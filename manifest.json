@@ -1,0 +1,13 @@
+{
+  "name": "PARFECT — Golf Analytics · IA",
+  "short_name": "PARFECT",
+  "description": "Deja de practicar. Empieza a mejorar.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#070b06",
+  "theme_color": "#070b06",
+  "lang": "es",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
