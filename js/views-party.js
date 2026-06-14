@@ -40,13 +40,13 @@ function vPartySetup() {
         <input id="pd-stake" type="number" min="0" inputmode="numeric" value="${esc(d.stake)}"></div>
       <button class="game-row ${d.useNet ? 'on' : ''}" data-act="pd-net" style="border-bottom:none">
         <div class="g-main"><b>Apostar con hándicap (net)</b>
-        <p>Asigna golpes de ventaja por jugador en el lobby. Skins, Medal, Nassau y Match se juegan con score neto.</p></div>
+        <p>Asigna golpes de ventaja por jugador en el lobby. Medal y Match se juegan con score neto.</p></div>
         <span class="g-check">${d.useNet ? '✓' : ''}</span>
       </button>
     </div>
     <div class="card">
-      <span class="label">Juegos de la party</span>
-      ${Object.entries(Party.GAMES).map(([k, g]) => `
+      <span class="label">Juego de la party</span>
+      ${Object.entries(Party.GAMES).filter(([k]) => k === 'medal' || k === 'match').map(([k, g]) => `
         <button class="game-row ${d.games[k] ? 'on' : ''}" data-act="pd-game" data-g="${k}">
           <div class="g-main"><b>${g.name}</b><p>${g.desc}</p></div>
           <span class="g-check">${d.games[k] ? '✓' : ''}</span>
@@ -242,7 +242,7 @@ function makeHoleForParty(p, i) {
 
 const partyActions = {
   'party-new'() {
-    V.partyDraft = { course: '', holes: 18, stake: '50', useNet: false, games: { corta: true, skins: true, larga: true, gogo: false, birdie: false, medal: false, nassau: false, match: false } };
+    V.partyDraft = { course: '', holes: 18, stake: '50', useNet: false, games: { corta: false, skins: false, larga: false, gogo: false, birdie: false, medal: true, nassau: false, match: false } };
     go('party-setup');
   },
   'pd-holes'(d) { V.partyDraft.course = val('pd-course'); V.partyDraft.stake = val('pd-stake'); V.partyDraft.holes = Number(d.n); render(); },

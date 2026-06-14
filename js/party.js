@@ -120,10 +120,11 @@ const Party = (() => {
       }
     }
 
-    if (party.status === 'done') {
+    // Medal / Nassau / Match: provisional en vivo (hoyos jugados), final al terminar
+    {
       const netSum = (pid, from, to) => {
         let s = 0, n = 0;
-        party.holes.slice(from, to).forEach((h, k) => {
+        party.holes.slice(from, Math.min(to, limit)).forEach((h, k) => {
           if (h.scores[pid] != null) { s += sc(h, from + k, pid); n++; }
         });
         return n ? s : null;
@@ -154,7 +155,7 @@ const Party = (() => {
       if (party.games.match && pids.length === 2) {
         const [a, b] = pids;
         let wa = 0, wb = 0;
-        party.holes.forEach((h, i) => {
+        party.holes.slice(0, limit).forEach((h, i) => {
           if (h.scores[a] == null || h.scores[b] == null) return;
           const da = sc(h, i, a), db = sc(h, i, b);
           if (da < db) wa++; else if (db < da) wb++;

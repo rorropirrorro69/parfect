@@ -159,13 +159,8 @@ const ALL_DRILLS = PARFECT_PLAN.flatMap(c => c.drills.map(d => ({ ...d, cat: c.c
 const drillById = id => ALL_DRILLS.find(d => d.id === id);
 
 function vTracker() {
-  const tab = V.trkTab || 'plan';
   return `<div class="sec-h"><h2>Parfect Tracker</h2><span class="small muted">tu práctica, medida</span></div>
-    <div class="tabs">
-      <button class="tab ${tab === 'plan' ? 'on' : ''}" data-act="trk-tab" data-t="plan">Plan PARFECT</button>
-      <button class="tab ${tab === 'libre' ? 'on' : ''}" data-act="trk-tab" data-t="libre">Registro libre</button>
-    </div>
-    ${tab === 'plan' ? vTrackerPlan() : vTrackerFree()}
+    ${vTrackerPlan()}
     ${V.drillLog ? vDrillSheet() : ''}`;
 }
 
@@ -205,52 +200,6 @@ function vDrillSheet() {
     <button class="btn primary" data-act="drill-save">Guardar resultado</button>
     <button class="btn" data-act="drill-close">Cancelar</button>
   </div></div>`;
-}
-
-function vTrackerFree() {
-  const list = myPractices();
-  const vals = V.trackVals || {};
-  const byArea = {};
-  for (const p of list) {
-    (byArea[p.area] = byArea[p.area] || []).push(p);
-  }
-  const areaCards = Object.entries(byArea).map(([area, ps]) => {
-    const acc = ps.reduce((a, p) => a + p.hits, 0) / Math.max(1, ps.reduce((a, p) => a + p.attempts, 0)) * 100;
-    const half = Math.floor(ps.length / 2);
-    let delta = '';
-    if (ps.length >= 2) {
-      const f = arr => arr.reduce((a, p) => a + p.hits, 0) / Math.max(1, arr.reduce((a, p) => a + p.attempts, 0)) * 100;
-      const dd = f(ps.slice(half)) - f(ps.slice(0, half));
-      delta = ` · ${dd >= 0 ? '▲' : '▼'} ${Math.abs(dd).toFixed(0)} pts`;
-    }
-    return `<div class="card">
-      <span class="label">${esc(area)} · ${ps.length} sesiones${delta}</span>
-      <div class="bar"><i style="width:${acc}%"></i></div>
-      <p class="note">${acc.toFixed(0)}% de acierto acumulado</p>
-    </div>`;
-  }).join('');
-
-  return `<div class="card">
-      <span class="label">Registrar sesión de práctica</span>
-      <div class="field" style="margin-top:4px"><label>Área</label>
-        <select id="t-area">${AREAS.map(a => `<option ${vals.area === a ? 'selected' : ''}>${a}</option>`).join('')}</select>
-      </div>
-      <div class="field"><label>Drill</label><input id="t-drill" placeholder="ej. Gate de putter (1 m)" value="${esc(vals.drill || '')}"></div>
-      <div class="field-row">
-        <div class="field"><label>Intentos</label><input id="t-att" type="number" min="1" inputmode="numeric" placeholder="10" value="${esc(vals.att || '')}"></div>
-        <div class="field"><label>Aciertos</label><input id="t-hits" type="number" min="0" inputmode="numeric" placeholder="7" value="${esc(vals.hits || '')}"></div>
-      </div>
-      ${V.err ? `<p class="form-err">${esc(V.err)}</p>` : ''}
-      <button class="btn primary" data-act="practice-add">Guardar sesión</button>
-    </div>
-    ${areaCards}
-    ${list.length ? `<div class="sec-h"><h2>Historial</h2><span class="small muted">${list.length} sesiones</span></div>` +
-      [...list].reverse().slice(0, 12).map(p => `
-      <div class="row">
-        <div class="r-main"><b>${esc(p.drill || p.area)}</b><span>${esc(p.area)} · ${fmtDate(p.date)}</span></div>
-        <div class="r-side"><b>${Math.round((p.hits / Math.max(1, p.attempts)) * 100)}%</b><span>${p.hits}/${p.attempts}</span></div>
-      </div>`).join('')
-    : `<div class="card empty"><div class="e-ico">📈</div><h3>Cuantifica tu práctica</h3><p>Registra cada drill con intentos y aciertos: la única forma de saber si de verdad estás mejorando.</p></div>`}`;
 }
 
 /* ---------- Social ---------- */
