@@ -88,7 +88,7 @@ const Trainer = (() => {
       let diag = `Salvas el par el ${agg.scrPct.toFixed(0)}% de las veces que fallas green (referencia: ${bench.scrPct.toFixed(0)}%).`;
       const tips = [];
       if (deficit > 8) {
-        diag += ` Aquí hay golpes fáciles: con tu GIR actual juegas ~${Math.round((100 - agg.girPct) / 100 * 18)} hoyos por ronda dependiendo del scrambling.`;
+        diag += ` Aquí hay golpes fáciles: con tu GIR actual juegas ~${Math.round((100 - agg.girPct) / 100 * 18)} hoyos por ronda dependiendo del up/down.`;
         tips.push('Antes de cada chip define el punto de bote, no la bandera.');
         tips.push('Fuera del green, tu palo por defecto debería ser el más rodador que la situación permita.');
       } else {

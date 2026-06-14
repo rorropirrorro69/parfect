@@ -114,6 +114,63 @@ function mbar(label, pct, valText) {
   </div>`;
 }
 
+/* ============ Drill art: animaciones SVG que ilustran el ejercicio ============ */
+function drillArt(key) {
+  const W = 320, H = 96;
+  const frame = `<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="12" fill="#0b110a" stroke="rgba(201,247,62,0.13)"/>`;
+  const ground = `<line x1="16" y1="78" x2="${W - 16}" y2="78" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>`;
+  const cap = t => `<text x="16" y="22" fill="#7c8a70" font-size="11" font-weight="700" font-family="Inter,system-ui">${t}</text>`;
+  const ball = (path, dur) => `<circle r="5" fill="#fff">
+      <animateMotion dur="${dur}" repeatCount="indefinite" calcMode="linear" path="${path}"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.08;0.5;0.85;1" dur="${dur}" repeatCount="indefinite"/>
+    </circle>`;
+  const flag = (x, y) => `<line x1="${x}" y1="${y}" x2="${x}" y2="78" stroke="#c9f73e" stroke-width="2"/><path d="M${x} ${y} l12 4 -12 4z" fill="#c9f73e"/>`;
+  const cup = x => `<ellipse cx="${x}" cy="78" rx="8" ry="3" fill="#0a0f06" stroke="#c9f73e" stroke-width="1.5"/>`;
+
+  if (key === 'driving') {
+    const p = 'M30 72 Q 165 6 292 50';
+    return `<svg viewBox="0 0 ${W} ${H}" class="drill-art" role="img" aria-label="Pasillo de salida">
+      ${frame}${ground}
+      <line x1="120" y1="50" x2="120" y2="78" stroke="#c9f73e" stroke-width="3" stroke-linecap="round"/>
+      <line x1="152" y1="50" x2="152" y2="78" stroke="#c9f73e" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="292" cy="50" r="10" fill="none" stroke="#c9f73e" stroke-width="2"/><circle cx="292" cy="50" r="3" fill="#c9f73e"/>
+      <path d="${p}" fill="none" stroke="rgba(201,247,62,0.25)" stroke-width="2" stroke-dasharray="3 6"/>
+      ${ball(p, '2.4s')}${cap('Salida por el pasillo')}
+    </svg>`;
+  }
+  if (key === 'approach') {
+    const p = 'M28 74 Q 150 -8 268 70';
+    return `<svg viewBox="0 0 ${W} ${H}" class="drill-art" role="img" aria-label="Control de distancia">
+      ${frame}${ground}
+      <ellipse cx="262" cy="78" rx="40" ry="6" fill="rgba(201,247,62,0.10)"/>
+      ${flag(268, 30)}
+      <path d="${p}" fill="none" stroke="rgba(201,247,62,0.25)" stroke-width="2" stroke-dasharray="3 6"/>
+      ${ball(p, '2.4s')}${cap('Approach a bandera')}
+    </svg>`;
+  }
+  if (key === 'short') {
+    const p = 'M34 72 Q 120 18 196 66 T 286 78';
+    return `<svg viewBox="0 0 ${W} ${H}" class="drill-art" role="img" aria-label="Up & down">
+      ${frame}${ground}
+      <ellipse cx="250" cy="78" rx="56" ry="6" fill="rgba(201,247,62,0.10)"/>
+      ${cup(286)}
+      <path d="${p}" fill="none" stroke="rgba(201,247,62,0.25)" stroke-width="2" stroke-dasharray="3 6"/>
+      ${ball(p, '2.6s')}${cap('Chip y salvar par')}
+    </svg>`;
+  }
+  // putting
+  const p = 'M30 70 L286 70';
+  return `<svg viewBox="0 0 ${W} ${H}" class="drill-art" role="img" aria-label="Putt por el gate">
+    ${frame}
+    <line x1="16" y1="70" x2="${W - 16}" y2="70" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+    <line x1="188" y1="58" x2="188" y2="70" stroke="#c9f73e" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="208" y1="58" x2="208" y2="70" stroke="#c9f73e" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="286" cy="70" rx="8" ry="3" fill="#0a0f06" stroke="#c9f73e" stroke-width="1.5"/>
+    <path d="${p}" fill="none" stroke="rgba(201,247,62,0.22)" stroke-width="2" stroke-dasharray="3 6"/>
+    ${ball(p, '2.2s')}${cap('Putt por el gate')}
+  </svg>`;
+}
+
 /* stat card with progress bar */
 function statCard(value, caption, barPct) {
   const w = Math.max(0, Math.min(100, barPct));

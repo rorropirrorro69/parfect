@@ -48,7 +48,7 @@ function vStats() {
     </div>
 
     <div class="card">
-      <span class="label">Juego corto · ${agg.scrPct.toFixed(0)}% scrambling</span>
+      <span class="label">Juego corto · ${agg.scrPct.toFixed(0)}% up/down</span>
       <div class="bar"><i style="width:${agg.scrPct}%"></i></div>
       <p class="note">% de veces que salvas el par cuando fallas el green.</p>
     </div>
@@ -106,7 +106,9 @@ function vDiag() {
       <p style="font-size:14px;margin-top:10px">${esc(f.diag)}</p>
       ${i < 2 ? `
         <p class="label" style="margin-top:16px">Prescripción de drills</p>
-        ${f.drills.map(dr => `<div class="drill"><b>${esc(dr.name)}</b><p>${esc(dr.desc)}</p>
+        ${f.drills.map(dr => `<div class="drill"><b>${esc(dr.name)}</b>
+          ${drillArt(f.key)}
+          <p>${esc(dr.desc)}</p>
           <div class="d-meta"><span>📋 ${esc(dr.dose)}</span><span>🎯 ${esc(dr.metric)}</span></div></div>`).join('')}
       ` : ''}
       <p class="label" style="margin-top:14px">Estrategia de campo</p>
@@ -226,7 +228,7 @@ function vSocial() {
   const partyFeed = S.parties.filter(p => p.status === 'done').map(p => {
     const ms = p.games && p.games.match ? Party.matchStatus(p) : null;
     let winName = '—';
-    if (ms) { winName = ms.up !== 0 ? plName(p, ms.leader).split(' ')[0] : 'Empate'; }
+    if (ms) { winName = ms.leaderWon > ms.runnerWon ? plName(p, ms.leader).split(' ')[0] : 'Empate'; }
     else { const st = Party.standings(p).filter(r => r.holes); winName = st.length ? st[0].name.split(' ')[0] : '—'; }
     return { date: p.date, html: `<button class="row" data-act="party-open" data-id="${p.id}">
       <div class="r-main"><b>🎉 Party en ${esc(p.course)}</b>

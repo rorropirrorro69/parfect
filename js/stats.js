@@ -93,7 +93,7 @@ const Stats = (() => {
 
   /* Radar: 6 ejes 0–100 contra rangos amateur→élite */
   function radarOf(agg) {
-    const labels = ['Driving', 'GIR%', 'Scramb.', 'Putting', 'Prox.', 'Consist.'];
+    const labels = ['Driving', 'GIR%', 'Up/Down', 'Putting', 'Prox.', 'Consist.'];
     if (!agg) return { labels, values: [5, 5, 5, 5, 5, 5] };
     const values = [
       scale(agg.fwPct, 30, 75),

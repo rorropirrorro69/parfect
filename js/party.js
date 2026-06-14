@@ -10,7 +10,7 @@ const Party = (() => {
     birdie: { name: 'Birdies',  desc: 'Cada birdie cobra 1 unidad de cada uno; el águila cobra 2.' },
     medal:  { name: 'Medal',    desc: 'Stroke play: gana quien termine con el score total más bajo.' },
     nassau: { name: 'Nassau',   desc: 'Ida, vuelta y total: cada tramo lo cobra el score más bajo (1 unidad de cada uno).' },
-    match:  { name: 'Match play', desc: 'Solo 2 jugadores: gana quien gane más hoyos.' },
+    match:  { name: 'Match play', desc: 'Gana quien gane más hoyos (el score más bajo del hoyo). 2 o más jugadores.' },
   };
 
   /** Puntos de La corta que gana un jugador en un hoyo (solo lo bueno suma) */
@@ -188,30 +188,47 @@ const Party = (() => {
     return rows;
   }
 
-  /** Estado de Match play (2 jugadores) sobre los hoyos jugados */
+  /** Estado de Match play (2+ jugadores): hoyos ganados por cada quien */
   function matchStatus(party, limit = party.holes.length) {
     const pids = party.players.map(p => p.pid);
-    if (pids.length !== 2) return null;
-    const [a, b] = pids;
-    let wa = 0, wb = 0, played = 0;
+    if (pids.length < 2) return null;
+    const nameOf = pid => { const pl = party.players.find(x => x.pid === pid); return pl ? pl.name.split(' ')[0] : '—'; };
+    const won = {}; pids.forEach(p => { won[p] = 0; });
+    let played = 0;
     party.holes.slice(0, limit).forEach((h, i) => {
-      if (h.scores[a] == null || h.scores[b] == null) return;
+      const scored = pids.filter(p => h.scores[p] != null);
+      if (scored.length < 2) return;
       played++;
-      const da = h.scores[a] - alloc(party, a, i);
-      const db = h.scores[b] - alloc(party, b, i);
-      if (da < db) wa++; else if (db < da) wb++;
+      let best = Infinity, count = 0, bestPid = null;
+      for (const p of scored) {
+        const s = h.scores[p] - alloc(party, p, i);
+        if (s < best) { best = s; count = 1; bestPid = p; }
+        else if (s === best) count++;
+      }
+      if (count === 1) won[bestPid]++;
     });
-    const up = wa - wb;
     const remaining = (party.holesCount || party.holes.length) - played;
-    let leader = null, text, decided = false;
-    if (up === 0) { text = played ? 'Empatados' : '—'; }
-    else {
-      leader = up > 0 ? a : b;
-      const diff = Math.abs(up);
-      if (diff > remaining) { text = `${diff}&${remaining}`; decided = true; }
-      else text = `${diff} ${diff === 1 ? 'arriba' : 'arriba'}`;
+    const order = pids.slice().sort((x, y) => won[y] - won[x]);
+    const leader = order[0];
+    const leaderWon = won[leader];
+    const runnerWon = order[1] ? won[order[1]] : 0;
+    const is2p = pids.length === 2;
+    let text, decided = false, up = 0, wa = 0, wb = 0;
+    if (is2p) {
+      wa = won[pids[0]]; wb = won[pids[1]]; up = wa - wb;
+      if (up === 0) text = played ? 'Igualados' : '—';
+      else {
+        const diff = Math.abs(up);
+        if (diff > remaining) { text = `${diff}&${remaining}`; decided = true; }
+        else text = `${diff} arriba`;
+      }
+    } else {
+      const lead = leaderWon - runnerWon;
+      if (leaderWon === 0) text = played ? 'Sin ganador aún' : '—';
+      else if (lead === 0) text = `Empate arriba (${leaderWon})`;
+      else { text = `${nameOf(leader)} +${lead}`; if (lead > remaining) decided = true; }
     }
-    return { a, b, wa, wb, up, leader, text, played, remaining, decided };
+    return { is2p, won, leader, leaderWon, runnerWon, played, remaining, text, decided, up, wa, wb, a: pids[0], b: pids[1] };
   }
 
   /** Quién paga a quién (greedy) */

@@ -67,7 +67,7 @@ function vDashboard() {
     <div class="grid2">
       ${statCard(agg.fwPct.toFixed(0) + '%', 'Fairways', agg.fwPct)}
       ${statCard(agg.girPct.toFixed(0) + '%', 'GIR', agg.girPct)}
-      ${statCard(agg.scrPct.toFixed(0) + '%', 'Scrambling', agg.scrPct)}
+      ${statCard(agg.scrPct.toFixed(0) + '%', 'Up/Down', agg.scrPct)}
       ${statCard(agg.putts18.toFixed(0), 'Putts / Ronda', Stats.clamp((38 - agg.putts18) / 11 * 100, 0, 100))}
     </div>
     <div class="card">

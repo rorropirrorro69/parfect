@@ -155,6 +155,16 @@ function vPartyLive() {
       ${p.idx > 0 ? `<button class="btn" style="flex:0 0 30%" data-act="pa-prev">←</button>` : ''}
       <button class="btn primary" data-act="${last ? 'pa-finish' : 'pa-next'}">${last ? 'Finalizar party 🏁' : 'Siguiente hoyo →'}</button>
     </div>
+
+    <div class="card" style="margin-top:18px">
+      <span class="label">Tarjeta</span>
+      ${scorecardTable(
+        p.holesCount,
+        i => (p.holes[i] ? p.holes[i].par : Stats.PAR_SEQ[i % 18]),
+        p.players.map(pl => ({ name: pl.name.split(' ')[0], scoreOf: i => (p.holes[i] ? p.holes[i].scores[pl.pid] : null) })),
+        p.idx
+      )}
+    </div>
     ${V.showMoney ? `<div class="overlay" data-act="pa-money-close"><div class="sheet" data-act="noop">
       <div class="grab"></div><h2>📋 Tabla en vivo</h2>
       ${vPartyTable(p, p.idx)}
@@ -165,23 +175,32 @@ function vPartyLive() {
 
 /* ---------- Tabla de posiciones (Medal / Match) ---------- */
 function vPartyTable(p, limit) {
+  if (p.games.match) {
+    const ms = Party.matchStatus(p, limit);
+    const order = p.players.slice().sort((a, b) => ms.won[b.pid] - ms.won[a.pid]);
+    const rows = order.map((pl, i) => `<div class="pl-row">
+      <span class="rank">${ms.won[pl.pid] > 0 ? i + 1 : '–'}</span>
+      <div class="r-main" style="flex:1"><b>${esc(pl.name)}</b><span>${ms.played} hoyos jugados</span></div>
+      <div class="r-side"><b>${ms.won[pl.pid]}</b><span>ganados</span></div>
+    </div>`).join('');
+    let head;
+    if (ms.is2p) {
+      head = ms.up === 0
+        ? `<p class="tip">Match igualado tras ${ms.played} hoyos.</p>`
+        : `<p class="tip"><b>${esc(plName(p, ms.leader).split(' ')[0])}</b> ${ms.decided ? `gana ${ms.text}` : `va ${ms.text}`} (${ms.wa}–${ms.wb})</p>`;
+    } else {
+      head = `<p class="note">Match play — gana quien gane más hoyos (score más bajo del hoyo).</p>`;
+    }
+    return head + rows;
+  }
   const st = Party.standings(p, limit);
-  const ms = p.games.match ? Party.matchStatus(p, limit) : null;
   const rows = st.map((r, i) => `<div class="pl-row">
     <span class="rank">${r.holes ? i + 1 : '–'}</span>
     <div class="r-main" style="flex:1"><b>${esc(r.name)}</b>
       <span>${r.holes ? `${r.holes} hoyos${p.useNet ? ` · bruto ${r.gross}` : ''}` : 'sin scores'}</span></div>
     <div class="r-side"><b>${r.holes ? r.shown : '—'}</b><span>${r.holes ? fmtToPar(r.toPar) : ''}</span></div>
   </div>`).join('');
-  let head = '';
-  if (ms) {
-    head = ms.up === 0
-      ? `<p class="tip">Match igualado tras ${ms.played} hoyos.</p>`
-      : `<p class="tip"><b>${esc(plName(p, ms.leader).split(' ')[0])}</b> ${ms.decided ? `gana ${ms.text}` : `va ${ms.text}`} (${ms.wa}–${ms.wb})</p>`;
-  } else {
-    head = `<p class="note">Medal — gana el score total más bajo${p.useNet ? ' (neto)' : ''}.</p>`;
-  }
-  return head + rows;
+  return `<p class="note">Medal — gana el score total más bajo${p.useNet ? ' (neto)' : ''}.</p>` + rows;
 }
 
 function vPartyDone() {
@@ -191,8 +210,10 @@ function vPartyDone() {
   const ms = p.games.match ? Party.matchStatus(p) : null;
   let winnerPid = null, sub = '';
   if (ms) {
-    if (ms.up !== 0) { winnerPid = ms.leader; sub = `gana el match ${ms.text} (${ms.wa}–${ms.wb})`; }
-    else sub = 'match empatado 🤝';
+    if (ms.leaderWon > ms.runnerWon) {
+      winnerPid = ms.leader;
+      sub = ms.is2p ? `gana el match ${ms.text} (${ms.wa}–${ms.wb})` : `gana con ${ms.leaderWon} hoyos`;
+    } else sub = 'match empatado 🤝';
   } else {
     const played = st.filter(r => r.holes);
     if (played.length && !(played[1] && played[1].toPar === played[0].toPar)) { winnerPid = played[0].pid; sub = `gana en Medal con ${fmtToPar(played[0].toPar)}`; }

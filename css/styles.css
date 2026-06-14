@@ -299,6 +299,25 @@ button.row { cursor: pointer; }
 .tip { display: flex; gap: 10px; margin-top: 10px; font-size: 13.5px; color: #cfd8c2; }
 .tip::before { content: '→'; color: var(--lime); font-weight: 900; }
 
+/* ============ Tarjeta de golf (tabla scrollable) ============ */
+.sc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 4px -4px 0; }
+.sc-table { border-collapse: collapse; width: max-content; font-size: 12.5px; }
+.sc-table th, .sc-table td { min-width: 26px; padding: 7px 0; text-align: center; border-bottom: 1px solid var(--line-soft); font-weight: 700; }
+.sc-table thead th { color: var(--muted2); font-size: 10.5px; letter-spacing: 0.02em; }
+.sc-table .sc-name { position: sticky; left: 0; z-index: 2; background: var(--card2); text-align: left; min-width: 58px; padding-right: 10px; padding-left: 2px; color: var(--text); }
+.sc-table thead .sc-name { background: var(--card2); color: var(--muted); }
+.sc-table .sc-parrow td { color: var(--muted); }
+.sc-table .sc-parrow .sc-name { color: var(--muted); }
+.sc-table .sc-tt { color: var(--lime); font-weight: 900; background: rgba(201, 247, 62, 0.05); }
+.sc-table td.sc-cur, .sc-table th.sc-cur { background: rgba(201, 247, 62, 0.12); }
+.sc-table td.birdie { color: var(--lime); }
+.sc-table td.eagle { color: #0a0f06; background: var(--lime); border-radius: 4px; }
+.sc-table td.bogey { color: #d8e0cc; }
+.sc-table td.doble { color: var(--danger); }
+
+/* ============ Drill art (animaciones SVG) ============ */
+.drill-art { width: 100%; height: auto; display: block; border-radius: 12px; margin: 6px 0 2px; }
+
 /* ============ Sheet / overlay ============ */
 .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 90; display: flex; align-items: flex-end; justify-content: center; }
 .sheet {
