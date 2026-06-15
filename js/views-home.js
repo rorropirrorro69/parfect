@@ -672,6 +672,14 @@ function vProfile() {
             <button class="chip sm ${(S.settings && S.settings.theme) === 'light' ? '' : 'on'}" data-act="set-theme" data-v="dark">${golfIcon('peak')} ${t('dark')}</button>
             <button class="chip sm ${(S.settings && S.settings.theme) === 'light' ? 'on' : ''}" data-act="set-theme" data-v="light">${t('light')}</button></div></div>
           <hr class="set-div">
+          <p class="set-lab" style="margin-bottom:9px">Respaldo de tus datos</p>
+          <div class="bk-row">
+            <button class="btn ghost" data-act="export-data">⬇ Exportar copia</button>
+            <button class="btn ghost" data-act="import-data">⬆ Importar copia</button>
+          </div>
+          <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="parfectImport(this)">
+          <p class="note">Tus datos viven en este dispositivo. Exporta una copia cada tanto para no perderlos si cambias de teléfono o limpias el navegador.</p>
+          <hr class="set-div">
           <button class="btn ghost" data-act="seed-demo">${t('load_demo')}</button>
           <button class="btn danger" data-act="wipe-mine">${V.wipeArm ? t('wipe_confirm') : t('wipe')}</button>
           <button class="btn" data-act="logout">${t('logout')}</button>

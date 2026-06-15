@@ -726,6 +726,10 @@ button.row { cursor: pointer; }
 .pl-empty p { color: var(--muted); font-size: 13.5px; line-height: 1.5; max-width: 36ch; margin: 0 auto 14px; }
 .pl-empty .btn { width: auto; display: inline-flex; padding: 12px 22px; }
 
+/* respaldo (exportar/importar) */
+.bk-row { display: flex; gap: 10px; }
+.bk-row .btn { margin-top: 0; flex: 1; }
+
 .empty { text-align: center; padding: 34px 18px; }
 .empty .e-ico { font-size: 38px; margin-bottom: 10px; }
 .empty h3 { font-size: 18px; font-weight: 900; }

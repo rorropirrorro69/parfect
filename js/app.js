@@ -61,6 +61,32 @@ function loadHole() {
 }
 
 /* ============ Router ============ */
+/* importar copia de respaldo (exportada con export-data) */
+function parfectImport(input) {
+  const file = input && input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const d = JSON.parse(reader.result);
+      if (!d || d.app !== 'parfect' || !d.user || !d.user.id) { alert('Ese archivo no es una copia válida de PARFECT.'); return; }
+      const i = S.users.findIndex(x => x.id === d.user.id || (x.email && x.email === d.user.email));
+      if (i >= 0) S.users[i] = d.user; else S.users.push(d.user);
+      const uid = d.user.id;
+      S.rounds = S.rounds.filter(r => r.userId !== uid).concat((d.rounds || []).map(r => ({ ...r, userId: uid })));
+      S.practices = S.practices.filter(p => p.userId !== uid).concat((d.practices || []).map(p => ({ ...p, userId: uid })));
+      if (d.settings) S.settings = d.settings;
+      S.session = uid;
+      V.profileOpen = false; V.view = 'inicio';
+      commit(); window.scrollTo(0, 0);
+      const n = (d.rounds || []).length;
+      alert(`¡Listo! Se restauraron tus datos (${n} ronda${n === 1 ? '' : 's'}).`);
+    } catch (e) { alert('No se pudo leer la copia: ' + e.message); }
+  };
+  reader.readAsText(file);
+}
+
 function App() {
   const u = cur();
   if (!u) {
@@ -170,6 +196,18 @@ const actions = {
     u.homeCourse = d.c;
     commit();
   },
+  'export-data'() {
+    const u = cur(); if (!u) return;
+    const data = { app: 'parfect', v: 1, exportedAt: new Date().toISOString(), user: u, rounds: myRounds(), practices: myPractices(), settings: S.settings };
+    try {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `parfect-${(u.name || 'jugador').replace(/\s+/g, '-').toLowerCase()}-${today()}.json`;
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500);
+    } catch (e) { alert('No se pudo exportar: ' + e.message); }
+  },
+  'import-data'() { const el = document.getElementById('import-file'); if (el) el.click(); },
   'finish-onboard'() {
     const u = cur(); if (!u) return;
     const n = val('p-name'); if (n) u.name = n;
