@@ -87,27 +87,25 @@ function positionOrb() {
 const AVATARS = ['assets/avatars/a1.png', 'assets/avatars/a2.png', 'assets/avatars/a3.png', 'assets/avatars/a4.png', 'assets/avatars/a5.png', 'assets/avatars/a6.png'];
 function avatarSrc(u) { const i = (u && u.avatar != null) ? u.avatar : 0; return AVATARS[i] || AVATARS[0]; }
 
-/* cintas estilo kung-fu por hándicap (1 = negra/maestro, >11 = blanca) */
-const BELTS = [
-  { n: 'Blanca', c: '#e6ebee', f: 'saturate(.18) brightness(1.22)' },
-  { n: 'Amarilla', c: '#f3d33a', f: 'hue-rotate(20deg) saturate(1.4)' },
-  { n: 'Naranja', c: '#ef8b3c', f: 'none' },
-  { n: 'Dorada', c: '#e0b020', f: 'hue-rotate(12deg) saturate(1.3) brightness(.96)' },
-  { n: 'Verde', c: '#57a83e', f: 'hue-rotate(95deg) saturate(1.3)' },
-  { n: 'Turquesa', c: '#2fb6a6', f: 'hue-rotate(140deg) saturate(1.3)' },
-  { n: 'Azul', c: '#3a7fd4', f: 'hue-rotate(195deg) saturate(1.4)' },
-  { n: 'Índigo', c: '#5a52c8', f: 'hue-rotate(225deg) saturate(1.3)' },
-  { n: 'Morada', c: '#8a4fc0', f: 'hue-rotate(258deg) saturate(1.3)' },
-  { n: 'Café', c: '#7a5230', f: 'hue-rotate(6deg) saturate(.6) brightness(.68)' },
-  { n: 'Roja', c: '#d8423a', f: 'hue-rotate(-26deg) saturate(1.55)' },
-  { n: 'Negra', c: '#23272c', f: 'brightness(.5) saturate(.85)' },
+/* rango por hándicap 0–36 (golf): tu golfista se tiñe y su aura crece al subir */
+const RANKS = [
+  { max: 36, n: 'Novato', c: '#9aa6b0', f: 'saturate(.35) brightness(1.08)', aura: 0 },
+  { max: 27, n: 'Aficionado', c: '#57a83e', f: 'hue-rotate(95deg) saturate(1.25)', aura: 1 },
+  { max: 18, n: 'Competidor', c: '#3a7fd4', f: 'hue-rotate(195deg) saturate(1.35)', aura: 2 },
+  { max: 12, n: 'Cazador de pares', c: '#8a4fc0', f: 'hue-rotate(258deg) saturate(1.3)', aura: 3 },
+  { max: 6, n: 'Élite', c: '#ef8b3c', f: 'none', aura: 4 },
+  { max: 2, n: 'Maestro', c: '#d8423a', f: 'hue-rotate(-26deg) saturate(1.5)', aura: 5 },
+  { max: 0, n: 'Leyenda', c: '#f5d33a', f: 'hue-rotate(14deg) saturate(1.45) brightness(1.05)', aura: 6 },
 ];
-function beltEarned(hcp) { const h = Math.round(Number(hcp) || 20); return h > 11 ? 0 : (12 - h); }
-function beltIdx(u) { const e = beltEarned(u && u.hcp); let b = (u && u.belt != null) ? u.belt : e; return Math.max(0, Math.min(e, b)); }
+function rankIdx(hcp) { const h = Math.round(Number(hcp)); if (isNaN(h)) return 0; let best = 0, bm = Infinity; RANKS.forEach((r, i) => { if (r.max >= h && r.max < bm) { bm = r.max; best = i; } }); return best; }
+function rankRange(i) { const lo = i + 1 < RANKS.length ? RANKS[i + 1].max + 1 : 0; return lo === RANKS[i].max ? `${lo}` : `${lo}–${RANKS[i].max}`; }
 function avatarImg(u, cls) {
-  const b = BELTS[beltIdx(u)] || BELTS[0];
-  const f = (b.f && b.f !== 'none') ? ` style="filter:${b.f}"` : '';
-  return `<img class="golfer ${cls || ''}" src="assets/avatars/a1.png"${f} alt="" loading="lazy">`;
+  const r = RANKS[rankIdx(u && u.hcp)] || RANKS[0];
+  let glow = '';
+  if (r.aura >= 1) glow += ` drop-shadow(0 0 ${3 + r.aura * 2}px ${r.c})`;
+  if (r.aura >= 4) glow += ` drop-shadow(0 0 ${7 + r.aura * 3}px ${r.c})`;
+  const fil = `${r.f && r.f !== 'none' ? r.f : ''}${glow}`.trim();
+  return `<img class="golfer ${cls || ''}" src="assets/avatars/a1.png"${fil ? ` style="filter:${fil}"` : ''} alt="" loading="lazy">`;
 }
 
 /* ============ Íconos de golf (SVG con look 3D + animación sutil) ============ */

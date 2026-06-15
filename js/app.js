@@ -213,7 +213,6 @@ const actions = {
   'bag-edit'() { V.bagEdit = true; render(); },
   'bag-close'() { V.bagEdit = false; render(); },
   'set-avatar'(d) { const u = cur(); if (u) { u.avatar = Number(d.i) || 0; commit(); } },
-  'set-belt'(d) { const u = cur(); if (u) { const e = beltEarned(u.hcp); u.belt = Math.max(0, Math.min(e, Number(d.i) || 0)); commit(); } },
   'stat-pop'(d, el) {
     if (!el) return;
     el.classList.remove('tapped'); void el.offsetWidth; el.classList.add('tapped');

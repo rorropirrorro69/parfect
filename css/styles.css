@@ -202,13 +202,16 @@ body.is-scrolling .sky-cloud, body.is-scrolling .hero-bird, body.is-scrolling .h
 .pl-av-opt.on { border-color: #9ccb35; background: var(--lime-faint); }
 .pl-av-opt img { width: 62px; height: 62px; object-fit: contain; }
 
-/* selector de cinta (kung-fu) */
-.belt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-.belt-opt { display: flex; align-items: center; gap: 9px; background: var(--card); border: 1px solid var(--line-soft); border-radius: 14px; padding: 10px 11px; cursor: pointer; box-shadow: 0 4px 12px rgba(40,60,25,0.05); }
-.belt-opt.on { border-color: #C7EE54; box-shadow: 0 0 0 2px rgba(199,238,84,0.45); }
-.belt-opt.locked { opacity: 0.38; }
-.belt-dot { width: 18px; height: 18px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.18); flex: none; }
-.belt-n { font-size: 12px; font-weight: 800; color: var(--text); }
+/* escalafón de rango */
+.rank-ladder { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+.rank-step { display: flex; align-items: center; gap: 11px; background: var(--card); border: 1px solid var(--line-soft); border-radius: 14px; padding: 10px 13px; box-shadow: 0 4px 12px rgba(40,60,25,0.05); opacity: 0.6; }
+.rank-step.done { opacity: 0.85; }
+.rank-step.on { opacity: 1; border-color: #C7EE54; box-shadow: 0 0 0 2px rgba(199,238,84,0.4); }
+.rank-dot { width: 20px; height: 20px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.18); flex: none; }
+.rank-meta { flex: 1; min-width: 0; }
+.rank-meta b { display: block; font-size: 14px; font-weight: 800; color: var(--text); }
+.rank-meta span { font-size: 11.5px; color: var(--muted); }
+.rank-now { font-size: 11px; font-weight: 800; color: #16241A; background: #C7EE54; border-radius: 99px; padding: 4px 10px; }
 
 /* tarjeta de jugador estilo Pokémon */
 .pkc { margin-top: 8px; border-radius: 24px; padding: 8px; background: linear-gradient(140deg, #d6f56c, #7fb85a 50%, #C7EE54); box-shadow: 0 16px 40px rgba(30,50,15,0.28); }

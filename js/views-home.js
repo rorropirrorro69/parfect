@@ -532,19 +532,17 @@ function vPerfilStats(agg, rounds) {
   return `<div class="reel"><div class="reel-track">${cards}${cards}</div></div>`;
 }
 
-/* selector de cinta (kung-fu por hándicap) */
+/* escalafón de rango por hándicap (0–36): tu aura crece al subir */
 function vAvatarPicker(u) {
-  const earned = beltEarned(u.hcp);
-  const sel = beltIdx(u);
-  const opts = BELTS.map((b, i) => {
-    const locked = i > earned;
-    return `<button class="belt-opt${i === sel ? ' on' : ''}${locked ? ' locked' : ''}"${locked ? ' disabled' : ''} data-act="set-belt" data-i="${i}">
-      <span class="belt-dot" style="background:${b.c}"></span><span class="belt-n">${b.n}</span>
-    </button>`;
-  }).join('');
-  return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Tu cinta · kung-fu</h2><span class="small muted">baja tu HCP para subir</span></div>
-    <p class="note" style="margin:0 0 4px">Vas en <b>cinta ${BELTS[sel].n}</b>. Cada hándicap es una cinta; negra = HCP 1.</p>
-    <div class="belt-grid">${opts}</div>`;
+  const idx = rankIdx(u.hcp);
+  const steps = RANKS.map((r, i) => `<div class="rank-step${i === idx ? ' on' : ''}${i < idx ? ' done' : ''}">
+      <span class="rank-dot" style="background:${r.c}"></span>
+      <div class="rank-meta"><b>${r.n}</b><span>HCP ${rankRange(i)}</span></div>
+      ${i === idx ? '<span class="rank-now">aquí</span>' : ''}
+    </div>`).join('');
+  return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Tu rango</h2><span class="small muted">baja tu HCP para subir</span></div>
+    <p class="note" style="margin:0 0 4px">Eres <b>${RANKS[idx].n}</b>. Tu golfista brilla más fuerte con cada rango que subes.</p>
+    <div class="rank-ladder">${steps}</div>`;
 }
 
 /* tarjeta de jugador estilo Pokémon: avatar + hándicap (HP) + stats (ataques) */
@@ -570,9 +568,10 @@ function vPlayerCard(u, agg) {
   ] : [];
   const rowIcon = ic => ic === 'bird' ? `<img src="assets/bird.png" class="pl-rr-img" alt="">` : ic === 'eagle' ? `<img src="assets/eagle.png" class="pl-rr-img" alt="">` : `<span class="pl-rr-ic">${golfIcon(ic)}</span>`;
   const rows = moves.map(([ic, name, val]) => `<div class="pl-rr stat"><span class="pl-rr-lead">${rowIcon(ic)}<b>${esc(name)}</b></span><span class="pl-rr-score">${val}</span></div>`).join('');
-  return `<div class="pl-hero">
+  const rk = RANKS[rankIdx(u.hcp)];
+  return `<div class="pl-hero" style="background:linear-gradient(150deg, ${rk.c}, #5fa03f)">
       <div class="pl-hero-txt">
-        <span class="pl-hero-lab">${esc(u.name)} · Cinta ${BELTS[beltIdx(u)].n}</span>
+        <span class="pl-hero-lab">${esc(u.name)} · ${rk.n}</span>
         <div class="pl-hero-num">${fmtHcp(u.hcp)}</div>
         <span class="pl-hero-sub">${t('hcp_label')} · ${esc(homeName)}</span>
       </div>

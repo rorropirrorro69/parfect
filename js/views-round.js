@@ -154,17 +154,31 @@ function captureSchematic(h, chole, noZoom, clean) {
   const ctrl = par3 ? [150, 165] : (dog === 'left' ? [198, 158] : dog === 'right' ? [102, 158] : [150, 158]);
   const gx = green[0], gy = green[1], halfW = 50;
   const fair = `M${tee[0]},${tee[1]} Q ${ctrl[0]},${ctrl[1]} ${gx},${gy}`;
-  // historial (clean): solo el hoyo + la línea de regulación marcada (sin trazo de tiros)
+  // peligros del campo (agua/arena, sin etiquetas)
+  const haz = ((chole && chole.risks) || []).map(r => {
+    let rx, ry;
+    if (r.at === 'drive') { rx = bez(0.5, tee[0], ctrl[0], gx) + (r.side === 'left' ? -40 : 40); ry = bez(0.5, tee[1], ctrl[1], gy); }
+    else { rx = gx + (r.side === 'left' ? -44 : 44); ry = gy + 10; }
+    const water = r.kind === 'water';
+    return `<ellipse cx="${rx.toFixed(0)}" cy="${ry.toFixed(0)}" rx="${water ? 22 : 16}" ry="${water ? 13 : 9}" fill="${water ? 'url(#g3dWater)' : 'url(#g3dSand)'}"/>`;
+  }).join('');
+  // campo claro tipo mapa VR (fondo blanco-verde, con profundidad, sin texto)
+  const field = `<rect width="${W}" height="${H}" rx="16" fill="#e9f2d8"/>
+    <rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="15" fill="none" stroke="rgba(40,80,20,0.10)"/>
+    <path d="${fair}" fill="none" stroke="#86c860" stroke-width="${par3 ? 46 : 62}" stroke-linecap="round"/>
+    <path d="${fair}" fill="none" stroke="#a6dd78" stroke-width="${par3 ? 26 : 36}" stroke-linecap="round" opacity="0.55"/>
+    ${haz}
+    <ellipse cx="${gx}" cy="${gy + 4}" rx="35" ry="23" fill="#2f6b39" opacity="0.22"/>
+    <ellipse cx="${gx}" cy="${gy}" rx="34" ry="22" fill="#54ad58" stroke="#3a8043" stroke-width="2"/>
+    <ellipse cx="${gx - 9}" cy="${gy - 6}" rx="15" ry="8" fill="#76c66f" opacity="0.5"/>
+    <circle cx="${gx}" cy="${gy}" r="4.6" fill="#0a2e16"/>
+    <line x1="${gx}" y1="${gy}" x2="${gx}" y2="${gy - 24}" stroke="#2c4a1c" stroke-width="2"/><path d="M${gx},${gy - 24} l12,3.6 -12,3.6z" fill="#c9f73e"/>
+    <rect x="${tee[0] - 9}" y="${tee[1]}" width="18" height="6" rx="2" fill="#8aa56b"/>`;
+  // historial (clean): campo + línea de regulación (sin trazo de tiros)
   if (clean) {
     return `<div class="cap"><svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Hoyo">
-      <rect width="${W}" height="${H}" rx="14" fill="#0a0f08" stroke="#1d2914"/>
-      <path d="${fair}" fill="none" stroke="#2f6b39" stroke-width="${par3 ? 40 : 56}" stroke-linecap="round"/>
-      <path d="${fair}" fill="none" stroke="#3a8043" stroke-width="${par3 ? 20 : 30}" stroke-linecap="round" opacity="0.5"/>
-      <ellipse cx="${gx}" cy="${gy}" rx="34" ry="22" fill="#57b15c" stroke="#2f6b39" stroke-width="2"/>
-      <circle cx="${gx}" cy="${gy}" r="4.5" fill="#0a0f08"/><circle cx="${gx}" cy="${gy}" r="6.5" fill="none" stroke="#c9f73e" stroke-width="0.8" opacity="0.6"/>
-      <line x1="${gx}" y1="${gy}" x2="${gx}" y2="${gy - 22}" stroke="#eef3e6" stroke-width="2"/><path d="M${gx},${gy - 22} l11,3 -11,3z" fill="#c9f73e"/>
-      <path d="${fair}" fill="none" stroke="#c9f73e" stroke-width="2.4" stroke-dasharray="2 7" stroke-linecap="round" opacity="0.9"/>
-      <rect x="${tee[0] - 9}" y="${tee[1]}" width="18" height="6" rx="2" fill="#9ab07f"/>
+      ${field}
+      <path d="${fair}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="2 7" stroke-linecap="round" opacity="0.92"/>
     </svg></div>`;
   }
   const P = s => {
@@ -174,54 +188,24 @@ function captureSchematic(h, chole, noZoom, clean) {
     return { x: x + s.side * halfW, y };
   };
   const fpts = shots.map(P);
-
-  // ---- putts: trayectoria sobre el green, desde la distancia registrada hasta el hoyo ----
   const nPutts = h.putts != null ? h.putts : 0;
   const dyOf = { '0-3': 16, '3-8': 26, '8-20': 40, '20+': 56 };
   const lagDy = nPutts > 0 ? (dyOf[h.dist] != null ? dyOf[h.dist] : 28) : 0;
   let lagIdx = -1, lag = { x: gx, y: gy };
   if (nPutts > 0) {
-    lagIdx = shots.findIndex(s => s.lie === 'green');     // llegada al green = primer putt
+    lagIdx = shots.findIndex(s => s.lie === 'green');
     lag = { x: gx + 2, y: gy + lagDy };
     if (lagIdx >= 0) fpts[lagIdx] = { x: lag.x, y: lag.y };
   }
   const pputts = [];
-  for (let i = 0; i < nPutts; i++) {
-    const f = (i + 1) / nPutts;
-    pputts.push({ x: lag.x + (gx - lag.x) * f, y: lag.y + (gy - lag.y) * f });
-  }
+  for (let i = 0; i < nPutts; i++) { const f = (i + 1) / nPutts; pputts.push({ x: lag.x + (gx - lag.x) * f, y: lag.y + (gy - lag.y) * f }); }
   const pts = [...fpts, ...pputts];
   const lagNode = lagIdx >= 0 ? lagIdx + 1 : (nPutts > 0 ? fpts.length + 1 : -1);
-
   const seq = shots.concat(Array.from({ length: nPutts }, () => ({ role: 'putt', ok: true })));
   const route = `M${tee[0]},${tee[1]} ` + pts.map(q => `L${q.x.toFixed(0)},${q.y.toFixed(0)}`).join(' ');
-  const distTxt = { '0-3': '0–3 ft', '3-8': '3–8 ft', '8-20': '8–20 ft', '20+': '+20 ft' };
-  const puttLbl = (nPutts > 0 && h.dist && distTxt[h.dist]) ? `<text x="${(lag.x + 12).toFixed(0)}" y="${(lag.y + 3).toFixed(0)}" fill="#9aa6a8" font-family="Inter,system-ui,sans-serif" font-size="9.5" font-weight="700">${distTxt[h.dist]}</text>` : '';
-  // ---- etiquetas claras (pills) en el trazo: calle, GIR/up&down, putts ----
-  const pill = (x, y, text, col) => { const w = text.length * 6.2 + 14; return `<g><rect x="${(x - w / 2).toFixed(0)}" y="${(y - 8).toFixed(0)}" width="${w.toFixed(0)}" height="16" rx="8" fill="rgba(8,12,7,0.9)" stroke="${col}" stroke-width="1"/><text x="${x.toFixed(0)}" y="${(y + 3.4).toFixed(0)}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" fill="${col}">${text}</text></g>`; };
-  let pills = '';
-  const teeIdx = shots.findIndex(s => s.role === 'tee');
-  if (h.par >= 4 && teeIdx >= 0) { const tp = fpts[teeIdx]; const fw = h.tee === 'fw'; pills += pill(tp.x, tp.y - 15, fw ? 'CALLE ✓' : h.tee === 'penal' ? 'PENAL ✗' : 'CALLE ✗', fw ? '#c9f73e' : '#ff9f43'); }
-  const gir = h.app === 'gir', saved = h.app && h.app !== 'gir' && h.upDown === true;
-  let gtxt = gir ? 'GIR ✓' : saved ? 'SALVÓ ✓' : (h.app && h.app !== 'gir' && h.upDown === false ? 'FALLÓ GREEN' : '');
-  const gcol = (gir || saved) ? '#c9f73e' : '#ff9f43';
-  if (nPutts > 0) gtxt = (gtxt ? gtxt + ' · ' : '') + nPutts + ' PUTT' + (nPutts !== 1 ? 'S' : '');
-  if (gtxt) pills += pill(gx, gy + lagDy + 18, gtxt, gtxt.includes('✓') ? '#c9f73e' : '#ff9f43');
-  let zones = '', dots = '';
-  shots.forEach((s, i) => { if (s.lie === 'green') return; const q = fpts[i], c = shotColor(s), rx = s.ok ? 13 : 18; zones += `<ellipse cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" rx="${rx}" ry="${(rx * 0.7).toFixed(0)}" fill="${c}" opacity="0.16" stroke="${c}" stroke-width="1.5" stroke-dasharray="4 4"/>`; });
-  pts.forEach((q, i) => {
-    const c = shotColor(seq[i]);
-    dots += `<circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="3.4" fill="${c}"/>`;
-  });
-  let haz = '';
-  ((chole && chole.risks) || []).forEach(r => {
-    let rx, ry;
-    if (r.at === 'drive') { const lp = fpts[0] || { x: gx, y: gy }; rx = lp.x + (r.side === 'left' ? -36 : 36); ry = lp.y; }
-    else { rx = gx + (r.side === 'left' ? -40 : 40); ry = gy + 14; }
-    const water = r.kind === 'water';
-    haz += `<ellipse cx="${rx.toFixed(0)}" cy="${ry.toFixed(0)}" rx="${water ? 21 : 16}" ry="${water ? 13 : 9}" fill="${water ? '#2f7fa6' : '#ddcb8c'}"/>`;
-  });
-  let ball = '', vbAnim = '', counter = '';
+  let dots = '';
+  pts.forEach((q, i) => { const c = shotColor(seq[i]); dots += `<circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="3.8" fill="${c}" stroke="#16301a" stroke-width="0.7"/>`; });
+  let ball = '', vbAnim = '';
   if (pts.length) {
     const allP = [{ x: tee[0], y: tee[1] }, ...pts], seg = []; let tot = 0;
     for (let i = 1; i < allP.length; i++) { const l = Math.hypot(allP[i].x - allP[i - 1].x, allP[i].y - allP[i - 1].y); seg.push(l); tot += l || 1; }
@@ -231,23 +215,8 @@ function captureSchematic(h, chole, noZoom, clean) {
     ev.push({ p: 1, d: 1 });
     const TT = ev.reduce((a, e) => a + e.d, 0); let ac = 0; const kp = [], kt = []; const nodeT = {};
     ev.forEach(e => { ac += e.d; const t = ac / TT; kp.push(e.p.toFixed(3)); kt.push(t.toFixed(3)); if (e.node != null) nodeT[e.node] = t; });
-    const dur = Math.min(9, 1.2 + (nf.length - 1) * 1.25).toFixed(1);   // tempo más lento y calmado
-    ball = `<circle r="4" fill="#fff" stroke="#0a0f08" stroke-width="0.8"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${route}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
-    { const N = pts.length; let cnum = '';
-      const roleLbl = { tee: 'SALIDA', advance: 'AVANCE', approach: 'APPROACH', chip: 'CHIP', putt: 'PUTT' };
-      for (let i = 1; i <= N; i++) {
-        const isFirst = i === 1;
-        let t0 = isFirst ? 0 : Number(nodeT[i] != null ? nodeT[i] : i / N);
-        let t1 = i < N ? Number(nodeT[i + 1] != null ? nodeT[i + 1] : 1) : 1;
-        t0 = Math.max(0, Math.min(0.985, t0)); t1 = Math.max(t0 + 0.01, Math.min(0.999, t1));
-        const lbl = `TIRO ${i}/${N} · ${roleLbl[seq[i - 1].role] || 'TIRO'}`;
-        const vals = isFirst ? '1;0;0' : '0;1;0;0';
-        const kt = isFirst ? `0;${t1.toFixed(3)};1` : `0;${t0.toFixed(3)};${t1.toFixed(3)};1`;
-        cnum += `<text x="79" y="17" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="900" letter-spacing="0.4" fill="#08120a" opacity="${isFirst ? '1' : '0'}">${lbl}<animate attributeName="opacity" values="${vals}" keyTimes="${kt}" dur="${dur}s" calcMode="discrete" repeatCount="indefinite"/></text>`;
-      }
-      counter = `<svg class="cap-count" viewBox="0 0 158 26" aria-hidden="true"><rect x="2" y="3" width="154" height="20" rx="10" fill="#c9f73e"/>${cnum}</svg>`;
-    }
-    // ---- zoom de cámara al green durante los putts ----
+    const dur = Math.min(9, 1.2 + (nf.length - 1) * 1.25).toFixed(1);
+    ball = `<circle r="4.6" fill="#fff" stroke="#16301a" stroke-width="0.8"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${route}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
     if (!noZoom && nPutts > 0 && lagNode >= 0) {
       const bw = 178, bh = 176;
       const bx = Math.max(0, Math.min(W - bw, gx - bw / 2)).toFixed(0);
@@ -260,18 +229,11 @@ function captureSchematic(h, chole, noZoom, clean) {
       vbAnim = `<animate attributeName="viewBox" dur="${dur}s" repeatCount="indefinite" values="${vals}" keyTimes="${k.map(x => x.toFixed(3)).join(';')}" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/>`;
     }
   }
-  return `<div class="cap">${clean ? '' : counter}<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tiros del hoyo">
+  return `<div class="cap"><svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Vuelo de la bola">
     ${vbAnim}
-    <rect width="${W}" height="${H}" rx="14" fill="#0a0f08" stroke="#1d2914"/>
-    <path d="${fair}" fill="none" stroke="#2f6b39" stroke-width="${par3 ? 40 : 56}" stroke-linecap="round"/>
-    <path d="${fair}" fill="none" stroke="#3a8043" stroke-width="${par3 ? 20 : 30}" stroke-linecap="round" opacity="0.5"/>
-    <ellipse cx="${gx}" cy="${gy}" rx="34" ry="22" fill="#57b15c" stroke="#2f6b39" stroke-width="2"/>
-    <circle cx="${gx}" cy="${gy}" r="4.5" fill="#0a0f08"/><circle cx="${gx}" cy="${gy}" r="6.5" fill="none" stroke="#c9f73e" stroke-width="0.8" opacity="0.6"/>
-    <line x1="${gx}" y1="${gy}" x2="${gx}" y2="${gy - 22}" stroke="#eef3e6" stroke-width="2"/><path d="M${gx},${gy - 22} l11,3 -11,3z" fill="#c9f73e"/>
-    ${haz}${zones}
-    <path d="${route}" fill="none" stroke="#c9f73e" stroke-width="2" stroke-dasharray="3 5"/>
-    ${dots}${clean ? '' : puttLbl}${clean ? '' : pills}${ball}
-    <rect x="${tee[0] - 9}" y="${tee[1]}" width="18" height="6" rx="2" fill="#9ab07f"/>
+    ${field}
+    <path d="${route}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="3 5" opacity="0.85"/>
+    ${dots}${ball}
   </svg></div>`;
 }
 
