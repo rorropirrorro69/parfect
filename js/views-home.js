@@ -384,8 +384,7 @@ function vDashboard() {
     ${vQuickActions()}
     <div class="sec-h" style="margin-top:18px"><h2 style="font-size:25px">${t('sec_stats')}</h2><span class="small muted">${t('sub_stats')}</span></div>
     ${vStatReel(rounds, agg)}
-    ${vMisNumeros(u, agg)}
-    ${vDrillsHome()}`;
+    ${vMisNumeros(u, agg)}`;
 }
 
 /* ---- reparto de score: birdies / pares / bogeys… ---- */
