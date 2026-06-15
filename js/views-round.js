@@ -279,36 +279,59 @@ function captureSchematic(h, chole, noZoom, clean) {
     if (s.prog > 1) return { x: gx + s.side * fwHalf(1), y: Math.max(yFar - 30, gy - (s.prog - 1) * 110) };
     return proj(t, s.side);
   };
-  const gnodes = [proj(0, 0), ...shots.map(nodePt)];
-  if (onGreen) gnodes[gnodes.length - 1] = { x: pin.x, y: pin.y };
+  // ===== cámara por tiro: salida = toma del hoyo; approach/GIR = la cámara sube al green =====
+  const stage = h.app ? 'approach' : 'tee';
+  let actShots, startNode;
+  if (stage === 'tee') {
+    actShots = shots.filter(s => s.role === 'tee');
+    startNode = proj(0, 0);
+  } else {
+    const pre = shots.filter(s => s.role === 'tee' || s.role === 'advance');
+    startNode = pre.length ? nodePt(pre[pre.length - 1]) : proj(0, 0);
+    actShots = shots.filter(s => s.role === 'approach' || s.role === 'chip');
+  }
+  const nodes = [startNode, ...actShots.map(nodePt)];
+  if (onGreen && nodes.length > 1) nodes[nodes.length - 1] = { x: pin.x, y: pin.y };
+  // viewBox: en approach la cámara se acerca al green
+  let vbX = 0, vbY = 0, vbW = W, vbH = H, aria = 'Tu salida';
+  if (stage === 'approach') {
+    vbW = 210; vbH = 207;
+    vbX = Math.max(0, Math.min(W - vbW, gx - vbW / 2));
+    vbY = Math.max(0, Math.min(H - vbH, yFar - 42));
+    aria = 'Tu tiro al green';
+  }
+  const vb = `${vbX.toFixed(0)} ${vbY.toFixed(0)} ${vbW} ${vbH}`;
 
-  let shadowPath = `M${gnodes[0].x.toFixed(1)},${gnodes[0].y.toFixed(1)}`, ballPath = shadowPath;
-  for (let i = 1; i < gnodes.length; i++) {
-    const a = gnodes[i - 1], b = gnodes[i];
+  let shadowPath = `M${nodes[0].x.toFixed(1)},${nodes[0].y.toFixed(1)}`, ballPath = shadowPath;
+  for (let i = 1; i < nodes.length; i++) {
+    const a = nodes[i - 1], b = nodes[i];
     shadowPath += ` L${b.x.toFixed(1)},${b.y.toFixed(1)}`;
     const segLen = Math.hypot(b.x - a.x, b.y - a.y);
     const peak = Math.max(6, Math.min(62, segLen * 0.34));
     ballPath += ` Q${((a.x + b.x) / 2).toFixed(1)},${((a.y + b.y) / 2 - peak).toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;
   }
+  // marca de origen (desde dónde tiras) + puntos de caída
   let dots = '';
-  shots.forEach((s, i) => { const q = gnodes[i + 1]; dots += `<ellipse cx="${q.x.toFixed(0)}" cy="${(q.y + 2).toFixed(0)}" rx="4" ry="1.6" fill="#000" opacity="0.18"/><circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="3.6" fill="${shotColor(s)}" stroke="#16301a" stroke-width="0.7"/>`; });
+  if (stage === 'approach') dots += `<ellipse cx="${startNode.x.toFixed(0)}" cy="${(startNode.y + 2).toFixed(0)}" rx="4.2" ry="1.6" fill="#000" opacity="0.18"/><circle cx="${startNode.x.toFixed(0)}" cy="${startNode.y.toFixed(0)}" r="3.4" fill="#fff" stroke="#16301a" stroke-width="0.7" opacity="0.85"/>`;
+  actShots.forEach((s, i) => { const q = nodes[i + 1]; dots += `<ellipse cx="${q.x.toFixed(0)}" cy="${(q.y + 2).toFixed(0)}" rx="4" ry="1.6" fill="#000" opacity="0.18"/><circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="3.6" fill="${shotColor(s)}" stroke="#16301a" stroke-width="0.7"/>`; });
 
   let ball = '', shadow = '';
-  if (gnodes.length > 1) {
+  if (nodes.length > 1) {
     const seg = []; let tot = 0;
-    for (let i = 1; i < gnodes.length; i++) { const l = Math.hypot(gnodes[i].x - gnodes[i - 1].x, gnodes[i].y - gnodes[i - 1].y) || 1; seg.push(l); tot += l; }
+    for (let i = 1; i < nodes.length; i++) { const l = Math.hypot(nodes[i].x - nodes[i - 1].x, nodes[i].y - nodes[i - 1].y) || 1; seg.push(l); tot += l; }
     const nf = [0]; { let a = 0; for (const l of seg) { a += l; nf.push(a / tot); } }
     const ev = [{ p: 0, d: 0 }]; for (let i = 1; i < nf.length; i++) { ev.push({ p: nf[i], d: 1 }); if (i < nf.length - 1) ev.push({ p: nf[i], d: 0.5 }); } ev.push({ p: 1, d: 0.7 });
     const TT = ev.reduce((a, e) => a + e.d, 0); let ac = 0; const kp = [], kt = []; ev.forEach(e => { ac += e.d; kp.push(e.p.toFixed(3)); kt.push((ac / TT).toFixed(3)); });
-    const dur = Math.min(9, 1.1 + (gnodes.length - 1) * 1.2).toFixed(1);
-    ball = `<circle r="4.6" fill="url(#g3dBall)" stroke="#16301a" stroke-width="0.8" style="filter:drop-shadow(0 2px 1.4px rgba(0,0,0,.35))"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${ballPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
+    const dur = Math.min(9, 1.1 + (nodes.length - 1) * 1.2).toFixed(1);
+    const bs = stage === 'approach' ? 5.4 : 4.6;
+    ball = `<circle r="${bs}" fill="url(#g3dBall)" stroke="#16301a" stroke-width="0.8" style="filter:drop-shadow(0 2px 1.4px rgba(0,0,0,.35))"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${ballPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
     shadow = `<ellipse rx="4.2" ry="1.6" fill="#000" opacity="0.22"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${shadowPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></ellipse>`;
   }
 
-  return `<div class="cap"><svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Vuelo de la bola">
+  return `<div class="cap"><svg width="100%" viewBox="${vb}" role="img" aria-label="${aria}">
     <g clip-path="url(#capClip)">
     ${field}
-    <path d="${shadowPath}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="3 5" stroke-linecap="round" opacity="0.85"/>
+    ${nodes.length > 1 ? `<path d="${shadowPath}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="3 5" stroke-linecap="round" opacity="0.85"/>` : ''}
     ${dots}${shadow}${ball}
     </g>
     <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="16" fill="none" stroke="rgba(20,50,15,0.18)"/>
