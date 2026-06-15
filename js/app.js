@@ -11,7 +11,7 @@ let V = {
   trainerTab: 'diag', diag: null, diagBusy: false,
   trackVals: null, trkTab: 'plan', drillLog: null, drillCat: 'fw',
   calY: null, calM: null, calSel: null, calAddType: 'entreno', friendId: null, holeIdx: 0,
-  courseId: 'campestre', addFriend: false,
+  courseId: 'campestre', addFriend: false, teeClubId: null,
   partyDraft: null, showMoney: false, partyView: null,
 };
 
@@ -317,6 +317,7 @@ const actions = {
   },
   'sel-hole'(d) { V.holeIdx = Number(d.i); render(); window.scrollTo(0, 0); },
   'sel-course'(d) { V.courseId = d.c; V.holeIdx = 0; render(); window.scrollTo(0, 0); },
+  'sel-tee'(d) { V.teeClubId = d.id; render(); },
   'go-estrategia'() { V.trainerTab = 'estrategia'; go('trainer'); },
   'go-clubs'() { V.profileOpen = false; go('clubs'); },
   'save-clubs'() {

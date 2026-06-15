@@ -407,6 +407,8 @@ button.row { cursor: pointer; }
 .hole-strip { display: flex; gap: 7px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 4px 0 8px; margin: 0 -2px; }
 .hole-chip { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line-soft); background: var(--card); color: var(--text); font-size: 15px; font-weight: 800; }
 .hole-chip.on { background: var(--lime); border-color: var(--lime); color: #0a0f06; }
+.hole-chip.wide { width: auto; min-width: 56px; height: auto; padding: 7px 12px; font-size: 13px; line-height: 1.15; text-align: center; }
+.hole-chip.wide span { font-size: 11px; font-weight: 700; opacity: 0.8; }
 
 /* ============ Amigos (Social) ============ */
 .friend-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 11px 2px; background: none; border: none; border-bottom: 1px solid var(--line-soft); color: var(--text); }
