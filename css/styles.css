@@ -832,6 +832,15 @@ body.is-scrolling .reel-track { animation-play-state: paused; }
 .reel-meta b { font-size: 44px; font-weight: 900; color: var(--lime); letter-spacing: -0.02em; line-height: 1; }
 .reel-card.warn .reel-meta b { color: #ff9f43; }
 .reel-meta b i { font-size: 24px; font-style: normal; font-weight: 800; color: var(--muted); letter-spacing: 0; }
+.reel-meta .reel-sub { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0; text-transform: none; color: var(--text); margin-top: 6px; }
+
+/* accesos rápidos (scroll infinito) */
+.qa-reel { margin-top: 14px; }
+.qa-reel .reel-track { animation-duration: 30s; }
+.qa { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 9px; padding: 12px 17px; border-radius: 99px; background: var(--lime-faint); border: 1px solid var(--line); color: var(--text); font-weight: 800; font-size: 14px; white-space: nowrap; cursor: pointer; }
+.qa .gi, .qa svg { width: 21px; height: 21px; }
+.qa:active { transform: scale(0.96); }
+.qa:hover { border-color: rgba(201,247,62,0.4); }
 .reel-meta span { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
 @media (prefers-reduced-motion: reduce) { .reel-track { animation: none; } .reel { overflow-x: auto; } }
 

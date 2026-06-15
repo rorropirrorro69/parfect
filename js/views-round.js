@@ -152,6 +152,19 @@ function captureSchematic(h, chole, noZoom, clean) {
   const ctrl = par3 ? [150, 165] : (dog === 'left' ? [198, 158] : dog === 'right' ? [102, 158] : [150, 158]);
   const gx = green[0], gy = green[1], halfW = 50;
   const fair = `M${tee[0]},${tee[1]} Q ${ctrl[0]},${ctrl[1]} ${gx},${gy}`;
+  // historial (clean): solo el hoyo + la línea de regulación marcada (sin trazo de tiros)
+  if (clean) {
+    return `<div class="cap"><svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Hoyo">
+      <rect width="${W}" height="${H}" rx="14" fill="#0a0f08" stroke="#1d2914"/>
+      <path d="${fair}" fill="none" stroke="#2f6b39" stroke-width="${par3 ? 40 : 56}" stroke-linecap="round"/>
+      <path d="${fair}" fill="none" stroke="#3a8043" stroke-width="${par3 ? 20 : 30}" stroke-linecap="round" opacity="0.5"/>
+      <ellipse cx="${gx}" cy="${gy}" rx="34" ry="22" fill="#57b15c" stroke="#2f6b39" stroke-width="2"/>
+      <circle cx="${gx}" cy="${gy}" r="4.5" fill="#0a0f08"/><circle cx="${gx}" cy="${gy}" r="6.5" fill="none" stroke="#c9f73e" stroke-width="0.8" opacity="0.6"/>
+      <line x1="${gx}" y1="${gy}" x2="${gx}" y2="${gy - 22}" stroke="#eef3e6" stroke-width="2"/><path d="M${gx},${gy - 22} l11,3 -11,3z" fill="#c9f73e"/>
+      <path d="${fair}" fill="none" stroke="#c9f73e" stroke-width="2.4" stroke-dasharray="2 7" stroke-linecap="round" opacity="0.9"/>
+      <rect x="${tee[0] - 9}" y="${tee[1]}" width="18" height="6" rx="2" fill="#9ab07f"/>
+    </svg></div>`;
+  }
   const P = s => {
     const t = Math.min(1, s.prog);
     let x = bez(t, tee[0], ctrl[0], gx), y = bez(t, tee[1], ctrl[1], gy);

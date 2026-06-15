@@ -187,47 +187,47 @@ function statScene(kind) {
     <text x="85" y="94" fill="#c9f73e" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" text-anchor="middle" opacity="0">dada<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.62;.68;.96;1" dur="3s" repeatCount="indefinite"/></text>
   </svg>`;
 }
-/* reel horizontal de stats animadas (scroll automático) */
+/* reel horizontal de stats animadas (scroll automático infinito) */
 function statReel(cards) {
-  const set = cards.map(([k, v, t, cls]) => `<div class="reel-card${cls ? ' ' + cls : ''}"><div class="reel-scene">${statScene(k)}</div><div class="reel-meta"><b>${v}</b><span>${esc(t)}</span></div></div>`).join('');
+  const set = cards.map(([k, v, t, cls, sub]) => `<div class="reel-card${cls ? ' ' + cls : ''}"><div class="reel-scene">${statScene(k)}</div><div class="reel-meta"><b>${v}</b><span>${esc(t)}</span>${sub ? `<span class="reel-sub">${esc(sub)}</span>` : ''}</div></div>`).join('');
   return `<div class="reel"><div class="reel-track">${set}${set}</div></div>`;
 }
-/* reel infinito de stats con gifs: precisión, juego corto y scoring */
-/* tarjeta de stat amigable e interactiva: pelotas que se llenan (toca para repetir) */
-const STAT_ICON = { par: 'flag', bird: 'bird', bogey: 'card', threeputt: 'putter', gir: 'green', fw: 'tee', ud: 'hand' };
-function statIntCard(kind, made, total, label, warn) {
-  total = Math.max(1, Math.round(total));
-  made = Math.min(total, Math.max(0, Math.round(made)));
-  let pips = '';
-  for (let i = 0; i < total; i++) pips += `<span class="pip ${i < made ? 'on' : ''}" style="--d:${(i * 0.06).toFixed(2)}s"></span>`;
-  return `<button type="button" class="reel-card stat-int${warn ? ' warn' : ''}" data-act="stat-pop">
-    <div class="si-head"><span class="si-ic">${golfIcon(STAT_ICON[kind] || 'flag')}</span><b class="si-count">${made}<i>/${total}</i></b></div>
-    <span class="si-label">${esc(label)}</span>
-    <div class="pips">${pips}</div>
-    <span class="si-hint">${golfIcon('ball')} toca para repetir</span>
-  </button>`;
-}
-/* tus estadísticas por cada 9 hoyos (hechos / total) */
+/* tus estadísticas: gifs animados, en % y sobre 18 hoyos */
 function vStatReel(rounds, agg) {
   const rs = rounds.map(Stats.roundStats);
   const sum = f => rs.reduce((a, r) => a + f(r), 0);
   const sd = agg.scoreDist || { total: 0, eagle: 0, birdie: 0, par: 0, bogey: 0, dbl: 0 };
+  const tot = sd.total || 1;
   const fw = sum(r => r.fw), fwTot = sum(r => r.fwTot);
-  const gir = sum(r => r.gir), girTot = sum(r => r.girTot);
+  const gir = sum(r => r.gir), girTot = sum(r => r.girTot) || 1;
   const scr = sum(r => r.scr), scrTot = sum(r => r.scrTot);
   const threeP = sum(r => r.threeP);
-  const allHoles = girTot || 1;
-  const n9 = x => Math.round(x * 9 / allHoles);   // normaliza a 9 hoyos
-  const cards = [
-    statIntCard('par', n9(sd.par), 9, 'Pares'),
-    statIntCard('bird', n9(sd.eagle + sd.birdie), 9, 'Birdies o mejor'),
-    statIntCard('bogey', n9(sd.bogey + sd.dbl), 9, 'Bogeys o peor', true),
-    statIntCard('threeputt', n9(threeP), 9, '3-putts', true),
-    statIntCard('gir', n9(gir), 9, 'Greens · GIR'),
-    statIntCard('fw', n9(fw), n9(fwTot), 'Fairways'),
-    statIntCard('ud', n9(scr), n9(scrTot), 'Up & down'),
-  ].join('');
-  return `<div class="reel reel-swipe stat-reel"><div class="reel-track">${cards}</div></div>`;
+  const pct = (a, b) => Math.round(a / (b || 1) * 100);
+  const per = (a, b, n) => `${Math.round(a / (b || 1) * n)} de ${n}`;
+  const gir18 = Math.round(gir / girTot * 18), miss18 = Math.max(1, 18 - gir18);
+  return statReel([
+    ['par', pct(sd.par, tot) + '%', 'Pares', '', per(sd.par, tot, 18)],
+    ['bird', pct(sd.eagle + sd.birdie, tot) + '%', 'Birdies o mejor', '', per(sd.eagle + sd.birdie, tot, 18)],
+    ['bogey', pct(sd.bogey + sd.dbl, tot) + '%', 'Bogeys o peor', 'warn', per(sd.bogey + sd.dbl, tot, 18)],
+    ['threeputt', pct(threeP, girTot) + '%', '3-putts', 'warn', per(threeP, girTot, 18)],
+    ['gir', pct(gir, girTot) + '%', 'Greens · GIR', '', `${gir18} de 18`],
+    ['fw', pct(fw, fwTot) + '%', 'Fairways', '', per(fw, fwTot, 14)],
+    ['ud', pct(scr, scrTot) + '%', 'Up & down', '', `${Math.round(pct(scr, scrTot) / 100 * miss18)} de ${miss18}`],
+  ]);
+}
+/* accesos rápidos en scroll infinito */
+function vQuickActions() {
+  const acts = [
+    ['quick-round', 'flag', 'Empezar ronda'],
+    ['go-entreno', 'bucket', 'Drills'],
+    ['go-diag', 'card', 'Estadísticas'],
+    ['go-trofeos', 'trophy', 'Trofeos'],
+    ['go-clubs', 'club', 'Mi bolsa'],
+    ['profile-open', 'green', 'Mi perfil'],
+  ];
+  const b = ([act, ic, label]) => `<button class="qa" data-act="${act}">${golfIcon(ic)}<span>${esc(label)}</span></button>`;
+  const set = acts.map(b).join('');
+  return `<div class="reel qa-reel"><div class="reel-track">${set}${set}</div></div>`;
 }
 /* área (texto del plan) → llave de drillArt */
 function areaKey(a) {
@@ -388,7 +388,8 @@ function vDashboard() {
   }
 
   return head + `
-    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:25px">Tus estadísticas</h2><span class="small muted">cada 9 hoyos →</span></div>
+    ${vQuickActions()}
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:25px">Tus estadísticas</h2><span class="small muted">% sobre 18 hoyos →</span></div>
     ${vStatReel(rounds, agg)}
     ${vMisNumeros(u, agg)}
     ${vLastRound(rounds)}`;
