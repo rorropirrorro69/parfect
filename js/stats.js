@@ -9,7 +9,7 @@ const Stats = (() => {
   const scale = (v, lo, hi) => clamp(((v - lo) / (hi - lo)) * 100, 4, 100);
 
   function roundStats(round) {
-    const h = round.holes;
+    const h = (round.holes || []).filter(Boolean);
     const par = sum(h.map(x => x.par));
     const score = sum(h.map(x => x.score));
     const teeHoles = h.filter(x => x.tee || x.teeLie);
@@ -32,7 +32,7 @@ const Stats = (() => {
   function aggregate(rounds) {
     if (!rounds || !rounds.length) return null;
     const rs = rounds.map(roundStats);
-    const holes = rounds.flatMap(r => r.holes);
+    const holes = rounds.flatMap(r => r.holes || []).filter(Boolean);
     const f = (a, b) => (b > 0 ? (a / b) * 100 : 0);
 
     const fwTot = sum(rs.map(r => r.fwTot));

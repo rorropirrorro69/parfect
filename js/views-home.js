@@ -16,7 +16,7 @@ function vShell(content) {
     <div class="hdr">
       <span style="width:40px"></span>
       <span class="logo-word">${logoMark(16)} PARFECT</span>
-      <button class="avatar-btn" data-act="profile-open" aria-label="Perfil">${avatarImg(u)}</button>
+      <button class="avatar-btn" data-act="profile-edit" aria-label="Personaliza tu perfil">${avatarImg(u)}</button>
     </div>
     <div class="app-content">${content}</div>
     <nav class="nav">
@@ -607,8 +607,7 @@ function vPerfil() {
   const agg = Stats.aggregate(myRounds());
   return `<div class="sec-h"><h2>Tu perfil</h2><button class="sec-edit" data-act="profile-edit" aria-label="Ajustes">⚙ Ajustes</button></div>
     ${vPlayerCard(u, agg)}
-    ${vLogros()}
-    ${V.profileOpen ? vProfile() : ''}`;
+    ${vLogros()}`;
 }
 
 /* ============ Perfil · panel de ajustes (datos + golfista + bolsa + config) ============ */
@@ -617,11 +616,12 @@ function vProfile() {
   return `<div class="overlay panel-ov" data-act="profile-close">
     <div class="panel" data-act="noop">
       <div class="panel-head">
-        <h2>Ajustes</h2>
+        <h2>Personaliza tu perfil</h2>
         <button class="panel-x" data-act="profile-close" aria-label="Cerrar">✕</button>
       </div>
       <div class="panel-body">
-        <div class="sec-h" style="margin-top:2px"><h2 style="font-size:16px">Tus datos</h2></div>
+        ${vAvatarCreator(u)}
+        <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Tus datos</h2></div>
         <div class="card">
           <div class="field"><label>Nombre</label><input id="p-name" value="${esc(u.name)}"></div>
           <div class="field-row">
@@ -633,7 +633,6 @@ function vProfile() {
           </div>
           <button class="btn primary" data-act="profile-save">Guardar cambios</button>
         </div>
-        ${vAvatarCreator(u)}
         <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">${t('sec_bag')}</h2></div>
         ${vBagEditor(u)}
         <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">${t('settings')}</h2></div>

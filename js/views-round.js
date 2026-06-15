@@ -158,6 +158,66 @@ function shotColor(s) {
   if (s && s.lie === 'sand') return '#e3c887';
   return '#c9f73e';
 }
+/* 2º tiro — toma de frente al green: estás en tu lie y le pegas al green (imagen distinta a la salida) */
+function approachView(h, chole, G, pf, px) {
+  const W = 300, H = 296;
+  const parV = chole ? chole.par : h.par;
+  const gx = 150, gy = 122;
+  let gw = 72, gh = 34;
+  if (G) { if (G.sh === 'wide') { gw = 86; gh = 30; } else if (G.sh === 'tall') { gw = 60; gh = 42; } const s = Math.max(0.9, Math.min(1.14, G.d / 33)); gw *= s; gh *= s; }
+  gw = Math.min(96, gw); gh = Math.min(46, gh);
+  const pin = { x: gx + px * gw * 0.46, y: gy + (0.5 - pf) * gh * 0.85 };
+  // bunkers alrededor del green
+  const bunkers = (G ? G.bk : []).map(code => { const o = CAP_BPOS[code]; if (!o) return ''; const bx = (gx + o[0] * gw * 1.06).toFixed(0), by = gy + o[1] * gh * 1.06; return `<ellipse cx="${bx}" cy="${(by + 3).toFixed(0)}" rx="${(gw * 0.32).toFixed(0)}" ry="${(gh * 0.4).toFixed(0)}" fill="#16401c" opacity="0.22"/><ellipse cx="${bx}" cy="${by.toFixed(0)}" rx="${(gw * 0.28).toFixed(0)}" ry="${(gh * 0.32).toFixed(0)}" fill="url(#g3dSand)"/>`; }).join('');
+  // árboles al fondo (horizonte)
+  let trees = ''; [[36, 88, 0.7], [90, 82, 0.55], [212, 82, 0.55], [266, 88, 0.7]].forEach(a => { trees += capTree(a[0], a[1], a[2]); });
+  // lie desde donde tiras el approach
+  const fromLie = parV === 3 ? 'tee' : parV === 5 ? 'calle' : (h.teeLie || (h.tee === 'fw' ? 'calle' : h.tee ? 'rough' : 'calle'));
+  const lieCol = fromLie === 'bunker' ? '#e6d6a3' : fromLie === 'rough' ? '#4e8a3a' : '#6cbd4c';
+  const start = { x: 150, y: 250 };
+  let land, ok = false;
+  if (h.app === 'gir') { land = { x: pin.x, y: pin.y }; ok = true; }
+  else if (h.app === 'corto') land = { x: gx - 6, y: gy + gh + 16 };
+  else if (h.app === 'largo') land = { x: gx + 4, y: Math.max(40, gy - gh - 14) };
+  else if (h.app === 'izq') land = { x: Math.max(24, gx - gw - 12), y: gy + 4 };
+  else if (h.app === 'der') land = { x: Math.min(276, gx + gw + 12), y: gy + 4 };
+  else { land = { x: pin.x, y: pin.y }; ok = true; }
+  const chip = (h.app !== 'gir' && h.upDown != null);
+  const arc = (a, b, peak) => `Q${((a.x + b.x) / 2).toFixed(1)},${((a.y + b.y) / 2 - peak).toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;
+  let ballPath = `M${start.x},${start.y} ${arc(start, land, 120)}`;
+  let shadowPath = `M${start.x},${start.y} L${land.x.toFixed(1)},${land.y.toFixed(1)}`;
+  const nodes = [start, land];
+  if (chip) { ballPath += ` ${arc(land, pin, 30)}`; shadowPath += ` L${pin.x.toFixed(1)},${pin.y.toFixed(1)}`; nodes.push(pin); }
+  const seg = []; let tot = 0;
+  for (let i = 1; i < nodes.length; i++) { const l = Math.hypot(nodes[i].x - nodes[i - 1].x, nodes[i].y - nodes[i - 1].y) || 1; seg.push(l); tot += l; }
+  const nf = [0]; { let a = 0; for (const l of seg) { a += l; nf.push(a / tot); } }
+  const ev = [{ p: 0, d: 0 }]; for (let i = 1; i < nf.length; i++) { ev.push({ p: nf[i], d: 1 }); if (i < nf.length - 1) ev.push({ p: nf[i], d: 0.5 }); } ev.push({ p: 1, d: 0.8 });
+  const TT = ev.reduce((a, e) => a + e.d, 0); let ac = 0; const kp = [], kt = []; ev.forEach(e => { ac += e.d; kp.push(e.p.toFixed(3)); kt.push((ac / TT).toFixed(3)); });
+  const dur = (1.4 + nodes.length * 0.8).toFixed(1);
+  const flagH = 30;
+  const field = `<rect width="${W}" height="${H}" fill="url(#g3dGrass)"/>
+    <rect width="${W}" height="100" fill="url(#capSky)"/>
+    ${trees}
+    ${bunkers}
+    <ellipse cx="${gx}" cy="${(gy + gh + 9).toFixed(0)}" rx="${(gw + 6).toFixed(0)}" ry="${(gh * 0.55).toFixed(0)}" fill="#16401c" opacity="0.26"/>
+    <ellipse cx="${gx}" cy="${(gy + 11).toFixed(0)}" rx="${gw.toFixed(0)}" ry="${gh.toFixed(0)}" fill="#3a8043"/>
+    <ellipse cx="${gx}" cy="${gy.toFixed(0)}" rx="${gw.toFixed(0)}" ry="${gh.toFixed(0)}" fill="#54ad58" stroke="#2f7a38" stroke-width="2"/>
+    <ellipse cx="${(gx - gw * 0.26).toFixed(0)}" cy="${(gy - gh * 0.3).toFixed(0)}" rx="${(gw * 0.44).toFixed(0)}" ry="${(gh * 0.34).toFixed(0)}" fill="#79c970" opacity="0.5"/>
+    <circle cx="${pin.x.toFixed(0)}" cy="${pin.y.toFixed(0)}" r="4" fill="#08260f"/>
+    <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - flagH).toFixed(0)}" stroke="#ffffff" stroke-width="2.2"/><path d="M${pin.x.toFixed(0)},${(pin.y - flagH).toFixed(0)} l14,4 -14,4z" fill="#c9f73e"/>
+    <ellipse cx="150" cy="262" rx="92" ry="26" fill="${lieCol}"/>
+    <ellipse cx="150" cy="256" rx="56" ry="13" fill="#ffffff" opacity="0.08"/>`;
+  const landDot = `<ellipse cx="${land.x.toFixed(0)}" cy="${(land.y + 2).toFixed(0)}" rx="4.4" ry="1.7" fill="#000" opacity="0.2"/><circle cx="${land.x.toFixed(0)}" cy="${land.y.toFixed(0)}" r="4" fill="${ok ? '#c9f73e' : '#e3c887'}" stroke="#16301a" stroke-width="0.8"/>`;
+  const ball = `<circle r="6.2" fill="url(#g3dBall)" stroke="#16301a" stroke-width="0.9" style="filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${ballPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
+  const shadow = `<ellipse rx="5" ry="1.8" fill="#000" opacity="0.2"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${shadowPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></ellipse>`;
+  return `<div class="cap"><svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tu tiro al green">
+    <g clip-path="url(#capClip)">${field}
+    <path d="${shadowPath}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="3 5" stroke-linecap="round" opacity="0.85"/>
+    ${landDot}${shadow}${ball}</g>
+    <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="16" fill="none" stroke="rgba(20,50,15,0.18)"/>
+  </svg></div>`;
+}
+
 /* vista de SOLO el green (putting): la bola se coloca según su distancia al pin */
 function greenCloseup(h, G, pf, px) {
   const W = 300, H = 296, cx = 150, cy = 164;
@@ -209,6 +269,8 @@ function captureSchematic(h, chole, noZoom, clean) {
   const last = shots[shots.length - 1];
   const onGreen = !!last && last.lie === 'green';
   if (!clean && onGreen && (h.putts != null || h.dist != null)) return greenCloseup(h, G, pf, px);
+  // 2º tiro: toma "de frente al green" (imagen totalmente distinta a la salida)
+  if (!clean && h.app) return approachView(h, chole, G, pf, px);
 
   // ===== proyección en perspectiva (diorama 3D profundo) =====
   const yNear = 270, yFar = 88;
