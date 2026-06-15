@@ -38,21 +38,6 @@ function greeting() {
   return 'Buenas noches';
 }
 
-/* Anillo animado de una métrica (estilo Apple Fitness) */
-function ringStat(value, label, pct, act) {
-  const C = 264, p = Math.max(0, Math.min(100, pct)), off = (C * (1 - p / 100)).toFixed(1);
-  return `<button class="ring-card"${act ? ` data-act="${act}"` : ''} aria-label="${esc(label)} ${esc(value)}">
-    <svg viewBox="0 0 104 104" class="ring-svg" aria-hidden="true">
-      <circle cx="52" cy="52" r="42" fill="none" stroke="var(--lime-dim)" stroke-width="9"/>
-      <circle cx="52" cy="52" r="42" fill="none" stroke="var(--lime)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 52 52)">
-        <animate attributeName="stroke-dashoffset" values="${C};${off}" dur="1.1s" begin="0.1s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1" keyTimes="0;1"/>
-      </circle>
-      <text x="52" y="50" text-anchor="middle" class="ring-val">${esc(value)}</text>
-      <text x="52" y="68" text-anchor="middle" class="ring-lab">${esc(label)}</text>
-    </svg>
-  </button>`;
-}
-
 function vDashboard() {
   const u = cur();
   const rounds = myRounds();
@@ -73,36 +58,42 @@ function vDashboard() {
     </div>`;
   }
 
+  const radar = Stats.radarOf(agg);
   const cont = S.active && S.active.userId === u.id;
-  const startBtn = `<button class="btn primary" data-act="quick-round">${logoMark(15)} ${cont ? `Continuar ronda · hoyo ${S.active.idx + 1}` : 'Iniciar ronda'}</button>`;
-
-  const puttQ = Stats.clamp((38 - agg.putts18) / 11 * 100, 0, 100);
-  const rings = `<div class="ring-grid">
-    ${ringStat(agg.fwPct.toFixed(0) + '%', 'Fairways', agg.fwPct, 'go-stats')}
-    ${ringStat(agg.girPct.toFixed(0) + '%', 'GIR', agg.girPct, 'go-stats')}
-    ${ringStat(agg.scrPct.toFixed(0) + '%', 'Up & down', agg.scrPct, 'go-stats')}
-    ${ringStat(agg.putts18.toFixed(0), 'Putts', puttQ, 'go-stats')}
-  </div>`;
-
-  const recent = rounds.slice(0, 5).map(r => {
-    const s = Stats.roundStats(r);
-    const cls = s.toPar <= 0 ? 'good' : s.toPar <= 5 ? 'ok' : 'bad';
-    return `<span class="form-pill ${cls}">${fmtToPar(s.toPar)}</span>`;
-  }).join('');
-  const forma = `<div class="card">
-    <span class="label">Forma reciente</span>
-    <div class="form-row">${recent}</div>
-    <p class="note" style="margin-bottom:0">Tus últimas ${Math.min(5, rounds.length)} rondas (vs par). Toca un anillo para ver tu avatar de stats.</p>
-  </div>`;
-
-  const f = (Trainer.analyze(agg, u).focus || [])[0];
-  const tip = f ? `<button class="card tip-card" data-act="go-diag">
-    <span class="label">🧠 Tu prioridad ahora</span>
-    <h3 class="tip-h">${esc(f.titulo)}</h3>
-    <p class="note" style="margin-bottom:0">~${f.lost.toFixed(1)} golpes/ronda en juego · toca para tu diagnóstico y drills →</p>
-  </button>` : '';
-
-  return head + startBtn + rings + forma + tip;
+  return head + `
+    <div class="card">
+      <span class="label">Perfil de habilidades</span>
+      <div class="radar-wrap">${radarSVG(radar.labels, radar.values)}</div>
+    </div>
+    <div class="grid2">
+      ${statCard(agg.fwPct.toFixed(0) + '%', 'Fairways', agg.fwPct)}
+      ${statCard(agg.girPct.toFixed(0) + '%', 'GIR', agg.girPct)}
+      ${statCard(agg.scrPct.toFixed(0) + '%', 'Up/Down', agg.scrPct)}
+      ${statCard(agg.putts18.toFixed(0), 'Putts / Ronda', Stats.clamp((38 - agg.putts18) / 11 * 100, 0, 100))}
+    </div>
+    <div class="card">
+      <span class="label">Historial de tarjetas</span>
+      ${rounds.slice(0, 5).map(r => {
+        const s = Stats.roundStats(r);
+        return `<button class="hist-row" data-act="round-detail" data-id="${r.id}">
+          <div class="r-main"><b>${esc(r.course)}${r.partyId ? ' 🎉' : ''}</b><span>${fmtDate(r.date)} · ${s.holes} hoyos · ${s.putts} putts</span></div>
+          <div class="r-side"><b>${s.score}</b><span>${fmtToPar(s.toPar)}</span></div>
+        </button>`;
+      }).join('')}
+      <div class="avg-strip">
+        <div><b>${agg.avgScore18.toFixed(1)}</b><span>Score prom.</span></div>
+        <div><b>${agg.putts18.toFixed(1)}</b><span>Putts prom.</span></div>
+        <div><b>${agg.fwPct.toFixed(0)}%</b><span>FW prom.</span></div>
+        <div><b>${agg.girPct.toFixed(0)}%</b><span>GIR prom.</span></div>
+      </div>
+      <button class="btn sm ghost" data-act="nav" data-view="ronda" style="margin-top:14px">Ver todas las tarjetas →</button>
+    </div>
+    <button class="btn ghost" data-act="quick-round">${logoMark(15)} ${cont ? `Continuar ronda · hoyo ${S.active.idx + 1}` : 'Iniciar ronda'}</button>
+    <div class="btn-row">
+      <button class="btn" data-act="go-stats">Avatar Stats →</button>
+      <button class="btn" data-act="go-trofeos">🏆 Trofeos</button>
+    </div>
+  `;
 }
 
 /* ============ Perfil (sheet) ============ */

@@ -128,11 +128,33 @@ function courseObjectives(course, hcp) {
 function holeStance(hole, hcp, reachable) {
   const water = (hole.risks || []).some(r => r.kind === 'water');
   const driveB = (hole.risks || []).some(r => r.at === 'drive');
-  if (hole.par === 5 && reachable && hcp <= 14) return { k: 'Agresivo', t: 'Puedes ir por el green en 2 si pegas sólido.' };
-  if (water) return { k: 'Conservador', t: 'Apunta lejos del agua; el centro del green basta.' };
-  if (driveB && hcp >= 16) return { k: 'Conservador', t: 'Coloca la salida; prioriza estar en calle.' };
-  if (hole.par === 3 && hole.yds >= 195) return { k: 'Conservador', t: 'Par 3 largo: toma palo de más y al centro.' };
-  return { k: 'Equilibrado', t: 'Juego estándar: calle y centro del green.' };
+  if (hole.par === 5 && reachable && hcp <= 14) return { k: 'Agresivo', t: 'Llegas al green en 2 y el error se castiga poco: vale la pena ir por el birdie/eagle.' };
+  if (hole.par === 5 && reachable) return { k: 'Equilibrado', t: 'Llegas en 2 pero con riesgo. Si tu salida queda sólida atácalo; si no, deja un wedge cómodo para el tercer tiro.' };
+  if (water) return { k: 'Conservador', t: 'Hay agua cerca del green: apunta al centro y olvida la bandera. El doble bogey aquí nace de buscar el pin.' };
+  if (driveB && hcp >= 16) return { k: 'Conservador', t: 'Coloca la salida con madera o híbrido para evitar el bunker: estar en calle vale más que 20 yardas.' };
+  if (hole.par === 3 && hole.yds >= 195) return { k: 'Conservador', t: 'Par 3 largo: toma un palo de más, apunta al centro y confía en tu up & down. El bogey es buen score.' };
+  return { k: 'Equilibrado', t: 'Hoyo noble: salida a calle y tiro al centro del green, sin heroísmos.' };
+}
+/* ¿por qué este objetivo (par vs bogey) para tu HCP? */
+function objectiveWhy(hole, target, hcp) {
+  return (target - hole.par) <= 0
+    ? `Tu HCP ${fmtHcp(hcp)} dice que aquí debes anotar par: es un hoyo a tu alcance, no regales golpes.`
+    : `Es de los hoyos más difíciles para tu HCP ${fmtHcp(hcp)}: un bogey es buen resultado — no fuerces el par y, sobre todo, evita el doble.`;
+}
+/* ¿por qué atacar el green en 2 o no? */
+function attackWhy(user, hole, attack) {
+  const bag = bagInfo(user);
+  const second = bag.filter(c => c.id !== 'dr').sort((a, b) => b.carry - a.carry)[0];
+  const nm = second ? second.name : 'tu palo más largo';
+  const water = (hole.risks || []).some(r => r.kind === 'water');
+  if (attack) {
+    return water
+      ? `Vas por el green en 2 con ${nm} — ojo con el agua: si dudas de la salida, mejor deja un wedge y sube en 3.`
+      : `Vas por el green en 2 con ${nm}. Subir en dos te deja putt para eagle y, aunque falles, casi siempre salvas birdie o par.`;
+  }
+  return water
+    ? `Atacar conviene solo si pegas sólido: hay agua de por medio. Lo seguro es subir en 3 y dejar un wedge cómodo.`
+    : `Súbete en 2 si la salida queda bien; con ${nm} alcanzas. Si no, juega el lay-up y un wedge a bandera.`;
 }
 
 /* ---- simulador de ronda tiro por tiro — SOLO con datos reales del Tracker ---- */
@@ -189,6 +211,158 @@ function simulateRound(user, course) {
   return { courseId: course.id, holes, score, par, toPar: score - par, fwHit, fwTot, girHit: holes.filter(h => h.gir).length, girTot: holes.length, putts: holes.reduce((a, h) => a + h.putts, 0) };
 }
 
+/* ============ Simulador TIRO POR TIRO (vive en Parfect Tracker) ============ */
+const SIM_LIE_ES = { tee: 'Tee', fw: 'Fairway', rough: 'Rough', bunker: 'Bunker', green: 'Green', holed: 'Embocada' };
+const SIM_LIE_F = { tee: 1, fw: 1, rough: 0.82, bunker: 0.6, green: 1 };
+function simClubFor(user, dist, lie, isTee, hole) {
+  const bag = bagInfo(user);
+  if (!bag.length) return null;
+  if (isTee && hole.par !== 3 && dist > 235) return bag.slice().sort((a, b) => b.carry - a.carry)[0];
+  return bag.slice().sort((a, b) => Math.abs(a.carry - dist) - Math.abs(b.carry - dist))[0];
+}
+function simInitHole(s) {
+  const hole = COURSES[s.courseId].holes[s.holeIdx];
+  s.dist = hole.yds; s.lie = 'tee'; s.strokes = 0; s.putts = 0;
+  s.gir = false; s.fw = null; s.puttDist = null; s.log = [];
+}
+function simNewRound(user, course) {
+  if (!trackerReadiness().ready) return null;
+  const s = { courseId: course.id, holeIdx: 0, card: [], done: false };
+  simInitHole(s);
+  return s;
+}
+function simStepPutt(s) {
+  const pe = (avgTrackerEff(['Putt 3 ft', 'Putt 5 ft', 'Putt 7 ft']) || 60) / 100;
+  s.strokes++; s.putts++;
+  const d = s.puttDist || 12;
+  const make = Math.max(0.04, Math.min(0.98, pe * (d <= 4 ? 1.35 : d <= 8 ? 0.85 : d <= 15 ? 0.42 : 0.18)));
+  if (Math.random() < make || s.putts >= 4) {
+    s.log.push({ t: `Putt ${d} ft → ¡adentro!`, ok: true });
+    s.lie = 'holed';
+  } else {
+    const left = Math.max(2, Math.round(d * (0.12 + Math.random() * 0.25)));
+    s.puttDist = left;
+    s.log.push({ t: `Putt ${d} ft → se queda corto, a ${left} ft`, ok: false });
+  }
+}
+function simStep(s, user) {
+  const hole = COURSES[s.courseId].holes[s.holeIdx];
+  if (s.lie === 'green') return simStepPutt(s);
+  const isTee = s.lie === 'tee';
+  const club = simClubFor(user, s.dist, s.lie, isTee, hole);
+  const eff = club ? club.eff : 60;
+  const good = Math.random() < (eff / 100) * (SIM_LIE_F[s.lie] || 0.85);
+  s.strokes++;
+  const cname = club ? club.name : 'Palo';
+  let carry = Math.round((club ? club.carry : 150) * (0.88 + Math.random() * 0.18));
+  if (s.lie === 'rough') carry = Math.round(carry * 0.9);
+  if (s.lie === 'bunker') carry = Math.round(carry * 0.82);
+
+  if (carry >= s.dist - 8) {
+    if (good) {
+      const reg = s.strokes <= (hole.par - 2);
+      s.gir = s.gir || reg;
+      s.puttDist = reg ? (8 + Math.round(Math.random() * 26)) : (3 + Math.round(Math.random() * 10));
+      s.lie = 'green';
+      s.log.push({ t: `${cname} → Green${reg ? ' ✓ (GIR)' : ''}, a ${s.puttDist} ft`, ok: true });
+    } else {
+      const water = (hole.risks || []).some(r => r.kind === 'water');
+      if (water && Math.random() < 0.22) {
+        s.strokes++;
+        s.lie = 'rough'; s.dist = Math.max(8, Math.round(s.dist * 0.3));
+        s.log.push({ t: `${cname} → 💧 al agua (+1), dropas a ${s.dist}y`, ok: false });
+      } else {
+        const miss = ['corto', 'largo', 'a la izq.', 'a la der.'][Math.floor(Math.random() * 4)];
+        s.lie = Math.random() < 0.4 ? 'bunker' : 'rough';
+        s.dist = Math.max(5, Math.round(8 + Math.random() * 16));
+        s.log.push({ t: `${cname} → falló ${miss} (${SIM_LIE_ES[s.lie].toLowerCase()}), a ${s.dist}y`, ok: false });
+      }
+    }
+  } else {
+    const adv = good ? carry : Math.round(carry * 0.78);
+    s.dist = Math.max(0, s.dist - adv);
+    if (isTee && hole.par >= 4) {
+      s.fw = good;
+      s.lie = good ? 'fw' : (Math.random() < 0.35 ? 'bunker' : 'rough');
+      s.log.push({ t: `${cname} → ${good ? 'Fairway ✓' : 'fuera de calle'}, quedan ${s.dist}y`, ok: good });
+    } else {
+      s.lie = good ? 'fw' : (Math.random() < 0.3 ? 'bunker' : 'rough');
+      s.log.push({ t: `${cname} → ${good ? 'buen tiro' : 'no salió bien'}, quedan ${s.dist}y`, ok: good });
+    }
+  }
+}
+function simFinishHole(s) {
+  const hole = COURSES[s.courseId].holes[s.holeIdx];
+  s.card.push({ n: hole.n, par: hole.par, score: s.strokes, putts: s.putts, gir: s.gir, fw: s.fw });
+  s.holeIdx++;
+  if (s.holeIdx >= COURSES[s.courseId].holes.length) s.done = true;
+  else simInitHole(s);
+}
+
+function vSimulator() {
+  const u = cur();
+  const ready = trackerReadiness();
+  const course = COURSES[V.courseId] || COURSES.campestre;
+  const courseChips = COURSE_ORDER.map(id => `<button class="chip sm ${id === course.id ? 'on' : ''}" data-act="sel-course" data-c="${id}">${esc(COURSES[id].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', ''))}</button>`).join('');
+  const head = `<div class="sec-h" style="margin-top:22px"><h2 style="font-size:16px">🎲 Simulador de ronda</h2><span class="small muted">tiro por tiro</span></div>`;
+
+  if (!ready.ready) {
+    return head + `<div class="card">
+      <p class="note" style="margin-top:0;margin-bottom:10px">Juega una ronda virtual <b class="lime">tiro por tiro</b>: cada golpe cae según tu <b class="lime">efectividad real</b> del Tracker. Primero registra al menos un drill de cada área:</p>
+      ${ready.areas.map(a => `<div class="row" style="padding:7px 0"><div class="r-main"><b>${a.v != null ? '✅' : '⬜️'} ${esc(a.label)}</b><span>${esc(a.hint)}</span></div><div class="r-side"><b class="${a.v != null ? 'lime' : 'muted'}">${a.v != null ? a.v + '%' : 'falta'}</b></div></div>`).join('')}
+    </div>`;
+  }
+
+  const sim = V.sim && V.sim.courseId === course.id ? V.sim : null;
+
+  if (!sim) {
+    return head + `<div class="card">
+      <div class="chips">${courseChips}</div>
+      <p class="note">Simula una ronda completa en <b>${esc(course.name)}</b>. Tú tiras hoyo por hoyo; cada palo cae según tus % del Tracker (salida ${ready.have.fw}% · hierros ${ready.have.gir}% · approach ${ready.have.ud}% · putt ${ready.have.putt}%).</p>
+      <button class="btn primary" data-act="sim-start">🏌️ Jugar ronda simulada</button>
+    </div>`;
+  }
+
+  const totScore = sim.card.reduce((a, h) => a + h.score, 0);
+  const totPar = sim.card.reduce((a, h) => a + h.par, 0);
+
+  if (sim.done) {
+    const fwT = sim.card.filter(h => h.fw !== null).length, fwH = sim.card.filter(h => h.fw === true).length;
+    const girH = sim.card.filter(h => h.gir).length, putts = sim.card.reduce((a, h) => a + h.putts, 0);
+    return head + `<div class="card">
+      <div class="greet" style="text-align:center;padding-top:6px"><h1 style="font-size:44px">${totScore}</h1><p class="hcp">${fmtToPar(totScore - totPar)} · ${sim.card.length} hoyos</p></div>
+      <div class="grid2">
+        ${statCard((fwT ? Math.round(fwH / fwT * 100) : 0) + '%', 'Fairways', fwT ? fwH / fwT * 100 : 0)}
+        ${statCard(Math.round(girH / sim.card.length * 100) + '%', 'GIR', girH / sim.card.length * 100)}
+      </div>
+      <p class="note" style="text-align:center">${putts} putts en la ronda</p>
+      <div class="card" style="margin-top:12px"><span class="label">Tarjeta simulada</span>
+        ${scorecardTable(sim.card.length, i => sim.card[i].par, [{ name: esc(u.name.split(' ')[0]), scoreOf: i => sim.card[i].score }], -1)}
+      </div>
+      <button class="btn primary" data-act="sim-start">Jugar otra vez</button>
+      <button class="btn" data-act="sim-reset">Salir del simulador</button>
+    </div>`;
+  }
+
+  const hole = course.holes[sim.holeIdx];
+  const holed = sim.lie === 'holed';
+  const toParNow = sim.card.length ? fmtToPar(totScore - totPar) : 'E';
+  const logHtml = sim.log.map(l => `<div class="sim-shot ${l.ok ? 'ok' : 'bad'}">${esc(l.t)}</div>`).join('');
+  const holeToPar = sim.strokes - hole.par;
+
+  return head + `<div class="card">
+    <div class="ph-head"><div class="r-main" style="flex:1"><b>Hoyo ${hole.n} · Par ${hole.par}</b><span class="muted">${hole.yds} yds · hoyo ${sim.holeIdx + 1}/${course.holes.length}</span></div>
+      <div class="r-side"><b style="color:var(--lime)">${totScore || 0}</b><span>${toParNow}</span></div></div>
+    <div class="sim-log">${logHtml || '<div class="sim-shot muted">Toca “Tirar” para tu golpe de salida.</div>'}</div>
+    ${holed
+      ? `<div class="sim-status">✅ Hoyo ${hole.n}: <b>${sim.strokes}</b> (${holeToPar === 0 ? 'par' : holeToPar > 0 ? '+' + holeToPar : holeToPar})</div>
+         <button class="btn primary" data-act="sim-shot">${sim.holeIdx + 1 >= course.holes.length ? 'Ver tarjeta final →' : 'Siguiente hoyo →'}</button>`
+      : `<div class="sim-status">${SIM_LIE_ES[sim.lie]} · quedan <b>${sim.lie === 'green' ? (sim.puttDist + ' ft') : (sim.dist + ' yds')}</b> · golpe ${sim.strokes + 1}</div>
+         <button class="btn primary" data-act="sim-shot">🏌️ Tirar</button>`}
+    <button class="btn sm ghost" data-act="sim-reset">Reiniciar</button>
+  </div>`;
+}
+
 function vStrategy() {
   const u = cur();
   const course = COURSES[V.courseId] || COURSES.campestre;
@@ -212,30 +386,35 @@ function vStrategy() {
   const teeInfo = !tee ? 'Carga tu bolsa en Perfil → Mis palos.'
     : hole.par === 3 ? (carry >= hole.yds - 5 ? `Con tu ${tee.name} (${carry}y) llegas al green de ${hole.yds}y.` : `Tu ${tee.name} vuela ${carry}y — ~${hole.yds - carry}y corto.`)
       : attack ? `Atacando: salida ${carry}y y vas por el green (~${leave}y) en 2.` : `Salida a ${carry}y; te deja ~${leave}y al green.`;
-  const sim = V.simResult && V.simResult.courseId === course.id ? V.simResult : null;
-  const ready = trackerReadiness();
 
-  return `<div class="sec-h"><h2>Estrategia</h2><span class="small muted">objetivo y track según tu HCP</span></div>
+  return `<div class="sec-h"><h2>Estrategia</h2><span class="small muted">tu plan según tu HCP</span></div>
     <div class="chips" style="margin-top:8px">${courseChips}</div>
     <div class="greet" style="padding-top:10px">
       <p class="hi">${esc(course.name)}${course.approx ? ' · yardas aprox.' : ''}</p>
       <h1 style="font-size:23px">Hoyo ${hole.n} · Par ${hole.par} · ${hole.yds} yds</h1>
-      <p class="hcp">Tu objetivo de ronda (HCP ${fmtHcp(u.hcp)}): ~${roundTarget} golpes</p>
+      <p class="hcp">Objetivo de ronda (HCP ${fmtHcp(u.hcp)}): ~${roundTarget} golpes</p>
     </div>
     <div class="hole-strip">${holeChips}</div>
     <div class="card" style="padding:12px">${holeSchematic(hole, landings)}</div>
 
-    <div class="grid2">
-      ${statCard(target === hole.par ? 'Par' : target === hole.par + 1 ? 'Bogey' : '+' + (target - hole.par), 'Tu objetivo aquí', 100)}
-      <div class="card"><div class="stat-num" style="font-size:20px">${esc(stance.k)}</div><div class="stat-cap">cómo jugarlo</div></div>
+    <div class="card">
+      <span class="label">Plan del hoyo</span>
+      <div class="grid2" style="margin-top:8px">
+        ${statCard(target === hole.par ? 'Par' : target === hole.par + 1 ? 'Bogey' : '+' + (target - hole.par), 'Tu objetivo', 100)}
+        <div class="card"><div class="stat-num" style="font-size:20px">${esc(stance.k)}</div><div class="stat-cap">cómo jugarlo</div></div>
+      </div>
+      <p class="tip" style="margin-top:10px"><b style="color:var(--text)">¿Por qué?</b> ${esc(objectiveWhy(hole, target, u.hcp))}</p>
+      <p class="tip">${esc(stance.t)}</p>
     </div>
-    <p class="tip" style="margin-top:8px">${esc(stance.t)}</p>
 
     <div class="card">
       <span class="label">${hole.par === 3 ? 'Tu tiro al green' : 'Tu salida'} · elige palo</span>
       ${cands.length ? `<div class="hole-strip" style="margin-top:8px">${teeChips}</div>` : ''}
-      ${reachable ? `<button class="chip ${attack ? 'on' : ''}" data-act="toggle-attack" style="margin-top:10px">🎯 Atacar el green en 2 ${attack ? '✓' : ''}</button>` : ''}
       <p class="tip">${esc(teeInfo)}</p>
+      ${reachable ? `<div style="border-top:1px solid var(--line-soft);margin-top:10px;padding-top:12px">
+        <button class="chip ${attack ? 'on' : ''}" data-act="toggle-attack">🎯 Atacar el green en 2 ${attack ? '✓' : ''}</button>
+        <p class="tip" style="margin-top:8px">${esc(attackWhy(u, hole, attack))}</p>
+      </div>` : ''}
     </div>
 
     <div class="card">
@@ -243,31 +422,5 @@ function vStrategy() {
       ${hazards.length ? hazards.map(h => `<p class="tip">${esc(h)}</p>`).join('') : '<p class="tip">Sin obstáculos marcados.</p>'}
       ${(hole.tips || []).map(t => `<p class="tip">${esc(t)}</p>`).join('')}
     </div>
-
-    <div class="card">
-      <span class="label">🎲 Simulador de ronda</span>
-      ${ready.ready ? `
-        <p class="note" style="margin-top:0;margin-bottom:8px">Juega ${course.holes.length} hoyos tiro por tiro con tus <b class="lime">porcentajes reales del Tracker</b> y genera tu tarjeta.</p>
-        <button class="btn primary" data-act="sim-run">${sim ? 'Simular otra vez' : 'Simular mi ronda aquí'}</button>
-        ${sim ? `
-          <div class="greet" style="text-align:center;padding-top:12px"><h1 style="font-size:40px">${sim.score}</h1><p class="hcp">${fmtToPar(sim.toPar)} · ${sim.holes.length} hoyos</p></div>
-          <div class="grid2">
-            ${statCard((sim.fwTot ? Math.round(sim.fwHit / sim.fwTot * 100) : 0) + '%', 'Fairways', sim.fwTot ? sim.fwHit / sim.fwTot * 100 : 0)}
-            ${statCard(Math.round(sim.girHit / sim.girTot * 100) + '%', 'GIR', sim.girHit / sim.girTot * 100)}
-          </div>
-          <div class="card" style="margin-top:12px"><span class="label">Tarjeta simulada</span>
-            ${scorecardTable(course.holes.length, i => course.holes[i].par, [{ name: esc(u.name.split(' ')[0]), scoreOf: i => sim.holes[i].score }], -1)}
-          </div>
-          <p class="note">Basado en tus % del Tracker: salida ${ready.have.fw}% · hierros ${ready.have.gir}% · approach ${ready.have.ud}% · putt ${ready.have.putt}%. Cada simulación varía, como en el golf real.</p>
-        ` : ''}
-      ` : `
-        <p class="note" style="margin-top:0;margin-bottom:10px">El simulador usa tus <b class="lime">porcentajes reales de práctica</b>. Primero registra en el Tracker al menos un drill de cada área:</p>
-        ${ready.areas.map(a => `<div class="row" style="padding:7px 0">
-          <div class="r-main"><b>${a.v != null ? '✅' : '⬜️'} ${esc(a.label)}</b><span>${esc(a.hint)}</span></div>
-          <div class="r-side"><b class="${a.v != null ? 'lime' : 'muted'}">${a.v != null ? a.v + '%' : 'falta'}</b></div>
-        </div>`).join('')}
-        <button class="btn primary" data-act="trainer-tab" data-t="tracker" style="margin-top:12px">Ir al Tracker →</button>
-      `}
-    </div>
-    <p class="note" style="margin-bottom:24px">${course.approx ? 'Pares reales; yardas por hoyo aproximadas.' : 'Par y yardas reales.'} Esquema genérico (no a escala).</p>`;
+    <p class="note" style="margin-bottom:24px">${course.approx ? 'Pares reales; yardas por hoyo aproximadas.' : 'Par y yardas reales.'} Esquema genérico (no a escala). El <b class="lime">simulador de ronda</b> ahora vive en Tracker.</p>`;
 }

@@ -462,29 +462,14 @@ button.row { cursor: pointer; }
 .avg-strip b { display: block; font-size: 17px; font-weight: 900; color: var(--lime); }
 .avg-strip span { font-size: 9.5px; color: var(--muted); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 
-/* ---- Inicio: anillos de stats ---- */
-.ring-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
-.ring-card {
-  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-  padding: 10px; display: flex; justify-content: center; align-items: center;
-  transition: transform 0.12s ease;
-}
-.ring-card:active { transform: scale(0.97); }
-.ring-svg { width: 100%; max-width: 132px; height: auto; }
-.ring-val { fill: var(--text); font-size: 22px; font-weight: 900; font-family: var(--font); }
-.ring-lab { fill: var(--muted); font-size: 11px; font-weight: 700; font-family: var(--font); }
-
-/* ---- Inicio: forma reciente + tip IA ---- */
-.form-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 11px 0 9px; }
-.form-pill {
-  min-width: 44px; text-align: center; padding: 9px 11px; border-radius: 12px;
-  font-weight: 900; font-size: 14px; background: var(--card2);
-  color: var(--text); border: 1px solid var(--line-soft);
-}
-.form-pill.good { color: var(--lime); border-color: var(--lime-dim); }
-.form-pill.bad { color: var(--muted); }
-.tip-card { display: block; width: 100%; text-align: left; }
-.tip-h { font-size: 17px; font-weight: 900; margin-top: 6px; color: var(--text); }
+/* ---- Simulador tiro por tiro (Tracker) ---- */
+.sim-log { margin: 12px 0; max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.sim-shot { font-size: 13px; padding: 8px 11px; border-radius: 10px; background: var(--card2); border-left: 3px solid var(--muted2); }
+.sim-shot.ok { border-left-color: var(--lime); color: var(--text); }
+.sim-shot.bad { border-left-color: var(--danger); color: var(--muted); }
+.sim-shot.muted { border-left-color: var(--line-soft); color: var(--muted); }
+.sim-status { font-size: 13.5px; color: var(--text); margin: 4px 0 12px; font-weight: 700; }
+.sim-status b { color: var(--lime); }
 
 /* ============ Parfect Party ============ */
 .code-box {

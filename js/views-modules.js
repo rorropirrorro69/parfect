@@ -209,6 +209,7 @@ function trackerPlan(u) {
 function vTracker() {
   return `<div class="sec-h"><h2>Parfect Tracker</h2><span class="small muted">tu práctica, medida</span></div>
     ${vTrackerPlan()}
+    ${vSimulator()}
     ${V.drillLog ? vDrillSheet() : ''}`;
 }
 

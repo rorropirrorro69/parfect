@@ -11,7 +11,7 @@ let V = {
   trainerTab: 'diag', diag: null, diagBusy: false,
   trackVals: null, trkTab: 'plan', drillLog: null, drillCat: 'fw',
   calY: null, calM: null, calSel: null, calAddType: 'entreno', friendId: null, holeIdx: 0,
-  courseId: 'campestre', addFriend: false, teeClubId: null, attack2: false, simResult: null,
+  courseId: 'campestre', addFriend: false, teeClubId: null, attack2: false, sim: null,
   partyDraft: null, showMoney: false, partyView: null,
 };
 
@@ -316,15 +316,22 @@ const actions = {
     commit();
   },
   'sel-hole'(d) { V.holeIdx = Number(d.i); V.teeClubId = null; V.attack2 = false; render(); window.scrollTo(0, 0); },
-  'sel-course'(d) { V.courseId = d.c; V.holeIdx = 0; V.teeClubId = null; V.attack2 = false; render(); window.scrollTo(0, 0); },
+  'sel-course'(d) { V.courseId = d.c; V.holeIdx = 0; V.teeClubId = null; V.attack2 = false; V.sim = null; render(); window.scrollTo(0, 0); },
   'sel-tee'(d) { V.teeClubId = d.id; render(); },
   'toggle-attack'() { V.attack2 = !V.attack2; render(); },
-  'sim-run'() {
+  'sim-start'() {
     if (!trackerReadiness().ready) { V.trainerTab = 'tracker'; go('trainer'); return; }
     const c = COURSES[V.courseId] || COURSES.campestre;
-    V.simResult = simulateRound(cur(), c);
+    V.sim = simNewRound(cur(), c);
     render();
   },
+  'sim-shot'() {
+    if (!V.sim || V.sim.done) return;
+    if (V.sim.lie === 'holed') simFinishHole(V.sim);
+    else simStep(V.sim, cur());
+    render();
+  },
+  'sim-reset'() { V.sim = null; render(); },
   'go-estrategia'() { V.trainerTab = 'estrategia'; go('trainer'); },
   'go-stats'() { V.trainerTab = 'stats'; go('trainer'); },
   'go-diag'() { V.trainerTab = 'diag'; go('trainer'); },
