@@ -76,6 +76,7 @@ function App() {
     trofeos: vTrophies,
     clubs: vClubs,
     friend: vFriend,
+    strategy: vStrategy,
     trainer: vTrainer,
     social: vSocial,
   }[V.view] || vDashboard;
