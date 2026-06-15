@@ -832,6 +832,26 @@ body.is-scrolling .reel-track { animation-play-state: paused; }
 .strat-tip b { display: block; font-size: 14px; font-weight: 800; }
 .strat-tip p { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
 
+/* banda de KPIs (Inicio) */
+.kpi-band { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.kpi { text-align: center; background: linear-gradient(180deg, var(--card2), var(--card)); border: 1px solid var(--line); border-radius: 16px; padding: 14px 6px; }
+.kpi b { display: block; font-size: 26px; font-weight: 900; color: var(--lime); letter-spacing: -0.02em; line-height: 1; }
+.kpi span { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+
+/* tus rondas por campo: chips + historial de tarjetas */
+.lr-chips { margin-bottom: 10px; }
+.lr-pick { padding: 12px 14px; margin-bottom: 2px; }
+.lr-pick-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.lr-pick-head b { font-size: 16px; font-weight: 900; }
+.lr-hist { display: flex; gap: 8px; overflow-x: auto; margin-top: 12px; padding-bottom: 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.lr-hist::-webkit-scrollbar { display: none; }
+.lr-card { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 76px; padding: 9px 10px; border-radius: 13px; border: 1px solid var(--line-soft); background: rgba(0,0,0,0.22); cursor: pointer; }
+.lr-card.on { border-color: var(--lime); background: var(--lime-faint); }
+.lr-card .lr-date { font-size: 10.5px; font-weight: 700; color: var(--muted); }
+.lr-card .lr-sc { font-size: 20px; font-weight: 900; color: var(--lime); letter-spacing: -0.02em; }
+.lr-card.on .lr-sc { color: var(--lime); }
+.lr-card .lr-tp { font-size: 11px; font-style: normal; font-weight: 700; color: var(--muted); }
+
 /* última ronda: fila de % */
 .lr-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .lr-stats > div { text-align: center; background: rgba(0,0,0,0.22); border: 1px solid var(--line-soft); border-radius: 12px; padding: 9px 4px; }

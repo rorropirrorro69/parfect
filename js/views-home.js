@@ -117,6 +117,26 @@ function statScene(kind) {
     <circle cx="85" cy="34" r="5" fill="#0a0f08"/><circle cx="85" cy="34" r="7" fill="none" stroke="#c9f73e" stroke-width="0.8" opacity="0.6"/>${flag(85, 34)}
     <circle fill="#fff" stroke="#0a0f08" stroke-width="0.8"><animateMotion dur="2.6s" repeatCount="indefinite" path="M85 80 L85 34" keyPoints="0;1;1" keyTimes="0;.68;1" calcMode="linear"/><animate attributeName="r" values="3.6;3.6;0;0" keyTimes="0;.64;.7;1" dur="2.6s" repeatCount="indefinite"/></circle>
   </svg>`;
+  if (kind === 'drive') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
+    <path d="M0 88 Q 85 80 170 70 L170 100 L0 100 Z" fill="#2f6b39" opacity="0.55"/>
+    <ellipse cx="150" cy="44" rx="15" ry="7" fill="#57b15c"/>${flag(150, 44)}
+    <line x1="20" y1="84" x2="20" y2="76" stroke="#6b7a5a" stroke-width="1.4"/><ellipse cx="20" cy="85" rx="6" ry="2" fill="#3a8043"/>
+    <circle r="4" fill="#fff" stroke="#0a0f08" stroke-width="0.8"><animateMotion dur="3s" repeatCount="indefinite" path="M20 76 Q 86 -22 150 44" keyPoints="0;1;1" keyTimes="0;.55;1" calcMode="linear"/></circle>
+    <circle r="2" fill="#c9f73e" opacity="0"><animateMotion dur="3s" repeatCount="indefinite" path="M20 76 Q 86 -22 150 44" keyPoints="0;1;1" keyTimes="0;.55;1" calcMode="linear"/><animate attributeName="opacity" values="0;.5;0;0" keyTimes="0;.3;.55;1" dur="3s" repeatCount="indefinite"/></circle>
+  </svg>`;
+  if (kind === 'bird') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
+    <ellipse cx="85" cy="56" rx="34" ry="17" fill="#2f6b39"/><ellipse cx="85" cy="54" rx="22" ry="11" fill="#57b15c"/>
+    <circle cx="85" cy="52" r="2.4" fill="#0a0f08"/>${flag(85, 52)}
+    <circle r="3.6" fill="#fff" stroke="#0a0f08" stroke-width="0.8"><animateMotion dur="3s" repeatCount="indefinite" path="M16 92 Q 50 -12 85 52" keyPoints="0;1;1;1" keyTimes="0;.5;.92;1" calcMode="linear"/><animate attributeName="r" values="3.6;3.6;0;0" keyTimes="0;.5;.56;1" dur="3s" repeatCount="indefinite"/></circle>
+    <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.5;.58;.92;1" dur="3s" repeatCount="indefinite"/>
+      <circle cx="85" cy="26" r="11" fill="#c9f73e"/><text x="85" y="30" fill="#0a0f06" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="900" text-anchor="middle">−1</text></g>
+  </svg>`;
+  if (kind === 'score') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
+    <line x1="18" y1="78" x2="152" y2="78" stroke="#16210f" stroke-width="1"/>
+    <polyline points="18,30 50,40 82,38 114,55 146,68" fill="none" stroke="#c9f73e" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="200" stroke-dashoffset="200"><animate attributeName="stroke-dashoffset" values="200;0;0" keyTimes="0;.7;1" dur="3s" repeatCount="indefinite"/></polyline>
+    <circle cx="146" cy="68" r="3.6" fill="#c9f73e" opacity="0"><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.68;.74;1" dur="3s" repeatCount="indefinite"/></circle>
+    <path d="M134 80 l12 0 0 -12" fill="none" stroke="#c9f73e" stroke-width="1.6" opacity="0"><animate attributeName="opacity" values="0;0;.9;.9;0" keyTimes="0;.7;.76;.94;1" dur="3s" repeatCount="indefinite"/></path>
+  </svg>`;
   return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
     <ellipse cx="85" cy="52" rx="48" ry="31" fill="#2f6b39"/><ellipse cx="85" cy="52" rx="34" ry="21" fill="#3a8043" opacity="0.5"/>
     <circle cx="85" cy="30" r="5" fill="#0a0f08"/>${flag(85, 30)}
@@ -126,19 +146,35 @@ function statScene(kind) {
   </svg>`;
 }
 /* reel horizontal de stats animadas (scroll automático) */
-function vStatReel(rounds, agg) {
+function statReel(cards) {
+  const set = cards.map(([k, v, t]) => `<div class="reel-card"><div class="reel-scene">${statScene(k)}</div><div class="reel-meta"><b>${v}</b><span>${esc(t)}</span></div></div>`).join('');
+  return `<div class="reel"><div class="reel-track">${set}${set}</div></div>`;
+}
+/* sección 1 — de tee a green (juego largo) */
+function reelTeeToGreen(rounds, agg) {
+  const holes = rounds.flatMap(r => r.holes);
+  const teeHoles = holes.filter(h => h.tee);
+  const inPlay = teeHoles.length ? Math.round(teeHoles.filter(h => h.tee !== 'penal').length / teeHoles.length * 100) : 0;
+  return statReel([
+    ['fw', Math.round(agg.fwPct) + '%', 'Fairways'],
+    ['gir', Math.round(agg.girPct) + '%', 'Greens · GIR'],
+    ['drive', inPlay + '%', 'Salidas en juego'],
+    ['score', fmtToPar(agg.bestToPar), 'Mejor vuelta'],
+  ]);
+}
+/* sección 2 — juego corto y scoring */
+function reelShortScoring(rounds, agg) {
   const holes = rounds.flatMap(r => r.holes);
   const onePutt = holes.length ? Math.round(holes.filter(h => h.putts != null && h.putts <= 1).length / holes.length * 100) : 0;
   const noThree = Math.max(0, 100 - Math.round(agg.threePct || 0));
-  const cards = [
-    ['fw', Math.round(agg.fwPct) + '%', 'Fairways'],
-    ['gir', Math.round(agg.girPct) + '%', 'Greens · GIR'],
+  const sd = agg.scoreDist || { total: 0, eagle: 0, birdie: 0 };
+  const birdie = sd.total ? Math.round((sd.eagle + sd.birdie) / sd.total * 100) : 0;
+  return statReel([
     ['ud', Math.round(agg.scrPct) + '%', 'Up & down'],
     ['putt', onePutt + '%', 'Putts embocados'],
     ['lag', noThree + '%', 'Sin 3-putt'],
-  ];
-  const set = cards.map(([k, v, t]) => `<div class="reel-card"><div class="reel-scene">${statScene(k)}</div><div class="reel-meta"><b>${v}</b><span>${esc(t)}</span></div></div>`).join('');
-  return `<div class="reel"><div class="reel-track">${set}${set}</div></div>`;
+    ['bird', birdie + '%', 'Birdies o mejor'],
+  ]);
 }
 /* área (texto del plan) → llave de drillArt */
 function areaKey(a) {
@@ -198,32 +234,69 @@ function holeShotList(hh) {
   return `<div class="hole-shots">${rows.join('')}</div>`;
 }
 
-/* putts embocados por distancia (inicio) */
-function vPuttStats(agg) {
-  if (!agg || !agg.puttsByDist) return '';
-  const bands = [['0-3', '0–3 ft'], ['3-8', '3–8 ft'], ['8-20', '8–20 ft'], ['20+', '+20 ft']];
-  const rows = bands.map(([k, lab]) => {
-    const b = agg.puttsByDist[k] || { n: 0, one: 0 };
-    const pct = b.n ? (b.one / b.n * 100) : 0;
-    return mbar(lab, pct, b.n ? `${Math.round(pct)}% · ${b.one}/${b.n}` : '—');
-  }).join('');
-  return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Putts por distancia</h2><span class="small muted">embocados / intentos</span></div>
-    <div class="card"><span class="label">% que embocas el 1er putt</span><div style="margin-top:8px">${rows}</div>
-    <p class="note" style="margin:10px 0 0">${agg.puttsPerGir.toFixed(2)} putts por GIR · ${agg.threePct.toFixed(0)}% de 3-putts</p></div>`;
+/* banda de KPIs (resumen rápido del jugador) */
+function vKpiBand(agg, u) {
+  const tiles = [
+    [String(agg.rounds), 'Rondas'],
+    [fmtToPar(agg.bestToPar), 'Mejor vuelta'],
+    [fmtToPar(Math.round(agg.avgToPar)), 'Promedio'],
+  ];
+  return `<div class="kpi-band">${tiles.map(([v, t]) => `<div class="kpi"><b>${v}</b><span>${t}</span></div>`).join('')}</div>`;
 }
 
-/* última ronda: solo los hoyos (sin stats) */
+/* tus rondas por campo: elige campo (3) y tarjeta guardada del historial */
 function vLastRound(rounds) {
-  // preferimos la última ronda jugada en uno de los 3 campos reales (con su diseño/curvas)
-  const r = rounds.find(x => x.courseId && COURSES[x.courseId]) || rounds[0];
-  if (!r) return '';
+  // agrupar rondas por campo real (con su diseño/curvas), en orden más reciente primero
+  const byCourse = {};
+  for (const r of rounds) {
+    if (!r.courseId || !COURSES[r.courseId]) continue;
+    (byCourse[r.courseId] = byCourse[r.courseId] || []).push(r);
+  }
+  const available = COURSE_ORDER.filter(id => byCourse[id] && byCourse[id].length);
+
+  // sin campos reales (datos antiguos): mostrar última ronda simple
+  if (!available.length) {
+    const r = rounds[0];
+    if (!r) return '';
+    const set = r.holes.map((hh, i) => `<div class="reel-card"><div class="reel-scene">${captureSchematic(hh, null, true, true)}</div><div class="reel-meta" style="padding:13px 16px 16px"><div class="hole-head2"><b>Hoyo ${i + 1}</b><span class="hh-par">Par ${hh.par}</span><span class="hh-score">${hh.score} <em>${fmtToPar(hh.score - hh.par)}</em></span></div>${holeShotList(hh)}</div></div>`).join('');
+    return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Tu última ronda</h2><span class="small muted">${esc(r.course)} · ${fmtDate(r.date)}</span></div>
+      <div class="reel reel-swipe"><div class="reel-track">${set}</div></div>`;
+  }
+
+  // campo seleccionado (con fallback al campo de la ronda más reciente)
+  const recent = rounds.find(r => r.courseId && COURSES[r.courseId]);
+  let cid = (V.homeCid && byCourse[V.homeCid]) ? V.homeCid : (recent ? recent.courseId : available[0]);
+  const list = byCourse[cid];
+  const r = list.find(x => x.id === V.homeRid) || list[0];
+  const courseName = COURSES[cid].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '');
+
+  const chips = COURSE_ORDER.map(id => {
+    const has = byCourse[id] && byCourse[id].length;
+    const name = COURSES[id].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '');
+    return `<button class="chip sm ${id === cid ? 'on' : ''}" data-act="home-course" data-c="${id}"${has ? '' : ' disabled style="opacity:.38"'}>${esc(name)}${has ? ` · ${has}` : ''}</button>`;
+  }).join('');
+
+  // historial de tarjetas guardadas de este campo (elige cuál ver)
+  const hist = list.map(rr => {
+    const ss = Stats.roundStats(rr);
+    return `<button class="lr-card ${rr.id === r.id ? 'on' : ''}" data-act="home-round" data-id="${rr.id}">
+      <span class="lr-date">${fmtDate(rr.date)}</span><b class="lr-sc">${ss.score}</b><em class="lr-tp">${fmtToPar(ss.toPar)}</em>
+    </button>`;
+  }).join('');
+
   const card = (hh, i) => {
-    const ch = (r.courseId && COURSES[r.courseId] && COURSES[r.courseId].holes[i]) ? COURSES[r.courseId].holes[i] : null;
+    const ch = (COURSES[cid] && COURSES[cid].holes[i]) ? COURSES[cid].holes[i] : null;
     const yds = ch && ch.yds ? ` · ${ch.yds}y` : '';
     return `<div class="reel-card"><div class="reel-scene">${captureSchematic(hh, ch, true, true)}</div><div class="reel-meta" style="padding:13px 16px 16px"><div class="hole-head2"><b>Hoyo ${i + 1}</b><span class="hh-par">Par ${hh.par}${yds}</span><span class="hh-score">${hh.score} <em>${fmtToPar(hh.score - hh.par)}</em></span></div>${holeShotList(hh)}</div></div>`;
   };
   const set = r.holes.map(card).join('');
-  return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Tu última ronda</h2><span class="small muted">${esc(r.course)} · ${fmtDate(r.date)} · desliza →</span></div>
+
+  return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Tus rondas por campo</h2><span class="small muted">elige campo y tarjeta</span></div>
+    <div class="chips lr-chips">${chips}</div>
+    <div class="card lr-pick">
+      <div class="lr-pick-head"><b>${esc(courseName)}</b><span class="small muted">${fmtDate(r.date)} · desliza los hoyos →</span></div>
+      <div class="lr-hist">${hist}</div>
+    </div>
     <div class="reel reel-swipe"><div class="reel-track">${set}</div></div>`;
 }
 
@@ -260,10 +333,15 @@ function vDashboard() {
   }
 
   return head + `
-    <div class="sec-h" style="margin-top:2px"><h2 style="font-size:18px">Tu juego en movimiento</h2><span class="small muted">desliza →</span></div>
-    ${vStatReel(rounds, agg)}
-    ${vPuttStats(agg)}
-    ${vLastRound(rounds)}`;
+    ${vKpiBand(agg, u)}
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Tu juego en movimiento</h2><span class="small muted">de tee a green →</span></div>
+    ${reelTeeToGreen(rounds, agg)}
+    <div class="sec-h" style="margin-top:14px"><h2 style="font-size:15px">Juego corto y scoring</h2><span class="small muted">desliza →</span></div>
+    ${reelShortScoring(rounds, agg)}
+    ${progressCard(u, rounds)}
+    ${vTrainingCard(u)}
+    ${vLastRound(rounds)}
+    ${upcomingCard(u)}`;
 }
 
 /* ---- reparto de score: birdies / pares / bogeys… ---- */

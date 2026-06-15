@@ -14,6 +14,7 @@ let V = {
   courseId: 'campestre', addFriend: false, teeClubId: null, attack2: false, sim: null, shadowHcp: null, camposHcp: null,
   partyDraft: null, showMoney: false, partyView: null, capPid: null,
   stratCid: null, stratIdx: null, stratTeeId: null, stratLie: 'fw', stratMiss: null, histRound: null, histHole: null,
+  homeCid: null, homeRid: null,
 };
 
 const cur = () => S.users.find(u => u.id === S.session) || null;
@@ -202,6 +203,8 @@ const actions = {
   'strat-miss'(d) { V.stratMiss = d.v; render(); },
   'hist-round'(d) { V.histRound = d.id; V.histHole = 0; render(); },
   'hist-hole'(d) { V.histHole = Number(d.i); render(); },
+  'home-course'(d) { if (COURSES[d.c]) { V.homeCid = d.c; V.homeRid = null; } render(); },
+  'home-round'(d) { V.homeRid = d.id; render(); },
   'quick-round'() {
     if (S.active && S.active.userId === S.session) { loadHole(); go('play'); }
     else actions['go-setup']();
@@ -269,7 +272,7 @@ const actions = {
   },
   'finish-round'() {
     const a = S.active;
-    const round = { id: Store.uid(), userId: a.userId, course: a.course, date: today(), holes: a.holes.slice(0, a.holesCount) };
+    const round = { id: Store.uid(), userId: a.userId, course: a.course, courseId: a.courseId, date: today(), holes: a.holes.slice(0, a.holesCount) };
     S.rounds.push(round);
     S.active = null;
     V.diag = null; V.detail = round.id; V.view = 'detalle';
