@@ -11,7 +11,7 @@ let V = {
   trainerTab: 'diag', diag: null, diagBusy: false,
   trackVals: null, trkTab: 'plan', drillLog: null, drillCat: 'fw',
   calY: null, calM: null, calSel: null, calAddType: 'entreno', friendId: null, holeIdx: 0,
-  courseId: 'campestre', addFriend: false, teeClubId: null,
+  courseId: 'campestre', addFriend: false, teeClubId: null, attack2: false, simResult: null,
   partyDraft: null, showMoney: false, partyView: null,
 };
 
@@ -147,7 +147,7 @@ const actions = {
 
   /* ---- perfil ---- */
   'profile-open'() { V.profileOpen = true; V.wipeArm = false; render(); },
-  'go-trofeos'() { V.profileOpen = false; go('trofeos'); },
+  'go-trofeos'() { V.profileOpen = false; V.trainerTab = 'logros'; go('trainer'); },
   'profile-close'() { V.profileOpen = false; V.wipeArm = false; render(); },
   'profile-save'() {
     const u = cur();
@@ -315,9 +315,11 @@ const actions = {
     u.events = (u.events || []).filter(e => e.id !== d.id);
     commit();
   },
-  'sel-hole'(d) { V.holeIdx = Number(d.i); render(); window.scrollTo(0, 0); },
-  'sel-course'(d) { V.courseId = d.c; V.holeIdx = 0; render(); window.scrollTo(0, 0); },
+  'sel-hole'(d) { V.holeIdx = Number(d.i); V.teeClubId = null; V.attack2 = false; render(); window.scrollTo(0, 0); },
+  'sel-course'(d) { V.courseId = d.c; V.holeIdx = 0; V.teeClubId = null; V.attack2 = false; render(); window.scrollTo(0, 0); },
   'sel-tee'(d) { V.teeClubId = d.id; render(); },
+  'toggle-attack'() { V.attack2 = !V.attack2; render(); },
+  'sim-run'() { const c = COURSES[V.courseId] || COURSES.campestre; V.simResult = simulateRound(cur(), c); render(); },
   'go-estrategia'() { V.trainerTab = 'estrategia'; go('trainer'); },
   'go-clubs'() { V.profileOpen = false; go('clubs'); },
   'save-clubs'() {

@@ -71,14 +71,12 @@ function vStats() {
 /* ---------- Parfect Trainer ---------- */
 function vTrainer() {
   const tab = V.trainerTab || 'diag';
-  const body = tab === 'diag' ? vDiag() : tab === 'drills' ? vDrillsLibrary() : tab === 'cal' ? vCalendar() : tab === 'estrategia' ? vStrategy() : vTracker();
+  const body = tab === 'diag' ? vDiag() : tab === 'drills' ? vDrillsLibrary() : tab === 'cal' ? vCalendar()
+    : tab === 'estrategia' ? vStrategy() : tab === 'stats' ? vStats() : tab === 'logros' ? vTrophies() : vTracker();
+  const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
     <div class="tabs" style="flex-wrap:wrap">
-      <button class="tab ${tab === 'diag' ? 'on' : ''}" data-act="trainer-tab" data-t="diag">Diagnóstico IA</button>
-      <button class="tab ${tab === 'drills' ? 'on' : ''}" data-act="trainer-tab" data-t="drills">Drills</button>
-      <button class="tab ${tab === 'tracker' ? 'on' : ''}" data-act="trainer-tab" data-t="tracker">Tracker</button>
-      <button class="tab ${tab === 'cal' ? 'on' : ''}" data-act="trainer-tab" data-t="cal">Calendario</button>
-      <button class="tab ${tab === 'estrategia' ? 'on' : ''}" data-act="trainer-tab" data-t="estrategia">Estrategia</button>
+      ${T('diag', 'Diagnóstico IA')}${T('drills', 'Drills')}${T('tracker', 'Tracker')}${T('cal', 'Calendario')}${T('estrategia', 'Estrategia')}${T('stats', 'Stats')}${T('logros', 'Logros')}
     </div>
     ${body}`;
 }

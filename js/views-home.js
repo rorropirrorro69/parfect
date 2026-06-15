@@ -58,25 +58,15 @@ function vDashboard() {
     </div>`;
   }
 
-  const radar = Stats.radarOf(agg);
   const cont = S.active && S.active.userId === u.id;
   return head + `
-    <div class="card">
-      <span class="label">Perfil de habilidades</span>
-      <div class="radar-wrap">${radarSVG(radar.labels, radar.values)}</div>
-    </div>
-    <div class="grid2">
-      ${statCard(agg.fwPct.toFixed(0) + '%', 'Fairways', agg.fwPct)}
-      ${statCard(agg.girPct.toFixed(0) + '%', 'GIR', agg.girPct)}
-      ${statCard(agg.scrPct.toFixed(0) + '%', 'Up/Down', agg.scrPct)}
-      ${statCard(agg.putts18.toFixed(0), 'Putts / Ronda', Stats.clamp((38 - agg.putts18) / 11 * 100, 0, 100))}
-    </div>
+    <button class="btn primary" data-act="quick-round">${logoMark(15)} ${cont ? `Continuar ronda · hoyo ${S.active.idx + 1}` : 'Iniciar ronda'}</button>
     <div class="card">
       <span class="label">Historial de tarjetas</span>
       ${rounds.slice(0, 5).map(r => {
         const s = Stats.roundStats(r);
         return `<button class="hist-row" data-act="round-detail" data-id="${r.id}">
-          <div class="r-main"><b>${esc(r.course)}</b><span>${fmtDate(r.date)} · ${s.holes} hoyos · ${s.putts} putts</span></div>
+          <div class="r-main"><b>${esc(r.course)}${r.partyId ? ' 🎉' : ''}</b><span>${fmtDate(r.date)} · ${s.holes} hoyos · ${s.putts} putts</span></div>
           <div class="r-side"><b>${s.score}</b><span>${fmtToPar(s.toPar)}</span></div>
         </button>`;
       }).join('')}
@@ -88,12 +78,7 @@ function vDashboard() {
       </div>
       <button class="btn sm ghost" data-act="nav" data-view="ronda" style="margin-top:14px">Ver todas las tarjetas →</button>
     </div>
-    <button class="btn ghost" data-act="quick-round">${logoMark(15)} ${cont ? `Continuar ronda · hoyo ${S.active.idx + 1}` : 'Iniciar ronda'}</button>
-    <button class="btn" data-act="go-estrategia">🗺️ Estrategia de campo (beta)</button>
-    <div class="btn-row">
-      <button class="btn" data-act="nav" data-view="stats">Avatar Stats →</button>
-      <button class="btn" data-act="nav" data-view="trofeos">🏆 Trofeos</button>
-    </div>
+    <p class="note" style="text-align:center;margin-top:14px">Tus stats, trofeos y estrategia ahora viven en <b class="lime">Trainer</b>.</p>
   `;
 }
 
