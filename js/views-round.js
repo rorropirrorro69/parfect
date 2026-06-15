@@ -114,6 +114,59 @@ function chipRow(items, key, current) {
   ).join('') + `</div>`;
 }
 
+/* posiciones de los tiros registrados, para animar el hoyo */
+function captureShots(h) {
+  const shots = [];
+  if (h.par >= 4 && h.tee) {
+    const t = h.tee;
+    const side = t === 'izq' ? -0.62 : t === 'der' ? 0.62 : t === 'penal' ? -0.82 : 0;
+    shots.push({ prog: 0.52, side, ok: t === 'fw', lie: t === 'penal' ? 'water' : (t === 'fw' ? 'fw' : 'rough') });
+  }
+  if (h.app) {
+    if (h.app === 'gir') shots.push({ prog: 1, side: 0, ok: true, lie: 'green' });
+    else {
+      const side = h.app === 'izq' ? -0.6 : h.app === 'der' ? 0.6 : 0;
+      const prog = h.app === 'largo' ? 1.04 : h.app === 'corto' ? 0.84 : 1;
+      shots.push({ prog, side, ok: false, lie: 'rough' });
+    }
+  }
+  if (h.app && h.app !== 'gir' && h.upDown != null) shots.push({ prog: 0.99, side: 0.12, ok: h.upDown === true, lie: 'green' });
+  if (h.putts != null) for (let i = 0; i < h.putts; i++) shots.push({ prog: 1, side: (i % 2 ? 0.06 : -0.06), ok: true, lie: 'green' });
+  return shots;
+}
+function captureSchematic(h) {
+  const shots = captureShots(h);
+  const W = 300, H = 232, cx = 150, teeY = 200, greenY = 40, span = teeY - greenY, halfW = 68;
+  const P = s => ({ x: cx + s.side * halfW, y: teeY - Math.min(1.06, s.prog) * span });
+  const pts = shots.map(P);
+  const route = `M${cx},${teeY} ` + pts.map(q => `L${q.x.toFixed(0)},${q.y.toFixed(0)}`).join(' ');
+  const colOf = s => s.ok ? '#c9f73e' : (s.lie === 'water' ? '#ff7a6b' : '#ff9f43');
+  let zones = '', dots = '';
+  shots.forEach((s, i) => { if (s.lie === 'green') return; const q = pts[i], c = colOf(s), rx = s.ok ? 14 : 20; zones += `<ellipse cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" rx="${rx}" ry="${(rx * 0.7).toFixed(0)}" fill="${c}" opacity="0.16" stroke="${c}" stroke-width="1.5" stroke-dasharray="4 4"/>`; });
+  pts.forEach((q, i) => { dots += `<circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="4" fill="${colOf(shots[i])}"/>`; });
+  let ball = '';
+  if (pts.length) {
+    const allP = [{ x: cx, y: teeY }, ...pts], seg = []; let tot = 0;
+    for (let i = 1; i < allP.length; i++) { const l = Math.hypot(allP[i].x - allP[i - 1].x, allP[i].y - allP[i - 1].y); seg.push(l); tot += l || 1; }
+    const nf = [0]; { let aa = 0; for (const l of seg) { aa += l; nf.push(aa / tot); } }
+    const ev = [{ p: 0, d: 0 }]; for (let i = 1; i < nf.length; i++) { ev.push({ p: nf[i], d: 1 }); if (i < nf.length - 1) ev.push({ p: nf[i], d: 0.5 }); } ev.push({ p: 1, d: 1 });
+    const TT = ev.reduce((a, e) => a + e.d, 0); let ac = 0; const kp = [], kt = []; ev.forEach(e => { ac += e.d; kp.push(e.p.toFixed(3)); kt.push((ac / TT).toFixed(3)); });
+    const dur = (0.8 + (nf.length - 1) * 0.9).toFixed(1);
+    ball = `<circle r="6" fill="#fff" stroke="#0a0f08" stroke-width="1"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${route}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
+  }
+  return `<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tiros del hoyo">
+    <rect width="${W}" height="${H}" rx="14" fill="#0a0f08" stroke="#1d2914"/>
+    <rect x="${cx - halfW - 4}" y="${greenY - 6}" width="${(halfW + 4) * 2}" height="${teeY - greenY + 14}" rx="${halfW}" fill="#2f6b39"/>
+    <ellipse cx="${cx}" cy="${greenY}" rx="40" ry="22" fill="#57b15c" stroke="#2f6b39" stroke-width="2"/>
+    <circle cx="${cx}" cy="${greenY}" r="3" fill="#0a0f08"/>
+    <line x1="${cx}" y1="${greenY}" x2="${cx}" y2="${greenY - 22}" stroke="#eef3e6" stroke-width="2"/><path d="M${cx},${greenY - 22} l11,3 -11,3z" fill="#c9f73e"/>
+    ${zones}
+    <path d="${route}" fill="none" stroke="#c9f73e" stroke-width="2" stroke-dasharray="3 5"/>
+    ${dots}${ball}
+    <rect x="${cx - 9}" y="${teeY}" width="18" height="6" rx="2" fill="#9ab07f"/>
+  </svg>`;
+}
+
 function vPlay() {
   const a = S.active;
   if (!a) return vRondaTab();
@@ -123,6 +176,12 @@ function vPlay() {
   const score = V.scoreTouched ? h.score : sugg;
   const pct = (a.idx / a.holesCount) * 100;
   const ready = h.app && h.putts != null && (h.par === 3 || h.tee);
+
+  const sl = [];
+  if (h.par >= 4 && h.tee) sl.push(h.tee === 'fw' ? 'Fairway ✓' : h.tee === 'penal' ? 'OB/Penal' : h.tee === 'izq' ? 'Salida izq' : 'Salida der');
+  if (h.app) sl.push(h.app === 'gir' ? 'Green ✓' : h.app === 'corto' ? 'Corto' : h.app === 'largo' ? 'Largo' : h.app === 'izq' ? 'Falló izq' : 'Falló der');
+  if (h.app && h.app !== 'gir' && h.upDown != null) sl.push(h.upDown ? 'Up & down ✓' : 'Chip');
+  if (h.putts != null) sl.push(h.putts + ' putt' + (h.putts !== 1 ? 's' : ''));
 
   return `<div class="shell no-nav fade-in">
     <div class="play-top">
@@ -134,6 +193,11 @@ function vPlay() {
     <div class="hole-head">
       <span class="hnum">Hoyo ${a.idx + 1}</span>
       <span class="hof">Par ${h.par}</span>
+    </div>
+
+    <div class="card" style="padding:10px">
+      ${captureSchematic(h)}
+      <p class="note" style="text-align:center;margin:6px 0 0">${sl.length ? esc(sl.join('  ·  ')) : 'Registra tu hoyo y míralo tiro por tiro.'}</p>
     </div>
 
     <div class="group">
@@ -163,7 +227,7 @@ function vPlay() {
 
     <div class="group">
       <div class="g-lab"><span class="label">Distancia 1er putt</span><span class="small muted">opcional</span></div>
-      ${chipRow([['0-2', '0–2 m'], ['2-5', '2–5 m'], ['5-10', '5–10 m'], ['10+', '+10 m']], 'dist', h.dist)}
+      ${chipRow([['0-3', '0–3 ft'], ['3-8', '3–8 ft'], ['8-20', '8–20 ft'], ['20+', '+20 ft']], 'dist', h.dist)}
     </div>
 
     <div class="group">

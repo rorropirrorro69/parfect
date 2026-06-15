@@ -2,7 +2,7 @@
 
 const Stats = (() => {
   const PAR_SEQ = [4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 4, 3, 4, 5, 4, 3, 4, 5];
-  const DIST_BANDS = ['0-2', '2-5', '5-10', '10+'];
+  const DIST_BANDS = ['0-3', '3-8', '8-20', '20+'];
 
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const sum = arr => arr.reduce((a, x) => a + x, 0);

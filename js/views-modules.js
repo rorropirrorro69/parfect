@@ -14,7 +14,7 @@ function vStats() {
   const mt = agg.missTee, ma = agg.missApp;
   const teeTot = mt.izq + mt.der + mt.penal || 1;
   const appTot = ma.corto + ma.largo + ma.izq + ma.der || 1;
-  const bands = [['0-2', '0–2 m'], ['2-5', '2–5 m'], ['5-10', '5–10 m'], ['10+', '+10 m']];
+  const bands = [['0-3', '0–3 ft'], ['3-8', '3–8 ft'], ['8-20', '8–20 ft'], ['20+', '+20 ft']];
 
   return `<div class="sec-h"><h2>Avatar Stats</h2><span class="small muted">${agg.rounds} rondas</span></div>
 
@@ -379,15 +379,24 @@ function vCalendar() {
   for (const e of events) (byDate[e.date] = byDate[e.date] || []).push(e);
   const tl = todayLocal();
 
-  // tira horizontal de los próximos 14 días
-  let strip = '';
-  for (let i = 0; i < 14; i++) {
-    const d = new Date(tl + 'T12:00:00'); d.setDate(d.getDate() + i);
-    const iso = isoLocal(d), wd = (d.getDay() + 6) % 7;
+  // cuadrícula de mes (formato calendario normal)
+  const now = new Date();
+  if (V.calY == null) { V.calY = now.getFullYear(); V.calM = now.getMonth(); }
+  const y = V.calY, m = V.calM;
+  const first = new Date(y, m, 1);
+  const pad = (first.getDay() + 6) % 7;
+  const dim = new Date(y, m + 1, 0).getDate();
+  let cells = '';
+  for (let i = 0; i < pad; i++) cells += `<div class="cal-cell empty"></div>`;
+  for (let day = 1; day <= dim; day++) {
+    const iso = isoLocal(new Date(y, m, day));
+    const wd = (new Date(y, m, day).getDay() + 6) % 7;
     const dots = (byDate[iso] || []).slice(0, 3).map(e => `<i class="cal-dot ${e.type}"></i>`).join('');
     const cls = [iso === tl ? 'today' : '', iso === V.calSel ? 'sel' : '', wd === closedDay ? 'closed' : ''].join(' ').trim();
-    strip += `<button class="day-pill ${cls}" data-act="cal-day-sel" data-date="${iso}"><span class="dp-wd">${CAL_WD[wd]}</span><span class="dp-n">${d.getDate()}</span><div class="dp-dots">${dots}</div></button>`;
+    cells += `<button class="cal-cell ${cls}" data-act="cal-day-sel" data-date="${iso}"><span class="cal-n">${day}</span><div class="cal-dots">${dots}</div></button>`;
   }
+  const ml = first.toLocaleDateString('es-MX', { month: 'long', year: 'numeric' });
+  const monthLabel = ml.charAt(0).toUpperCase() + ml.slice(1);
 
   const selD = new Date(V.calSel + 'T12:00:00');
   const selWd = (selD.getDay() + 6) % 7;
@@ -418,8 +427,15 @@ function vCalendar() {
 
   return `
     <div class="card">
-      <div class="cal-day-head"><span class="label" style="margin:0">📅 Próximos 14 días</span><button class="chip sm ${V.calSel === tl ? 'on' : ''}" data-act="cal-day-sel" data-date="${tl}">Hoy</button></div>
-      <div class="day-strip">${strip}</div>
+      <div class="cal-head">
+        <button class="cal-nav" data-act="cal-prev" aria-label="Mes anterior">‹</button>
+        <span class="cal-month">${monthLabel}</span>
+        <button class="cal-nav" data-act="cal-next" aria-label="Mes siguiente">›</button>
+      </div>
+      <div class="cal-grid">
+        ${CAL_WD.map(w => `<div class="cal-wd">${w}</div>`).join('')}
+        ${cells}
+      </div>
       <div class="cal-legend">
         <span><i class="cal-dot ronda"></i>Ronda</span>
         <span><i class="cal-dot entreno"></i>Entreno</span>
