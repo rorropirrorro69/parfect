@@ -738,6 +738,24 @@ button.row { cursor: pointer; }
 .lp-snum { font-size: 32px; font-weight: 900; color: rgba(201,247,62,.5); font-style: italic; line-height: 1; }
 .lp-step h3 { font-size: 16px; font-weight: 800; }
 .lp-step p { color: var(--muted); font-size: 13.5px; margin-top: 4px; }
+/* landing · sección de drills / entrenamiento con gifs */
+.lp-train .lp-lead { max-width: 560px; }
+.lp-drillreel { margin: 38px -8px 0; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+.lp-drillreel .reel-track { display: flex; gap: 14px; width: max-content; padding: 0 8px; animation: reelScroll 52s linear infinite; will-change: transform; }
+.lp-drillreel:hover .reel-track { animation-play-state: paused; }
+.lp-drillcard { flex: 0 0 auto; width: min(82vw, 320px); background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)); border: 1px solid var(--line-soft); border-radius: 18px; overflow: hidden; }
+.lp-drillcard .reel-scene { padding: 12px 12px 0; }
+.lp-drillcard .drill-art { display: block; width: 100%; height: auto; border-radius: 10px; }
+.lp-drillmeta { padding: 12px 16px 16px; }
+.lp-drilltag { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); }
+.lp-drillmeta b { display: block; font-size: 17px; font-weight: 800; margin-top: 5px; }
+.lp-drillmeta p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.lp-trainfeat { display: grid; grid-template-columns: 1.05fr 1fr; gap: 26px; align-items: center; margin-top: 30px; background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008)); border: 1px solid var(--line-soft); border-radius: 22px; padding: 24px; }
+.lp-trainfeat-art .drill-art { display: block; width: 100%; height: auto; border-radius: 12px; }
+.lp-trainfeat-body h3 { font-size: clamp(20px,3vw,26px); font-weight: 900; letter-spacing: -.02em; margin: 10px 0 8px; }
+.lp-trainfeat-body p { color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+.lp-trainfeat-body .lp-order { margin-top: 18px; }
+
 .lp-final { text-align: center; }
 .lp-final .lp-order { margin-top: 24px; }
 .lp-alt { margin-top: 18px; display: flex; gap: 10px; justify-content: center; align-items: center; color: var(--muted2); font-size: 13px; }
@@ -766,6 +784,7 @@ button.row { cursor: pointer; }
   .lp-flavors { position: static; order: 4; align-items: center; margin: 6px auto 24px; }
   .lp-sat1 { top: -2%; left: 0; } .lp-sat3 { right: -2%; }
   .lp-feats, .lp-steps { grid-template-columns: 1fr; }
+  .lp-trainfeat { grid-template-columns: 1fr; gap: 16px; }
   .lp-terrain { display: none; }
 }
 

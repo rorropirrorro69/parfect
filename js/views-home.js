@@ -162,6 +162,15 @@ function statScene(kind) {
     <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.52;.6;.92;1" dur="3s" repeatCount="indefinite"/>
       <circle cx="92" cy="22" r="11" fill="#ff9f43"/><text x="92" y="26" fill="#0a0f06" font-family="Inter,system-ui,sans-serif" font-size="10.5" font-weight="900" text-anchor="middle">+1</text></g>
   </svg>`;
+  if (kind === 'threeputt') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
+    <ellipse cx="85" cy="54" rx="48" ry="31" fill="#2f6b39"/><ellipse cx="85" cy="54" rx="34" ry="21" fill="#357a3d" opacity="0.5"/><ellipse cx="80" cy="46" rx="15" ry="7" fill="#6cc471" opacity="0.28"/>
+    <path d="M85 86 L85 30" stroke="#c9f73e" stroke-width="1" stroke-dasharray="2 4" opacity="0.4"/>
+    <circle cx="85" cy="30" r="5" fill="#06120a"/>${flag(85, 30, 16)}
+    <circle cx="85" cy="55" r="1.6" fill="#ff9f43" opacity="0.65"/><circle cx="85" cy="42" r="1.6" fill="#ff9f43" opacity="0.65"/>
+    <circle r="3.6" fill="#fff" stroke="#0a0f08" stroke-width="0.8"><animateMotion dur="3.6s" repeatCount="indefinite" calcMode="linear" path="M85 86 L85 55 L85 42 L85 30" keyPoints="0;0.554;0.554;0.786;0.786;1;1" keyTimes="0;.26;.4;.55;.68;.84;1"/></circle>
+    <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.84;.88;.96;1" dur="3.6s" repeatCount="indefinite"/>
+      <circle cx="116" cy="26" r="10" fill="#ff9f43"/><text x="116" y="29.6" fill="#0a0f06" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="900" text-anchor="middle">×3</text></g>
+  </svg>`;
   return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
     <ellipse cx="85" cy="54" rx="48" ry="31" fill="#2f6b39"/><ellipse cx="85" cy="54" rx="34" ry="21" fill="#357a3d" opacity="0.5"/><ellipse cx="80" cy="46" rx="15" ry="7" fill="#6cc471" opacity="0.28"/>
     <circle cx="85" cy="32" r="5" fill="#06120a"/>${flag(85, 32, 16)}
@@ -179,10 +188,11 @@ function statReel(cards) {
 function vStatReel(rounds, agg) {
   const holes = rounds.flatMap(r => r.holes);
   const onePutt = holes.length ? Math.round(holes.filter(h => h.putts != null && h.putts <= 1).length / holes.length * 100) : 0;
-  const noThree = Math.max(0, 100 - Math.round(agg.threePct || 0));
   const sd = agg.scoreDist || { total: 0, eagle: 0, birdie: 0, bogey: 0, dbl: 0 };
   const birdie = sd.total ? Math.round((sd.eagle + sd.birdie) / sd.total * 100) : 0;
   const bogeyPlus = sd.total ? Math.round((sd.bogey + sd.dbl) / sd.total * 100) : 0;
+  // 3-putts por ronda (normalizado a 18 hoyos)
+  const threePuttsPer18 = holes.length ? (holes.filter(h => h.putts >= 3).length / holes.length * 18) : 0;
   // distancia promedio a la que embocas el 1er putt
   const mid = { '0-3': 2, '3-8': 5, '8-20': 13, '20+': 25 };
   let mNum = 0, mDen = 0;
@@ -193,7 +203,7 @@ function vStatReel(rounds, agg) {
     ['gir', Math.round(agg.girPct) + '%', 'Greens en regulación'],
     ['ud', Math.round(agg.scrPct) + '%', 'Up & down'],
     ['putt', onePutt + '%', makeDist ? `Embocados · ~${makeDist} ft` : 'Putts embocados'],
-    ['lag', noThree + '%', 'Sin 3-putt'],
+    ['threeputt', threePuttsPer18.toFixed(1), '3-putts por ronda', 'warn'],
     ['bird', birdie + '%', 'Birdies o mejor'],
     ['bogey', bogeyPlus + '%', 'Bogeys o peor', 'warn'],
   ]);
@@ -357,10 +367,10 @@ function vDashboard() {
   }
 
   return head + `
-    <div class="sec-h" style="margin-top:16px"><h2 style="font-size:18px">Tu rendimiento</h2><span class="small muted">promedio de tus rondas →</span></div>
+    ${vLastRound(rounds)}
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Tu rendimiento</h2><span class="small muted">promedio de tus rondas →</span></div>
     ${vStatReel(rounds, agg)}
-    ${vMisNumeros(u, agg)}
-    ${vLastRound(rounds)}`;
+    ${vMisNumeros(u, agg)}`;
 }
 
 /* ---- reparto de score: birdies / pares / bogeys… ---- */

@@ -24,6 +24,22 @@ function golfBallSVG() {
   </svg>`;
 }
 
+/* tarjetas de drills animados (reel para la landing) */
+function lpDrillCards() {
+  const drills = [
+    ['Gate drill', 'putting', 'Putt', 'Centra la cara de tu putter'],
+    ['Escalera de distancias', 'approach', 'Approach', 'Domina tus carries'],
+    ['Up & down', 'short', 'Juego corto', 'Salva el par desde cualquier lie'],
+    ['14 calles a presión', 'driving', 'Salida', 'Encuentra la calle bajo presión'],
+    ['Splash de bunker', 'short', 'Bunker', 'Sal de la arena al primer intento'],
+    ['Lag putting', 'putting', 'Putt largo', 'Acaba con los 3-putts'],
+  ];
+  return drills.map(([name, area, tag, sub]) => `<div class="reel-card lp-drillcard">
+    <div class="reel-scene">${drillScene(name, area)}</div>
+    <div class="lp-drillmeta"><span class="lp-drilltag">${tag}</span><b>${esc(name)}</b><p>${esc(sub)}</p></div>
+  </div>`).join('');
+}
+
 function vLanding() {
   return `<div class="lp">
     <div class="lp-bg">
@@ -86,6 +102,22 @@ function vLanding() {
            [ICONS.social, 'Juega con amigos', 'Arma una partida con código. Cada quien apunta y la app lleva La corta en vivo.'],
            [golfIcon('trophy'), 'Trofeos y metas', 'Ponte objetivos y desbloquea logros conforme mejoras. Tu progreso, claro.']]
           .map(([ic, t, d]) => `<div class="lp-feat reveal"><div class="lp-feat-ic">${ic}</div><h3>${t}</h3><p>${d}</p></div>`).join('')}
+      </div>
+    </section>
+
+    <section class="lp-sec lp-train">
+      <span class="lp-eyebrow reveal">ENTRENA CON PROPÓSITO</span>
+      <h2 class="lp-h2 reveal">Drills que sí<br/><span class="lime">mueven la aguja.</span></h2>
+      <p class="lp-lead reveal">La IA detecta tu mayor fuga de golpes y arma la sesión: el drill, las repeticiones y el cronómetro. Tú solo ejecutas.</p>
+      <div class="lp-drillreel reveal"><div class="reel-track">${lpDrillCards()}${lpDrillCards()}</div></div>
+      <div class="lp-trainfeat reveal">
+        <div class="lp-trainfeat-art">${drillScene('Reloj con wedges', 'approach')}</div>
+        <div class="lp-trainfeat-body">
+          <span class="lp-eyebrow">TU SESIÓN DE HOY</span>
+          <h3>El entrenamiento que toca, ya armado.</h3>
+          <p>Cada sesión sale de tus rondas reales: pantalla interactiva, contador de aciertos y temporizador. Entrenas lo justo, no de más.</p>
+          <button class="lp-order" data-act="go" data-view="signup">EMPEZAR A ENTRENAR</button>
+        </div>
       </div>
     </section>
 
