@@ -188,31 +188,35 @@ function vAuth(mode) {
   const vals = V.authVals || {};
   const err = V.err ? `<p class="form-err">${esc(V.err)}</p>` : '';
   if (mode === 'login') {
-    return `<div class="shell no-nav fade-in">
+    return `<div class="shell no-nav fade-in auth-wrap">
       <button class="auth-back" data-act="go" data-view="landing">← Volver</button>
-      <h1 class="auth-h">Hola de nuevo</h1>
-      <p class="auth-sub">Inicia sesión para seguir construyendo tu perfil de jugador.</p>
-      <div class="field"><label>Email</label><input id="f-email" type="email" autocomplete="email" placeholder="tu@email.com" value="${esc(vals.email || '')}"></div>
-      <div class="field"><label>Contraseña</label><input id="f-pass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
-      ${err}
-      <button class="btn primary" data-act="login">Iniciar sesión</button>
-      <p class="auth-alt">¿Aún no tienes cuenta? <button data-act="go" data-view="signup">Crear cuenta gratis</button></p>
+      <div class="auth-card">
+        <h1 class="auth-h">Hola de nuevo</h1>
+        <p class="auth-sub">Inicia sesión para seguir construyendo tu perfil de jugador.</p>
+        <div class="field"><label>Email</label><input id="f-email" type="email" autocomplete="email" placeholder="tu@email.com" value="${esc(vals.email || '')}"></div>
+        <div class="field"><label>Contraseña</label><input id="f-pass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+        ${err}
+        <button class="btn primary" data-act="login">Iniciar sesión</button>
+        <p class="auth-alt">¿Aún no tienes cuenta? <button data-act="go" data-view="signup">Crear cuenta gratis</button></p>
+      </div>
     </div>`;
   }
-  return `<div class="shell no-nav fade-in">
+  return `<div class="shell no-nav fade-in auth-wrap">
     <button class="auth-back" data-act="go" data-view="landing">← Volver</button>
-    <h1 class="auth-h">Crea tu cuenta</h1>
-    <p class="auth-sub">60 segundos y empiezas a registrar. Tus datos se guardan en este dispositivo.</p>
-    <div class="field"><label>Nombre</label><input id="f-name" type="text" autocomplete="name" placeholder="¿Cómo te llamamos?" value="${esc(vals.name || '')}"></div>
-    <div class="field"><label>Email</label><input id="f-email" type="email" autocomplete="email" placeholder="tu@email.com" value="${esc(vals.email || '')}"></div>
-    <div class="field"><label>Contraseña</label><input id="f-pass" type="password" autocomplete="new-password" placeholder="Mínimo 4 caracteres"></div>
-    <div class="field-row">
-      <div class="field"><label>Hándicap actual</label><input id="f-hcp" type="number" inputmode="decimal" step="1" placeholder="ej. 18" value="${esc(vals.hcp ?? '')}"></div>
-      <div class="field"><label>Meta</label><input id="f-goal" type="number" inputmode="decimal" step="1" placeholder="ej. 12" value="${esc(vals.goal ?? '')}"></div>
+    <div class="auth-card">
+      <h1 class="auth-h">Crea tu cuenta</h1>
+      <p class="auth-sub">60 segundos y empiezas a registrar. Tus datos se guardan en este dispositivo.</p>
+      <div class="field"><label>Nombre</label><input id="f-name" type="text" autocomplete="name" placeholder="¿Cómo te llamamos?" value="${esc(vals.name || '')}"></div>
+      <div class="field"><label>Email</label><input id="f-email" type="email" autocomplete="email" placeholder="tu@email.com" value="${esc(vals.email || '')}"></div>
+      <div class="field"><label>Contraseña</label><input id="f-pass" type="password" autocomplete="new-password" placeholder="Mínimo 4 caracteres"></div>
+      <div class="field-row">
+        <div class="field"><label>Hándicap actual</label><input id="f-hcp" type="number" inputmode="decimal" step="1" placeholder="ej. 18" value="${esc(vals.hcp ?? '')}"></div>
+        <div class="field"><label>Meta</label><input id="f-goal" type="number" inputmode="decimal" step="1" placeholder="ej. 12" value="${esc(vals.goal ?? '')}"></div>
+      </div>
+      <label class="check"><input id="f-demo" type="checkbox" ${vals.demo ? 'checked' : ''}> Cargar datos de ejemplo para explorar la app</label>
+      ${err}
+      <button class="btn primary" data-act="signup">Crear cuenta gratis</button>
+      <p class="auth-alt">¿Ya tienes cuenta? <button data-act="go" data-view="login">Iniciar sesión</button></p>
     </div>
-    <label class="check"><input id="f-demo" type="checkbox" ${vals.demo ? 'checked' : ''}> Cargar datos de ejemplo para explorar la app</label>
-    ${err}
-    <button class="btn primary" data-act="signup">Crear cuenta gratis</button>
-    <p class="auth-alt">¿Ya tienes cuenta? <button data-act="go" data-view="login">Iniciar sesión</button></p>
   </div>`;
 }

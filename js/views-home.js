@@ -598,7 +598,8 @@ function vPlayerCard(u, agg) {
       </div>
       ${avatarImg(u, 'pl-hero-av')}
     </div>
-    <div class="pl-rr-list" style="margin-top:12px">${rows}</div>`;
+    ${agg ? `<div class="pl-rr-list" style="margin-top:12px">${rows}</div>`
+      : `<div class="card pl-empty"><span class="pl-empty-ic">${golfIcon('flag')}</span><b>Aún sin estadísticas</b><p>Registra tu primera ronda y aquí verás tus fairways, greens, putts y más.</p><button class="btn primary" data-act="quick-round">Registrar ronda →</button></div>`}`;
 }
 
 /* ============ Perfil (página) ============ */
@@ -608,6 +609,33 @@ function vPerfil() {
   return `<div class="sec-h"><h2>Tu perfil</h2><button class="sec-edit" data-act="profile-edit" aria-label="Ajustes">⚙ Ajustes</button></div>
     ${vPlayerCard(u, agg)}
     ${vLogros()}`;
+}
+
+/* ============ Bienvenida / onboarding (primer ingreso) ============ */
+function vOnboard() {
+  const u = cur();
+  return `<div class="onb">
+    <div class="onb-top">
+      <span class="lp-logo">${logoMark(18)} PARFECT</span>
+      <button class="onb-skip" data-act="finish-onboard">Saltar</button>
+    </div>
+    <div class="onb-body">
+      <h1 class="onb-h1">¡Bienvenido,<br/><span class="lime">${esc((u.name || '').split(' ')[0])}</span>!</h1>
+      <p class="onb-sub">Crea tu golfista y dinos cómo juegas. Toma 1 minuto y lo cambias cuando quieras.</p>
+      ${vAvatarCreator(u)}
+      <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Cómo juegas</h2></div>
+      <div class="card">
+        <div class="field-row">
+          <div class="field"><label>Hándicap</label><input id="p-hcp" type="number" step="1" value="${esc(u.hcp)}"></div>
+          <div class="field"><label>Meta</label><input id="p-goal" type="number" step="1" value="${esc(u.goal)}"></div>
+        </div>
+        <div class="field"><label>Campo de casa</label>
+          <div class="chips">${COURSE_ORDER.map(id => `<button class="chip sm ${(u.homeCourse || 'campestre') === id ? 'on' : ''}" data-act="prof-campo" data-c="${id}">${esc(COURSES[id].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', ''))}</button>`).join('')}</div>
+        </div>
+      </div>
+      <button class="btn primary big" data-act="finish-onboard" style="margin-top:18px">Empezar a jugar →</button>
+    </div>
+  </div>`;
 }
 
 /* ============ Perfil · panel de ajustes (datos + golfista + bolsa + config) ============ */

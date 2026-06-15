@@ -67,6 +67,7 @@ function App() {
     if (V.view === 'login' || V.view === 'signup') return vAuth(V.view);
     return vLanding();
   }
+  if (u.onboarded === false) return vOnboard();
   if (V.view === 'play') {
     if (!S.active || S.active.userId !== u.id) { V.view = 'ronda'; }
     else return vPlay();
@@ -139,7 +140,7 @@ const actions = {
     if (S.users.some(x => x.email === email)) { V.err = 'Ya existe una cuenta con ese email en este dispositivo.'; render(); return; }
     const hcp = hcpRaw === '' ? 18 : Math.round(Number(hcpRaw));
     const goal = goalRaw === '' ? Math.max(hcp - 5, 0) : Math.round(Number(goalRaw));
-    const u = { id: Store.uid(), name, email, pass: await hashPass(pass), hcp, goal, createdAt: Date.now() };
+    const u = { id: Store.uid(), name, email, pass: await hashPass(pass), hcp, goal, createdAt: Date.now(), onboarded: demo ? true : false };
     S.users.push(u);
     S.session = u.id;
     if (demo) {
@@ -168,6 +169,15 @@ const actions = {
     const g = val('p-goal'); if (g !== '') u.goal = Math.round(Number(g));
     u.homeCourse = d.c;
     commit();
+  },
+  'finish-onboard'() {
+    const u = cur(); if (!u) return;
+    const n = val('p-name'); if (n) u.name = n;
+    const h = val('p-hcp'); if (h !== '') u.hcp = Math.round(Number(h)) || u.hcp;
+    const g = val('p-goal'); if (g !== '') u.goal = Math.round(Number(g));
+    u.onboarded = true;
+    V.view = 'inicio';
+    commit(); window.scrollTo(0, 0);
   },
   'profile-save'() {
     const u = cur();
