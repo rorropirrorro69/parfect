@@ -28,10 +28,31 @@ const TM_DOGS = ['left', 'right', 'straight', 'straight', 'left', 'straight', 'l
 const ALT_PARS = [4, 5, 4, 4, 3, 5, 3, 4, 4, 4, 4, 3, 4, 3, 4, 5, 4, 5];
 const ALT_YDS = ALT_PARS.map(p => p === 3 ? 195 : p === 4 ? 420 : 565);
 const ALT_DOGS = ['left', 'left', 'right', 'left', 'straight', 'right', 'straight', 'left', 'right', 'left', 'right', 'straight', 'right', 'straight', 'right', 'left', 'left', 'left'];
+/* Greens reales de Altozano (hoja de banderas viernes/sábado): d=profundidad yds, pf=posición pin frente(0)→fondo(1), px=pin izq(-1)→der(1), sh=forma, bk=bunkers alrededor */
+const ALT_GREENS = [
+  { d: 31, pf: 0.19, px: 0.0, sh: 'round', bk: ['fl'] },         // 1
+  { d: 43, pf: 0.88, px: 0.0, sh: 'tall', bk: ['fl'] },          // 2
+  { d: 38, pf: 0.26, px: 0.45, sh: 'wide', bk: ['f', 'fr'] },    // 3
+  { d: 28, pf: 0.25, px: 0.45, sh: 'round', bk: ['fl', 'r'] },   // 4
+  { d: 26, pf: 0.54, px: 0.0, sh: 'round', bk: ['l', 'f'] },     // 5
+  { d: 31, pf: 0.84, px: 0.0, sh: 'round', bk: ['fl'] },         // 6
+  { d: 28, pf: 0.5, px: -0.4, sh: 'round', bk: ['fl'] },         // 7
+  { d: 31, pf: 0.84, px: 0.4, sh: 'round', bk: ['r'] },          // 8
+  { d: 48, pf: 0.21, px: 0.4, sh: 'tall', bk: ['r', 'br'] },     // 9
+  { d: 35, pf: 0.4, px: 0.0, sh: 'wide', bk: ['l'] },            // 10
+  { d: 43, pf: 0.23, px: 0.0, sh: 'wide', bk: ['fl', 'fr'] },    // 11
+  { d: 41, pf: 0.51, px: 0.0, sh: 'tall', bk: ['fl'] },          // 12
+  { d: 36, pf: 0.33, px: 0.0, sh: 'round', bk: [] },             // 13
+  { d: 23, pf: 0.78, px: -0.4, sh: 'round', bk: [] },            // 14
+  { d: 28, pf: 0.18, px: 0.45, sh: 'round', bk: ['bl', 'l'] },   // 15
+  { d: 34, pf: 0.85, px: 0.0, sh: 'wide', bk: ['l'] },           // 16
+  { d: 22, pf: 0.45, px: 0.0, sh: 'tall', bk: ['bl'] },          // 17
+  { d: 27, pf: 0.81, px: 0.4, sh: 'round', bk: ['br'] },         // 18
+];
 const COURSES = {
   campestre: { id: 'campestre', name: 'Club Campestre Morelia', sub: '9 hoyos · Par 36', holes: CAMP_HOLES },
   tresmarias: { id: 'tresmarias', name: 'Tres Marías · El Reto', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(TM_PARS, TM_YDS, TM_DOGS) },
-  altozano: { id: 'altozano', name: 'Altozano Morelia', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(ALT_PARS, ALT_YDS, ALT_DOGS) },
+  altozano: { id: 'altozano', name: 'Altozano Morelia', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(ALT_PARS, ALT_YDS, ALT_DOGS).map((h, i) => Object.assign(h, { g: ALT_GREENS[i] })) },
 };
 const COURSE_ORDER = ['campestre', 'tresmarias', 'altozano'];
 /* salidas (tees): factor sobre la yardaja del campo (las yardas base son de campeonato) */

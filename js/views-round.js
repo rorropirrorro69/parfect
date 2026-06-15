@@ -154,25 +154,43 @@ function captureSchematic(h, chole, noZoom, clean) {
   const ctrl = par3 ? [150, 165] : (dog === 'left' ? [198, 158] : dog === 'right' ? [102, 158] : [150, 158]);
   const gx = green[0], gy = green[1], halfW = 50;
   const fair = `M${tee[0]},${tee[1]} Q ${ctrl[0]},${ctrl[1]} ${gx},${gy}`;
-  // peligros del campo (agua/arena, sin etiquetas)
-  const haz = ((chole && chole.risks) || []).map(r => {
+  // green real del hoyo (forma + bunkers + pin) si el campo lo trae (Altozano)
+  const G = (chole && chole.g) || null;
+  let gw = 33, gh = 23;
+  if (G) {
+    if (G.sh === 'wide') { gw = 40; gh = 19; }
+    else if (G.sh === 'tall') { gw = 27; gh = 28; }
+    const sc = Math.max(0.85, Math.min(1.16, G.d / 33));
+    gw = Math.min(42, gw * sc * 0.94); gh = Math.min(29, gh * sc);
+  }
+  const pf = G ? G.pf : 0.5, px = G ? G.px : 0;
+  const pin = { x: gx + px * gw * 0.55, y: gy + (0.5 - pf) * gh * 1.5 };
+  // peligros del campo (agua/arena, sin etiquetas). Con green real, los bunkers del green los pone G.bk
+  const haz = ((chole && chole.risks) || []).filter(r => !G || r.at === 'drive' || r.kind === 'water').map(r => {
     let rx, ry;
     if (r.at === 'drive') { rx = bez(0.5, tee[0], ctrl[0], gx) + (r.side === 'left' ? -40 : 40); ry = bez(0.5, tee[1], ctrl[1], gy); }
     else { rx = gx + (r.side === 'left' ? -44 : 44); ry = gy + 10; }
     const water = r.kind === 'water';
     return `<ellipse cx="${rx.toFixed(0)}" cy="${ry.toFixed(0)}" rx="${water ? 22 : 16}" ry="${water ? 13 : 9}" fill="${water ? 'url(#g3dWater)' : 'url(#g3dSand)'}"/>`;
   }).join('');
+  // bunkers alrededor del green (posición relativa al green, según hoja de banderas)
+  const BPOS = { fl: [-0.72, 0.85], fr: [0.72, 0.85], f: [0, 1.06], l: [-1.04, 0.05], r: [1.04, 0.05], bl: [-0.72, -0.8], br: [0.72, -0.8], b: [0, -0.95] };
+  const bunkers = (G ? G.bk : []).map(code => {
+    const o = BPOS[code]; if (!o) return '';
+    const bx = (gx + o[0] * gw).toFixed(0), by = gy + o[1] * gh;
+    return `<ellipse cx="${bx}" cy="${(by + 2).toFixed(0)}" rx="13" ry="8.6" fill="#16401c" opacity="0.24"/><ellipse cx="${bx}" cy="${by.toFixed(0)}" rx="12" ry="7.6" fill="url(#g3dSand)"/>`;
+  }).join('');
   // árbol estilizado 3D (copa + tronco + sombra)
   const tree = (x, y, s) => `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(${s.toFixed(2)})"><ellipse cx="0" cy="4" rx="10" ry="3.2" fill="#16401c" opacity="0.32"/><rect x="-2.2" y="-5" width="4.4" height="11" rx="1.6" fill="#6b4a2a"/><circle cx="0" cy="-13" r="11.5" fill="#39863a"/><circle cx="-7" cy="-8" r="8.5" fill="#479a44"/><circle cx="7" cy="-9" r="8.5" fill="#479a44"/><circle cx="-3" cy="-17" r="7.5" fill="#57ad50"/><circle cx="4" cy="-15" r="6.5" fill="#57ad50"/></g>`;
   let trees = '';
   for (let i = 0; i < 6; i++) { const ty = 252 - i * 40; const s = 0.42 + (ty / 296) * 0.72; trees += tree(20, ty, s) + tree(280, ty, s); }
   // campo con profundidad (cielo lejano arriba, pasto que aclara al frente, árboles a los lados)
-  const green3d = `${haz}
-    <ellipse cx="${gx}" cy="${gy + 5}" rx="35" ry="23" fill="#16401c" opacity="0.3"/>
-    <ellipse cx="${gx}" cy="${gy}" rx="34" ry="22" fill="#54ad58" stroke="#2f7a38" stroke-width="2"/>
-    <ellipse cx="${gx - 9}" cy="${gy - 6}" rx="15" ry="8" fill="#79c970" opacity="0.6"/>
-    <circle cx="${gx}" cy="${gy}" r="4.6" fill="#08260f"/>
-    <line x1="${gx}" y1="${gy}" x2="${gx}" y2="${gy - 24}" stroke="#ffffff" stroke-width="2"/><path d="M${gx},${gy - 24} l12,3.6 -12,3.6z" fill="#c9f73e"/>
+  const green3d = `${haz}${bunkers}
+    <ellipse cx="${gx}" cy="${(gy + 5).toFixed(0)}" rx="${(gw + 1).toFixed(0)}" ry="${(gh + 1).toFixed(0)}" fill="#16401c" opacity="0.3"/>
+    <ellipse cx="${gx}" cy="${gy}" rx="${gw.toFixed(0)}" ry="${gh.toFixed(0)}" fill="#54ad58" stroke="#2f7a38" stroke-width="2"/>
+    <ellipse cx="${(gx - gw * 0.26).toFixed(0)}" cy="${(gy - gh * 0.28).toFixed(0)}" rx="${(gw * 0.44).toFixed(0)}" ry="${(gh * 0.34).toFixed(0)}" fill="#79c970" opacity="0.55"/>
+    <circle cx="${pin.x.toFixed(0)}" cy="${pin.y.toFixed(0)}" r="4.6" fill="#08260f"/>
+    <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - 24).toFixed(0)}" stroke="#ffffff" stroke-width="2"/><path d="M${pin.x.toFixed(0)},${(pin.y - 24).toFixed(0)} l12,3.6 -12,3.6z" fill="#c9f73e"/>
     <rect x="${tee[0] - 9}" y="${tee[1]}" width="18" height="6" rx="2" fill="#caa15e"/>`;
   const field = `<rect width="${W}" height="${H}" fill="url(#g3dGrass)"/>
     <rect width="${W}" height="72" fill="url(#g3dHorizon)"/>
@@ -199,14 +217,14 @@ function captureSchematic(h, chole, noZoom, clean) {
   const nPutts = h.putts != null ? h.putts : 0;
   const dyOf = { '0-3': 16, '3-8': 26, '8-20': 40, '20+': 56 };
   const lagDy = nPutts > 0 ? (dyOf[h.dist] != null ? dyOf[h.dist] : 28) : 0;
-  let lagIdx = -1, lag = { x: gx, y: gy };
+  let lagIdx = -1, lag = { x: pin.x, y: pin.y };
   if (nPutts > 0) {
     lagIdx = shots.findIndex(s => s.lie === 'green');
-    lag = { x: gx + 2, y: gy + lagDy };
+    lag = { x: pin.x + 2, y: pin.y + lagDy };
     if (lagIdx >= 0) fpts[lagIdx] = { x: lag.x, y: lag.y };
   }
   const pputts = [];
-  for (let i = 0; i < nPutts; i++) { const f = (i + 1) / nPutts; pputts.push({ x: lag.x + (gx - lag.x) * f, y: lag.y + (gy - lag.y) * f }); }
+  for (let i = 0; i < nPutts; i++) { const f = (i + 1) / nPutts; pputts.push({ x: lag.x + (pin.x - lag.x) * f, y: lag.y + (pin.y - lag.y) * f }); }
   const pts = [...fpts, ...pputts];
   const lagNode = lagIdx >= 0 ? lagIdx + 1 : (nPutts > 0 ? fpts.length + 1 : -1);
   const seq = shots.concat(Array.from({ length: nPutts }, () => ({ role: 'putt', ok: true })));
