@@ -94,11 +94,11 @@ function vTrainer() {
   const entreno = vRecommendedDrills(u, Stats.aggregate(myRounds())) + vTracker()
     + `<div class="sec-h" style="margin-top:20px"><h2 style="font-size:18px">Biblioteca de drills</h2></div>`
     + vDrillsLibrary();
-  const body = tab === 'entreno' ? entreno : tab === 'cal' ? vCalendar() : tab === 'campos' ? vEstrategia() : mainPage;
+  const body = tab === 'entreno' ? entreno : tab === 'cal' ? vCalendar() : mainPage;
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
     <div class="tabs scroll">
-      ${T('diag', 'Resumen')}${T('campos', 'Estrategia')}${T('entreno', 'Entrenamiento')}${T('cal', 'Calendario')}
+      ${T('diag', 'Resumen')}${T('entreno', 'Entrenamiento')}${T('cal', 'Calendario')}
     </div>
     ${body}`;
 }
