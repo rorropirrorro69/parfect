@@ -1,32 +1,34 @@
-/* ============ Estrategia de campo (beta) — Club de Golf Campestre Morelia ============
-   Datos del mapa oficial del club (par/yardas reales, 9 hoyos · par 72).
-   Cada hoyo se recrea como dibujo propio fiel al trazo real (dogleg, agua, green).
-   La zona de aterrizaje se calcula con la dispersión real del jugador. */
+/* ============ Plan de juego por hoyo (sin mapa) — Club Campestre Morelia ============
+   Datos reales del scorecard del club (par/yardas, 9 hoyos · par 72).
+   Recomendación calculada con la dispersión real del jugador y su bolsa de palos.
+   Sin dibujo del hoyo: no se puede recrear con precisión, así que damos el plan en datos. */
 
 const CAMP_COURSE = { name: 'Club Campestre Morelia', sub: '9 hoyos · Par 72 · plano' };
 
-/* yds = mesa azul (campeonato). dog: left|right|straight. hazard: water/bunker + lado */
 const CAMP_HOLES = [
   { n: 1, par: 5, yds: 503, dog: 'straight', hazard: 'bunker-right', desc: 'Par 5 largo y plano; calle amplia.',
-    tips: ['Driver al centro-izquierda: los dos bunkers de calle quedan a la derecha de tu zona.', 'Solo los pegadores llegan en dos; si no, deja un wedge cómodo de tercer golpe.'],
-    geo: { tee: [180, 446], green: [166, 98], ctrl: [198, 262], fairW: 78, bunkers: [[236, 250, 17, 11], [257, 275, 14, 9], [126, 116, 18, 12]], water: [] } },
+    tips: ['Driver al centro-izquierda: los bunkers de calle quedan a la derecha.', 'Solo los pegadores llegan en dos; si no, deja un wedge cómodo de tercer golpe.'] },
   { n: 2, par: 5, yds: 550, dog: 'right', hazard: 'bunker-left', desc: 'El par 5 más largo; un arroyo cruza antes del green.',
-    tips: ['El hoyo más largo del campo: prioriza calle, no distancia.', 'El arroyo cruza antes del green — si no llegas en dos, deja el tercer golpe corto del agua.'],
-    geo: { tee: [180, 446], green: [212, 100], ctrl: [150, 252], fairW: 74, bunkers: [[246, 118, 16, 11], [150, 300, 15, 10]], water: [], stream: { y: 206 } } },
+    tips: ['Prioriza calle, no distancia: es el hoyo más largo.', 'El arroyo cruza antes del green — si no llegas en dos, deja el tercer golpe corto del agua.'] },
   { n: 3, par: 3, yds: 174, dog: 'straight', hazard: 'water-left', desc: 'Par 3 corto con laguna a la izquierda del green.',
-    tips: ['Apunta al centro-derecha del green; la laguna castiga el lado izquierdo.', 'Fallar a la derecha (al bunker) se salva mejor que mojar la bola.'],
-    geo: { tee: [180, 446], green: [196, 118], ctrl: [186, 300], fairW: 42, bunkers: [[232, 106, 16, 11]], water: [[126, 150, 30, 20]] } },
-  { n: 4, par: 4, yds: 405, dog: 'left', hazard: 'bunker-right', desc: 'Dogleg suave a la izquierda.' },
-  { n: 5, par: 3, yds: 201, dog: 'straight', hazard: 'bunker-left', desc: 'El par 3 más largo; toma palo de más.' },
-  { n: 6, par: 4, yds: 432, dog: 'right', hazard: 'bunker-left', desc: 'Par 4 largo; coloca el drive a la derecha.' },
-  { n: 7, par: 5, yds: 529, dog: 'left', hazard: 'water-right', desc: 'Par 5 alcanzable en dos si pegas recto.' },
-  { n: 8, par: 3, yds: 176, dog: 'straight', hazard: 'water-left', desc: 'Par 3 sobre el agua a la izquierda.' },
-  { n: 9, par: 4, yds: 407, dog: 'right', hazard: 'bunker-right', desc: 'Par 4 de cierre hacia la casa club.' },
+    tips: ['Apunta al centro-derecha del green; la laguna castiga la izquierda.', 'Fallar a la derecha (al bunker) se salva mejor que mojar la bola.'] },
+  { n: 4, par: 4, yds: 405, dog: 'left', hazard: 'bunker-right', desc: 'Dogleg suave a la izquierda.',
+    tips: ['Coloca el drive en el centro; deja approach de hierro medio.'] },
+  { n: 5, par: 3, yds: 201, dog: 'straight', hazard: 'bunker-left', desc: 'El par 3 más largo; toma palo de más.',
+    tips: ['Es largo: toma un palo más y juega al centro del green.'] },
+  { n: 6, par: 4, yds: 432, dog: 'right', hazard: 'bunker-left', desc: 'Par 4 largo; coloca el drive.',
+    tips: ['Par 4 exigente: prioriza estar en calle para atacar el green.'] },
+  { n: 7, par: 5, yds: 529, dog: 'left', hazard: 'water-right', desc: 'Par 5 alcanzable en dos si pegas recto.',
+    tips: ['Si pegas recto, es alcanzable en dos; ojo con el agua a la derecha.'] },
+  { n: 8, par: 3, yds: 176, dog: 'straight', hazard: 'water-left', desc: 'Par 3 sobre el agua a la izquierda.',
+    tips: ['Apunta al centro-derecha; el agua castiga el lado izquierdo.'] },
+  { n: 9, par: 4, yds: 407, dog: 'right', hazard: 'bunker-right', desc: 'Par 4 de cierre hacia la casa club.',
+    tips: ['Hoyo de cierre: deja la bola en calle y ataca el green al centro.'] },
 ];
 
 function clubForDistance(user, yds) {
   const clubs = (user && user.clubs) || {};
-  const bag = CLUBS.map(c => ({ name: c.name, carry: clubs[c.id] != null ? clubs[c.id] : CLUB_DEFAULT[c.id] }))
+  const bag = (typeof CLUBS !== 'undefined' ? CLUBS : []).map(c => ({ name: c.name, carry: clubs[c.id] != null ? clubs[c.id] : CLUB_DEFAULT[c.id] }))
     .filter(c => c.carry);
   if (!bag.length) return null;
   bag.sort((a, b) => Math.abs(a.carry - yds) - Math.abs(b.carry - yds));
@@ -51,7 +53,7 @@ function strategyRecommend(hole, user, agg) {
     return { par3: true, club: club ? club.name : 'Hierro', leave: hole.yds, aim, reason, width, bias };
   }
 
-  const carry = (user.clubs && user.clubs.dr) || CLUB_DEFAULT.dr;
+  const carry = (user.clubs && user.clubs.dr) || (typeof CLUB_DEFAULT !== 'undefined' ? CLUB_DEFAULT.dr : 250);
   const dl = hole.dog;
   let club, landing, aim, reason;
   const tight = width >= 46 && ((dl === 'left' && bias === 'der') || (dl === 'right' && bias === 'izq'));
@@ -71,109 +73,13 @@ function strategyRecommend(hole, user, agg) {
   return { par3: false, club, landing, leave, aim, reason, width, bias, approach: approach ? approach.name : null };
 }
 
-function bez(t, p0, c, p2) {
-  const u = 1 - t;
-  return u * u * p0 + 2 * u * t * c + t * t * p2;
-}
-
-/* Render con geometría REAL del mapa (coordenadas del PDF), orientación norte arriba */
-function holeRealSVG(hole, rec, G) {
-  const par3 = hole.par === 3;
-  const [x0, y0, w, h] = G.bbox;
-  const VW = 340, s = VW / w, H = Math.round(h * s);
-  const sx = x => +((x - x0) * s).toFixed(1), sy = y => +((y - y0) * s).toFixed(1);
-  const colors = { turf: '#2f6b39', agua: '#2f7fa6', arena: '#ddcb8c' };
-  const ord = { turf: 0, arena: 1, agua: 2 };
-  const polys = [...G.polys].sort((a, b) => ord[a.k] - ord[b.k])
-    .map(p => `<path d="${p.d}" fill="${colors[p.k]}"/>`).join('');
-  const tee = [sx(G.tee[0]), sy(G.tee[1])], pin = [sx(G.pin[0]), sy(G.pin[1])];
-  const t = par3 ? 1 : Math.max(0.2, Math.min(0.86, rec.landing / hole.yds));
-  const lx = tee[0] + (pin[0] - tee[0]) * t, ly = tee[1] + (pin[1] - tee[1]) * t;
-  const lrx = Math.max(15, Math.min(34, rec.width * 0.55)), lry = lrx * 0.78;
-  const route = par3
-    ? `M${tee[0]},${tee[1]} L${pin[0]},${pin[1]}`
-    : `M${tee[0]},${tee[1]} L${lx.toFixed(0)},${ly.toFixed(0)} L${pin[0]},${pin[1]}`;
-  return `<svg width="100%" viewBox="0 0 ${VW} ${H}" role="img" aria-label="Estrategia hoyo ${hole.n}">
-    <rect x="0" y="0" width="${VW}" height="${H}" rx="16" fill="#0a0f08" stroke="#1d2914"/>
-    <g transform="scale(${s.toFixed(4)}) translate(${(-x0).toFixed(1)},${(-y0).toFixed(1)})">${polys}</g>
-    <ellipse cx="${lx.toFixed(0)}" cy="${ly.toFixed(0)}" rx="${(lrx + 10).toFixed(0)}" ry="${(lry + 8).toFixed(0)}" fill="#c9f73e" opacity="0.08"/>
-    <path d="${route}" fill="none" stroke="#c9f73e" stroke-width="2.5" stroke-dasharray="3 6"/>
-    <ellipse cx="${lx.toFixed(0)}" cy="${ly.toFixed(0)}" rx="${lrx.toFixed(0)}" ry="${lry.toFixed(0)}" fill="#c9f73e" opacity="0.16" stroke="#c9f73e" stroke-width="1.5" stroke-dasharray="4 4">
-      <animate attributeName="opacity" values="0.1;0.24;0.1" dur="2.4s" repeatCount="indefinite"/>
-    </ellipse>
-    <circle r="5" fill="#ffffff">
-      <animateMotion dur="3.2s" repeatCount="indefinite" path="${route}"/>
-      <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.06;0.5;0.85;1" dur="3.2s" repeatCount="indefinite"/>
-    </circle>
-    <line x1="${pin[0]}" y1="${pin[1]}" x2="${pin[0]}" y2="${(pin[1] - 26)}" stroke="#eef3e6" stroke-width="2"/>
-    <path d="M${pin[0]},${(pin[1] - 26)} L${(pin[0] + 14)},${(pin[1] - 22)} L${pin[0]},${(pin[1] - 18)} Z" fill="#c9f73e"/>
-    <circle cx="${pin[0]}" cy="${pin[1]}" r="3" fill="#0a0f08" stroke="#eef3e6" stroke-width="1"/>
-    <rect x="${(tee[0] - 9)}" y="${(tee[1] - 5)}" width="18" height="7" rx="2" fill="#9ab07f"/>
-    <text x="${tee[0]}" y="${(tee[1] + 16)}" fill="#9ab07f" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="700" text-anchor="middle">TEE</text>
-    ${!par3 ? `<rect x="${(lx - 46).toFixed(0)}" y="${(ly - lry - 23).toFixed(0)}" width="92" height="20" rx="10" fill="#c9f73e"/>
-      <text x="${lx.toFixed(0)}" y="${(ly - lry - 9).toFixed(0)}" fill="#0a0f08" font-family="Inter,system-ui,sans-serif" font-size="10.5" font-weight="800" text-anchor="middle">Tu zona ideal</text>` : ''}
-  </svg>`;
-}
-
-function holeStrategySVG(hole, rec) {
-  const real = window.CAMP_GEO && window.CAMP_GEO[hole.n];
-  if (real) return holeRealSVG(hole, rec, real);
-  const W = 360, H = 470;
-  const par3 = hole.par === 3;
-  const g = hole.geo;
-  const tee = g ? g.tee : [180, 446];
-  const green = g ? g.green : [hole.dog === 'left' ? 124 : hole.dog === 'right' ? 236 : 180, 104];
-  const ctrl = g ? g.ctrl : [par3 ? 180 : (hole.dog === 'left' ? 232 : hole.dog === 'right' ? 128 : 180), 262];
-  const gx = green[0], gy = green[1];
-  const fairW = g ? g.fairW : (par3 ? 40 : 74);
-  const fairD = `M${tee[0]},${tee[1]} Q ${ctrl[0]},${ctrl[1]} ${gx},${gy}`;
-
-  const t = par3 ? 1 : Math.max(0.15, Math.min(0.82, rec.landing / hole.yds));
-  const lx = par3 ? gx : bez(t, tee[0], ctrl[0], gx);
-  const ly = par3 ? gy : bez(t, tee[1], ctrl[1], gy);
-  const lrx = Math.max(24, Math.min(56, rec.width));
-  const lry = lrx * 0.58;
-
+function hazardAvoid(hole) {
   const hz = hole.hazard || '';
-  const waters = g && g.water ? g.water : (hz.includes('water') ? [[gx + (hz.includes('left') ? -54 : 54), gy + 30, 30, 19]] : []);
-  const bunkers = g && g.bunkers ? g.bunkers : (hz.includes('bunker') ? [[gx + (hz.includes('left') ? -54 : 54), gy + 28, 24, 14]] : []);
-  let hazSVG = '';
-  for (const w of waters) hazSVG += `<ellipse cx="${w[0]}" cy="${w[1]}" rx="${w[2]}" ry="${w[3]}" fill="#2f7fa6"/><ellipse cx="${w[0] - 5}" cy="${w[1] - 4}" rx="${Math.max(8, w[2] * 0.55)}" ry="${Math.max(5, w[3] * 0.5)}" fill="#3f96bd" opacity="0.7"/>`;
-  for (const b of bunkers) hazSVG += `<ellipse cx="${b[0]}" cy="${b[1]}" rx="${b[2]}" ry="${b[3]}" fill="#ddcb8c"/>`;
-  const stream = g && g.stream ? `<path d="M6,${g.stream.y + 14} Q 180,${g.stream.y - 12} 354,${g.stream.y + 8}" fill="none" stroke="#2f7fa6" stroke-width="9" opacity="0.85"/>` : '';
-  let hazLabel = '';
-  if (waters.length) { const w = waters[0]; hazLabel = `<rect x="${w[0] - 26}" y="${w[1] - w[3] - 22}" width="52" height="18" rx="9" fill="#16323f" stroke="#3f96bd"/><text x="${w[0]}" y="${w[1] - w[3] - 9}" fill="#7fc3df" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="800" text-anchor="middle">Agua</text>`; }
-
-  const recRoute = par3 ? `M${tee[0]},${tee[1]} L${gx},${gy}` : `M${tee[0]},${tee[1]} L${lx.toFixed(0)},${ly.toFixed(0)} L${gx},${gy}`;
-  const cutX = gx > tee[0] ? gx - 16 : gx < tee[0] ? gx + 16 : 180;
-  const aggRoute = par3 ? '' : `M${tee[0]},${tee[1]} L${cutX},250 L${gx},${gy}`;
-
-  return `<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Estrategia hoyo ${hole.n}">
-    <rect x="0" y="0" width="${W}" height="${H}" rx="18" fill="#0a0f08" stroke="#1d2914"/>
-    <path d="${fairD}" fill="none" stroke="#2f6b39" stroke-width="${fairW}" stroke-linecap="round"/>
-    <path d="${fairD}" fill="none" stroke="#3a8043" stroke-width="${fairW - 26}" stroke-linecap="round" opacity="0.5"/>
-    ${stream}
-    <ellipse cx="${gx}" cy="${gy}" rx="42" ry="30" fill="#57b15c" stroke="#2f6b39" stroke-width="2"/>
-    <circle cx="${gx + 6}" cy="${gy + 2}" r="3.2" fill="#0a0f08"/>
-    <line x1="${gx + 6}" y1="${gy + 2}" x2="${gx + 6}" y2="${gy - 38}" stroke="#eef3e6" stroke-width="2"/>
-    <path d="M${gx + 6},${gy - 38} L${gx + 22},${gy - 33} L${gx + 6},${gy - 28} Z" fill="#c9f73e"/>
-    ${hazSVG}
-    <ellipse cx="${lx.toFixed(0)}" cy="${ly.toFixed(0)}" rx="${(lrx + 14).toFixed(0)}" ry="${(lry + 9).toFixed(0)}" fill="#c9f73e" opacity="0.08"/>
-    ${aggRoute ? `<path d="${aggRoute}" fill="none" stroke="#e0a25a" stroke-width="2" stroke-dasharray="2 7" opacity="0.7"/>` : ''}
-    <path d="${recRoute}" fill="none" stroke="#c9f73e" stroke-width="3" stroke-dasharray="3 6"/>
-    <ellipse cx="${lx.toFixed(0)}" cy="${ly.toFixed(0)}" rx="${lrx.toFixed(0)}" ry="${lry.toFixed(0)}" fill="#c9f73e" opacity="0.16" stroke="#c9f73e" stroke-width="1.5" stroke-dasharray="4 4">
-      <animate attributeName="opacity" values="0.10;0.24;0.10" dur="2.4s" repeatCount="indefinite"/>
-    </ellipse>
-    <circle r="5.5" fill="#ffffff">
-      <animateMotion dur="3.2s" repeatCount="indefinite" path="${recRoute}"/>
-      <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.06;0.5;0.85;1" dur="3.2s" repeatCount="indefinite"/>
-    </circle>
-    ${hazLabel}
-    <rect x="${(tee[0] - 11).toFixed(0)}" y="${(tee[1] - 6).toFixed(0)}" width="22" height="8" rx="2" fill="#9ab07f"/>
-    <text x="${tee[0]}" y="${(tee[1] + 17).toFixed(0)}" fill="#9ab07f" font-family="Inter,system-ui,sans-serif" font-size="10.5" font-weight="700" text-anchor="middle">TEE</text>
-    ${!par3 ? `<rect x="${(lx - 50).toFixed(0)}" y="${(ly - lry - 25).toFixed(0)}" width="100" height="21" rx="10.5" fill="#c9f73e"/>
-      <text x="${lx.toFixed(0)}" y="${(ly - lry - 10).toFixed(0)}" fill="#0a0f08" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="800" text-anchor="middle">Tu zona ideal</text>` : ''}
-  </svg>`;
+  const side = hz.includes('left') ? 'izquierda' : hz.includes('right') ? 'derecha' : null;
+  if (!side) return null;
+  const safe = side === 'izquierda' ? 'derecha' : 'izquierda';
+  const what = hz.includes('water') ? 'Agua' : 'Bunker';
+  return `${what} a la ${side}${hole.par === 3 ? ' del green' : ' de la zona de caída'} — si dudas, falla a la ${safe}.`;
 }
 
 function vStrategy() {
@@ -183,6 +89,9 @@ function vStrategy() {
   const hole = CAMP_HOLES[idx];
   const rec = strategyRecommend(hole, u, agg);
   const chips = CAMP_HOLES.map((h, i) => `<button class="hole-chip ${i === idx ? 'on' : ''}" data-act="sel-hole" data-i="${i}">${h.n}</button>`).join('');
+  const av = hazardAvoid(hole);
+  const tips = hole.tips && hole.tips.length ? hole.tips : [hole.desc];
+
   return `<button class="auth-back" data-act="nav" data-view="inicio">← Inicio</button>
     <div class="greet" style="padding-top:6px">
       <p class="hi">${esc(CAMP_COURSE.name)}</p>
@@ -190,23 +99,32 @@ function vStrategy() {
       <p class="hcp">${hole.yds} yds (azules) · ${esc(CAMP_COURSE.sub)}</p>
     </div>
     <div class="hole-strip">${chips}</div>
-    <div class="card" style="padding:12px">${holeStrategySVG(hole, rec)}</div>
-    <p class="small muted" style="margin-top:-4px">${esc(hole.desc)}</p>
+
     <div class="card">
-      <span class="prio">Recomendado</span>
-      <h3 style="margin-top:12px;font-size:19px;font-weight:900">${esc(rec.club)} · ${esc(rec.aim.toLowerCase())}</h3>
-      <p style="font-size:14px;margin-top:8px">${esc(rec.reason)}</p>
-      ${hole.tips ? `<div style="margin-top:10px">${hole.tips.map(t => `<p class="tip">${esc(t)}</p>`).join('')}</div>` : ''}
-      <div class="grid2" style="margin-top:12px">
-        <div><div class="stat-num" style="font-size:22px">${rec.par3 ? hole.yds : rec.leave}</div><div class="stat-cap">${rec.par3 ? 'yds al green' : 'yds a green (2°)'}</div></div>
-        <div><div class="stat-num" style="font-size:22px">~${rec.width}</div><div class="stat-cap">tu dispersión (yds)</div></div>
+      <span class="prio">${rec.par3 ? 'Tiro al green' : 'Salida recomendada'}</span>
+      <h3 style="margin-top:12px;font-size:22px;font-weight:900">${esc(rec.club)}</h3>
+      <p class="hcp" style="font-size:14px;margin-top:2px">Apunta ${esc(rec.aim.toLowerCase())}</p>
+      <p style="font-size:14px;margin-top:10px">${esc(rec.reason)}</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="stat-num" style="font-size:26px">${rec.par3 ? hole.yds : rec.leave}</div>
+        <div class="stat-cap">${rec.par3 ? 'yds al green' : 'yds a green (2°)'}</div>
+        ${!rec.par3 && rec.approach ? `<p class="note" style="margin-top:6px">Approach: ${esc(rec.approach)}</p>` : ''}
       </div>
-      ${!rec.par3 && rec.approach ? `<p class="tip">Para el approach, tu ${esc(rec.approach)} cubre esa distancia.</p>` : ''}
+      <div class="card">
+        <div class="stat-num" style="font-size:26px">~${rec.width}</div>
+        <div class="stat-cap">tu dispersión (yds)</div>
+      </div>
     </div>
+
+    ${av ? `<div class="card"><span class="label">⚠️ Dónde no fallar</span><p style="font-size:14px;margin-top:6px">${esc(av)}</p></div>` : ''}
+
     <div class="card">
-      <span class="label">Cómo se lee</span>
-      <p class="tip">Línea <b class="lime">verde</b>: ruta recomendada para tu juego.${rec.par3 ? '' : ' Línea <b style="color:var(--danger)">ámbar</b>: agresiva (más riesgo).'}</p>
-      <p class="tip">El óvalo verde es dónde caen tus tiros según tu % de calles — por eso evita los obstáculos.</p>
+      <span class="label">Plan del hoyo</span>
+      ${tips.map(t => `<p class="tip">${esc(t)}</p>`).join('')}
     </div>
-    <p class="note" style="margin-bottom:24px">Recreación basada en el mapa oficial del club (par y yardas reales). Es una representación fiel del trazo, no un levantamiento topográfico. La estrategia se calcula con tu dispersión real.</p>`;
+
+    <p class="note" style="margin-bottom:24px">Plan basado en el par y las yardas reales del Campestre y en tu dispersión. Sin mapa del hoyo (no se puede recrear con precisión exacta).</p>`;
 }

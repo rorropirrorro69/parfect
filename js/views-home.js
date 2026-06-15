@@ -89,7 +89,7 @@ function vDashboard() {
       <button class="btn sm ghost" data-act="nav" data-view="ronda" style="margin-top:14px">Ver todas las tarjetas →</button>
     </div>
     <button class="btn ghost" data-act="quick-round">${logoMark(15)} ${cont ? `Continuar ronda · hoyo ${S.active.idx + 1}` : 'Iniciar ronda'}</button>
-    <button class="btn" data-act="nav" data-view="strategy">🗺️ Estrategia de campo (beta)</button>
+    <button class="btn" data-act="nav" data-view="strategy">📋 Plan de juego · Campestre (beta)</button>
     <div class="btn-row">
       <button class="btn" data-act="nav" data-view="stats">Avatar Stats →</button>
       <button class="btn" data-act="nav" data-view="trofeos">🏆 Trofeos</button>
