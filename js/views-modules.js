@@ -74,10 +74,10 @@ function vStats() {
 function vTrainer() {
   const u = cur();
   const tab = V.trainerTab || 'diag';
-  const mainPage = objetivosCard(u)
+  const mainPage = vDiag();
+  const entreno = objetivosCard(u)
     + `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">🏋️ Tu entrenamiento para lograrlo</h2><span class="small muted">en pro de tus objetivos</span></div>`
-    + vDiag();
-  const entreno = vTracker()
+    + vTracker()
     + `<div class="sec-h" style="margin-top:20px"><h2 style="font-size:18px">Biblioteca de drills</h2></div>`
     + vDrillsLibrary();
   const body = tab === 'entreno' ? entreno : mainPage;
