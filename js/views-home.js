@@ -198,23 +198,32 @@ function holeShotList(hh) {
   return `<div class="hole-shots">${rows.join('')}</div>`;
 }
 
-/* última ronda: % de la ronda + reel infinito de sus hoyos tiro por tiro */
+/* putts embocados por distancia (inicio) */
+function vPuttStats(agg) {
+  if (!agg || !agg.puttsByDist) return '';
+  const bands = [['0-3', '0–3 ft'], ['3-8', '3–8 ft'], ['8-20', '8–20 ft'], ['20+', '+20 ft']];
+  const rows = bands.map(([k, lab]) => {
+    const b = agg.puttsByDist[k] || { n: 0, one: 0 };
+    const pct = b.n ? (b.one / b.n * 100) : 0;
+    return mbar(lab, pct, b.n ? `${Math.round(pct)}% · ${b.one}/${b.n}` : '—');
+  }).join('');
+  return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Putts por distancia</h2><span class="small muted">embocados / intentos</span></div>
+    <div class="card"><span class="label">% que embocas el 1er putt</span><div style="margin-top:8px">${rows}</div>
+    <p class="note" style="margin:10px 0 0">${agg.puttsPerGir.toFixed(2)} putts por GIR · ${agg.threePct.toFixed(0)}% de 3-putts</p></div>`;
+}
+
+/* última ronda: solo los hoyos (sin stats) */
 function vLastRound(rounds) {
   // preferimos la última ronda jugada en uno de los 3 campos reales (con su diseño/curvas)
   const r = rounds.find(x => x.courseId && COURSES[x.courseId]) || rounds[0];
   if (!r) return '';
-  const s = Stats.roundStats(r);
-  const frac = (a, b) => b ? `${a}/${b}` : '—';
-  const stats = [[frac(s.fw, s.fwTot), 'Calles'], [frac(s.gir, s.girTot), 'GIR'], [frac(s.scr, s.scrTot), 'Up&down'], [String(s.putts), 'Putts']];
-  const statRow = `<div class="lr-stats">${stats.map(([v, t]) => `<div><b>${v}</b><span>${t}</span></div>`).join('')}</div>`;
   const card = (hh, i) => {
     const ch = (r.courseId && COURSES[r.courseId] && COURSES[r.courseId].holes[i]) ? COURSES[r.courseId].holes[i] : null;
     const yds = ch && ch.yds ? ` · ${ch.yds}y` : '';
     return `<div class="reel-card"><div class="reel-scene">${captureSchematic(hh, ch, true, true)}</div><div class="reel-meta" style="padding:13px 16px 16px"><div class="hole-head2"><b>Hoyo ${i + 1}</b><span class="hh-par">Par ${hh.par}${yds}</span><span class="hh-score">${hh.score} <em>${fmtToPar(hh.score - hh.par)}</em></span></div>${holeShotList(hh)}</div></div>`;
   };
   const set = r.holes.map(card).join('');
-  return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Tu última ronda</h2><span class="small muted">${esc(r.course)} · ${fmtDate(r.date)}</span></div>
-    <div class="card" style="padding:14px">${statRow}<p class="note" style="margin:10px 0 0">${s.score} golpes · ${fmtToPar(s.toPar)} en ${s.holes} hoyos · desliza los hoyos →</p></div>
+  return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Tu última ronda</h2><span class="small muted">${esc(r.course)} · ${fmtDate(r.date)} · desliza →</span></div>
     <div class="reel reel-swipe"><div class="reel-track">${set}</div></div>`;
 }
 
@@ -253,6 +262,7 @@ function vDashboard() {
   return head + `
     <div class="sec-h" style="margin-top:2px"><h2 style="font-size:18px">Tu juego en movimiento</h2><span class="small muted">desliza →</span></div>
     ${vStatReel(rounds, agg)}
+    ${vPuttStats(agg)}
     ${vLastRound(rounds)}`;
 }
 

@@ -1,16 +1,16 @@
 /* ============ Estrategia + Simulador por hoyo — multi-campo ============ */
 
-/* Club de Golf Campestre Morelia — campo PLANO, calles rectas (mapa oficial 2022, tees Azules) */
+/* Club de Golf Campestre Morelia — con sus doglegs y lagunas (pares/yardas tees Azules) */
 const CAMP_HOLES = [
-  { n: 1, par: 5, yds: 503, dog: 'straight', risks: [{ at: 'drive', side: 'right', kind: 'bunker' }], tips: ['Par 5 recto y amplio para arrancar; bunkers de salida a la derecha.'] },
-  { n: 2, par: 5, yds: 550, dog: 'straight', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['El más largo (550y). Recto; bunker cuidando el green.'] },
+  { n: 1, par: 5, yds: 503, dog: 'straight', risks: [{ at: 'drive', side: 'right', kind: 'bunker' }], tips: ['Par 5 amplio para arrancar; bunkers de salida a la derecha.'] },
+  { n: 2, par: 5, yds: 550, dog: 'left', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['El hoyo más largo (550y); dogleg a la izquierda.'] },
   { n: 3, par: 3, yds: 174, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'water' }], tips: ['Par 3 con laguna a la izquierda del green.'] },
-  { n: 4, par: 4, yds: 405, dog: 'straight', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['Par 4 recto; deja el approach al centro del green.'] },
-  { n: 5, par: 3, yds: 201, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['El par 3 más largo (201y); toma palo de sobra.'] },
-  { n: 6, par: 4, yds: 432, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['Par 4 largo y recto; lo clave es la calle.'] },
-  { n: 7, par: 5, yds: 529, dog: 'straight', risks: [{ at: 'green', side: 'right', kind: 'water' }], tips: ['Par 5 recto, alcanzable en dos; agua a la derecha del green.'] },
-  { n: 8, par: 3, yds: 176, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'water' }], tips: ['Par 3 con agua a la izquierda; juega al centro.'] },
-  { n: 9, par: 4, yds: 407, dog: 'straight', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['Cierre recto hacia la casa club; bunker a la derecha.'] },
+  { n: 4, par: 4, yds: 405, dog: 'right', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['Dogleg suave a la derecha.'] },
+  { n: 5, par: 3, yds: 201, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['El par 3 más largo (201y).'] },
+  { n: 6, par: 4, yds: 432, dog: 'right', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['Par 4 largo, dogleg a la derecha; clave estar en calle.'] },
+  { n: 7, par: 5, yds: 529, dog: 'left', risks: [{ at: 'green', side: 'right', kind: 'water' }], tips: ['Dogleg izquierda, alcanzable en dos; laguna a la derecha del green.'] },
+  { n: 8, par: 3, yds: 176, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'water' }], tips: ['Par 3 con laguna a la izquierda; juega al centro.'] },
+  { n: 9, par: 4, yds: 407, dog: 'right', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['Cierre con dogleg a la derecha hacia la casa club.'] },
 ];
 function buildHoles(pars, yards, dogs) {
   return pars.map((par, i) => {
