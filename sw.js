@@ -1,5 +1,5 @@
 /* PARFECT service worker: la app funciona offline una vez visitada. */
-const CACHE = 'parfect-v59';
+const CACHE = 'parfect-v60';
 const ASSETS = [
   './',
   './index.html',
