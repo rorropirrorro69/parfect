@@ -804,14 +804,20 @@ button.row { cursor: pointer; }
 .dp-dots { display: flex; gap: 3px; height: 6px; }
 
 /* ---- Práctica inmersiva: timer + contador ---- */
-.drill-timer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; background: var(--card2); border: 1px solid var(--line-soft); border-radius: 16px; padding: 14px 16px; transition: border-color 0.2s; }
-.drill-timer.run { border-color: var(--lime); }
-.drill-timer.up { border-color: var(--danger); }
-.dt-time { font-size: 40px; font-weight: 900; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
-.drill-timer.run .dt-time { color: var(--lime); }
-.drill-timer.up .dt-time { color: var(--danger); }
-.dt-btns { display: flex; flex-direction: column; gap: 8px; }
-.dt-btns .btn { margin: 0; white-space: nowrap; }
+/* timer del drill: anillo circular */
+.dtimer { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 16px; }
+.dtimer-ring { position: relative; width: 158px; height: 158px; background: none; border: none; padding: 0; cursor: pointer; }
+.dtimer-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); display: block; }
+.dtimer-track { fill: none; stroke: var(--line); stroke-width: 9; }
+.dtimer-prog { fill: none; stroke: #C7EE54; stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+.dtimer.up .dtimer-prog { stroke: var(--danger); }
+.dtimer-mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; pointer-events: none; }
+.dtimer-time { font-size: 38px; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--text); line-height: 1; }
+.dtimer-hint { font-size: 12px; font-weight: 800; color: var(--muted); }
+.dtimer.run .dtimer-hint { color: var(--lime); }
+.dtimer.up .dtimer-time, .dtimer.up .dtimer-hint { color: var(--danger); }
+.dtimer-ring:active { transform: scale(0.97); }
+.dtimer-reset { background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 700; text-decoration: underline; padding: 4px; }
 .drill-count { text-align: center; margin: 20px 0 16px; }
 .dc-num { font-size: 56px; font-weight: 900; line-height: 1; }
 .dc-num.done { color: var(--lime); }

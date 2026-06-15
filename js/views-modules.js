@@ -298,13 +298,22 @@ function vDrillSheet() {
     ${d.desc ? `<p class="auth-sub" style="margin-bottom:6px">${esc(d.desc)}</p>` : ''}
     <p class="auth-sub">Mete <b style="color:var(--text)">${d.target} seguidas</b>${d.goal ? ' · ' + esc(d.goal) : ''} antes de que acabe el timer. Si fallas, vuelves a 0.</p>
 
-    <div class="drill-timer ${d.running ? 'run' : ''} ${timeUp ? 'up' : ''}">
-      <div class="dt-time" id="drill-time">${mm}:${ss}</div>
-      <div class="dt-btns">
-        <button class="btn sm primary" data-act="drill-timer-toggle">${d.running ? 'Pausar' : (timeUp ? '¡Tiempo!' : (secs < full ? '▶ Reanudar' : '▶ Iniciar'))}</button>
-        <button class="btn sm ghost" data-act="drill-timer-reset" aria-label="Reiniciar timer">Reiniciar</button>
-      </div>
-    </div>
+    ${(() => {
+      const R = 52, CIRC = 2 * Math.PI * R;
+      const frac = full > 0 ? Math.max(0, Math.min(1, secs / full)) : 0;
+      const off = (CIRC * (1 - frac)).toFixed(1);
+      const hint = d.running ? '❚❚ Pausar' : (timeUp ? '¡Se acabó!' : (secs < full ? '▶ Reanudar' : '▶ Iniciar'));
+      return `<div class="dtimer ${d.running ? 'run' : ''} ${timeUp ? 'up' : ''}">
+      <button class="dtimer-ring" data-act="drill-timer-toggle" aria-label="${d.running ? 'Pausar' : 'Iniciar'} timer">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="dtimer-track" cx="60" cy="60" r="${R}"/>
+          <circle class="dtimer-prog" cx="60" cy="60" r="${R}" stroke-dasharray="${CIRC.toFixed(1)}" stroke-dashoffset="${off}"/>
+        </svg>
+        <span class="dtimer-mid"><span class="dtimer-time" id="drill-time">${mm}:${ss}</span><span class="dtimer-hint">${hint}</span></span>
+      </button>
+      <button class="dtimer-reset" data-act="drill-timer-reset">↻ Reiniciar timer</button>
+    </div>`;
+    })()}
 
     <div class="drill-count">
       <div class="dc-num ${done ? 'done' : ''}">${streak}<span>/ ${d.target} seguidas</span></div>

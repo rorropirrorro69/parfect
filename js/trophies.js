@@ -20,7 +20,7 @@ const Trophies = (() => {
       return isMine(st[0].pid);
     }).length;
 
-    const anyHole = fn => rounds.some(r => r.holes.some(fn));
+    const anyHole = fn => rounds.some(r => (r.holes || []).filter(Boolean).some(fn));
     const bestNorm = rs.length ? Math.min(...rs.map(r => (r.score * 18) / r.holes)) : null;
     const maxFw = rs.reduce((m, r) => Math.max(m, r.fwTot ? (r.fw / r.fwTot) * 100 : 0), 0);
     const maxGir = rs.reduce((m, r) => Math.max(m, r.girTot ? (r.gir / r.girTot) * 100 : 0), 0);

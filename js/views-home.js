@@ -339,7 +339,7 @@ function vLastRound(rounds) {
   const cid = (r.courseId && COURSES[r.courseId]) ? r.courseId : null;
   const courseName = cid ? COURSES[cid].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : r.course;
   const s = Stats.roundStats(r);
-  const set = r.holes.map((hh, i) => lrHoleCard(hh, i, (cid && COURSES[cid].holes[i]) ? COURSES[cid].holes[i] : null)).join('');
+  const set = r.holes.map((hh, i) => hh ? lrHoleCard(hh, i, (cid && COURSES[cid].holes[i]) ? COURSES[cid].holes[i] : null) : '').join('');
   return `<div class="sec-h" style="margin-top:22px"><h2 style="font-size:25px">Historial</h2><span class="small muted">tu última ronda →</span></div>
     <div class="card lr-last">
       <div class="lr-last-id"><b>${esc(courseName)}</b><span class="small muted">${fmtDate(r.date)} · desliza los hoyos →</span></div>

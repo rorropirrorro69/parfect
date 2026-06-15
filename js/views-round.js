@@ -195,9 +195,14 @@ function approachView(h, chole, G, pf, px) {
   const TT = ev.reduce((a, e) => a + e.d, 0); let ac = 0; const kp = [], kt = []; ev.forEach(e => { ac += e.d; kp.push(e.p.toFixed(3)); kt.push((ac / TT).toFixed(3)); });
   const dur = (1.4 + nodes.length * 0.8).toFixed(1);
   const flagH = 30;
+  // fairway que lleva de tu lie hasta el green (gir fairway)
+  const fwTop = (gy + gh * 0.55);
+  const fairway = `<polygon points="92,266 208,266 ${(gx + gw * 0.52).toFixed(0)},${fwTop.toFixed(0)} ${(gx - gw * 0.52).toFixed(0)},${fwTop.toFixed(0)}" fill="#5fa83f"/>
+    <polygon points="118,266 182,266 ${(gx + gw * 0.3).toFixed(0)},${fwTop.toFixed(0)} ${(gx - gw * 0.3).toFixed(0)},${fwTop.toFixed(0)}" fill="#86c860" opacity="0.8"/>`;
   const field = `<rect width="${W}" height="${H}" fill="url(#g3dGrass)"/>
     <rect width="${W}" height="100" fill="url(#capSky)"/>
     ${trees}
+    ${fairway}
     ${bunkers}
     <ellipse cx="${gx}" cy="${(gy + gh + 9).toFixed(0)}" rx="${(gw + 6).toFixed(0)}" ry="${(gh * 0.55).toFixed(0)}" fill="#16401c" opacity="0.26"/>
     <ellipse cx="${gx}" cy="${(gy + 11).toFixed(0)}" rx="${gw.toFixed(0)}" ry="${gh.toFixed(0)}" fill="#3a8043"/>

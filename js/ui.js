@@ -310,13 +310,21 @@ function mbar(label, pct, valText) {
 }
 
 /* ============ Drill art: animaciones SVG que ilustran el ejercicio ============ */
+/* colores de las "gifs" según el tema actual (para que siempre combinen) */
+function artTheme() {
+  const dark = (typeof S !== 'undefined' && S.settings && S.settings.theme === 'dark');
+  return dark
+    ? { frame: '#141d36', stroke: 'rgba(150,175,255,0.16)', ground: 'rgba(150,175,255,0.12)', cap: '#8A93B2', ballStroke: ' stroke="#0b1020" stroke-width="0.8"' }
+    : { frame: '#eef4e2', stroke: 'rgba(40,90,20,0.2)', ground: 'rgba(20,40,10,0.15)', cap: '#6b7a58', ballStroke: ' stroke="#1B2A18" stroke-width="0.8"' };
+}
 function drillArt(key, light) {
   const W = 320, H = 96;
-  const frameFill = light ? '#F2F6E8' : '#0b110a';
-  const frameStroke = light ? 'rgba(40,90,20,0.22)' : 'rgba(201,247,62,0.13)';
-  const groundCol = light ? 'rgba(20,40,10,0.16)' : 'rgba(255,255,255,0.08)';
-  const capCol = light ? '#5f7050' : '#7c8a70';
-  const ballStroke = light ? ' stroke="#1B2A18" stroke-width="0.8"' : '';
+  const A = artTheme();
+  const frameFill = A.frame;
+  const frameStroke = A.stroke;
+  const groundCol = A.ground;
+  const capCol = A.cap;
+  const ballStroke = A.ballStroke;
   const frame = `<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="12" fill="${frameFill}" stroke="${frameStroke}"/>`;
   const ground = `<line x1="16" y1="78" x2="${W - 16}" y2="78" stroke="${groundCol}" stroke-width="1.5"/>`;
   const cap = t => `<text x="16" y="22" fill="${capCol}" font-size="11" font-weight="700" font-family="Inter,system-ui">${t}</text>`;
@@ -374,12 +382,13 @@ function drillArt(key, light) {
 function drillScene(name, areaKey) {
   const n = (name || '').toLowerCase();
   const W = 320, H = 96, G = 78;
-  const fr = `<rect x="0.5" y="0.5" width="319" height="95" rx="12" fill="#0b110a" stroke="rgba(201,247,62,0.13)"/>`;
-  const gr = (y = G) => `<line x1="16" y1="${y}" x2="304" y2="${y}" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>`;
-  const cap = t => `<text x="16" y="20" fill="#7c8a70" font-size="10.5" font-weight="700" font-family="Inter,system-ui,sans-serif">${t}</text>`;
-  const fl = (x, y) => `<line x1="${x}" y1="${y}" x2="${x}" y2="${G}" stroke="#c9f73e" stroke-width="2"/><path d="M${x} ${y} l11 3.5 -11 3.5z" fill="#c9f73e"/>`;
-  const cp = (x, y = G) => `<ellipse cx="${x}" cy="${y}" rx="8" ry="3" fill="#0a0f06" stroke="#c9f73e" stroke-width="1.5"/>`;
-  const bl = (path, dur, extra = '') => `<circle r="4.5" fill="#fff">${extra}<animateMotion dur="${dur}" repeatCount="indefinite" calcMode="linear" path="${path}"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.5;.85;1" dur="${dur}" repeatCount="indefinite"/></circle>`;
+  const A = artTheme();
+  const fr = `<rect x="0.5" y="0.5" width="319" height="95" rx="12" fill="${A.frame}" stroke="${A.stroke}"/>`;
+  const gr = (y = G) => `<line x1="16" y1="${y}" x2="304" y2="${y}" stroke="${A.ground}" stroke-width="1.5"/>`;
+  const cap = t => `<text x="16" y="20" fill="${A.cap}" font-size="10.5" font-weight="700" font-family="Inter,system-ui,sans-serif">${t}</text>`;
+  const fl = (x, y) => `<line x1="${x}" y1="${y}" x2="${x}" y2="${G}" stroke="#7fb52b" stroke-width="2"/><path d="M${x} ${y} l11 3.5 -11 3.5z" fill="#c9f73e"/>`;
+  const cp = (x, y = G) => `<ellipse cx="${x}" cy="${y}" rx="8" ry="3" fill="#0a2e16" stroke="#7fb52b" stroke-width="1.5"/>`;
+  const bl = (path, dur, extra = '') => `<circle r="4.5" fill="#fff"${A.ballStroke}>${extra}<animateMotion dur="${dur}" repeatCount="indefinite" calcMode="linear" path="${path}"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.5;.85;1" dur="${dur}" repeatCount="indefinite"/></circle>`;
   const svg = inner => `<svg viewBox="0 0 ${W} ${H}" class="drill-art" aria-hidden="true">${fr}${inner}</svg>`;
 
   if (n.includes('gate drill')) return svg(`${gr()}<line x1="74" y1="62" x2="74" y2="${G}" stroke="#c9f73e" stroke-width="3" stroke-linecap="round"/><line x1="100" y1="62" x2="100" y2="${G}" stroke="#c9f73e" stroke-width="3" stroke-linecap="round"/><ellipse cx="272" cy="${G}" rx="28" ry="5" fill="rgba(201,247,62,0.12)"/>${bl('M44 74 Q 170 -10 286 74', '3s')}${cap('Gate de alineación')}`);
