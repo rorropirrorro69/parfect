@@ -203,8 +203,8 @@ function vLastRound(rounds) {
   const r = rounds[0];
   if (!r) return '';
   const s = Stats.roundStats(r);
-  const p = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
-  const stats = [[p(s.fw, s.fwTot), 'Calles'], [p(s.gir, s.girTot), 'GIR'], [p(s.scr, s.scrTot), 'Up&down'], [String(s.putts), 'Putts']];
+  const frac = (a, b) => b ? `${a}/${b}` : '—';
+  const stats = [[frac(s.fw, s.fwTot), 'Calles'], [frac(s.gir, s.girTot), 'GIR'], [frac(s.scr, s.scrTot), 'Up&down'], [String(s.putts), 'Putts']];
   const statRow = `<div class="lr-stats">${stats.map(([v, t]) => `<div><b>${v}</b><span>${t}</span></div>`).join('')}</div>`;
   const card = (hh, i) => {
     const ch = (r.courseId && COURSES[r.courseId] && COURSES[r.courseId].holes[i]) ? COURSES[r.courseId].holes[i] : null;
