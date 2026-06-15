@@ -191,7 +191,7 @@ function holeShotList(hh) {
   if (hh.app) {
     const a = hh.app;
     const txt = a === 'gir' ? 'Green ✓' : a === 'corto' ? 'corto' : a === 'largo' ? 'largo, se pasó' : a === 'izq' ? 'falló izquierda' : 'falló derecha';
-    rows.push(`<span>${dot(a === 'gir' ? '#46d39a' : '#ff9f43')} Approach · ${txt}</span>`);
+    rows.push(`<span>${dot(a === 'gir' ? '#6fd08a' : '#ff9f43')} Approach · ${txt}</span>`);
     if (a !== 'gir' && hh.upDown != null) rows.push(`<span>${dot('#5aa9e0')} Up & down · ${hh.upDown ? 'salvado ✓' : 'no ✗'}</span>`);
   }
   if (hh.putts != null) rows.push(`<span>${dot('#eef3e6')} ${hh.putts} putt${hh.putts !== 1 ? 's' : ''}${hh.dist && distTxt[hh.dist] ? ` · 1er a ${distTxt[hh.dist]}` : ''}</span>`);

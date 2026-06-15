@@ -144,7 +144,7 @@ function shotColor(s) {
   if (s.role === 'putt') return '#eef3e6';
   if (s.role === 'chip' || s.ud) return '#5aa9e0';
   if (s.lie === 'water') return '#ff7a6b';
-  if (s.role === 'approach') return s.ok ? '#46d39a' : '#ff9f43';
+  if (s.role === 'approach') return s.ok ? '#6fd08a' : '#ff9f43';
   return s.ok ? '#c9f73e' : '#ff9f43';
 }
 function captureSchematic(h, chole, noZoom) {
@@ -193,7 +193,7 @@ function captureSchematic(h, chole, noZoom) {
   if (h.par >= 4 && teeIdx >= 0) { const tp = fpts[teeIdx]; const fw = h.tee === 'fw'; pills += pill(tp.x, tp.y - 15, fw ? 'CALLE ✓' : h.tee === 'penal' ? 'PENAL ✗' : 'CALLE ✗', fw ? '#c9f73e' : '#ff9f43'); }
   const gir = h.app === 'gir', saved = h.app && h.app !== 'gir' && h.upDown === true;
   let gtxt = gir ? 'GIR ✓' : saved ? 'SALVÓ ✓' : (h.app && h.app !== 'gir' && h.upDown === false ? 'FALLÓ GREEN' : '');
-  const gcol = gir ? '#46d39a' : saved ? '#5aa9e0' : '#ff9f43';
+  const gcol = gir ? '#6fd08a' : saved ? '#5aa9e0' : '#ff9f43';
   if (nPutts > 0) gtxt = (gtxt ? gtxt + ' · ' : '') + nPutts + ' PUTT' + (nPutts !== 1 ? 'S' : '');
   if (gtxt) pills += pill(gx, gy + lagDy + 18, gtxt, nPutts > 0 && !gir && !saved ? '#eef3e6' : gcol);
   let zones = '', dots = '';
