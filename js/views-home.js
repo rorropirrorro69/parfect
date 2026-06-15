@@ -544,14 +544,22 @@ function vAvatarPicker(u) {
 function vPlayerCard(u, agg) {
   const home = (u.homeCourse && COURSES[u.homeCourse]) ? COURSES[u.homeCourse] : COURSES.campestre;
   const homeName = home.name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '');
-  const sd = (agg && agg.scoreDist) || { birdie: 0, eagle: 0 };
+  const sd = (agg && agg.scoreDist) || { total: 0, birdie: 0, eagle: 0, par: 0, bogey: 0, dbl: 0 };
+  const tot = sd.total || 1;
+  const rs = myRounds().map(Stats.roundStats);
+  const holesTot = rs.reduce((a, r) => a + r.holes, 0) || 1;
+  const threeP = (rs.reduce((a, r) => a + r.threeP, 0) / holesTot * 18).toFixed(1);
   const moves = agg ? [
-    ['bird', 'Birdies', String(sd.birdie)],
     ['eagle', 'Águilas', String(sd.eagle)],
-    ['flag', 'Fairways', Math.round(agg.fwPct) + '%'],
+    ['bird', 'Birdies', String(sd.birdie)],
+    ['flag', 'Pares', Math.round((sd.par || 0) / tot * 100) + '%'],
+    ['card', 'Bogeys o peor', Math.round(((sd.bogey || 0) + (sd.dbl || 0)) / tot * 100) + '%'],
+    ['tee', 'Fairways', Math.round(agg.fwPct) + '%'],
     ['green', 'Greens · GIR', Math.round(agg.girPct) + '%'],
     ['hand', 'Up & down', Math.round(agg.scrPct) + '%'],
     ['putter', 'Putts / ronda', agg.putts18.toFixed(0)],
+    ['bucket', '3-putts / ronda', threeP],
+    ['trophy', 'Mejor vuelta', fmtToPar(agg.bestToPar)],
   ] : [];
   const moveRow = ([ic, name, val]) => {
     const icon = ic === 'bird' ? `<img src="assets/bird.png" class="pkc-mi" alt="">` : ic === 'eagle' ? `<img src="assets/eagle.png" class="pkc-mi" alt="">` : `<span class="pkc-mic">${golfIcon(ic)}</span>`;

@@ -143,13 +143,13 @@ input, select, textarea { font-family: var(--font); }
 .pl-av-opt img { width: 62px; height: 62px; object-fit: contain; }
 
 /* tarjeta de jugador estilo Pokémon */
-.pkc { margin-top: 8px; border-radius: 24px; padding: 8px; background: linear-gradient(140deg, #f0cf72, #cdec5e 50%, #e6b745); box-shadow: 0 16px 40px rgba(30,50,15,0.30); }
+.pkc { margin-top: 8px; border-radius: 24px; padding: 8px; background: linear-gradient(140deg, #d6f56c, #7fb85a 50%, #C7EE54); box-shadow: 0 16px 40px rgba(30,50,15,0.28); }
 .pkc-inner { background: #FBF8EC; border-radius: 18px; padding: 12px 12px 10px; }
 .pkc-top { display: flex; align-items: baseline; justify-content: space-between; padding: 2px 4px 8px; }
 .pkc-name { font-size: 18px; font-weight: 900; color: #1B2A18; letter-spacing: -0.01em; }
-.pkc-hp { font-size: 22px; font-weight: 900; color: #d8423a; }
-.pkc-hp i { font-size: 11px; font-style: normal; color: #8a3b36; margin-right: 3px; vertical-align: 2px; }
-.pkc-art { position: relative; border: 3px solid #e6c659; border-radius: 13px; overflow: hidden; height: 196px; display: flex; align-items: flex-end; justify-content: center; background: radial-gradient(120% 92% at 50% 18%, #c2e58c, #7fb85a 72%); }
+.pkc-hp { font-size: 22px; font-weight: 900; color: #2c4a1c; }
+.pkc-hp i { font-size: 11px; font-style: normal; color: #5a7044; margin-right: 3px; vertical-align: 2px; }
+.pkc-art { position: relative; border: 3px solid #a7d63f; border-radius: 13px; overflow: hidden; height: 196px; display: flex; align-items: flex-end; justify-content: center; background: radial-gradient(120% 92% at 50% 18%, #c2e58c, #7fb85a 72%); }
 .pkc-art::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,0.28), transparent 32%, transparent 68%, rgba(255,255,255,0.16)); }
 .pkc-av { width: 168px; height: 168px; object-fit: contain; position: relative; z-index: 1; }
 .pkc-stage { position: absolute; top: 8px; left: 8px; z-index: 2; background: rgba(255,255,255,0.82); color: #26421a; font-size: 10.5px; font-weight: 800; padding: 3px 9px; border-radius: 99px; }
@@ -177,6 +177,18 @@ input, select, textarea { font-family: var(--font); }
 .pkc-mt b { display: block; font-size: 13px; font-weight: 800; color: #1B2A18; }
 .pkc-mt p { font-size: 12px; color: #5f7050; line-height: 1.4; margin-top: 1px; }
 .pkc-go { color: #3b6d11; font-weight: 800; }
+
+/* lista de drills estilo Inicio */
+.drill-hero { margin-top: 14px; }
+.drill-hero .drill-art { display: block; width: 100%; height: auto; border-radius: 12px; margin-top: 8px; }
+.drillc-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.drillc { display: block; width: 100%; text-align: left; background: var(--card); border: 1px solid var(--line-soft); border-radius: 18px; padding: 14px 16px; cursor: pointer; box-shadow: 0 6px 16px rgba(40,60,25,0.05); }
+.drillc:active { transform: scale(0.99); }
+.drillc b { font-size: 15px; font-weight: 800; color: var(--text); }
+.drillc p { font-size: 13px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+.drillc-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 9px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.drillc-meta .gi { width: 15px; height: 15px; vertical-align: -3px; }
+.drillc-go { display: inline-block; margin-top: 9px; font-size: 12.5px; font-weight: 800; color: var(--lime); }
 
 /* escenas con pájaro/águila 3D volando */
 .fly-scene { position: relative; height: 200px; overflow: hidden; background: radial-gradient(120% 90% at 50% 18%, #1a3f29, #0a130c 72%); }
