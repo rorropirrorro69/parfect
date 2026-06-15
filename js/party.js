@@ -19,13 +19,14 @@ const Party = (() => {
     const s = h.scores[pid];
     if (s != null) { const d = s - h.par; if (d <= -2) bonus += 2; else if (d === -1) bonus += 1; } // águila/birdie (del score)
     if ((h.sandy || []).includes(pid)) bonus += 1;                   // sandy
-    if ((h.prox || []).includes(pid)) bonus += 1;                    // más cerca en regulación
     if ((h.holeout || []).includes(pid)) bonus += 1;                 // hole-out
-    if ((h.longputt || []).includes(pid)) bonus += 1;               // putt largo
+    if (h.longputt && !Array.isArray(h.longputt) && h.longputt[pid]) bonus += h.longputt[pid]; // putt largo: +1 por bandera
     if ((h.threeputt || []).includes(pid)) penalty += 1;            // 3-putt
     if ((h.espanol || []).includes(pid)) penalty += 1;             // español (doble del par)
     return { bonus, penalty };
   }
+  /* rango de regulación (1 = más cerca); sin marcar = lejos */
+  function regRank(h, pid) { return (h.reg && h.reg[pid]) ? h.reg[pid] : 99; }
 
   /** La corta por parejas: total de cada jugador (suma cero) */
   function unidades(party, limit = party.holes.length) {
@@ -44,6 +45,8 @@ const Party = (() => {
           if (sa < sb) delta += 1; else if (sb < sa) delta -= 1;     // ganar el hoyo
           delta += (info[pa].bonus - info[pb].bonus);                // bonos vs rival
           delta += (info[pb].penalty - info[pa].penalty);            // castigos
+          const ra = regRank(h, pa), rb = regRank(h, pb);            // más cerca en regulación
+          if (ra < rb) delta += 1; else if (rb < ra) delta -= 1;
           net[pa] += delta; net[pb] -= delta;
         }
       }

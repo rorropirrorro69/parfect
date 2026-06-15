@@ -144,12 +144,7 @@ function captureShots(h, score) {
     shots.push({ prog, side, ok: false, lie: 'rough' });
     if (chip) shots.push({ prog: 0.99, side: 0.1, ok: h.upDown === true, lie: 'green' });
   }
-  const df = ({ '0-3': 0.14, '3-8': 0.34, '8-20': 0.6, '20+': 0.85 })[h.dist];
-  const distFrac = df != null ? df : 0.42;
-  for (let i = 0; i < putts; i++) {
-    const f = distFrac * Math.max(0, 1 - i * 0.65);          // cada putt se acerca al hoyo
-    shots.push({ prog: 1 - f * 0.11, side: f * 0.2 * (i % 2 ? 1 : -1), ok: true, lie: 'green', putt: true });
-  }
+  for (let i = 0; i < putts; i++) shots.push({ prog: 1, side: (i % 2 ? 0.06 : -0.06), ok: true, lie: 'green' });
   return shots;
 }
 function captureSchematic(h, score) {
@@ -182,7 +177,6 @@ function captureSchematic(h, score) {
     ${zones}
     <path d="${route}" fill="none" stroke="#c9f73e" stroke-width="2" stroke-dasharray="3 5"/>
     ${dots}${ball}
-    ${h.putts && h.dist ? `<text x="${cx}" y="${greenY + 44}" fill="#eef3e6" font-family="Inter,system-ui" font-size="11" font-weight="800" text-anchor="middle">🏌️ 1er putt · ${({ '0-3': '0–3  ft', '3-8': '3–8 ft', '8-20': '8–20 ft', '20+': '+20 ft' })[h.dist]}</text>` : ''}
     <rect x="${cx - 9}" y="${teeY}" width="18" height="6" rx="2" fill="#9ab07f"/>
   </svg>`;
 }
@@ -201,7 +195,7 @@ function vPlay() {
   if (h.par >= 4 && h.tee) sl.push(h.tee === 'fw' ? 'Fairway ✓' : h.tee === 'penal' ? 'OB/Penal' : h.tee === 'izq' ? 'Salida izq' : 'Salida der');
   if (h.app) sl.push(h.app === 'gir' ? 'Green ✓' : h.app === 'corto' ? 'Corto' : h.app === 'largo' ? 'Largo' : h.app === 'izq' ? 'Falló izq' : 'Falló der');
   if (h.app && h.app !== 'gir' && h.upDown != null) sl.push(h.upDown ? 'Up & down ✓' : 'Chip');
-  if (h.putts != null) { const dl = ({ '0-3': '0–3 ft', '3-8': '3–8 ft', '8-20': '8–20 ft', '20+': '+20 ft' })[h.dist]; sl.push(h.putts + ' putt' + (h.putts !== 1 ? 's' : '') + (dl ? ' · ' + dl : '')); }
+  if (h.putts != null) sl.push(h.putts + ' putt' + (h.putts !== 1 ? 's' : ''));
 
   return `<div class="shell no-nav fade-in">
     <div class="play-top">

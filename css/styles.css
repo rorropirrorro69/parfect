@@ -532,6 +532,7 @@ button.row { cursor: pointer; }
 .ev-group { display: flex; flex-wrap: wrap; gap: 6px; }
 .ph-stats { justify-content: space-between; align-items: flex-start; gap: 10px; }
 .chip.xs.ev-sub.on { background: rgba(255, 122, 107, 0.16); border-color: var(--danger); color: var(--danger); }
+.bdg { display: inline-block; font-size: 10px; font-weight: 800; color: var(--lime); background: var(--lime-dim); padding: 1px 7px; border-radius: 6px; vertical-align: middle; }
 
 /* ---- Entrenamiento: campaña de misiones ---- */
 .mission-list { display: flex; flex-direction: column; gap: 8px; }

@@ -310,19 +310,20 @@ function vClubs() {
   const clubs = u.clubs || {};
   const groupName = { largo: 'Maderas e híbridos', hierros: 'Hierros', wedges: 'Wedges' };
   const sections = ['largo', 'hierros', 'wedges'].map(g => {
-    const rows = CLUBS.filter(c => c.group === g).map(c => `
-      <div class="club-row">
+    const rows = CLUBS.filter(c => c.group === g).map(c => {
+      const cc = clubC(clubs, c.id);
+      return `<div class="club-row">
         <label>${esc(c.name)}</label>
         <div class="club-in">
-          <input id="club-c-${c.id}" type="number" inputmode="numeric" placeholder="${CLUB_DEFAULT[c.id]}" value="${clubC(clubs, c.id) != null ? clubC(clubs, c.id) : ''}"><span>yds</span>
-          <input id="club-e-${c.id}" type="number" inputmode="numeric" min="0" max="100" placeholder="${CLUB_EFF_DEFAULT}" value="${clubE(clubs, c.id) != null ? clubE(clubs, c.id) : ''}" style="width:58px"><span>%</span>
+          <input id="club-c-${c.id}" type="number" inputmode="numeric" placeholder="${CLUB_DEFAULT[c.id]}" value="${cc != null ? cc : ''}"><span>yds</span>
         </div>
-      </div>`).join('');
-    return `<div class="card"><span class="label">${groupName[g]}</span><p class="note" style="margin-top:0;margin-bottom:6px">Carry (yds) · Efectividad (%)</p>${rows}</div>`;
+      </div>`;
+    }).join('');
+    return `<div class="card"><span class="label">${GROUP_META[g].icon} ${groupName[g]}</span><p class="note" style="margin-top:0;margin-bottom:6px">Carry de cada bastón (cuánto vuela, en yardas).</p>${rows}</div>`;
   }).join('');
   return `<button class="auth-back" data-act="nav" data-view="perfil">← Perfil</button>
     <h1 class="auth-h">Mis bastones</h1>
-    <p class="auth-sub">Para cada palo que uses: su carry (cuánto vuela) y tu efectividad (qué tan seguido lo pegas bien, 0–100%). Con esto la estrategia recomienda tus tiros. Deja en blanco los que no uses.</p>
+    <p class="auth-sub">Anota el carry de cada bastón que uses. Deja en blanco los que no tengas.</p>
     ${sections}
     <button class="btn primary" data-act="save-clubs">Guardar mis bastones</button>
     <button class="btn" data-act="nav" data-view="perfil">Cancelar</button>`;
