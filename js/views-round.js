@@ -525,7 +525,9 @@ function vSummary(a) {
   const fake = { holes: a.holes };
   const s = Stats.roundStats(fake);
   const pct = (x, t) => (t ? Math.round((x / t) * 100) + '%' : '—');
-  return `<div class="shell no-nav fade-in">
+  const good = s.toPar <= 2 || (a.holes || []).some(h => h && h.score != null && (h.score - h.par) <= -1);
+  const celebrate = good ? ` data-celebrate="sum-${a.startedAt || ''}-${s.score}"` : '';
+  return `<div class="shell no-nav fade-in"${celebrate}>
     <div class="play-top"><span></span><span class="label">Resumen de ronda</span><span></span></div>
     <div class="greet" style="text-align:center">
       <p class="hi">${esc(a.course)}</p>

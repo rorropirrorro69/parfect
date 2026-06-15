@@ -155,8 +155,47 @@ function afterRender() {
   window.__lastView = V.view;
   if (changed) {
     const el = document.querySelector('.app-content') || (document.getElementById('root') || {}).firstElementChild;
-    if (el) el.classList.add('view-in');
+    if (el) { el.classList.add('view-in'); animateCountUps(el); }
   }
+  maybeCelebrate();
+}
+
+/* anima números clave contando hacia arriba al entrar a una vista */
+function animateCountUps(root) {
+  if (!root || (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  root.querySelectorAll('.pl-hero-num, .pl-chip b').forEach(el => {
+    if (el.dataset.cupDone) return;
+    const raw = (el.textContent || '').trim();
+    const m = raw.match(/^(\d+(?:\.\d+)?)(\s*%?)$/);
+    if (!m) return;
+    const target = parseFloat(m[1]); if (!(target > 0)) return;
+    const dec = m[1].includes('.') ? 1 : 0, suf = m[2] || '';
+    el.dataset.cupDone = '1';
+    const dur = 750, t0 = performance.now();
+    el.textContent = (dec ? '0.0' : '0') + suf;
+    const step = t => { const p = Math.min(1, (t - t0) / dur); const e = 1 - Math.pow(1 - p, 3); const v = target * e; el.textContent = (dec ? v.toFixed(1) : Math.round(v)) + suf; if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+
+/* confeti cuando hay algo que celebrar (marca data-celebrate en la vista) */
+function maybeCelebrate() {
+  const m = document.querySelector('[data-celebrate]');
+  const key = m && m.getAttribute('data-celebrate');
+  if (!key || window.__celebrated === key) return;
+  window.__celebrated = key;
+  if (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cols = ['#C7EE54', '#9ad13e', '#ffd56b', '#ff9f43', '#5aa9e0', '#ffffff'];
+  const wrap = document.createElement('div');
+  wrap.className = 'confetti';
+  let html = '';
+  for (let i = 0; i < 90; i++) {
+    const x = Math.random() * 100, d = 2 + Math.random() * 1.8, delay = Math.random() * 0.6, c = cols[i % cols.length], sway = (Math.random() * 40 - 20).toFixed(0);
+    html += `<i style="left:${x.toFixed(1)}%;background:${c};animation:confFall ${d.toFixed(2)}s linear ${delay.toFixed(2)}s forwards;margin-left:${sway}px"></i>`;
+  }
+  wrap.innerHTML = html;
+  document.body.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 4200);
 }
 function initLanding(root) {
   const io = new IntersectionObserver(es => {
