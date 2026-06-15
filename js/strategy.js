@@ -264,9 +264,13 @@ function simDefaultShadowHcp(user) {
 function simNewRound(user, course, shadowHcp) {
   if (!Stats.aggregate(myRounds())) return null;   // requiere stats del perfil (rondas)
   const goalHcp = shadowHcp != null ? shadowHcp : simDefaultShadowHcp(user);
-  const s = { courseId: course.id, holeIdx: 0, card: [], done: false, pr: statProbs(user), shadowPr: hcpProbs(goalHcp), shadowGoal: goalHcp, shadowCard: [] };
-  simInitHole(s);
-  return s;
+  const pr = statProbs(user), shPr = hcpProbs(goalHcp);
+  const holes = course.holes.map((h, i) => {       // se simula TODA la ronda de una vez
+    const me = simAutoHole(course.id, i, pr);
+    const sh = simAutoHole(course.id, i, shPr);
+    return { n: h.n, par: h.par, score: me.score, putts: me.putts, gir: me.gir, fw: me.fw, log: me.log, shScore: sh.score, shLog: sh.log };
+  });
+  return { courseId: course.id, shadowGoal: goalHcp, holes, viewHole: 0, done: true };
 }
 function simStepPutt(s) {
   const pr = s.pr;
@@ -377,8 +381,21 @@ function simSchematic(hole, shots, shadowShots) {
   pts.forEach((q, i) => {
     dots += `<circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="4" fill="${colOf(shots[i])}"/><text x="${q.x.toFixed(0)}" y="${(q.y - 9).toFixed(0)}" fill="#eef3e6" font-family="Inter,system-ui" font-size="10" font-weight="800" text-anchor="middle">${i + 1}</text>`;
   });
-  const last = pts[pts.length - 1];
-  const ball = last ? `<circle cx="${last.x.toFixed(0)}" cy="${last.y.toFixed(0)}" r="6" fill="#fff" stroke="#0a0f08" stroke-width="1.5"/>` : '';
+  // pelota que vuela tiro por tiro (vuelo + pausa en cada caída), en bucle
+  let ball = '';
+  if (pts.length) {
+    const allP = [{ x: cx, y: teeY }, ...pts];
+    const seg = []; let tot = 0;
+    for (let i = 1; i < allP.length; i++) { const l = Math.hypot(allP[i].x - allP[i - 1].x, allP[i].y - allP[i - 1].y); seg.push(l); tot += l || 1; }
+    const nf = [0]; { let a = 0; for (const l of seg) { a += l; nf.push(a / tot); } }
+    const ev = [{ p: 0, d: 0 }];
+    for (let i = 1; i < nf.length; i++) { ev.push({ p: nf[i], d: 1 }); if (i < nf.length - 1) ev.push({ p: nf[i], d: 0.5 }); }
+    ev.push({ p: 1, d: 1 });
+    const TT = ev.reduce((a, e) => a + e.d, 0); let ac = 0; const kp = [], kt = [];
+    ev.forEach(e => { ac += e.d; kp.push(e.p.toFixed(3)); kt.push((ac / TT).toFixed(3)); });
+    const dur = (1 + (nf.length - 1) * 1.1).toFixed(1);
+    ball = `<circle r="6" fill="#fff" stroke="#0a0f08" stroke-width="1"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${route}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
+  }
   let shadowG = '';
   const sh2 = (shadowShots || []).map(P);
   if (sh2.length) {
@@ -440,59 +457,51 @@ function vSimulator() {
     </div>`;
   }
 
-  const totScore = sim.card.reduce((a, h) => a + h.score, 0);
-  const totPar = sim.card.reduce((a, h) => a + h.par, 0);
-  const shadowDone = (sim.shadowCard || []).reduce((a, b) => a + b, 0);
+  // ---- ronda ya simulada completa: resumen + navegador tiro por tiro ----
+  const me = sim.holes;
+  const meTot = me.reduce((a, h) => a + h.score, 0);
+  const shTot = me.reduce((a, h) => a + h.shScore, 0);
+  const parTot = course.holes.reduce((a, h) => a + h.par, 0);
+  const fwT = me.filter(h => h.fw !== null).length, fwH = me.filter(h => h.fw === true).length;
+  const girH = me.filter(h => h.gir).length, putts = me.reduce((a, h) => a + h.putts, 0);
+  const diff = meTot - shTot;
+  const vh = Math.min(sim.viewHole || 0, me.length - 1);
+  const H = me[vh], hole = course.holes[vh];
+  const hTP = H.score - hole.par;
+  const holeChips = me.map((h, i) => `<button class="hole-chip ${i === vh ? 'on' : ''}" data-act="sim-hole" data-i="${i}">${h.n}</button>`).join('');
+  const logHtml = H.log.map(l => `<div class="sim-shot ${l.ok ? 'ok' : 'bad'}">${esc(l.t)}</div>`).join('');
 
-  if (sim.done) {
-    const fwT = sim.card.filter(h => h.fw !== null).length, fwH = sim.card.filter(h => h.fw === true).length;
-    const girH = sim.card.filter(h => h.gir).length, putts = sim.card.reduce((a, h) => a + h.putts, 0);
-    const diff = totScore - shadowDone;
-    return `<div class="card">
-      <div class="greet" style="text-align:center;padding-top:6px"><h1 style="font-size:46px">${totScore}</h1><p class="hcp">${fmtToPar(totScore - totPar)} · ${sim.card.length} hoyos</p></div>
-      <div class="sim-vs"><span>Tú <b>${totScore}</b></span><span class="muted">vs</span><span style="color:#6db3ff">Shadow HCP ${sim.shadowGoal} <b>${shadowDone}</b></span></div>
-      <p class="note" style="text-align:center;margin-top:4px">${diff <= 0 ? '¡Le ganaste o empataste a tu objetivo! 🔥' : `Tu Shadow te sacó <b class="lime">${diff}</b> golpe${diff > 1 ? 's' : ''} — ese es el camino.`}</p>
+  return `<div class="sec-h"><h2>🎲 Simulador de ronda</h2><span class="small muted">ronda completa</span></div>
+    <div class="card">
+      <div class="greet" style="text-align:center;padding-top:6px"><h1 style="font-size:46px">${meTot}</h1><p class="hcp">${fmtToPar(meTot - parTot)} · ${me.length} hoyos</p></div>
+      <div class="sim-vs"><span>Tú <b>${meTot}</b></span><span class="muted">vs</span><span style="color:#6db3ff">Shadow HCP ${sim.shadowGoal} <b>${shTot}</b></span></div>
+      <p class="note" style="text-align:center;margin-top:4px">${diff <= 0 ? '¡Le ganaste o empataste a tu Shadow! 🔥' : `Tu Shadow te sacó <b class="lime">${diff}</b> golpe${diff > 1 ? 's' : ''} — ese es el camino.`}</p>
       <div class="grid2" style="margin-top:8px">
         ${statCard((fwT ? Math.round(fwH / fwT * 100) : 0) + '%', 'Fairways', fwT ? fwH / fwT * 100 : 0)}
-        ${statCard(Math.round(girH / sim.card.length * 100) + '%', 'GIR', girH / sim.card.length * 100)}
+        ${statCard(Math.round(girH / me.length * 100) + '%', 'GIR', girH / me.length * 100)}
       </div>
       <p class="note" style="text-align:center">${putts} putts en la ronda</p>
-      <div class="card" style="margin-top:12px"><span class="label">Tarjeta · Tú vs Shadow</span>
-        ${scorecardTable(sim.card.length, i => sim.card[i].par, [
-          { name: esc(u.name.split(' ')[0]), scoreOf: i => sim.card[i].score },
-          { name: 'Shadow', scoreOf: i => sim.shadowCard[i] }
-        ], -1)}
-      </div>
-      <button class="btn primary" data-act="sim-start">Jugar otra vez</button>
-      <button class="btn" data-act="sim-reset">Salir</button>
-    </div>`;
-  }
-
-  const hole = course.holes[sim.holeIdx];
-  const holed = sim.lie === 'holed';
-  const toParNow = sim.card.length ? fmtToPar(totScore - totPar) : 'E';
-  const logHtml = sim.log.map(l => `<div class="sim-shot ${l.ok ? 'ok' : 'bad'}">${esc(l.t)}</div>`).join('');
-  const holeToPar = sim.strokes - hole.par;
-  const shHole = sim.shadowHole ? sim.shadowHole.score : null;
-  const shTP = shHole != null ? shHole - hole.par : null;
-
-  return `
-    <div class="card" style="padding-bottom:8px">
-      <div class="ph-head"><div class="r-main" style="flex:1"><b>Hoyo ${hole.n} · Par ${hole.par}</b><span class="muted">${hole.yds} yds · hoyo ${sim.holeIdx + 1}/${course.holes.length}</span></div>
-        <div class="r-side"><b style="color:var(--lime)">${totScore || 0}</b><span>${toParNow}</span></div></div>
-      <div class="sim-vs" style="margin-top:8px"><span>🟢 Tú</span><span style="color:#6db3ff">🔵 Shadow HCP ${sim.shadowGoal} · ${shadowDone || 0}</span></div>
-      <div style="margin-top:6px">${simSchematic(hole, sim.log, sim.shadowHole ? sim.shadowHole.log : [])}</div>
-      ${shHole != null ? `<p class="note" style="margin:6px 0 0;text-align:center">🔵 Tu Shadow hizo <b>${shHole}</b> (${shTP === 0 ? 'par' : shTP > 0 ? '+' + shTP : shTP}) en este hoyo</p>` : ''}
     </div>
-    <div class="card">
-      <div class="sim-log">${logHtml || '<div class="sim-shot muted">Toca “Tirar” para tu golpe de salida.</div>'}</div>
-      ${holed
-        ? `<div class="sim-status">✅ Hoyo ${hole.n}: <b>${sim.strokes}</b> (${holeToPar === 0 ? 'par' : holeToPar > 0 ? '+' + holeToPar : holeToPar})</div>
-           <button class="btn primary" data-act="sim-shot">${sim.holeIdx + 1 >= course.holes.length ? 'Ver tarjeta final →' : 'Siguiente hoyo →'}</button>`
-        : `<div class="sim-status">${SIM_LIE_ES[sim.lie]} · quedan <b>${sim.lie === 'green' ? (sim.puttDist + ' ft') : (sim.dist + ' yds')}</b> · golpe ${sim.strokes + 1}</div>
-           <button class="btn primary" data-act="sim-shot">🏌️ Tirar</button>`}
-      <button class="btn sm ghost" data-act="sim-reset">Reiniciar</button>
-    </div>`;
+
+    <div class="sec-h" style="margin-top:16px"><h2 style="font-size:16px">Tu ronda tiro por tiro</h2><span class="small muted">elige un hoyo</span></div>
+    <div class="hole-strip">${holeChips}</div>
+    <div class="card" style="padding-bottom:8px">
+      <div class="ph-head"><div class="r-main" style="flex:1"><b>Hoyo ${hole.n} · Par ${hole.par}</b><span class="muted">${hole.yds} yds · hoyo ${vh + 1}/${me.length}</span></div>
+        <div class="r-side"><b style="color:var(--lime)">${H.score}</b><span>${hTP === 0 ? 'par' : hTP > 0 ? '+' + hTP : hTP}</span></div></div>
+      <div class="sim-vs" style="margin-top:8px"><span>🟢 Tú ${H.score}</span><span style="color:#6db3ff">🔵 Shadow ${H.shScore}</span></div>
+      <div style="margin-top:6px">${simSchematic(hole, H.log, H.shLog)}</div>
+    </div>
+    <div class="card"><span class="label">Tiros del hoyo ${hole.n}</span>
+      <div class="sim-log">${logHtml}</div>
+    </div>
+    <div class="card"><span class="label">Tarjeta · Tú vs Shadow</span>
+      ${scorecardTable(me.length, i => me[i].par, [
+        { name: esc(u.name.split(' ')[0]), scoreOf: i => me[i].score },
+        { name: 'Shadow', scoreOf: i => me[i].shScore }
+      ], -1)}
+    </div>
+    <button class="btn primary" data-act="sim-start">Jugar otra vez</button>
+    <button class="btn" data-act="sim-reset">Salir</button>`;
 }
 
 /* ---- objetivo realista por % del jugador + plan de mejora semanal ---- */
@@ -632,6 +641,50 @@ function objetivosCard(u) {
       </div>
       <p class="note" style="margin-bottom:0">Pega <b class="lime">${fwT} de ${driveHoles}</b> calles y <b class="lime">${girT} de ${N}</b> greens, salva el ${udPct}% y deja los putts en ${puttsT}.</p>
     </div>`;
+}
+
+/* ENTRENAMIENTO → campaña de misiones a lograr + práctica + drills */
+function vEntreno() {
+  const u = cur();
+  const agg = Stats.aggregate(myRounds());
+  const practices = (typeof myPractices === 'function' ? myPractices() : []);
+  const pc = practices.length;
+  const driverP = practices.filter(p => p.drill === 'Driver').length;
+  const clubsSet = !!(u.clubs && Object.keys(u.clubs).some(k => u.clubs[k] != null));
+  const pr = goalProbs(u);
+  const fwG = Math.round(pr.fw * 100), girG = Math.round(pr.gir * 100), udG = Math.round(pr.ud * 100);
+  const fw = agg ? agg.fwPct : 0, gir = agg ? agg.girPct : 0, ud = agg ? agg.scrPct : 0, threeP = agg ? agg.threePct : 99;
+  const cl = v => Math.max(0, Math.min(1, v));
+  const M = [
+    { ic: '🎒', t: 'Arma tu bolsa', d: 'Carga tus palos y distancias en tu perfil', prog: clubsSet ? 1 : 0, done: clubsSet },
+    { ic: '📋', t: 'Primeras 5 prácticas', d: `Registra 5 sesiones · ${Math.min(5, pc)}/5`, prog: cl(pc / 5), done: pc >= 5 },
+    { ic: '🏌️', t: 'Domina tu salida', d: `3 prácticas de Driver · ${Math.min(3, driverP)}/3`, prog: cl(driverP / 3), done: driverP >= 3 },
+    { ic: '🎯', t: `Calles al ${fwG}%`, d: `Tus fairways: ${Math.round(fw)}% → ${fwG}%`, prog: cl(fw / Math.max(1, fwG)), done: fw >= fwG },
+    { ic: '🟢', t: `Greens al ${girG}%`, d: `Tu GIR: ${Math.round(gir)}% → ${girG}%`, prog: cl(gir / Math.max(1, girG)), done: gir >= girG },
+    { ic: '⛳', t: `Up & down al ${udG}%`, d: `Tu juego corto: ${Math.round(ud)}% → ${udG}%`, prog: cl(ud / Math.max(1, udG)), done: ud >= udG },
+    { ic: '🥅', t: 'Putt sólido', d: `Baja tus 3-putts a ≤10% · hoy ${Math.round(threeP)}%`, prog: cl(10 / Math.max(1, threeP)), done: threeP <= 10 },
+  ];
+  const doneCount = M.filter(x => x.done).length;
+  const activeIdx = M.findIndex(x => !x.done);
+  const rows = M.map((x, i) => {
+    const st = x.done ? 'done' : (i === activeIdx ? 'active' : 'todo');
+    return `<div class="mission ${st}">
+      <div class="m-ic">${x.done ? '✓' : x.ic}</div>
+      <div class="m-body"><b>${esc(x.t)}${i === activeIdx ? ' <span class="m-tag">ahora</span>' : ''}</b><span>${esc(x.d)}</span>
+        ${!x.done ? `<div class="bar mini" style="margin-top:6px"><i style="width:${Math.round(x.prog * 100)}%"></i></div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="sec-h"><h2>Tu campaña</h2><span class="small muted">${doneCount}/${M.length} misiones</span></div>
+    <div class="card">
+      <span class="label">🏁 Misiones de mejora</span>
+      <p class="note" style="margin-top:0;margin-bottom:10px">Completa misiones para llegar a tu objetivo. Cada una te acerca a tu meta.</p>
+      <div class="bar" style="margin-bottom:12px"><i style="width:${Math.round(doneCount / M.length * 100)}%"></i></div>
+      <div class="mission-list">${rows}</div>
+    </div>
+    ${vTracker()}
+    <div class="sec-h" style="margin-top:20px"><h2 style="font-size:18px">Biblioteca de drills</h2></div>
+    ${vDrillsLibrary()}`;
 }
 
 /* CAMPOS → camino ideal por hoyo, analizable por hándicap */

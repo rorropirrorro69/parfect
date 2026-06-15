@@ -77,19 +77,16 @@ function vTrainer() {
   const mainPage = objetivosCard(u)
     + `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">🏋️ Tu entrenamiento para lograrlo</h2><span class="small muted">en pro de tus objetivos</span></div>`
     + vDiag()
+    + vStats()
+    + vTrophies()
     + vHcpReference(u);
-  const entreno = vTracker()
-    + `<div class="sec-h" style="margin-top:20px"><h2 style="font-size:18px">Biblioteca de drills</h2></div>`
-    + vDrillsLibrary();
-  const body = tab === 'entreno' ? entreno
+  const body = tab === 'entreno' ? vEntreno()
     : tab === 'simulador' ? vSimulator()
-      : tab === 'stats' ? vStats()
-        : tab === 'logros' ? vTrophies()
-          : mainPage;
+      : mainPage;
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
     <div class="tabs scroll">
-      ${T('diag', 'Diagnóstico')}${T('entreno', 'Entrenamiento')}${T('simulador', 'Simulador')}${T('stats', 'Stats')}${T('logros', 'Logros')}
+      ${T('diag', 'Resumen')}${T('entreno', 'Entrenamiento')}${T('simulador', 'Simulador')}
     </div>
     ${body}`;
 }

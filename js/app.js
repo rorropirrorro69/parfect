@@ -146,7 +146,7 @@ const actions = {
 
   /* ---- perfil ---- */
   'profile-open'() { V.profileOpen = true; V.wipeArm = false; render(); },
-  'go-trofeos'() { V.profileOpen = false; V.trainerTab = 'logros'; go('trainer'); },
+  'go-trofeos'() { V.profileOpen = false; V.trainerTab = 'diag'; go('trainer'); },
   'profile-close'() { V.profileOpen = false; V.wipeArm = false; render(); },
   'profile-save'() {
     const u = cur();
@@ -328,15 +328,10 @@ const actions = {
     V.trainerTab = 'simulador'; V.view = 'trainer';
     render();
   },
-  'sim-shot'() {
-    if (!V.sim || V.sim.done) return;
-    if (V.sim.lie === 'holed') simFinishHole(V.sim);
-    else simStep(V.sim);
-    render();
-  },
+  'sim-hole'(d) { if (V.sim) { V.sim.viewHole = Number(d.i); render(); window.scrollTo(0, 0); } },
   'sim-reset'() { V.sim = null; render(); },
   'go-estrategia'() { V.trainerTab = 'estrategia'; go('trainer'); },
-  'go-stats'() { V.trainerTab = 'stats'; go('trainer'); },
+  'go-stats'() { V.trainerTab = 'diag'; go('trainer'); },
   'go-diag'() { V.trainerTab = 'diag'; go('trainer'); },
   'go-clubs'() { V.profileOpen = false; go('clubs'); },
   'save-clubs'() {
