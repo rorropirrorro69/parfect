@@ -2,33 +2,45 @@
 
 const CAMP_HOLES = [
   { n: 1, par: 5, yds: 503, dog: 'straight', risks: [{ at: 'drive', side: 'right', kind: 'bunker' }], tips: ['Calle amplia; los bunkers de salida están a la derecha.'] },
-  { n: 2, par: 5, yds: 550, dog: 'right', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['El hoyo más largo; un arroyo cruza antes del green.'] },
+  { n: 2, par: 5, yds: 550, dog: 'left', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['El hoyo más largo; un arroyo cruza antes del green.'] },
   { n: 3, par: 3, yds: 174, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'water' }], tips: ['Laguna a la izquierda del green.'] },
-  { n: 4, par: 4, yds: 405, dog: 'left', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['Dogleg suave a la izquierda.'] },
+  { n: 4, par: 4, yds: 405, dog: 'right', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['Dogleg suave a la derecha.'] },
   { n: 5, par: 3, yds: 201, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['El par 3 más largo.'] },
   { n: 6, par: 4, yds: 432, dog: 'right', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['Par 4 largo; importa estar en calle.'] },
   { n: 7, par: 5, yds: 529, dog: 'left', risks: [{ at: 'green', side: 'right', kind: 'water' }], tips: ['Alcanzable en dos; agua a la derecha del green.'] },
   { n: 8, par: 3, yds: 176, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'water' }], tips: ['Agua a la izquierda del green.'] },
   { n: 9, par: 4, yds: 407, dog: 'right', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['Hoyo de cierre hacia la casa club.'] },
 ];
-function buildHoles(pars, yards) {
+function buildHoles(pars, yards, dogs) {
   return pars.map((par, i) => {
     const n = i + 1;
-    const dog = par === 3 ? 'straight' : (n % 2 === 0 ? 'right' : 'left');
-    const risks = par === 3 ? [{ at: 'green', side: n % 2 ? 'left' : 'right', kind: n % 4 === 0 ? 'water' : 'bunker' }] : [{ at: 'green', side: n % 2 ? 'right' : 'left', kind: 'bunker' }];
-    return { n, par, yds: yards[i], dog, risks, tips: [`Par ${par} de ${yards[i]} yds.`] };
+    const dog = par === 3 ? 'straight' : ((dogs && dogs[i]) ? dogs[i] : (n % 2 === 0 ? 'right' : 'left'));
+    const side = par === 3 ? (n % 2 ? 'left' : 'right')
+      : (dog === 'left' ? 'right' : dog === 'right' ? 'left' : (n % 2 ? 'right' : 'left'));
+    const kind = par === 3 && n % 4 === 0 ? 'water' : 'bunker';
+    return { n, par, yds: yards[i], dog, risks: [{ at: 'green', side, kind }], tips: [`Par ${par} de ${yards[i]} yds.`] };
   });
 }
 const TM_PARS = [4, 4, 3, 4, 5, 3, 4, 5, 4, 4, 4, 4, 3, 3, 4, 5, 4, 5];
 const TM_YDS = [433, 466, 207, 434, 555, 187, 389, 530, 404, 520, 380, 374, 214, 216, 509, 541, 350, 545];
+const TM_DOGS = ['left', 'right', 'straight', 'straight', 'left', 'straight', 'left', 'right', 'straight', 'straight', 'left', 'right', 'straight', 'straight', 'left', 'left', 'left', 'right'];
 const ALT_PARS = [4, 5, 4, 4, 3, 5, 3, 4, 4, 4, 4, 3, 4, 3, 4, 5, 4, 5];
 const ALT_YDS = ALT_PARS.map(p => p === 3 ? 195 : p === 4 ? 420 : 565);
+const ALT_DOGS = ['left', 'left', 'right', 'left', 'straight', 'right', 'straight', 'left', 'right', 'left', 'right', 'straight', 'right', 'straight', 'right', 'left', 'left', 'left'];
 const COURSES = {
   campestre: { id: 'campestre', name: 'Club Campestre Morelia', sub: '9 hoyos · Par 72', holes: CAMP_HOLES },
-  tresmarias: { id: 'tresmarias', name: 'Tres Marías · El Reto', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(TM_PARS, TM_YDS) },
-  altozano: { id: 'altozano', name: 'Altozano Morelia', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(ALT_PARS, ALT_YDS) },
+  tresmarias: { id: 'tresmarias', name: 'Tres Marías · El Reto', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(TM_PARS, TM_YDS, TM_DOGS) },
+  altozano: { id: 'altozano', name: 'Altozano Morelia', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(ALT_PARS, ALT_YDS, ALT_DOGS) },
 };
 const COURSE_ORDER = ['campestre', 'tresmarias', 'altozano'];
+/* salidas (tees): factor sobre la yardaja del campo (las yardas base son de campeonato) */
+const TEES = [
+  { id: 'negras', name: 'Negras', sub: 'Campeonato', f: 1.0 },
+  { id: 'azules', name: 'Azules', sub: 'Avanzado', f: 0.92 },
+  { id: 'blancas', name: 'Blancas', sub: 'Media', f: 0.85 },
+  { id: 'rojas', name: 'Rojas', sub: 'Adelantada', f: 0.74 },
+];
+const teeById = id => TEES.find(t => t.id === id) || TEES[2];
 
 /* ---- bolsa + efectividad (del Tracker) ---- */
 function trackerEff(clubName) {

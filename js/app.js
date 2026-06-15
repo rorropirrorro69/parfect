@@ -5,7 +5,7 @@ let V = {
   view: S.session ? 'inicio' : 'landing',
   err: null, authVals: null,
   profileOpen: false, wipeArm: false,
-  setupCourseId: null,
+  setupCourseId: null, setupTee: 'blancas',
   hole: null, scoreTouched: false, confirmExit: false,
   detail: null, delArm: null,
   trainerTab: 'diag', diag: null, diagBusy: false,
@@ -192,6 +192,7 @@ const actions = {
   /* ---- rondas ---- */
   'go-setup'() { V.setupCourseId = (V.setupCourseId && COURSES[V.setupCourseId]) ? V.setupCourseId : 'campestre'; go('nueva'); },
   'setup-pick-course'(d) { if (COURSES[d.c]) V.setupCourseId = d.c; render(); },
+  'setup-pick-tee'(d) { if (TEES.some(t => t.id === d.t)) V.setupTee = d.t; render(); },
   'quick-round'() {
     if (S.active && S.active.userId === S.session) { loadHole(); go('play'); }
     else actions['go-setup']();
@@ -200,7 +201,8 @@ const actions = {
     const cid = (V.setupCourseId && COURSES[V.setupCourseId]) ? V.setupCourseId : 'campestre';
     const course = COURSES[cid].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '');
     const holesCount = COURSES[cid].holes.length;
-    S.active = { userId: S.session, course, courseId: cid, holesCount, holes: [], idx: 0, startedAt: Date.now() };
+    const tee = teeById(V.setupTee);
+    S.active = { userId: S.session, course, courseId: cid, holesCount, holes: [], idx: 0, startedAt: Date.now(), teeId: tee.id, teeName: tee.name, teeF: tee.f };
     loadHole();
     V.view = 'play';
     commit(); window.scrollTo(0, 0);

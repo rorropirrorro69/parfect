@@ -85,7 +85,10 @@ function vRondaTab() {
 /* ---------- Setup de ronda ---------- */
 function vSetup() {
   const cid = V.setupCourseId || 'campestre';
+  const tid = V.setupTee || 'blancas';
+  const tee = teeById(tid);
   const sname = id => COURSES[id].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '');
+  const totalYds = Math.round(COURSES[cid].holes.reduce((a, h) => a + h.yds, 0) * tee.f);
   return `<div class="sec-h"><h2>Nueva ronda</h2></div>
     <div class="card">
       <span class="label">Elige campo</span>
@@ -93,6 +96,13 @@ function vSetup() {
         ${COURSE_ORDER.map(id => `<button class="chip ${cid === id ? 'on' : ''}" data-act="setup-pick-course" data-c="${id}">${esc(sname(id))}</button>`).join('')}
       </div>
       <p class="note" style="margin:10px 0 0">${esc(COURSES[cid].name)} · ${COURSES[cid].holes.length} hoyos · <b class="lime">pares y yardas reales</b>.</p>
+    </div>
+    <div class="card">
+      <span class="label">Salidas (tees)</span>
+      <div class="chips" style="margin-top:8px">
+        ${TEES.map(t => `<button class="chip ${tid === t.id ? 'on' : ''}" data-act="setup-pick-tee" data-t="${t.id}">${esc(t.name)}</button>`).join('')}
+      </div>
+      <p class="note" style="margin:10px 0 0">${esc(tee.name)} · ${esc(tee.sub)} · <b class="lime">${totalYds} yds</b> en total.</p>
     </div>
     <button class="btn primary" data-act="start-round">Comenzar ronda →</button>
     <button class="btn" data-act="nav" data-view="ronda">Cancelar</button>
@@ -107,30 +117,25 @@ function chipRow(items, key, current) {
   ).join('') + `</div>`;
 }
 
-/* posiciones de los tiros — se construyen SOLO con lo que ya registraste, tiro por tiro */
+/* tiros de campo (sin putts) — se construyen SOLO con lo que ya registraste */
 function captureShots(h) {
   const shots = [];
   const par = h.par;
-  // 1 · Salida (par 4/5)
   if (par >= 4 && h.tee) {
     const side = h.tee === 'izq' ? -0.62 : h.tee === 'der' ? 0.62 : h.tee === 'penal' ? -0.82 : 0;
     const ok = h.tee === 'fw';
     shots.push({ prog: par === 5 ? 0.33 : 0.5, side, ok, lie: h.tee === 'penal' ? 'water' : (ok ? 'fw' : 'rough') });
   }
-  // 2 · Approach (en par 5, primero el tiro de avance / layup)
   if (h.app) {
     if (par === 5 && h.tee) shots.push({ prog: 0.72, side: 0, ok: true, lie: 'fw' });
     if (h.app === 'gir') shots.push({ prog: 1, side: 0, ok: true, lie: 'green' });
     else {
       const side = h.app === 'izq' ? -0.6 : h.app === 'der' ? 0.6 : 0;
-      const prog = h.app === 'largo' ? 1.13 : h.app === 'corto' ? 0.82 : 1;   // largo = se pasa del green
+      const prog = h.app === 'largo' ? 1.13 : h.app === 'corto' ? 0.82 : 1;
       shots.push({ prog, side, ok: false, lie: 'rough' });
-      // 3 · Alrededor del green (solo si ya lo registraste)
       if (h.upDown != null) shots.push({ prog: 0.99, side: 0.1, ok: h.upDown === true, lie: 'green' });
     }
   }
-  // 4 · Putts
-  if (h.putts != null) for (let i = 0; i < h.putts; i++) shots.push({ prog: 1, side: (i % 2 ? 0.06 : -0.06), ok: true, lie: 'green' });
   return shots;
 }
 function captureSchematic(h, chole) {
@@ -145,39 +150,74 @@ function captureSchematic(h, chole) {
   const P = s => {
     const t = Math.min(1, s.prog);
     let x = bez(t, tee[0], ctrl[0], gx), y = bez(t, tee[1], ctrl[1], gy);
-    if (s.prog > 1) y -= (s.prog - 1) * 72;            // approach largo: se pasa del green
+    if (s.prog > 1) y -= (s.prog - 1) * 72;
     return { x: x + s.side * halfW, y };
   };
-  const pts = shots.map(P);
+  const fpts = shots.map(P);
+
+  // ---- putts: trayectoria sobre el green, desde la distancia registrada hasta el hoyo ----
+  const nPutts = h.putts != null ? h.putts : 0;
+  const dyOf = { '0-3': 16, '3-8': 26, '8-20': 40, '20+': 56 };
+  const lagDy = nPutts > 0 ? (dyOf[h.dist] != null ? dyOf[h.dist] : 28) : 0;
+  let lagIdx = -1, lag = { x: gx, y: gy };
+  if (nPutts > 0) {
+    lagIdx = shots.findIndex(s => s.lie === 'green');     // llegada al green = primer putt
+    lag = { x: gx + 2, y: gy + lagDy };
+    if (lagIdx >= 0) fpts[lagIdx] = { x: lag.x, y: lag.y };
+  }
+  const pputts = [];
+  for (let i = 0; i < nPutts; i++) {
+    const f = (i + 1) / nPutts;
+    pputts.push({ x: lag.x + (gx - lag.x) * f + (i < nPutts - 1 ? (i % 2 ? 3 : -3) : 0), y: lag.y + (gy - lag.y) * f });
+  }
+  const pts = [...fpts, ...pputts];
+  const lagNode = lagIdx >= 0 ? lagIdx + 1 : (nPutts > 0 ? fpts.length + 1 : -1);
+
   const route = `M${tee[0]},${tee[1]} ` + pts.map(q => `L${q.x.toFixed(0)},${q.y.toFixed(0)}`).join(' ');
   const colOf = s => s.ok ? '#c9f73e' : (s.lie === 'water' ? '#ff7a6b' : '#ff9f43');
   let zones = '', dots = '';
-  shots.forEach((s, i) => { if (s.lie === 'green') return; const q = pts[i], c = colOf(s), rx = s.ok ? 13 : 18; zones += `<ellipse cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" rx="${rx}" ry="${(rx * 0.7).toFixed(0)}" fill="${c}" opacity="0.16" stroke="${c}" stroke-width="1.5" stroke-dasharray="4 4"/>`; });
-  pts.forEach((q, i) => { dots += `<circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="4" fill="${colOf(shots[i])}"/>`; });
+  shots.forEach((s, i) => { if (s.lie === 'green') return; const q = fpts[i], c = colOf(s), rx = s.ok ? 13 : 18; zones += `<ellipse cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" rx="${rx}" ry="${(rx * 0.7).toFixed(0)}" fill="${c}" opacity="0.16" stroke="${c}" stroke-width="1.5" stroke-dasharray="4 4"/>`; });
+  fpts.forEach((q, i) => { dots += `<circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="4" fill="${colOf(shots[i])}"/>`; });
+  pputts.forEach((q, i) => { dots += `<circle cx="${q.x.toFixed(0)}" cy="${q.y.toFixed(0)}" r="${i === nPutts - 1 ? 3.2 : 4.2}" fill="#fff" stroke="#0a0f08" stroke-width="0.6"/>`; });
   let haz = '';
   ((chole && chole.risks) || []).forEach(r => {
     let rx, ry;
-    if (r.at === 'drive') { const lp = pts[0] || { x: gx, y: gy }; rx = lp.x + (r.side === 'left' ? -36 : 36); ry = lp.y; }
+    if (r.at === 'drive') { const lp = fpts[0] || { x: gx, y: gy }; rx = lp.x + (r.side === 'left' ? -36 : 36); ry = lp.y; }
     else { rx = gx + (r.side === 'left' ? -40 : 40); ry = gy + 14; }
     const water = r.kind === 'water';
     haz += `<ellipse cx="${rx.toFixed(0)}" cy="${ry.toFixed(0)}" rx="${water ? 21 : 16}" ry="${water ? 13 : 9}" fill="${water ? '#2f7fa6' : '#ddcb8c'}"/>`;
   });
-  let ball = '';
+  let ball = '', vbAnim = '';
   if (pts.length) {
     const allP = [{ x: tee[0], y: tee[1] }, ...pts], seg = []; let tot = 0;
     for (let i = 1; i < allP.length; i++) { const l = Math.hypot(allP[i].x - allP[i - 1].x, allP[i].y - allP[i - 1].y); seg.push(l); tot += l || 1; }
     const nf = [0]; { let aa = 0; for (const l of seg) { aa += l; nf.push(aa / tot); } }
-    const ev = [{ p: 0, d: 0 }]; for (let i = 1; i < nf.length; i++) { ev.push({ p: nf[i], d: 1 }); if (i < nf.length - 1) ev.push({ p: nf[i], d: 0.5 }); } ev.push({ p: 1, d: 1 });
-    const TT = ev.reduce((a, e) => a + e.d, 0); let ac = 0; const kp = [], kt = []; ev.forEach(e => { ac += e.d; kp.push(e.p.toFixed(3)); kt.push((ac / TT).toFixed(3)); });
+    const ev = [{ p: 0, d: 0, node: 0 }];
+    for (let i = 1; i < nf.length; i++) { ev.push({ p: nf[i], d: 1, node: i }); if (i < nf.length - 1) ev.push({ p: nf[i], d: 0.5 }); }
+    ev.push({ p: 1, d: 1 });
+    const TT = ev.reduce((a, e) => a + e.d, 0); let ac = 0; const kp = [], kt = []; const nodeT = {};
+    ev.forEach(e => { ac += e.d; const t = ac / TT; kp.push(e.p.toFixed(3)); kt.push(t.toFixed(3)); if (e.node != null) nodeT[e.node] = t; });
     const dur = (0.8 + (nf.length - 1) * 0.9).toFixed(1);
     ball = `<circle r="6" fill="#fff" stroke="#0a0f08" stroke-width="1"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${route}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
+    // ---- zoom de cámara al green durante los putts ----
+    if (nPutts > 0 && lagNode >= 0) {
+      const bx = Math.max(0, Math.min(W - 118, gx - 59)).toFixed(0);
+      const by = Math.max(0, Math.min(H - 116, gy + lagDy / 2 - 58)).toFixed(0);
+      const box = `${bx} ${by} 118 116`;
+      const tA = nodeT[lagNode] != null ? nodeT[lagNode] : 0.55;
+      let k = [0, Math.max(0.05, tA - 0.03), Math.min(0.9, tA + 0.06), 0.96, 1];
+      for (let i = 1; i < k.length; i++) if (k[i] <= k[i - 1]) k[i] = Math.min(1, k[i - 1] + 0.005);
+      const vals = `0 0 ${W} ${H};0 0 ${W} ${H};${box};${box};0 0 ${W} ${H}`;
+      vbAnim = `<animate attributeName="viewBox" dur="${dur}s" repeatCount="indefinite" values="${vals}" keyTimes="${k.map(x => x.toFixed(3)).join(';')}" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/>`;
+    }
   }
   return `<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tiros del hoyo">
+    ${vbAnim}
     <rect width="${W}" height="${H}" rx="14" fill="#0a0f08" stroke="#1d2914"/>
     <path d="${fair}" fill="none" stroke="#2f6b39" stroke-width="${par3 ? 40 : 56}" stroke-linecap="round"/>
     <path d="${fair}" fill="none" stroke="#3a8043" stroke-width="${par3 ? 20 : 30}" stroke-linecap="round" opacity="0.5"/>
     <ellipse cx="${gx}" cy="${gy}" rx="34" ry="22" fill="#57b15c" stroke="#2f6b39" stroke-width="2"/>
-    <circle cx="${gx}" cy="${gy}" r="3" fill="#0a0f08"/>
+    <circle cx="${gx}" cy="${gy}" r="4.5" fill="#0a0f08"/><circle cx="${gx}" cy="${gy}" r="6.5" fill="none" stroke="#c9f73e" stroke-width="0.8" opacity="0.6"/>
     <line x1="${gx}" y1="${gy}" x2="${gx}" y2="${gy - 22}" stroke="#eef3e6" stroke-width="2"/><path d="M${gx},${gy - 22} l11,3 -11,3z" fill="#c9f73e"/>
     ${haz}${zones}
     <path d="${route}" fill="none" stroke="#c9f73e" stroke-width="2" stroke-dasharray="3 5"/>
@@ -212,7 +252,7 @@ function vPlay() {
     <div class="progress"><i style="width:${pct}%"></i></div>
     <div class="hole-head">
       <span class="hnum">Hoyo ${a.idx + 1}</span>
-      <span class="hof">Par ${h.par}${chole && chole.yds ? ` · ${chole.yds} yds` : ''}</span>
+      <span class="hof">Par ${h.par}${chole && chole.yds ? ` · ${Math.round(chole.yds * (a.teeF || 1))} yds` : ''}${a.teeName ? ` · ${esc(a.teeName)}` : ''}</span>
     </div>
 
     <div class="card" style="padding:10px">
