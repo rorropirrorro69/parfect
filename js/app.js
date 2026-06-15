@@ -72,6 +72,7 @@ function App() {
     nueva: vSetup,
     detalle: vRoundDetail,
     stats: vStats,
+    trofeos: vTrophies,
     trainer: vTrainer,
     social: vSocial,
   }[V.view] || vDashboard;
@@ -141,6 +142,7 @@ const actions = {
 
   /* ---- perfil ---- */
   'profile-open'() { V.profileOpen = true; V.wipeArm = false; render(); },
+  'go-trofeos'() { V.profileOpen = false; go('trofeos'); },
   'profile-close'() { V.profileOpen = false; V.wipeArm = false; render(); },
   'profile-save'() {
     const u = cur();

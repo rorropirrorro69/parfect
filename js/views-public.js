@@ -11,71 +11,76 @@ function vLanding() {
     </div>
 
     <div class="land-hero">
-      <span class="badge">⛳ Golf · Stats · IA</span>
-      <h1 class="land-h1">Deja de practicar.<br/><span class="lime">Empieza a mejorar.</span></h1>
-      <p class="land-sub">PARFECT anota tu juego hoyo por hoyo, te dice en qué estás fallando y qué practicar para bajar tu hándicap. Y cuando juegas con amigos, lleva la tabla por ti.</p>
-      <button class="btn primary" data-act="go" data-view="signup">Crear cuenta gratis</button>
+      <span class="badge">⛳ Golf más fácil</span>
+      <h1 class="land-h1">Juega golf.<br/><span class="lime">Mejora de verdad.</span></h1>
+      <p class="land-sub">Apunta cada hoyo en segundos. La app te muestra en qué fallas y qué practicar para bajar tu hándicap. ¿Juegas con amigos? Ella lleva la cuenta sola.</p>
+      <button class="btn primary" data-act="go" data-view="signup">Crear mi cuenta gratis</button>
       <button class="btn ghost" data-act="go" data-view="login">Ya tengo cuenta</button>
       <div class="mini-stats">
-        <div class="mini-stat"><b>4 toques</b><span>por hoyo</span></div>
-        <div class="mini-stat"><b>Party</b><span>con amigos</span></div>
-        <div class="mini-stat"><b>IA</b><span>tu coach</span></div>
+        <div class="mini-stat"><b>Fácil</b><span>4 toques por hoyo</span></div>
+        <div class="mini-stat"><b>Con amigos</b><span>y torneos</span></div>
+        <div class="mini-stat"><b>Gratis</b><span>en tu celular</span></div>
       </div>
     </div>
 
     <div class="land-sec">
-      <h2 class="land-h2">Todo lo que necesitas<br/>para jugar mejor</h2>
-      <p class="land-lead">Cinco herramientas que convierten tus números en mejoras de verdad.</p>
+      <h2 class="land-h2">Todo en un<br/>solo lugar</h2>
+      <p class="land-lead">Seis cosas simples para jugar mejor.</p>
 
       <div class="card feat">
         <div class="f-ico">${ICONS.feat_round}</div>
-        <h3>Anota tus rondas</h3>
-        <p>Captura cada hoyo en 4 toques: salida, approach, juego corto y putts. En segundos.</p>
+        <h3>Apunta tus rondas</h3>
+        <p>Anota cada hoyo con unos toques: salida, tiro al green, juego corto y putts. Listo en segundos.</p>
       </div>
       <div class="card feat">
         <div class="f-ico">${ICONS.feat_stats}</div>
-        <h3>Tus números</h3>
-        <p>Calles, greens, salvadas y putts, claros y a la mano. Sabes exactamente cómo juegas.</p>
+        <h3>Mira tus números</h3>
+        <p>Calles, greens, salvadas y putts, claros y fáciles de leer. Sabes cómo juegas de verdad.</p>
       </div>
       <div class="card feat">
         <div class="f-ico">${ICONS.feat_ai}</div>
-        <h3>Parfect Trainer</h3>
-        <p>La IA revisa tus rondas, te dice por qué pierdes golpes y te arma ejercicios para tu caso.</p>
+        <h3>Tu entrenador</h3>
+        <p>Revisa tus rondas, te dice por qué pierdes golpes y te arma ejercicios hechos para ti.</p>
       </div>
       <div class="card feat">
         <div class="f-ico">${ICONS.feat_track}</div>
-        <h3>Parfect Tracker</h3>
-        <p>Anota cada práctica con tus aciertos y comprueba si de verdad estás mejorando.</p>
+        <h3>Tus prácticas</h3>
+        <p>Apunta cada práctica y comprueba si de verdad estás mejorando, semana con semana.</p>
       </div>
       <div class="card feat">
         <div class="f-ico">${ICONS.social}</div>
-        <h3>Parfect Party 🎉</h3>
-        <p>Juega con amigos en Medal o Match play. Cada quien anota desde su celular y la app lleva la tabla en vivo. Ideal para tu torneo.</p>
+        <h3>Juega con amigos 🎉</h3>
+        <p>Arma una partida con un código. Cada quien apunta desde su celular y la app lleva la cuenta en vivo. Perfecto para torneos.</p>
+      </div>
+      <div class="card feat">
+        <div class="f-ico">🏆</div>
+        <h3>Trofeos y metas</h3>
+        <p>Ponte objetivos y desbloquea logros conforme mejoras. Tu progreso, claro y motivante.</p>
       </div>
     </div>
 
     <div class="land-sec">
-      <h2 class="land-h2">Cómo funciona</h2>
-      <p class="land-lead">Tres pasos, sin complicarte.</p>
+      <h2 class="land-h2">Así de fácil</h2>
+      <p class="land-lead">Tres pasos y ya.</p>
       <div class="step">
         <span class="s-num">01</span>
-        <div><h3>Anota tu ronda</h3><p>Captura cada hoyo en 30 segundos desde tu celular.</p></div>
+        <div><h3>Apunta tu ronda</h3><p>Cada hoyo en 30 segundos, desde tu celular.</p></div>
       </div>
       <div class="step">
         <span class="s-num">02</span>
-        <div><h3>Mira dónde fallas</h3><p>La app encuentra dónde se te van los golpes de más.</p></div>
+        <div><h3>Ve qué fallas</h3><p>La app te dice dónde se te van los golpes.</p></div>
       </div>
       <div class="step">
         <span class="s-num">03</span>
-        <div><h3>Practica lo correcto</h3><p>Practica solo lo que te hace falta. Sin perder el tiempo.</p></div>
+        <div><h3>Practica lo justo</h3><p>Solo lo que te hace falta. Sin perder el tiempo.</p></div>
       </div>
     </div>
 
     <div class="land-cta">
-      <span class="label">¿Listo para jugar tu mejor golf?</span>
-      <h2 class="land-h2" style="margin-top:10px">Tu hándicap<br/><span class="lime">te está esperando.</span></h2>
-      <p class="land-lead">Crea tu cuenta gratis y empieza hoy.</p>
-      <button class="btn primary" data-act="go" data-view="signup">Empezar ahora</button>
+      <span class="label">¿Listo para jugar mejor?</span>
+      <h2 class="land-h2" style="margin-top:10px">Tu mejor golf<br/><span class="lime">empieza hoy.</span></h2>
+      <p class="land-lead">Crea tu cuenta gratis. Toma menos de un minuto.</p>
+      <button class="btn primary" data-act="go" data-view="signup">Empezar gratis</button>
     </div>
 
     <div class="land-foot">

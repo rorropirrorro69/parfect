@@ -88,7 +88,10 @@ function vDashboard() {
       <button class="btn sm ghost" data-act="nav" data-view="ronda" style="margin-top:14px">Ver todas las tarjetas →</button>
     </div>
     <button class="btn ghost" data-act="quick-round">${logoMark(15)} ${cont ? `Continuar ronda · hoyo ${S.active.idx + 1}` : 'Iniciar ronda'}</button>
-    <button class="btn" data-act="nav" data-view="stats">Avatar Stats →</button>
+    <div class="btn-row">
+      <button class="btn" data-act="nav" data-view="stats">Avatar Stats →</button>
+      <button class="btn" data-act="nav" data-view="trofeos">🏆 Trofeos</button>
+    </div>
   `;
 }
 
@@ -105,6 +108,7 @@ function vProfile() {
         <div class="field"><label>Meta</label><input id="p-goal" type="number" step="1" value="${esc(u.goal)}"></div>
       </div>
       <button class="btn primary" data-act="profile-save">Guardar cambios</button>
+      <button class="btn" data-act="go-trofeos">🏆 Ver mis trofeos</button>
       <button class="btn ghost" data-act="seed-demo">Cargar datos de ejemplo</button>
       <button class="btn danger" data-act="wipe-mine">${V.wipeArm ? '¿Seguro? Toca otra vez para borrar tus rondas' : 'Borrar mis rondas y prácticas'}</button>
       <button class="btn" data-act="logout">Cerrar sesión</button>

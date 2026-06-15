@@ -1,23 +1,25 @@
 /* PARFECT service worker: la app funciona offline una vez visitada. */
-const CACHE = 'parfect-v10';
+const CACHE = 'parfect-v11';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon.svg',
-  './css/styles.css?v=10',
-  './js/ui.js?v=10',
-  './js/store.js?v=10',
-  './js/stats.js?v=10',
-  './js/trainer.js?v=10',
-  './js/views-public.js?v=10',
-  './js/views-home.js?v=10',
-  './js/views-round.js?v=10',
-  './js/views-modules.js?v=10',
-  './js/party.js?v=10',
-  './js/views-party.js?v=10',
-  './js/sync.js?v=10',
-  './js/app.js?v=10',
+  './css/styles.css?v=11',
+  './js/ui.js?v=11',
+  './js/store.js?v=11',
+  './js/stats.js?v=11',
+  './js/trainer.js?v=11',
+  './js/views-public.js?v=11',
+  './js/views-home.js?v=11',
+  './js/views-round.js?v=11',
+  './js/views-modules.js?v=11',
+  './js/party.js?v=11',
+  './js/views-party.js?v=11',
+  './js/trophies.js?v=11',
+  './js/views-trophies.js?v=11',
+  './js/sync.js?v=11',
+  './js/app.js?v=11',
 ];
 
 self.addEventListener('install', (e) => {
