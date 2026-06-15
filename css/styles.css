@@ -164,6 +164,20 @@ input, select, textarea { font-family: var(--font); }
 .pkc-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding: 8px 6px 2px; border-top: 1px solid rgba(20,40,10,0.10); font-size: 11px; color: #7C8A6E; }
 .pkc-stars { color: #e6b745; font-size: 13px; letter-spacing: 1px; }
 
+/* variante: tarjeta de drill */
+.pkc-grid { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+.pkc-drill { display: block; width: 100%; text-align: left; border: none; cursor: pointer; }
+.pkc-drill:active { transform: scale(0.99); }
+.pkc-tag { font-size: 11px; font-weight: 800; color: #3b6d11; background: rgba(120,190,40,0.18); padding: 3px 10px; border-radius: 99px; }
+.pkc-art-wide { height: auto; background: #F2F6E8; display: block; align-items: stretch; }
+.pkc-art-wide::after { display: none; }
+.pkc-art-wide .drill-art { display: block; width: 100%; height: auto; border-radius: 9px; }
+.pkc-move-txt { align-items: flex-start; }
+.pkc-mt { flex: 1; }
+.pkc-mt b { display: block; font-size: 13px; font-weight: 800; color: #1B2A18; }
+.pkc-mt p { font-size: 12px; color: #5f7050; line-height: 1.4; margin-top: 1px; }
+.pkc-go { color: #3b6d11; font-weight: 800; }
+
 /* escenas con pájaro/águila 3D volando */
 .fly-scene { position: relative; height: 200px; overflow: hidden; background: radial-gradient(120% 90% at 50% 18%, #1a3f29, #0a130c 72%); }
 .fly-scene .fly { position: absolute; top: 46%; left: -80px; width: 64px; height: 64px; object-fit: contain; }

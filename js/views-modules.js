@@ -145,7 +145,20 @@ function vDiag() {
      <p class="note">Registra los drills en Parfect Tracker para medir tu progreso real.</p>`;
 }
 
-/* ---------- Biblioteca de drills (50) ---------- */
+/* ---------- Biblioteca de drills (50) — tarjetas estilo Pokémon ---------- */
+function vDrillCard(d, art) {
+  const cat = DRILL_CATS.find(c => c.id === d.cat) || { label: 'Drill' };
+  const target = d.cat === 'putt' ? 10 : 7;
+  return `<button class="pkc pkc-drill" data-act="drill-open" data-name="${esc(d.name)}" data-target="${target}" data-area="${esc(cat.label)}" data-goal="${esc(d.desc)}" data-timer="20"><div class="pkc-inner">
+    <div class="pkc-top"><span class="pkc-name">${esc(d.name)}</span><span class="pkc-tag">${esc(cat.label)}</span></div>
+    <div class="pkc-art pkc-art-wide">${drillArt(art, true)}</div>
+    <div class="pkc-moves">
+      <div class="pkc-move pkc-move-txt"><span class="pkc-mic">${golfIcon('bucket')}</span><div class="pkc-mt"><b>Dosis</b><p>${esc(d.dose)}</p></div></div>
+      <div class="pkc-move pkc-move-txt"><span class="pkc-mic">${golfIcon('green')}</span><div class="pkc-mt"><b>Meta</b><p>${esc(d.metric)}</p></div></div>
+    </div>
+    <div class="pkc-foot"><span class="pkc-stars">★★★☆☆</span><span class="pkc-go">Entrenar →</span></div>
+  </div></button>`;
+}
 function vDrillsLibrary() {
   const cat = V.drillCat || 'fw';
   const meta = DRILL_CATS.find(c => c.id === cat);
@@ -154,18 +167,10 @@ function vDrillsLibrary() {
     const n = DRILL_LIBRARY.filter(d => d.cat === c.id).length;
     return `<button class="tab ${c.id === cat ? 'on' : ''}" data-act="drill-cat" data-c="${c.id}">${esc(c.label)} <span class="muted">${n}</span></button>`;
   }).join('');
-  const cards = list.map(d => `<div class="drill">
-    <b>${esc(d.name)}</b>
-    <p>${esc(d.desc)}</p>
-    <div class="d-meta"><span>${golfIcon('card')} ${esc(d.dose)}</span><span>${golfIcon('green')} ${esc(d.metric)}</span></div>
-  </div>`).join('');
-  return `<p class="note" style="margin-top:14px">${DRILL_LIBRARY.length} ejercicios para cada parte de tu juego. Elige una categoría.</p>
+  const cards = list.map(d => vDrillCard(d, meta.art)).join('');
+  return `<p class="note" style="margin-top:14px">${DRILL_LIBRARY.length} drills para cada parte de tu juego. Elige categoría y toca una carta para entrenar.</p>
     <div class="tabs" style="flex-wrap:wrap">${chips}</div>
-    <div class="card" style="margin-top:14px">
-      <span class="label">${esc(meta.label)} · ${list.length} drills</span>
-      ${drillArt(meta.art)}
-      ${cards}
-    </div>`;
+    <div class="pkc-grid">${cards}</div>`;
 }
 
 /* ---------- Parfect Tracker (personalizado por palos) ---------- */

@@ -199,12 +199,17 @@ function mbar(label, pct, valText) {
 }
 
 /* ============ Drill art: animaciones SVG que ilustran el ejercicio ============ */
-function drillArt(key) {
+function drillArt(key, light) {
   const W = 320, H = 96;
-  const frame = `<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="12" fill="#0b110a" stroke="rgba(201,247,62,0.13)"/>`;
-  const ground = `<line x1="16" y1="78" x2="${W - 16}" y2="78" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>`;
-  const cap = t => `<text x="16" y="22" fill="#7c8a70" font-size="11" font-weight="700" font-family="Inter,system-ui">${t}</text>`;
-  const ball = (path, dur) => `<circle r="5" fill="#fff">
+  const frameFill = light ? '#F2F6E8' : '#0b110a';
+  const frameStroke = light ? 'rgba(40,90,20,0.22)' : 'rgba(201,247,62,0.13)';
+  const groundCol = light ? 'rgba(20,40,10,0.16)' : 'rgba(255,255,255,0.08)';
+  const capCol = light ? '#5f7050' : '#7c8a70';
+  const ballStroke = light ? ' stroke="#1B2A18" stroke-width="0.8"' : '';
+  const frame = `<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="12" fill="${frameFill}" stroke="${frameStroke}"/>`;
+  const ground = `<line x1="16" y1="78" x2="${W - 16}" y2="78" stroke="${groundCol}" stroke-width="1.5"/>`;
+  const cap = t => `<text x="16" y="22" fill="${capCol}" font-size="11" font-weight="700" font-family="Inter,system-ui">${t}</text>`;
+  const ball = (path, dur) => `<circle r="5" fill="#fff"${ballStroke}>
       <animateMotion dur="${dur}" repeatCount="indefinite" calcMode="linear" path="${path}"/>
       <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.08;0.5;0.85;1" dur="${dur}" repeatCount="indefinite"/>
     </circle>`;
@@ -245,7 +250,7 @@ function drillArt(key) {
   const p = 'M30 70 L286 70';
   return `<svg viewBox="0 0 ${W} ${H}" class="drill-art" role="img" aria-label="Putt por el gate">
     ${frame}
-    <line x1="16" y1="70" x2="${W - 16}" y2="70" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+    <line x1="16" y1="70" x2="${W - 16}" y2="70" stroke="${groundCol}" stroke-width="1.5"/>
     <line x1="188" y1="58" x2="188" y2="70" stroke="#c9f73e" stroke-width="2.5" stroke-linecap="round"/>
     <line x1="208" y1="58" x2="208" y2="70" stroke="#c9f73e" stroke-width="2.5" stroke-linecap="round"/>
     <ellipse cx="286" cy="70" rx="8" ry="3" fill="#0a0f06" stroke="#c9f73e" stroke-width="1.5"/>
