@@ -192,6 +192,37 @@ function drillArt(key) {
   </svg>`;
 }
 
+/* escena animada ÚNICA por drill (cae a drillArt por área si no hay específica) */
+function drillScene(name, areaKey) {
+  const n = (name || '').toLowerCase();
+  const W = 320, H = 96, G = 78;
+  const fr = `<rect x="0.5" y="0.5" width="319" height="95" rx="12" fill="#0b110a" stroke="rgba(201,247,62,0.13)"/>`;
+  const gr = (y = G) => `<line x1="16" y1="${y}" x2="304" y2="${y}" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>`;
+  const cap = t => `<text x="16" y="20" fill="#7c8a70" font-size="10.5" font-weight="700" font-family="Inter,system-ui,sans-serif">${t}</text>`;
+  const fl = (x, y) => `<line x1="${x}" y1="${y}" x2="${x}" y2="${G}" stroke="#c9f73e" stroke-width="2"/><path d="M${x} ${y} l11 3.5 -11 3.5z" fill="#c9f73e"/>`;
+  const cp = (x, y = G) => `<ellipse cx="${x}" cy="${y}" rx="8" ry="3" fill="#0a0f06" stroke="#c9f73e" stroke-width="1.5"/>`;
+  const bl = (path, dur, extra = '') => `<circle r="4.5" fill="#fff">${extra}<animateMotion dur="${dur}" repeatCount="indefinite" calcMode="linear" path="${path}"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.5;.85;1" dur="${dur}" repeatCount="indefinite"/></circle>`;
+  const svg = inner => `<svg viewBox="0 0 ${W} ${H}" class="drill-art" aria-hidden="true">${fr}${inner}</svg>`;
+
+  if (n.includes('gate drill')) return svg(`${gr()}<line x1="74" y1="62" x2="74" y2="${G}" stroke="#c9f73e" stroke-width="3" stroke-linecap="round"/><line x1="100" y1="62" x2="100" y2="${G}" stroke="#c9f73e" stroke-width="3" stroke-linecap="round"/><ellipse cx="272" cy="${G}" rx="28" ry="5" fill="rgba(201,247,62,0.12)"/>${bl('M44 74 Q 170 -10 286 74', '3s')}${cap('Gate de alineación')}`);
+  if (n.includes('14 calles')) return svg(`${gr()}<rect x="150" y="71" width="120" height="7" rx="3.5" fill="#2f6b39"/><g stroke="#c9f73e" stroke-width="2"><line x1="180" y1="67" x2="180" y2="74"/><line x1="210" y1="67" x2="210" y2="74"/><line x1="240" y1="67" x2="240" y2="74"/></g>${bl('M34 74 Q 150 -8 210 72', '2.6s')}${cap('14 calles a presión')}`);
+  if (n.includes('madera 3')) return svg(`${gr()}<path d="M44 74 Q 150 -12 256 58" fill="none" stroke="rgba(255,120,107,0.3)" stroke-dasharray="3 5"/><path d="M44 74 Q 150 2 256 72" fill="none" stroke="rgba(201,247,62,0.3)" stroke-dasharray="3 5"/>${bl('M44 74 Q 150 -12 256 58', '3s')}<circle r="4" fill="#c9f73e"><animateMotion dur="3s" begin="1.3s" repeatCount="indefinite" calcMode="linear" path="M44 74 Q 150 2 256 72"/></circle>${cap('Driver vs Madera 3')}`);
+  if (n.includes('escalera')) return svg(`${gr()}${[120, 200, 268].map((x, i) => `<ellipse cx="${x}" cy="${G}" rx="13" ry="4" fill="rgba(201,247,62,0.12)"/><circle r="4" fill="#fff"><animateMotion dur="3s" begin="${i * 0.6}s" repeatCount="indefinite" calcMode="linear" path="M34 74 Q ${(34 + x) / 2} -6 ${x} 74"/><animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.1;.45;.55;1" dur="3s" begin="${i * 0.6}s" repeatCount="indefinite"/></circle>`).join('')}${cap('Escalera de distancias')}`);
+  if (n.includes('reloj con wedges')) return svg(`<circle cx="64" cy="50" r="26" fill="none" stroke="rgba(201,247,62,0.28)" stroke-width="2"/><circle cx="64" cy="50" r="2.5" fill="#c9f73e"/><line x1="64" y1="50" x2="64" y2="28" stroke="#c9f73e" stroke-width="3" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" values="-35 64 50;-95 64 50;-35 64 50" dur="2.6s" repeatCount="indefinite"/></line>${fl(268, 46)}${bl('M118 60 Q 200 8 260 72', '2.6s')}${cap('Reloj de wedges')}`);
+  if (n.includes('pin high')) return svg(`${gr()}${fl(244, 40)}<line x1="120" y1="62" x2="266" y2="62" stroke="rgba(201,247,62,0.25)" stroke-width="1.5" stroke-dasharray="3 5"/>${bl('M34 74 Q 150 -2 232 62', '2.8s')}${cap('Pin high siempre')}`);
+  if (n.includes('up & down')) return svg(`${gr()}<ellipse cx="44" cy="76" rx="18" ry="6" fill="#43331a"/>${cp(268)}${fl(268, 46)}${bl('M44 72 Q 140 6 232 70 L260 76', '3.2s')}${cap('Up & down')}`);
+  if (n.includes('landing spot')) return svg(`${gr()}<rect x="180" y="70" width="26" height="6" rx="2" fill="#5aa9e0"/>${cp(272)}${fl(272, 46)}${bl('M40 72 Q 120 4 193 70 L266 76', '3.2s')}${cap('Landing spot (toalla)')}`);
+  if (n.includes('splash')) return svg(`${gr()}<ellipse cx="64" cy="76" rx="32" ry="8" fill="#ddcb8c"/>${cp(270)}${fl(270, 46)}<g fill="#ddcb8c"><circle cx="58" cy="70" r="1.6"><animate attributeName="cy" values="70;54;72" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="72" cy="70" r="1.4"><animate attributeName="cy" values="70;50;72" dur="2.6s" begin="0.12s" repeatCount="indefinite"/></circle></g>${bl('M64 70 Q 160 2 258 72', '2.6s')}${cap('Splash de bunker')}`);
+  if (n.includes('lag putting')) return svg(`${gr()}${cp(252)}<circle cx="252" cy="${G}" r="22" fill="none" stroke="rgba(201,247,62,0.32)" stroke-width="1.2" stroke-dasharray="3 3"/><path d="M40 ${G} L236 ${G}" stroke="rgba(201,247,62,0.18)" stroke-dasharray="3 6"/><circle r="4.5" fill="#fff"><animateMotion dur="3s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;.66;1" path="M40 ${G} L236 ${G}"/></circle>${cap('Lag a círculo de 1 m')}`);
+  if (n.includes('gate de putter')) return svg(`${gr(70)}<line x1="190" y1="58" x2="190" y2="70" stroke="#c9f73e" stroke-width="2.5" stroke-linecap="round"/><line x1="210" y1="58" x2="210" y2="70" stroke="#c9f73e" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="272" cy="70" rx="8" ry="3" fill="#0a0f06" stroke="#c9f73e" stroke-width="1.5"/><path d="M40 70 L272 70" stroke="rgba(201,247,62,0.2)" stroke-dasharray="3 6"/><circle fill="#fff"><animateMotion dur="2.4s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;.72;1" path="M40 70 L272 70"/><animate attributeName="r" values="4.5;4.5;0;0" keyTimes="0;.68;.74;1" dur="2.4s" repeatCount="indefinite"/></circle>${cap('Gate de putter')}`);
+  if (n.includes('reloj de 1.5')) {
+    const cx = 160, cy = 46, R = 30;
+    const dots = [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const a = i / 8 * Math.PI * 2; return `<circle cx="${(cx + Math.cos(a) * R).toFixed(0)}" cy="${(cy + Math.sin(a) * R * 0.7).toFixed(0)}" r="2.2" fill="rgba(201,247,62,0.4)"/>`; }).join('');
+    return svg(`<ellipse cx="${cx}" cy="${cy}" rx="8" ry="4" fill="#0a0f06" stroke="#c9f73e" stroke-width="1.5"/>${dots}<circle fill="#fff"><animateMotion dur="2.2s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;.6;1" path="M${cx + R} ${cy} L${cx} ${cy}"/><animate attributeName="r" values="4.5;4.5;0;0" keyTimes="0;.56;.62;1" dur="2.2s" repeatCount="indefinite"/></circle>${cap('Reloj de 1.5 m')}`);
+  }
+  return drillArt(areaKey || 'putting');
+}
+
 /* stat card with progress bar */
 function statCard(value, caption, barPct) {
   const w = Math.max(0, Math.min(100, barPct));

@@ -79,7 +79,7 @@ function vRecommendedDrills(u, agg) {
   focus.slice(0, 3).forEach(f => (f.drills || []).slice(0, 2).forEach(d => recs.push({ key: f.key, area: FOCUS_LABEL[f.key] || f.titulo, name: d.name, desc: d.desc || '', target: f.key === 'putting' ? 10 : 7 })));
   if (!recs.length) return '';
   const cards = recs.map(d => `<button class="reel-card dr-card" data-act="drill-open" data-name="${esc(d.name)}" data-target="${d.target}" data-area="${esc(d.area)}" data-goal="" data-desc="${esc(d.desc)}" data-timer="20">
-    <div class="dr-scene">${drillArt(d.key)}</div>
+    <div class="dr-scene">${drillScene(d.name, d.key)}</div>
     <div class="reel-meta" style="padding:12px 14px 14px"><b style="font-size:14.5px">${esc(d.name)}</b><span>${esc(d.area)} · Entrenar →</span></div>
   </button>`).join('');
   return `<div class="sec-h" style="margin-top:2px"><h2 style="font-size:16px">Ejercicios recomendados</h2><span class="small muted">para tu meta</span></div>
@@ -131,7 +131,7 @@ function vDiag() {
       ${i < 2 ? `
         <p class="label" style="margin-top:16px">Prescripción de drills</p>
         ${f.drills.map(dr => `<div class="drill"><b>${esc(dr.name)}</b>
-          ${drillArt(f.key)}
+          ${drillScene(dr.name, f.key)}
           <p>${esc(dr.desc)}</p>
           <div class="d-meta"><span>${golfIcon('card')} ${esc(dr.dose)}</span><span>${golfIcon('green')} ${esc(dr.metric)}</span></div></div>`).join('')}
         <div class="drill" style="border-color:var(--lime)"><b>${golfIcon('green')} Reto: 7 de 7 seguidas</b>

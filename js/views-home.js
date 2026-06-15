@@ -169,7 +169,7 @@ function vTrainingCard(u) {
   const target = t.key === 'putting' ? 10 : 7;
   return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Entrenamiento que toca</h2><span class="small muted">${when}</span></div>
     <button class="card train-card" data-act="drill-open" data-name="${esc(t.name)}" data-target="${target}" data-area="${esc(t.area)}" data-goal="${esc(howTo[t.key] || '')}" data-timer="20">
-      <div class="tc-art">${drillArt(t.key)}</div>
+      <div class="tc-art">${drillScene(t.name, t.key)}</div>
       <div class="tc-row">
         <div class="tc-body"><b>${esc(t.name)}</b><span>${esc(t.area)}${t.rec ? ' · tu mayor fuga de golpes' : ''}</span></div>
         <span class="tc-go">Entrenar →</span>
@@ -232,6 +232,7 @@ function vDashboard() {
     <div class="sec-h" style="margin-top:2px"><h2 style="font-size:18px">Tu juego en movimiento</h2><span class="small muted">desliza →</span></div>
     ${vStatReel(rounds, agg)}
     ${vTrainingCard(u)}
+    ${vRecommendedDrills(u, agg)}
     ${vLastRound(rounds)}`;
 }
 
