@@ -102,38 +102,40 @@ function statScene(kind) {
   const green3d = (cx, cy, rx, ry) => `<ellipse cx="${cx}" cy="${(cy + ry * 0.5).toFixed(1)}" rx="${rx}" ry="${ry}" fill="#16461f"/><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#g3dGreenTop)"/><ellipse cx="${(cx - rx * 0.3).toFixed(1)}" cy="${(cy - ry * 0.32).toFixed(1)}" rx="${(rx * 0.52).toFixed(1)}" ry="${(ry * 0.42).toFixed(1)}" fill="#aef0a4" opacity="0.28"/>`;
   // pelota 3D (esfera con gradiente)
   const ball = `fill="url(#g3dBall)" stroke="#5a6668" stroke-width="0.3"`;
+  // insignia de palomita ✓ (logrado) que aparece
+  const okBadge = (cx, cy, dur) => `<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.55;.63;.92;1" dur="${dur}" repeatCount="indefinite"/><circle cx="${cx}" cy="${cy}" r="11" fill="url(#g3dLime)"/><path d="M${cx - 4.6} ${cy + 0.4} l3.3 3.4 6.6 -7.6" stroke="#0a1206" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
   if (kind === 'fw') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
-    <path d="M60 100 L110 100 L96 30 L74 30 Z" fill="url(#g3dFair)"/>
-    <path d="M74 30 L96 30 L95 26 L75 26 Z" fill="#4ca055" opacity="0.85"/>
-    <path d="M70 68 L100 68 L99 62 L71 62 Z" fill="#2a6531" opacity="0.45"/><path d="M66 88 L104 88 L103 82 L67 82 Z" fill="#2a6531" opacity="0.35"/>
-    ${green3d(85, 27, 16, 7)}
-    <circle cx="85" cy="25" r="1.6" fill="#06120a"/>${flag(85, 25, 14)}
-    <ellipse cx="85" cy="62" rx="2" ry="0.9" fill="#c9f73e" opacity="0"><animate attributeName="rx" values="2;2;10;13" keyTimes="0;.5;.62;.7" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.5;.56;.7" dur="3s" repeatCount="indefinite"/></ellipse>
-    <circle r="2.3" fill="#fff" opacity="0.2"><animateMotion dur="3s" begin="-0.07s" repeatCount="indefinite" path="M16 92 Q 48 -14 85 62" keyPoints="0;1;1;1" keyTimes="0;.5;.9;1" calcMode="linear"/></circle>
-    <circle r="4.4" ${ball}><animateMotion dur="3s" repeatCount="indefinite" path="M16 92 Q 48 -14 85 62" keyPoints="0;1;1;1" keyTimes="0;.5;.9;1" calcMode="linear"/></circle>
+    <rect x="0" y="36" width="170" height="64" fill="#13301a"/>
+    <path d="M62 100 L108 100 L95 36 L75 36 Z" fill="url(#g3dFair)"/>
+    <path d="M75 36 L95 36 L94 32 L76 32 Z" fill="#4ca055"/>
+    <path d="M71 66 L99 66 L98 60 L72 60 Z" fill="#2a6531" opacity="0.4"/><path d="M67 86 L103 86 L102 80 L68 80 Z" fill="#2a6531" opacity="0.32"/>
+    <ellipse cx="85" cy="66" rx="2" ry="0.9" fill="#c9f73e" opacity="0"><animate attributeName="rx" values="2;2;10;13" keyTimes="0;.5;.62;.7" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.5;.56;.7" dur="3s" repeatCount="indefinite"/></ellipse>
+    <circle r="4.4" ${ball}><animateMotion dur="3s" repeatCount="indefinite" path="M16 92 Q 48 -8 85 66" keyPoints="0;1;1;1" keyTimes="0;.5;.9;1" calcMode="linear"/></circle>
+    ${okBadge(85, 22, '3s')}
   </svg>`;
   if (kind === 'gir') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
-    ${green3d(85, 50, 37, 18)}
-    <circle cx="85" cy="44" r="2" fill="#06120a"/>${flag(85, 44, 15)}
-    <ellipse cx="78" cy="51" rx="2" ry="0.9" fill="#c9f73e" opacity="0"><animate attributeName="rx" values="2;2;9;12" keyTimes="0;.44;.56;.66" dur="3.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.44;.5;.66" dur="3.2s" repeatCount="indefinite"/></ellipse>
-    <circle r="4.2" fill="url(#g3dLime)"><animateMotion dur="3.2s" begin="1.5s" repeatCount="indefinite" path="M156 92 Q 124 -12 92 51" keyPoints="0;1;1;1" keyTimes="0;.44;.9;1" calcMode="linear"/></circle>
-    <circle r="4.4" ${ball}><animateMotion dur="3.2s" repeatCount="indefinite" path="M14 94 Q 38 -10 78 51" keyPoints="0;1;1;1" keyTimes="0;.44;.9;1" calcMode="linear"/></circle>
+    ${green3d(85, 58, 43, 20)}
+    <circle cx="85" cy="52" r="2.2" fill="#06120a"/>${flag(85, 52, 16)}
+    <ellipse cx="83" cy="60" rx="2" ry="0.9" fill="#c9f73e" opacity="0"><animate attributeName="rx" values="2;2;10;13" keyTimes="0;.5;.62;.7" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.5;.56;.7" dur="3s" repeatCount="indefinite"/></ellipse>
+    <circle r="4.4" ${ball}><animateMotion dur="3s" repeatCount="indefinite" path="M16 92 Q 48 -10 83 60" keyPoints="0;1;1;1" keyTimes="0;.5;.9;1" calcMode="linear"/></circle>
+    ${okBadge(85, 22, '3s')}
   </svg>`;
   if (kind === 'ud') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
-    ${green3d(108, 54, 29, 14)}
-    <circle cx="108" cy="48" r="2" fill="#06120a"/>${flag(108, 48, 15)}
-    <ellipse cx="30" cy="78" rx="20" ry="8" fill="#0e1c0a"/><ellipse cx="30" cy="76" rx="19" ry="7" fill="url(#g3dSand)"/><ellipse cx="27" cy="74" rx="11" ry="3.4" fill="#f7ecd2" opacity="0.5"/>
-    <g opacity="0"><animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.07;.22;1" dur="3.4s" repeatCount="indefinite"/><circle cx="26" cy="70" r="1.4" fill="#f0e2b4"/><circle cx="33" cy="68" r="1.2" fill="#f0e2b4"/><circle cx="29" cy="65" r="1" fill="#f0e2b4"/><circle cx="36" cy="71" r="1" fill="#f0e2b4"/></g>
-    <circle cx="108" cy="48" r="3" fill="none" stroke="#c9f73e" stroke-width="1.2" opacity="0"><animate attributeName="r" values="3;3;11" keyTimes="0;.82;.96" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.9;0" keyTimes="0;.82;.88;.96" dur="3.4s" repeatCount="indefinite"/></circle>
-    <circle r="4.2" ${ball}><animateMotion dur="3.4s" repeatCount="indefinite" path="M30 73 Q 64 -8 100 54 L108 48" keyPoints="0;0.85;0.85;1;1" keyTimes="0;.44;.6;.82;1" calcMode="linear"/></circle>
-    <text x="100" y="93" fill="#c9f73e" font-family="Inter,system-ui,sans-serif" font-size="9.5" font-weight="800" text-anchor="middle" opacity="0">¡Salvado!<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.82;.86;.96;1" dur="3.4s" repeatCount="indefinite"/></text>
+    <ellipse cx="28" cy="82" rx="24" ry="10" fill="#13301a"/><ellipse cx="24" cy="79" rx="13" ry="4" fill="#1d4528" opacity="0.7"/>
+    ${green3d(114, 58, 27, 13)}
+    <circle cx="114" cy="53" r="2" fill="#06120a"/>${flag(114, 53, 15)}
+    <path d="M30 76 Q 72 -6 106 58" fill="none" stroke="#c9f73e" stroke-width="1.6" stroke-dasharray="2 5" opacity="0.5"/>
+    <circle r="4.2" ${ball}><animateMotion dur="3.2s" repeatCount="indefinite" path="M30 76 Q 72 -6 106 58 L114 53" keyPoints="0;0.85;0.85;1;1" keyTimes="0;.5;.64;.85;1" calcMode="linear"/></circle>
+    ${okBadge(114, 24, '3.2s')}
   </svg>`;
   if (kind === 'putt') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
-    ${green3d(85, 56, 50, 30)}
-    <path d="M85 84 L85 36" stroke="#06120a" stroke-width="1" stroke-dasharray="2 4" opacity="0.35"/>
-    <ellipse cx="85" cy="37" rx="6" ry="2.8" fill="#04100a"/><ellipse cx="85" cy="36" rx="5" ry="2.3" fill="#0c1c11"/>${flag(85, 35, 16)}
-    <ellipse cx="85" cy="37" rx="6" ry="2.8" fill="none" stroke="#c9f73e" stroke-width="1.2" opacity="0"><animate attributeName="rx" values="6;6;15" keyTimes="0;.7;.86" dur="2.8s" repeatCount="indefinite"/><animate attributeName="ry" values="2.8;2.8;7" keyTimes="0;.7;.86" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.7;.76;.86" dur="2.8s" repeatCount="indefinite"/></ellipse>
-    <circle ${ball}><animateMotion dur="2.8s" repeatCount="indefinite" path="M85 80 L85 37" keyPoints="0;1;1" keyTimes="0;.7;1" calcMode="linear"/><animate attributeName="r" values="4.2;4.2;0;0" keyTimes="0;.68;.74;1" dur="2.8s" repeatCount="indefinite"/></circle>
+    ${green3d(85, 58, 50, 28)}
+    <path d="M85 80 L85 40" stroke="#06120a" stroke-width="1" stroke-dasharray="2 4" opacity="0.3"/>
+    <ellipse cx="85" cy="41" rx="6" ry="2.8" fill="#04100a"/><ellipse cx="85" cy="40" rx="5" ry="2.3" fill="#0c1c11"/>${flag(85, 39, 16)}
+    <ellipse cx="85" cy="41" rx="6" ry="2.8" fill="none" stroke="#c9f73e" stroke-width="1.2" opacity="0"><animate attributeName="rx" values="6;6;15" keyTimes="0;.74;.88" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.74;.8;.88" dur="2.8s" repeatCount="indefinite"/></ellipse>
+    <g><animateTransform attributeName="transform" type="translate" values="0 7;0 7;0 -2;0 1;0 1" keyTimes="0;.06;.16;.24;1" dur="2.8s" repeatCount="indefinite"/>
+      <rect x="84.1" y="60" width="1.9" height="22" rx="0.9" fill="#cdd5d7"/><rect x="75" y="82" width="20" height="4.4" rx="2.2" fill="#9aa6a8"/><rect x="75" y="82" width="20" height="1.6" rx="0.8" fill="#e9eef0" opacity="0.6"/></g>
+    <circle ${ball}><animateMotion dur="2.8s" repeatCount="indefinite" path="M85 78 L85 41" keyPoints="0;0;1;1" keyTimes="0;.2;.76;1" calcMode="linear"/><animate attributeName="r" values="4.2;4.2;4.2;0;0" keyTimes="0;.2;.74;.8;1" dur="2.8s" repeatCount="indefinite"/></circle>
   </svg>`;
   if (kind === 'par') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
     ${green3d(85, 52, 36, 17)}
