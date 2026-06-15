@@ -188,7 +188,8 @@ function vLastRound(rounds) {
   const card = (hh, i) => {
     const ch = (r.courseId && COURSES[r.courseId] && COURSES[r.courseId].holes[i]) ? COURSES[r.courseId].holes[i] : null;
     const yds = ch && ch.yds ? ` · ${ch.yds}y` : '';
-    return `<div class="reel-card"><div class="reel-scene">${captureSchematic(hh, ch)}</div><div class="reel-meta" style="padding:12px 16px 14px"><b style="font-size:22px">Hoyo ${i + 1}</b><span>Par ${hh.par}${yds} · ${hh.score} (${fmtToPar(hh.score - hh.par)})</span></div></div>`;
+    const stats = [hh.par >= 4 ? (hh.tee === 'fw' ? 'Calle ✓' : 'Calle ✗') : '', hh.app === 'gir' ? 'GIR ✓' : 'GIR ✗', hh.putts != null ? `${hh.putts} putts` : ''].filter(Boolean).join(' · ');
+    return `<div class="reel-card"><div class="reel-scene">${captureSchematic(hh, ch)}</div><div class="reel-meta" style="padding:12px 16px 14px"><b style="font-size:22px">Hoyo ${i + 1}</b><span>Par ${hh.par}${yds} · ${hh.score} (${fmtToPar(hh.score - hh.par)})</span><span class="lr-holestats">${stats}</span></div></div>`;
   };
   const set = r.holes.map(card).join('');
   return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Tu última ronda</h2><span class="small muted">${esc(r.course)} · ${fmtDate(r.date)}</span></div>

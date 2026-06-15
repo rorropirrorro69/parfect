@@ -845,3 +845,8 @@ body.is-scrolling .reel-track { animation-play-state: paused; }
 
 /* scroll fluido: pausa animaciones CSS mientras se hace scroll */
 body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp-stars { animation-play-state: paused !important; }
+
+/* contador de tiro + wrapper del esquema */
+.cap { position: relative; line-height: 0; }
+.cap-count { position: absolute; top: 8px; right: 8px; width: 38px; height: 25px; z-index: 2; pointer-events: none; }
+.lr-holestats { display: block; font-size: 11px !important; font-weight: 700; letter-spacing: 0 !important; text-transform: none !important; color: var(--muted) !important; margin-top: 3px; }
