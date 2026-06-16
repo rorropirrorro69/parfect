@@ -34,7 +34,7 @@ function scTableCell(score, par, cur) {
 /**
  * holesCount, parOf(i)->par, rows = [{name, scoreOf(i)->score|null}], curIdx (resaltar)
  */
-function scorecardTable(holesCount, parOf, rows, curIdx) {
+function scorecardTable(holesCount, parOf, rows, curIdx, ydsOf) {
   const has18 = holesCount > 9;
   const seg = (a, b) => Array.from({ length: Math.max(0, b - a) }, (_, k) => a + k);
   const front = seg(0, Math.min(9, holesCount));
@@ -48,12 +48,18 @@ function scorecardTable(holesCount, parOf, rows, curIdx) {
   const parCells = arr => arr.map(i => `<td>${parOf(i)}</td>`).join('');
   const parRow = `<tr class="sc-parrow"><td class="sc-name">Par</td>${parCells(front)}${has18 ? `<td class="sc-tt">${sumR(parOf, front)}</td>` : ''}${parCells(back)}${has18 ? `<td class="sc-tt">${sumR(parOf, back)}</td>` : ''}<td class="sc-tt">${sumR(parOf, all)}</td></tr>`;
 
+  let ydsRow = '';
+  if (ydsOf) {
+    const ydsCells = arr => arr.map(i => `<td>${ydsOf(i) || '–'}</td>`).join('');
+    ydsRow = `<tr class="sc-ydsrow"><td class="sc-name">Yds</td>${ydsCells(front)}${has18 ? `<td class="sc-tt">${sumR(ydsOf, front)}</td>` : ''}${ydsCells(back)}${has18 ? `<td class="sc-tt">${sumR(ydsOf, back)}</td>` : ''}<td class="sc-tt">${sumR(ydsOf, all)}</td></tr>`;
+  }
+
   const playerRows = rows.map(r => {
     const cells = arr => arr.map(i => scTableCell(r.scoreOf(i), parOf(i), i === curIdx)).join('');
     return `<tr><td class="sc-name">${esc(r.name)}</td>${cells(front)}${has18 ? `<td class="sc-tt">${sumR(r.scoreOf, front)}</td>` : ''}${cells(back)}${has18 ? `<td class="sc-tt">${sumR(r.scoreOf, back)}</td>` : ''}<td class="sc-tt">${sumR(r.scoreOf, all)}</td></tr>`;
   }).join('');
 
-  return `<div class="sc-scroll"><table class="sc-table"><thead>${head}</thead><tbody>${parRow}${playerRows}</tbody></table></div>`;
+  return `<div class="sc-scroll"><table class="sc-table"><thead>${head}</thead><tbody>${parRow}${ydsRow}${playerRows}</tbody></table></div>`;
 }
 
 /* ---------- Tab Ronda: historial ---------- */
@@ -599,10 +605,20 @@ function vRoundDetail() {
   if (!r) return vRondaTab();
   const s = Stats.roundStats(r);
   const pct = (x, t) => (t ? Math.round((x / t) * 100) + '%' : '—');
+  const course = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId] : null;
+  const courseName = course ? course.name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : r.course;
+  const ch = course ? course.holes : null;
+  const parOf = i => (ch && ch[i]) ? ch[i].par : (r.holes[i] ? r.holes[i].par : 4);
+  const ydsOf = (ch && ch.some(h => h.yds)) ? (i => (ch[i] ? ch[i].yds : null)) : null;
+  const totYds = ch ? ch.slice(0, r.holes.length).reduce((a, h) => a + (h.yds || 0), 0) : 0;
   return `<button class="auth-back" data-act="nav" data-view="ronda">← Tus rondas</button>
     <div class="greet">
-      <h1 style="font-size:26px">${esc(r.course)}</h1>
+      <h1 style="font-size:26px">${esc(courseName)}</h1>
       <p class="hcp">${fmtDate(r.date)} · ${s.score} golpes (${fmtToPar(s.toPar)})</p>
+    </div>
+    <div class="card rd-course">
+      <span class="rd-c-ic">${golfIcon('flag')}</span>
+      <span><b>${esc(course ? course.name : r.course)}</b><span>${s.holes} hoyos · Par ${s.par}${totYds ? ` · ${totYds.toLocaleString('es-MX')} yds` : ''}${course && course.approx ? ' · aprox' : ' · real'}</span></span>
     </div>
     <div class="grid2">
       ${statCard(pct(s.fw, s.fwTot), 'Fairways', s.fwTot ? (s.fw / s.fwTot) * 100 : 0)}
@@ -611,9 +627,8 @@ function vRoundDetail() {
       ${statCard(String(s.putts), 'Putts', Stats.clamp(((38 - (s.putts * 18) / s.holes) / 11) * 100, 0, 100))}
     </div>
     <div class="card">
-      <span class="label">Tarjeta</span>
-      ${scorecard(r.holes.slice(0, 9))}
-      ${r.holes.length > 9 ? scorecard(r.holes.slice(9), 9) : ''}
+      <span class="label">Tarjeta · ${esc(courseName)}</span>
+      ${scorecardTable(r.holes.length, parOf, [{ name: cur().name.split(' ')[0], scoreOf: i => (r.holes[i] ? r.holes[i].score : null) }], -1, ydsOf)}
     </div>
     <button class="btn danger" data-act="round-delete" data-id="${r.id}">${V.delArm === r.id ? '¿Seguro? Toca otra vez para eliminar' : 'Eliminar esta ronda'}</button>`;
 }

@@ -463,6 +463,12 @@ body.is-scrolling .fly { animation-play-state: paused !important; }
 .greet { padding-top: 12px; }
 .greet .hi { color: var(--muted); font-size: 14.5px; }
 .greet h1 { font-size: 31px; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase; }
+.rd-course { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.rd-course .rd-c-ic { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--lime-faint); display: grid; place-items: center; color: var(--lime); }
+.rd-course .rd-c-ic .gi, .rd-course .rd-c-ic svg { width: 24px; height: 24px; }
+.rd-course b { display: block; font-size: 14.5px; font-weight: 800; color: var(--text); }
+.rd-course span span { font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.sc-ydsrow td { color: var(--muted); font-size: 10.5px; font-weight: 700; }
 .greet .hcp { color: var(--lime); font-weight: 800; font-size: 15.5px; margin-top: 2px; }
 
 /* ============ Play (round capture) ============ */
@@ -1332,6 +1338,18 @@ body.is-scrolling .lp-bird, body.is-scrolling .lp-fly { animation-play-state: pa
 /* confeti de celebración (resumen de ronda) */
 .confetti { position: fixed; inset: 0; pointer-events: none; z-index: 95; overflow: hidden; }
 .confetti i { position: absolute; top: -12px; width: 9px; height: 14px; border-radius: 2px; opacity: .95; }
+
+/* celebración gamificada */
+.celebrate { position: fixed; inset: 0; pointer-events: none; z-index: 96; overflow: hidden; }
+.cel-check { position: absolute; left: 50%; top: 40%; transform: translate(-50%,-50%); min-width: 92px; height: 92px; padding: 0 18px; border-radius: 50px; background: #C7EE54; color: #16241A; font-size: 50px; font-weight: 900; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; box-shadow: 0 18px 44px rgba(199,247,84,.6); animation: celCheck 1.4s cubic-bezier(.2,.9,.3,1.4) forwards; }
+.cel-lab { font-size: 14px; font-weight: 900; letter-spacing: .04em; }
+@keyframes celCheck { 0% { transform: translate(-50%,-50%) scale(0) rotate(-12deg); opacity: 0; } 28% { transform: translate(-50%,-50%) scale(1.18) rotate(0); opacity: 1; } 72% { transform: translate(-50%,-50%) scale(1); opacity: 1; } 100% { transform: translate(-50%,-72%) scale(.9); opacity: 0; } }
+.cel-fly { position: absolute; left: 0; filter: drop-shadow(0 6px 10px rgba(0,0,0,.25)); }
+@keyframes celCrossL { from { transform: translate(112vw,0) scaleX(-1) rotate(6deg); } to { transform: translate(-18vw,-10vh) scaleX(-1) rotate(-6deg); } }
+@keyframes celCrossR { from { transform: translate(-18vw,0) rotate(-6deg); } to { transform: translate(112vw,-12vh) rotate(6deg); } }
+.cel-ball { position: absolute; left: 0; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #fff, #cdd5d7 70%, #9aa6a8); box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+@keyframes celBall { 0% { transform: translate(-10vw,12vh); opacity: 0; } 12% { opacity: 1; } 100% { transform: translate(112vw,-22vh); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .celebrate { display: none; } }
 @keyframes confFall { 0% { transform: translateY(-12px) rotate(0); opacity: 1; } 100% { transform: translateY(104vh) rotate(720deg); opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {

@@ -345,6 +345,13 @@ const actions = {
     const done = { ...h, score };
     done.upDown = done.app !== 'gir' ? (done.upDown != null ? done.upDown : score <= done.par) : null;
     a.holes[a.idx] = done;
+    const rel = score - h.par;
+    if (a.idx + 1 < a.holesCount && typeof celebrate === 'function') {
+      if (rel <= -2) celebrate(true, '¡Águila!');
+      else if (rel === -1) celebrate(true, '¡Birdie!');
+      else if (rel === 0) celebrate(false, '¡Par!');
+      else celebrate(false);
+    }
     a.idx++;
     if (a.idx < a.holesCount) loadHole();
     V.diag = null;
@@ -415,8 +422,10 @@ const actions = {
   'drill-hit'() {
     if (!V.drillLog) return;
     const d = V.drillLog;
+    const wasDone = d.streak >= d.target;
     d.streak = Math.min(d.target, d.streak + 1);
     if (d.streak > d.best) d.best = d.streak;
+    if (!wasDone && d.streak === d.target && typeof celebrate === 'function') celebrate(true, '¡Logrado!');
     render();
   },
   'drill-miss'() { if (!V.drillLog) return; V.drillLog.streak = 0; render(); },

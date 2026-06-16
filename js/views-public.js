@@ -198,6 +198,27 @@ function maybeCelebrate() {
   document.body.appendChild(wrap);
   setTimeout(() => wrap.remove(), 4200);
 }
+
+/* celebración al completar algo (gamificado): check 3D + pájaros/águilas/bolas volando */
+function celebrate(big, label) {
+  if (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'celebrate';
+  let html = `<div class="cel-check">✓${label ? `<span class="cel-lab">${label}</span>` : ''}</div>`;
+  const creatures = big ? ['eagle', 'bird', 'eagle', 'bird', 'bird', 'eagle'] : ['bird', 'bird'];
+  creatures.forEach((k, i) => {
+    const dir = i % 2, top = 8 + Math.random() * 60, dur = 1.5 + Math.random() * 0.9, delay = Math.random() * 0.5, sz = 30 + Math.random() * 18;
+    html += `<img class="cel-fly" src="assets/${k}.png" alt="" style="top:${top.toFixed(0)}%;width:${sz.toFixed(0)}px;animation:${dir ? 'celCrossR' : 'celCrossL'} ${dur.toFixed(2)}s ease-in ${delay.toFixed(2)}s forwards">`;
+  });
+  const nballs = big ? 7 : 3;
+  for (let i = 0; i < nballs; i++) {
+    const top = 30 + Math.random() * 50, dur = 1.3 + Math.random() * 0.7, delay = Math.random() * 0.4;
+    html += `<span class="cel-ball" style="top:${top.toFixed(0)}%;animation:celBall ${dur.toFixed(2)}s ease-out ${delay.toFixed(2)}s forwards"></span>`;
+  }
+  wrap.innerHTML = html;
+  document.body.appendChild(wrap);
+  setTimeout(() => wrap.remove(), big ? 2600 : 1900);
+}
 function initLanding(root) {
   const io = new IntersectionObserver(es => {
     es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });

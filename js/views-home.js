@@ -404,8 +404,7 @@ function vDashboard() {
   const rounds = myRounds();
   const agg = Stats.aggregate(rounds);
   const head = `<div class="greet">
-    <p class="hi">${greeting()}</p>
-    <h1>${t('hi')}, ${esc(u.name.split(' ')[0])}!</h1>
+    <h1 class="greet-h">${greeting()}, ${esc(u.name.split(' ')[0])}</h1>
   </div>`;
 
   if (!agg) {
