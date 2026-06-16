@@ -313,7 +313,7 @@ function vPartyTable(p, limit) {
       return `<div class="pl-row">
       <span class="rank">${i + 1}</span>
       <div class="r-main" style="flex:1"><b>${esc(pl.name)}</b>${stake ? `<span>${u >= 0 ? 'cobra' : 'paga'} $${Math.abs(u * stake)}</span>` : ''}</div>
-      <div class="r-side"><b style="color:${u >= 0 ? 'var(--lime)' : 'var(--danger)'}">${u >= 0 ? '+' : ''}${u}</b><span>unidades</span></div>
+      <div class="r-side"><b style="color:${u >= 0 ? '#3aa055' : 'var(--danger)'}">${u >= 0 ? '+' : ''}${u}</b><span>unidades</span></div>
     </div>`;
     }).join('');
   }

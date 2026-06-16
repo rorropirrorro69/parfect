@@ -521,7 +521,7 @@ function vSimulator() {
     <div class="hole-strip">${holeChips}</div>
     <div class="card" style="padding-bottom:8px">
       <div class="ph-head"><div class="r-main" style="flex:1"><b>Hoyo ${hole.n} · Par ${hole.par}</b><span class="muted">${hole.yds} yds · hoyo ${vh + 1}/${me.length}</span></div>
-        <div class="r-side"><b style="color:var(--lime)">${H.score}</b><span>${hTP === 0 ? 'par' : hTP > 0 ? '+' + hTP : hTP}</span></div></div>
+        <div class="r-side"><b style="color:var(--lime-ink)">${H.score}</b><span>${hTP === 0 ? 'par' : hTP > 0 ? '+' + hTP : hTP}</span></div></div>
       <div class="sim-vs" style="margin-top:8px"><span>Tú ${H.score}</span><span style="color:#6db3ff">Shadow ${H.shScore}</span></div>
       <div style="margin-top:6px">${simSchematic(hole, H.log, H.shLog)}</div>
     </div>
