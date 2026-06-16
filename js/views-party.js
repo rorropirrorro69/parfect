@@ -30,7 +30,6 @@ function vPartySetup() {
   const courseCards = COURSE_ORDER.map(id => {
     const c = COURSES[id]; const on = cid === id; const nh = Math.min(c.holes.length, 18); const par = c.holes.slice(0, nh).reduce((a, h) => a + h.par, 0);
     return `<button class="su-course ${on ? 'on' : ''}" data-act="pd-pick-course" data-c="${id}">
-      <span class="su-c-ic">${golfIcon('flag')}</span>
       <span class="su-c-info"><b>${esc(sname(id))}</b><span>${nh} hoyos · Par ${par}</span></span>
       <span class="su-c-check">${on ? '✓' : ''}</span>
     </button>`;

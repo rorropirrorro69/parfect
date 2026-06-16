@@ -2954,6 +2954,36 @@ svg.fd-av { object-fit: contain; }
 .app-bg.night .bg-stars { opacity: .85; }
 [data-theme="light"] .app-bg.night { background: linear-gradient(180deg, #14264a 0%, #1c3450 44%, #1b3a26 100%); }
 
+/* ===== Landing v2: campo de golf con cielo gigante que cambia con el reloj ===== */
+.lp-hero2 { position: relative; min-height: 100svh; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+.lp-ph-dawn  .lp-hero2 { background: linear-gradient(180deg,#ffd9a8 0%,#ffc6b2 18%,#e0e2cd 44%,#bfe39a 72%,#a9d877 100%); }
+.lp-ph-day   .lp-hero2 { background: linear-gradient(180deg,#5fbdef 0%,#8fcef0 22%,#c6e6f2 42%,#d9edc8 60%,#a9d877 100%); }
+.lp-ph-dusk  .lp-hero2 { background: linear-gradient(180deg,#ff9e6b 0%,#ff8fa0 20%,#caa7c2 42%,#bfd79a 70%,#a9d877 100%); }
+.lp-ph-night .lp-hero2 { background: linear-gradient(180deg,#0a1430 0%,#14254a 30%,#1b2f3e 52%,#2b5536 80%,#a9d877 100%); }
+.lp-ph-night .lp-hero-copy .lp-title, .lp-ph-night .lp-hero-copy .lp-sub, .lp-ph-night .lp-nav .lp-logo { color: #fff; }
+.lp-ph-night .lp-hero-copy .lp-sub { opacity: .9; }
+.lp-ph-night .lp-icloud { opacity: .16; }
+.lp-ph-dusk .lp-icloud, .lp-ph-dawn .lp-icloud { opacity: .85; }
+.lp-sky2 { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.lp-sun { position: absolute; border-radius: 50%; }
+.lp-ph-day  .lp-sun { top: 7%; right: 13%; width: 104px; height: 104px; background: radial-gradient(circle at 42% 38%,#fffbe6,#ffe487 70%); box-shadow: 0 0 90px 30px rgba(255,228,135,.5); }
+.lp-ph-dawn .lp-sun { top: 24%; left: 12%; width: 90px; height: 90px; background: radial-gradient(circle at 42% 38%,#fff3d6,#ffcf8a 72%); box-shadow: 0 0 80px 26px rgba(255,185,120,.5); }
+.lp-ph-dusk .lp-sun { top: 18%; right: 12%; width: 100px; height: 100px; background: radial-gradient(circle at 42% 38%,#fff0d0,#ff8a5b 72%); box-shadow: 0 0 90px 30px rgba(255,120,80,.5); }
+.lp-hero2 .lp-moon { top: 8%; right: 14%; }
+.lp-bsil { position: absolute; width: 26px; height: auto; will-change: transform; }
+.lp-hero2 .lp-icloud { position: absolute; height: 20px; background: #fff; border-radius: 99px; box-shadow: 26px 5px 0 -3px #fff, -24px 6px 0 -4px #fff; }
+.lp-hero2 .lp-course { height: 30svh; z-index: 1; }
+.lp-hero2 .lp-stage { width: min(76%, 320px); margin: 46px auto 0; z-index: 3; }
+.lp-hero2 .lp-hero-copy { z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; max-width: 540px; margin: 8px auto 0; padding: 0 22px clamp(40px,12vw,90px); }
+.lp-hero2 .lp-hero-copy .lp-title { margin-top: 14px; }
+.lp-hero2 .lp-sub { max-width: 34ch; margin-left: auto; margin-right: auto; }
+.lp-hero2 .lp-cta-row { justify-content: center; }
+.lp-fc2 .lp-fc-v { font-size: 18px; margin-right: 2px; }
+@media (min-width: 720px) {
+  .lp-hero2 .lp-stage { width: min(46%, 380px); }
+  .lp-hero2 .lp-hero-copy { max-width: 640px; }
+}
+
 /* fondo de la landing: colinas, lago con fuente, ardilla */
 .lp-hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 34vh; opacity: .55; }
 [data-theme="dark"] .lp-hills { opacity: .22; }

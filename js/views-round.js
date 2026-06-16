@@ -226,7 +226,6 @@ function vSetup() {
     const on = cid === id;
     const par = c.holes.reduce((a, h) => a + h.par, 0);
     return `<button class="su-course ${on ? 'on' : ''}" data-act="setup-pick-course" data-c="${id}">
-      <span class="su-c-ic">${golfIcon('flag')}</span>
       <span class="su-c-info"><b>${esc(sname(id))}</b><span>${c.holes.length} hoyos · Par ${par} · ${c.approx ? 'aprox' : 'real'}</span></span>
       <span class="su-c-check">${on ? '✓' : ''}</span>
     </button>`;

@@ -68,65 +68,32 @@ function lpFeatArt(kind) {
 }
 
 function vLanding() {
-  const feat = (kind, t, d) => `<div class="lp-feat reveal"><h3>${t}</h3><p>${d}</p></div>`;
+  const feat = (kind, t, d) => `<div class="lp-feat reveal"><div class="lp-feat-art lpa-${kind}">${lpFeatArt(kind)}</div><h3>${t}</h3><p>${d}</p></div>`;
   // (lpFeatArt definida abajo, a nivel de módulo)
-  const lpHour = new Date().getHours();
-  const lpNight = (lpHour < 7 || lpHour >= 19);
+  // cielo gigante que cambia con el reloj del día: amanecer / día / atardecer / noche
+  const lpH = new Date().getHours() + new Date().getMinutes() / 60;
+  const phase = lpH < 6.5 ? 'night' : lpH < 8.5 ? 'dawn' : lpH < 17 ? 'day' : lpH < 19.5 ? 'dusk' : 'night';
+  const isNight = phase === 'night';
   const lpTree = (st) => `<div class="lp-tree" style="${st}"><svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg></div>`;
-  const lpStars = lpNight ? Array.from({ length: 16 }, (_, i) => `<span class="lp-star" style="left:${(i * 37 % 95) + 2}%;top:${(i * 29 % 48) + 3}%;animation-delay:${(i % 5) * 0.5}s"></span>`).join('') : '';
-  const lpSky = lpNight ? `<div class="lp-moon"></div>${lpStars}` : `<div class="lp-intro-sun"></div>`;
-  return `<div class="lp ${lpNight ? 'lp-night' : 'lp-day'}">
-    <div class="lp-life" aria-hidden="true">
-      <img class="lp-bird lb1" src="assets/bird.png" alt="" />
-      <img class="lp-bird lb2" src="assets/bird.png" alt="" />
-      <img class="lp-bird lb3" src="assets/bird.png" alt="" />
-      <span class="lp-fly lf1"></span><span class="lp-fly lf2"></span><span class="lp-fly lf3"></span><span class="lp-fly lf4"></span>
-    </div>
-    <div class="lp-oldlife" hidden aria-hidden="true">
-      <svg class="lp-hills" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-        <path d="M0,96 Q110,58 210,80 T400,70 L400,160 L0,160 Z" fill="#cfe9a8"/>
-        <path d="M0,124 Q120,92 250,112 T400,104 L400,160 L0,160 Z" fill="#a9d877"/>
-        <path d="M150,160 Q185,120 250,108 Q320,96 380,66" fill="none" stroke="#bfe28a" stroke-width="26" stroke-linecap="round" opacity=".8"/>
-        <ellipse cx="300" cy="120" rx="42" ry="13" fill="#8fc85e"/>
-      </svg>
-      <svg class="lp-lake" viewBox="0 0 140 70" aria-hidden="true">
-        <defs><radialGradient id="lpLakeG" cx="40%" cy="32%" r="80%"><stop offset="0" stop-color="#8fd6f0"/><stop offset="1" stop-color="#2f87b0"/></radialGradient></defs>
-        <ellipse cx="70" cy="46" rx="64" ry="20" fill="url(#lpLakeG)"/>
-        <ellipse class="lp-lakeshine" cx="54" cy="40" rx="24" ry="5" fill="#ffffff" opacity=".4"/>
-        <g class="lp-fountain"><rect x="68" y="22" width="4" height="22" rx="2" fill="#9fb0b3"/>
-          <path class="lp-fjet" d="M70 24 q-9 -16 -18 -2 M70 24 q9 -16 18 -2 M70 22 v-14" fill="none" stroke="#bfeaf6" stroke-width="2.4" stroke-linecap="round"/>
-          <circle class="lp-fdrop d1" cx="55" cy="26" r="1.8" fill="#cdeefb"/><circle class="lp-fdrop d2" cx="85" cy="26" r="1.8" fill="#cdeefb"/><circle class="lp-fdrop d3" cx="70" cy="14" r="1.8" fill="#cdeefb"/>
-        </g>
-      </svg>
-      <svg class="lp-squirrel" viewBox="0 0 60 60" aria-hidden="true">
-        <path class="lp-sqtail" d="M44 50 q22 -2 14 -24 q-3 -12 -14 -8 q10 2 11 12 q1 12 -11 14 Z" fill="#b06a35"/>
-        <ellipse cx="30" cy="52" rx="13" ry="6" fill="#000" opacity=".12"/>
-        <path d="M22 50 q-6 -22 10 -26 q14 -3 14 12 q0 14 -12 16 Z" fill="#c87a40"/>
-        <circle cx="20" cy="24" r="9" fill="#c87a40"/>
-        <path d="M14 16 q-1 -6 4 -5 q1 4 -1 7 Z M22 15 q3 -5 6 -2 q-1 4 -4 5 Z" fill="#a85f2c"/>
-        <circle cx="18" cy="23" r="1.6" fill="#241308"/>
-        <path d="M11 25 q-4 1 -5 4" stroke="#7a4a22" stroke-width="1" fill="none"/>
-        <ellipse cx="26" cy="40" rx="6" ry="8" fill="#e6c79a"/>
-      </svg>
-      <img class="lp-fbird lpf1" src="assets/bird.png" alt="" />
-      <img class="lp-fbird lpf2" src="assets/bird.png" alt="" />
-      <div class="lp-tree" aria-hidden="true">
-        <svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg>
-        <img class="lp-perch lpp1" src="assets/bird.png" alt="" />
-        <img class="lp-perch lpp2" src="assets/bird.png" alt="" />
+  const stars = isNight ? Array.from({ length: 18 }, (_, i) => `<span class="lp-star" style="left:${(i * 37 % 96) + 2}%;top:${(i * 23 % 44) + 3}%;animation-delay:${(i % 5) * 0.5}s"></span>`).join('') : '';
+  const celest = isNight ? `<div class="lp-moon"></div>${stars}` : `<div class="lp-sun"></div>`;
+  const bsil = (st) => `<svg class="lp-bsil" style="${st}" viewBox="0 0 24 8" aria-hidden="true"><path d="M1 6 Q6 0 11 5 Q16 0 23 6" fill="none" stroke="rgba(35,50,35,.45)" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+  return `<div class="lp lp-ph-${phase}">
+    <header class="lp-nav">
+      <span class="lp-logo">${logoMark(16)} PARFECT</span>
+      <div class="lp-links">
+        <button data-act="go" data-view="login">Entrar</button>
+        <button class="lp-cta-sm" data-act="go" data-view="signup">Empezar</button>
       </div>
-    </div>
-    <section class="lp-intro ${lpNight ? 'is-night' : 'is-day'}" aria-label="PARFECT">
-      ${lpSky}
-      <span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span><span class="lp-icloud i4"></span>
-      <img class="lp-fbird lpf1" src="assets/bird.png" alt="" />
-      <img class="lp-fbird lpf2" src="assets/bird.png" alt="" />
-      <img class="lp-fbird lpf3" src="assets/bird.png" alt="" />
-      <span class="lp-fly lf-i1"></span><span class="lp-fly lf-i2"></span>
-      <div class="lp-introtop">
-        <div class="lp-intrologo">PARFECT</div>
-        <p class="lp-introtag">IA Tracker</p>
-        <span class="lp-introhint">Desliza ↓ y entra al club</span>
+    </header>
+    <section class="lp-hero2">
+      <div class="lp-sky2" aria-hidden="true">
+        ${celest}
+        <span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span>
+        ${bsil('left:0;top:15%;animation:lpFlyR 36s linear infinite')}
+        ${bsil('left:0;top:24%;transform:scale(.7);animation:lpFlyR 46s linear infinite;animation-delay:-14s')}
+        ${bsil('left:0;top:11%;animation:lpFlyL 40s linear infinite;animation-delay:-7s')}
+        <span class="lp-fly lf1"></span><span class="lp-fly lf2"></span>
       </div>
       <div class="lp-course" aria-hidden="true">
         <svg class="lp-hills" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice">
@@ -158,14 +125,12 @@ function vLanding() {
         </svg>
         <div class="lp-tree" aria-hidden="true">
           <svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg>
-          <img class="lp-perch lpp1" src="assets/bird.png" alt="" />
         </div>
         ${lpTree('left:2%;bottom:13%;width:90px')}
         ${lpTree('left:19%;bottom:7%;width:56px')}
         ${lpTree('right:5%;bottom:21%;width:76px')}
         ${lpTree('right:20%;bottom:8%;width:50px')}
         ${lpTree('left:40%;bottom:24%;width:44px')}
-        <img class="lp-cgolfer" src="${AVATARS[0]}" alt="" style="left:60%;bottom:6%;" />
         <svg class="lp-squirrel" viewBox="0 0 60 60" aria-hidden="true">
           <path class="lp-sqtail" d="M44 50 q22 -2 14 -24 q-3 -12 -14 -8 q10 2 11 12 q1 12 -11 14 Z" fill="#b06a35"/>
           <ellipse cx="30" cy="52" rx="13" ry="6" fill="#000" opacity=".12"/>
@@ -174,27 +139,23 @@ function vLanding() {
           <circle cx="18" cy="23" r="1.6" fill="#241308"/><ellipse cx="26" cy="40" rx="6" ry="8" fill="#e6c79a"/>
         </svg>
       </div>
-    </section>
-
-    <section class="lp-hero">
-      <div class="lp-hero-copy reveal">
-        <span class="lp-pill">${logoMark(13)} Golf analytics con IA</span>
-        <h1 class="lp-title">Guarda tu tarjeta.<br/><span class="lime">Baja tu hándicap.</span></h1>
-        <p class="lp-sub">Registra cada ronda en segundos. La IA encuentra dónde pierdes golpes y te arma el entrenamiento exacto. Y rétate con amigos en La corta.</p>
-        <div class="lp-cta-row">
-          <button class="lp-order" data-act="go" data-view="signup">Empezar gratis →</button>
-          <button class="lp-ghostbtn" data-act="demo-account">Ver demo</button>
-        </div>
-        <p class="lp-trust">Gratis para empezar · Tus datos viven en tu dispositivo</p>
-      </div>
-
       <div class="lp-stage">
         <div class="lp-glow"></div>
         <div class="lp-golfer-stack parallax" data-speed="0.16">${AVATARS.map((src, i) => `<img class="lp-golfer lpg${i}" src="${src}" alt="${i === 0 ? 'Golfista PARFECT' : ''}" />`).join('')}</div>
         <div class="lp-shadow" aria-hidden="true"></div>
         <div class="lp-fcard lp-fc1 parallax" data-speed="0.7"><span class="lp-fc-k">Hándicap</span><b class="lp-fc-v">12.4 <i>▾</i></b></div>
-        <div class="lp-fcard lp-fc2 parallax" data-speed="0.95"><img class="lp-fc-img" src="assets/bird.png" alt="" /><span>¡Birdie!</span></div>
+        <div class="lp-fcard lp-fc2 parallax" data-speed="0.95"><b class="lp-fc-v lime">−1</b><span>¡Birdie!</span></div>
         <div class="lp-fcard lp-fc3 parallax" data-speed="0.5"><span class="lp-fc-k">GIR</span><b class="lp-fc-v lime">64%</b></div>
+      </div>
+      <div class="lp-hero-copy reveal">
+        <span class="lp-pill">${logoMark(13)} Golf analytics con IA</span>
+        <h1 class="lp-title">Guarda tu tarjeta.<br/><span class="lime">Baja tu hándicap.</span></h1>
+        <p class="lp-sub">Registra cada ronda en segundos, deja que la IA la analice y entrena exactamente lo que te hace mejor. Sin adivinar.</p>
+        <div class="lp-cta-row">
+          <button class="lp-order" data-act="go" data-view="signup">Empezar gratis →</button>
+          <button class="lp-ghostbtn" data-act="demo-account">Ver demo</button>
+        </div>
+        <p class="lp-trust">Gratis para empezar · Tus datos viven en tu dispositivo</p>
       </div>
     </section>
 
