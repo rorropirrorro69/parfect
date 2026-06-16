@@ -545,6 +545,28 @@ body.is-scrolling .fly { animation-play-state: paused !important; }
 .ps-back { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 9px 16px; font-weight: 800; color: var(--muted); font-size: 13px; }
 @media (prefers-reduced-motion: reduce) { .ps-stage.ps-anim, .ps-bubble { animation: none !important; } }
 
+/* ====== Trainer: áreas (dónde ganar golpes) ====== */
+.tr-areas { display: flex; flex-direction: column; gap: 9px; margin-top: 10px; }
+.tr-area { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; box-shadow: 0 6px 16px rgba(20,40,15,.06); transition: transform .12s, box-shadow .2s; }
+.tr-area:active { transform: scale(.99); }
+.tr-area.focus { border-color: #C7EE54; box-shadow: 0 8px 22px rgba(199,247,84,.24); }
+.tr-rank { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 900; color: #fff; }
+.tr-rank.weak { background: #e8704a; }
+.tr-rank.mid { background: #e0a93a; }
+.tr-rank.strong { background: #57b15c; }
+.tr-area-mid { flex: 1; min-width: 0; }
+.tr-area-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.tr-area-top b { font-size: 14.5px; font-weight: 800; color: var(--text); }
+.tr-area-top span { font-size: 14px; font-weight: 900; color: var(--text); flex: none; }
+.tr-bar { height: 7px; border-radius: 99px; background: var(--line); overflow: hidden; margin: 6px 0 5px; }
+.tr-bar i { display: block; height: 100%; border-radius: 99px; }
+.tr-bar.weak i { background: #e8704a; }
+.tr-bar.mid i { background: #e0a93a; }
+.tr-bar.strong i { background: #57b15c; }
+.app-content.view-in .tr-bar i { transform-origin: left; animation: barGrow .9s cubic-bezier(.2,.8,.2,1) both; }
+.tr-area-meta { font-size: 11.5px; font-weight: 700; color: var(--muted); }
+.tr-area-go { flex: none; color: var(--lime); font-weight: 900; font-size: 16px; }
+
 /* ====== Trainer pro: sesión recomendada ====== */
 .tr-feat { margin-top: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 16px; box-shadow: 0 12px 30px rgba(20,40,15,0.1); }
 .tr-feat-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--lime); }
