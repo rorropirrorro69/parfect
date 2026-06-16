@@ -352,7 +352,7 @@ function captureShots(h) {
 function shotColor(s) {
   if (s && s.lie === 'water') return '#ff7a6b';
   if (s && s.lie === 'sand') return '#e3c887';
-  return '#2f9e54';
+  return '#C7EE54';
 }
 /* 2º tiro — toma de frente al green: estás en tu lie y le pegas al green (imagen distinta a la salida) */
 function approachView(h, chole, G, pf, px) {
@@ -405,10 +405,10 @@ function approachView(h, chole, G, pf, px) {
     <ellipse cx="${gx}" cy="${gy.toFixed(0)}" rx="${gw.toFixed(0)}" ry="${gh.toFixed(0)}" fill="#54ad58" stroke="#2f7a38" stroke-width="2"/>
     <ellipse cx="${(gx - gw * 0.26).toFixed(0)}" cy="${(gy - gh * 0.3).toFixed(0)}" rx="${(gw * 0.44).toFixed(0)}" ry="${(gh * 0.34).toFixed(0)}" fill="#79c970" opacity="0.5"/>
     <circle cx="${pin.x.toFixed(0)}" cy="${pin.y.toFixed(0)}" r="4" fill="#08260f"/>
-    <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - flagH).toFixed(0)}" stroke="#ffffff" stroke-width="2.2"/><path d="M${pin.x.toFixed(0)},${(pin.y - flagH).toFixed(0)} l14,4 -14,4z" fill="#2f9e54"/>
+    <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - flagH).toFixed(0)}" stroke="#ffffff" stroke-width="2.2"/><path d="M${pin.x.toFixed(0)},${(pin.y - flagH).toFixed(0)} l14,4 -14,4z" fill="#C7EE54"/>
     <ellipse cx="150" cy="262" rx="92" ry="26" fill="${lieCol}"/>
     <ellipse cx="150" cy="256" rx="56" ry="13" fill="#ffffff" opacity="0.08"/>`;
-  const landDot = `<ellipse cx="${land.x.toFixed(0)}" cy="${(land.y + 2).toFixed(0)}" rx="4.4" ry="1.7" fill="#000" opacity="0.2"/><circle cx="${land.x.toFixed(0)}" cy="${land.y.toFixed(0)}" r="4" fill="${ok ? '#2f9e54' : '#e3c887'}" stroke="#16301a" stroke-width="0.8"/>`;
+  const landDot = `<ellipse cx="${land.x.toFixed(0)}" cy="${(land.y + 2).toFixed(0)}" rx="4.4" ry="1.7" fill="#000" opacity="0.2"/><circle cx="${land.x.toFixed(0)}" cy="${land.y.toFixed(0)}" r="4" fill="${ok ? '#C7EE54' : '#e3c887'}" stroke="#16301a" stroke-width="0.8"/>`;
   const ball = `<circle r="6.2" fill="url(#g3dBall)" stroke="#16301a" stroke-width="0.9" style="filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${ballPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
   const shadow = `<ellipse rx="5" ry="1.8" fill="#000" opacity="0.2"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${shadowPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></ellipse>`;
   return `<div class="cap"><svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tu tiro al green">
@@ -449,7 +449,7 @@ function greenCloseup(h, G, pf, px) {
     <ellipse cx="${(cx - rx * 0.24).toFixed(0)}" cy="${(cy - ry * 0.26).toFixed(0)}" rx="${(rx * 0.42).toFixed(0)}" ry="${(ry * 0.34).toFixed(0)}" fill="#79c970" opacity="0.5"/>
     ${rings}
     <circle cx="${pin.x.toFixed(0)}" cy="${pin.y.toFixed(0)}" r="5.5" fill="#08260f"/>
-    <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - 42).toFixed(0)}" stroke="#ffffff" stroke-width="2.5"/><path d="M${pin.x.toFixed(0)},${(pin.y - 42).toFixed(0)} l16,5 -16,5z" fill="#2f9e54"/>`;
+    <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - 42).toFixed(0)}" stroke="#ffffff" stroke-width="2.5"/><path d="M${pin.x.toFixed(0)},${(pin.y - 42).toFixed(0)} l16,5 -16,5z" fill="#C7EE54"/>`;
   const ballEl = `<path d="${puttPath}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="3 5" stroke-linecap="round" opacity="0.9"/>
     <ellipse rx="5" ry="2" fill="#000" opacity="0.2"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${puttPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></ellipse>
     <circle r="6" fill="url(#g3dBall)" stroke="#16301a" stroke-width="0.8" style="filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${puttPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
@@ -514,7 +514,7 @@ function captureSchematic(h, chole, noZoom, clean) {
     <ellipse cx="${gx.toFixed(0)}" cy="${gy.toFixed(0)}" rx="${gw.toFixed(0)}" ry="${gh.toFixed(0)}" fill="#54ad58" stroke="#2f7a38" stroke-width="1.6"/>
     <ellipse cx="${(gx - gw * 0.25).toFixed(0)}" cy="${(gy - gh * 0.28).toFixed(0)}" rx="${(gw * 0.42).toFixed(0)}" ry="${(gh * 0.34).toFixed(0)}" fill="#79c970" opacity="0.55"/>
     <circle cx="${pin.x.toFixed(0)}" cy="${pin.y.toFixed(0)}" r="3.2" fill="#08260f"/>
-    <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - flagH).toFixed(0)}" stroke="#ffffff" stroke-width="1.8"/><path d="M${pin.x.toFixed(0)},${(pin.y - flagH).toFixed(0)} l11,3.2 -11,3.2z" fill="#2f9e54"/>`;
+    <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - flagH).toFixed(0)}" stroke="#ffffff" stroke-width="1.8"/><path d="M${pin.x.toFixed(0)},${(pin.y - flagH).toFixed(0)} l11,3.2 -11,3.2z" fill="#C7EE54"/>`;
 
   const teeBox = `<ellipse cx="150" cy="${(yNear + 5).toFixed(0)}" rx="20" ry="6" fill="#16401c" opacity="0.18"/><rect x="139" y="${(yNear - 1).toFixed(0)}" width="22" height="7" rx="2.5" fill="#caa15e"/>`;
 

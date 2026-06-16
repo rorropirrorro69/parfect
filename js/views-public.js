@@ -20,7 +20,7 @@ function golfBallSVG() {
     <circle cx="100" cy="100" r="90" fill="url(#bg-ball)"/>
     <g fill="#8b9698" opacity="0.30">${ballDimples()}</g>
     <ellipse cx="70" cy="58" rx="30" ry="20" fill="#fff" opacity="0.55"/>
-    <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(47,158,84,0.55)" stroke-width="1.5"/>
+    <circle cx="100" cy="100" r="89" fill="none" stroke="rgba(199,238,84,0.55)" stroke-width="1.5"/>
   </svg>`;
 }
 
@@ -50,7 +50,7 @@ function lpFeatArt(kind) {
     <circle class="lpa-ball" cx="18" cy="58" r="5.5" fill="#fff" stroke="#cdd5d7" stroke-width="1"/>
   </svg>`;
   if (kind === 'stats') return `<svg class="lpa" viewBox="0 0 96 78" aria-hidden="true">
-    <rect class="lpa-bar lpab1" x="20" y="18" width="15" height="46" rx="4" fill="#2f9e54"/>
+    <rect class="lpa-bar lpab1" x="20" y="18" width="15" height="46" rx="4" fill="#C7EE54"/>
     <rect class="lpa-bar lpab2" x="41" y="18" width="15" height="46" rx="4" fill="#46b0e0"/>
     <rect class="lpa-bar lpab3" x="62" y="18" width="15" height="46" rx="4" fill="#9a5cd0"/>
     <line x1="14" y1="65" x2="83" y2="65" stroke="#cbd5c0" stroke-width="2.5" stroke-linecap="round"/>
@@ -63,7 +63,7 @@ function lpFeatArt(kind) {
   </svg>`;
   return `<svg class="lpa" viewBox="0 0 96 78" aria-hidden="true">
     <g class="lpa-trophy"><path d="M34 22h28v9c0 9-6 16-14 16s-14-7-14-16z" fill="#f7d04a"/><rect x="45" y="47" width="6" height="8" fill="#c98a1e"/><rect x="37" y="55" width="22" height="5" rx="2" fill="#c98a1e"/><path d="M34 25c-6 0-9 3-8 8 1 4 5 6 9 6v-4c-3 0-5-2-5.5-4.5" fill="none" stroke="#f7d04a" stroke-width="3"/><path d="M62 25c6 0 9 3 8 8-1 4-5 6-9 6v-4c3 0 5-2 5.5-4.5" fill="none" stroke="#f7d04a" stroke-width="3"/></g>
-    <circle class="lpa-spark lpas1" cx="26" cy="20" r="2.6" fill="#2f9e54"/><circle class="lpa-spark lpas2" cx="71" cy="17" r="2.2" fill="#46b0e0"/><circle class="lpa-spark lpas3" cx="73" cy="42" r="2.6" fill="#ff6a88"/>
+    <circle class="lpa-spark lpas1" cx="26" cy="20" r="2.6" fill="#C7EE54"/><circle class="lpa-spark lpas2" cx="71" cy="17" r="2.2" fill="#46b0e0"/><circle class="lpa-spark lpas3" cx="73" cy="42" r="2.6" fill="#ff6a88"/>
   </svg>`;
 }
 
@@ -108,9 +108,49 @@ function vLanding() {
     <section class="lp-intro" aria-label="PARFECT">
       <div class="lp-intro-sun"></div>
       <span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span>
-      <div class="lp-intrologo">PARFECT</div>
-      <p class="lp-introtag">IA Tracker</p>
-      <span class="lp-introhint">Desliza ↓ y entra al club</span>
+      <img class="lp-fbird lpf1" src="assets/bird.png" alt="" />
+      <img class="lp-fbird lpf2" src="assets/bird.png" alt="" />
+      <div class="lp-introtop">
+        <div class="lp-intrologo">PARFECT</div>
+        <p class="lp-introtag">IA Tracker</p>
+        <span class="lp-introhint">Desliza ↓ y entra al club</span>
+      </div>
+      <div class="lp-course" aria-hidden="true">
+        <svg class="lp-hills" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice">
+          <path d="M0,70 Q90,40 190,58 T400,48 L400,180 L0,180Z" fill="#c4e493"/>
+          <path d="M0,104 Q120,72 250,94 T400,86 L400,180 L0,180Z" fill="#a9d877"/>
+          <path d="M0,140 Q140,112 280,130 T400,122 L400,180 L0,180Z" fill="#90c557"/>
+          <path d="M150,180 Q180,134 250,120 Q330,104 392,72" fill="none" stroke="#d3ecae" stroke-width="22" stroke-linecap="round" opacity=".7"/>
+        </svg>
+        <svg class="lp-clubhouse" viewBox="0 0 150 120">
+          <ellipse cx="75" cy="112" rx="60" ry="7" fill="#1a3a14" opacity=".14"/>
+          <rect x="30" y="56" width="90" height="52" rx="3" fill="#f4ecd6"/><rect x="30" y="56" width="90" height="52" rx="3" fill="none" stroke="#ddcfa8" stroke-width="1.5"/>
+          <path d="M20 58 L75 24 L130 58 Z" fill="#7c4a2c"/><path d="M20 58 L75 24 L130 58 Z" fill="#000" opacity=".06"/>
+          <rect x="72" y="12" width="6" height="14" fill="#9a5a32"/><path d="M78 13 L92 17 L78 21 Z" fill="#ff5a4d"/>
+          <rect x="66" y="82" width="18" height="26" rx="1.5" fill="#6b4a2a"/><circle cx="80" cy="95" r="1.4" fill="#e0c060"/>
+          <rect x="40" y="68" width="15" height="14" rx="1.5" fill="#bfe6f7" stroke="#fff" stroke-width="1.5"/>
+          <rect x="95" y="68" width="15" height="14" rx="1.5" fill="#bfe6f7" stroke="#fff" stroke-width="1.5"/>
+        </svg>
+        <svg class="lp-lake" viewBox="0 0 140 70" aria-hidden="true">
+          <defs><radialGradient id="lpLakeG2" cx="40%" cy="32%" r="80%"><stop offset="0" stop-color="#8fd6f0"/><stop offset="1" stop-color="#2f87b0"/></radialGradient></defs>
+          <ellipse cx="70" cy="46" rx="62" ry="18" fill="url(#lpLakeG2)"/>
+          <ellipse class="lp-lakeshine" cx="54" cy="40" rx="22" ry="4.5" fill="#fff" opacity=".4"/>
+          <g class="lp-fountain"><rect x="68" y="24" width="4" height="20" rx="2" fill="#9fb0b3"/>
+            <path class="lp-fjet" d="M70 26 q-9 -15 -17 -2 M70 26 q9 -15 17 -2 M70 24 v-13" fill="none" stroke="#bfeaf6" stroke-width="2.4" stroke-linecap="round"/>
+            <circle class="lp-fdrop d1" cx="55" cy="28" r="1.7" fill="#cdeefb"/><circle class="lp-fdrop d2" cx="85" cy="28" r="1.7" fill="#cdeefb"/><circle class="lp-fdrop d3" cx="70" cy="16" r="1.7" fill="#cdeefb"/></g>
+        </svg>
+        <div class="lp-tree" aria-hidden="true">
+          <svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg>
+          <img class="lp-perch lpp1" src="assets/bird.png" alt="" />
+        </div>
+        <svg class="lp-squirrel" viewBox="0 0 60 60" aria-hidden="true">
+          <path class="lp-sqtail" d="M44 50 q22 -2 14 -24 q-3 -12 -14 -8 q10 2 11 12 q1 12 -11 14 Z" fill="#b06a35"/>
+          <ellipse cx="30" cy="52" rx="13" ry="6" fill="#000" opacity=".12"/>
+          <path d="M22 50 q-6 -22 10 -26 q14 -3 14 12 q0 14 -12 16 Z" fill="#c87a40"/>
+          <circle cx="20" cy="24" r="9" fill="#c87a40"/><path d="M14 16 q-1 -6 4 -5 q1 4 -1 7 Z M22 15 q3 -5 6 -2 q-1 4 -4 5 Z" fill="#a85f2c"/>
+          <circle cx="18" cy="23" r="1.6" fill="#241308"/><ellipse cx="26" cy="40" rx="6" ry="8" fill="#e6c79a"/>
+        </svg>
+      </div>
     </section>
 
     <section class="lp-hero">
@@ -257,7 +297,7 @@ function maybeCelebrate() {
   if (!key || window.__celebrated === key) return;
   window.__celebrated = key;
   if (matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const cols = ['#2f9e54', '#9ad13e', '#ffd56b', '#ff9f43', '#5aa9e0', '#ffffff'];
+  const cols = ['#C7EE54', '#9ad13e', '#ffd56b', '#ff9f43', '#5aa9e0', '#ffffff'];
   const wrap = document.createElement('div');
   wrap.className = 'confetti';
   let html = '';

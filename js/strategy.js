@@ -172,8 +172,8 @@ function holeSchematic(hole, landings) {
     const rx = Math.max(13, Math.min(32, q.disp * 0.7)), ry = rx * 0.7;
     const t = arriveT(i + 1);
     const tb = Math.max(0.001, t - 0.03).toFixed(3), ta = Math.max(0.002, t).toFixed(3), tm = Math.min(0.999, (t + 1) / 2).toFixed(3);
-    lands += `<ellipse cx="${q.p[0].toFixed(0)}" cy="${q.p[1].toFixed(0)}" rx="${rx.toFixed(0)}" ry="${ry.toFixed(0)}" fill="#2f9e54" stroke="#2f9e54" stroke-width="1.5" stroke-dasharray="4 4" opacity="0"><animate attributeName="opacity" values="0;0;0.26;0.14;0.22" keyTimes="0;${tb};${ta};${tm};1" dur="${animDur}s" repeatCount="indefinite"/></ellipse>
-      <text x="${q.p[0].toFixed(0)}" y="${(q.p[1] - ry - 5).toFixed(0)}" fill="#2f9e54" font-family="Inter,system-ui,sans-serif" font-size="11.5" font-weight="900" text-anchor="middle" opacity="0">${q.dist}y<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;${tb};${ta};1" dur="${animDur}s" repeatCount="indefinite"/></text>`;
+    lands += `<ellipse cx="${q.p[0].toFixed(0)}" cy="${q.p[1].toFixed(0)}" rx="${rx.toFixed(0)}" ry="${ry.toFixed(0)}" fill="#C7EE54" stroke="#C7EE54" stroke-width="1.5" stroke-dasharray="4 4" opacity="0"><animate attributeName="opacity" values="0;0;0.26;0.14;0.22" keyTimes="0;${tb};${ta};${tm};1" dur="${animDur}s" repeatCount="indefinite"/></ellipse>
+      <text x="${q.p[0].toFixed(0)}" y="${(q.p[1] - ry - 5).toFixed(0)}" fill="#C7EE54" font-family="Inter,system-ui,sans-serif" font-size="11.5" font-weight="900" text-anchor="middle" opacity="0">${q.dist}y<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;${tb};${ta};1" dur="${animDur}s" repeatCount="indefinite"/></text>`;
   });
   return `<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Esquema hoyo ${hole.n}">
     <rect x="0" y="0" width="${W}" height="${H}" rx="16" fill="#0a0f08" stroke="#1d2914"/>
@@ -182,9 +182,9 @@ function holeSchematic(hole, landings) {
     <ellipse cx="${gx}" cy="${gy}" rx="36" ry="26" fill="#57b15c" stroke="#2f6b39" stroke-width="2"/>
     <circle cx="${gx + 5}" cy="${gy + 1}" r="3" fill="#0a0f08"/>
     <line x1="${gx + 5}" y1="${gy + 1}" x2="${gx + 5}" y2="${gy - 32}" stroke="#eef3e6" stroke-width="2"/>
-    <path d="M${gx + 5},${gy - 32} L${gx + 18},${gy - 28} L${gx + 5},${gy - 24} Z" fill="#2f9e54"/>
+    <path d="M${gx + 5},${gy - 32} L${gx + 18},${gy - 28} L${gx + 5},${gy - 24} Z" fill="#C7EE54"/>
     ${risks}${lands}
-    <path d="${route}" fill="none" stroke="#2f9e54" stroke-width="2.5" stroke-dasharray="3 6"/>
+    <path d="${route}" fill="none" stroke="#C7EE54" stroke-width="2.5" stroke-dasharray="3 6"/>
     <circle r="6" fill="#fff" stroke="#0a0f08" stroke-width="1"><animateMotion dur="${animDur}s" repeatCount="indefinite" path="${route}" keyPoints="${keyP.join(';')}" keyTimes="${keyT.join(';')}" calcMode="linear"/></circle>
     ${labels}
     <rect x="161" y="412" width="18" height="7" rx="2" fill="#9ab07f"/><text x="170" y="${H - 5}" fill="#9ab07f" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="700" text-anchor="middle">TEE</text>
@@ -427,7 +427,7 @@ function simSchematic(hole, shots, shadowShots) {
   const P = sh => ({ x: cx + sh.side * halfW, y: teeY - Math.min(1.06, sh.prog) * span });
   const pts = shots.map(P);
   const route = `M${cx},${teeY} ` + pts.map(q => `L${q.x.toFixed(0)},${q.y.toFixed(0)}`).join(' ');
-  const colOf = sh => sh.ok ? '#2f9e54' : (sh.lie === 'water' ? '#2f7fa6' : '#ff9f43');
+  const colOf = sh => sh.ok ? '#C7EE54' : (sh.lie === 'water' ? '#2f7fa6' : '#ff9f43');
   let zones = '', dots = '';
   shots.forEach((sh, i) => {
     if (sh.lie === 'green') return;
@@ -465,10 +465,10 @@ function simSchematic(hole, shots, shadowShots) {
     <ellipse cx="${cx}" cy="${greenY}" rx="40" ry="27" fill="#57b15c" stroke="#2f6b39" stroke-width="2"/>
     <circle cx="${cx}" cy="${greenY}" r="3" fill="#0a0f08"/>
     <line x1="${cx}" y1="${greenY}" x2="${cx}" y2="${greenY - 30}" stroke="#eef3e6" stroke-width="2"/>
-    <path d="M${cx},${greenY - 30} l13,4 -13,4z" fill="#2f9e54"/>
+    <path d="M${cx},${greenY - 30} l13,4 -13,4z" fill="#C7EE54"/>
     ${shadowG}
     ${zones}
-    <path d="${route}" fill="none" stroke="#2f9e54" stroke-width="2" stroke-dasharray="3 5"/>
+    <path d="${route}" fill="none" stroke="#C7EE54" stroke-width="2" stroke-dasharray="3 5"/>
     ${dots}${ball}
     <rect x="${cx - 9}" y="${teeY}" width="18" height="7" rx="2" fill="#9ab07f"/>
     <text x="${cx}" y="${teeY + 22}" fill="#9ab07f" font-family="Inter,system-ui" font-size="10" font-weight="700" text-anchor="middle">TEE</text>

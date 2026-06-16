@@ -57,12 +57,12 @@ function progressChart(data) {
   const y = v => pad + (v - min) / span * (H - 2 * pad);
   const pts = data.map((v, i) => [x(i), y(v)]);
   const line = pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(0)},${p[1].toFixed(0)}`).join(' ');
-  const dots = pts.map(p => `<circle cx="${p[0].toFixed(0)}" cy="${p[1].toFixed(0)}" r="3.5" fill="#2f9e54"/>`).join('');
+  const dots = pts.map(p => `<circle cx="${p[0].toFixed(0)}" cy="${p[1].toFixed(0)}" r="3.5" fill="#C7EE54"/>`).join('');
   const sign = v => (v >= 0 ? '+' : '') + v;
   return `<svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tendencia de score">
-    <path d="${line}" fill="none" stroke="#2f9e54" stroke-width="2.5" stroke-linejoin="round"/>${dots}
+    <path d="${line}" fill="none" stroke="#C7EE54" stroke-width="2.5" stroke-linejoin="round"/>${dots}
     <text x="${pad}" y="14" fill="#7c8a70" font-family="Inter,system-ui" font-size="10">${sign(data[0])} antes</text>
-    <text x="${W - pad}" y="14" fill="#2f9e54" font-family="Inter,system-ui" font-size="11" font-weight="800" text-anchor="end">${sign(data[data.length - 1])} última</text>
+    <text x="${W - pad}" y="14" fill="#C7EE54" font-family="Inter,system-ui" font-size="11" font-weight="800" text-anchor="end">${sign(data[data.length - 1])} última</text>
   </svg>`;
 }
 function progressCard(u, rounds) {
@@ -106,7 +106,7 @@ function statScene(kind) {
   const flag = (x, y, h) => {
     h = h || 16; const t = y - h;
     return `<line x1="${x}" y1="${y}" x2="${x}" y2="${t}" stroke="#eef3e6" stroke-width="1.4"/><circle cx="${x}" cy="${t}" r="1.3" fill="#eef3e6"/>`
-      + `<path fill="#2f9e54"><animate attributeName="d" dur="1.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" values="M${x} ${t} L${x + 11} ${t + 1.4} L${x} ${t + 5} Z;M${x} ${t} L${x + 11} ${t + 3.8} L${x} ${t + 5} Z;M${x} ${t} L${x + 11} ${t + 1.4} L${x} ${t + 5} Z"/></path>`;
+      + `<path fill="#C7EE54"><animate attributeName="d" dur="1.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1" values="M${x} ${t} L${x + 11} ${t + 1.4} L${x} ${t + 5} Z;M${x} ${t} L${x + 11} ${t + 3.8} L${x} ${t + 5} Z;M${x} ${t} L${x + 11} ${t + 1.4} L${x} ${t + 5} Z"/></path>`;
   };
   // green elevado en 3D (plataforma con lado oscuro + brillo cenital)
   const green3d = (cx, cy, rx, ry) => `<ellipse cx="${cx}" cy="${(cy + ry * 0.5).toFixed(1)}" rx="${rx}" ry="${ry}" fill="#16461f"/><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#g3dGreenTop)"/><ellipse cx="${(cx - rx * 0.3).toFixed(1)}" cy="${(cy - ry * 0.32).toFixed(1)}" rx="${(rx * 0.52).toFixed(1)}" ry="${(ry * 0.42).toFixed(1)}" fill="#aef0a4" opacity="0.28"/>`;
@@ -119,14 +119,14 @@ function statScene(kind) {
     <path d="M62 100 L108 100 L95 36 L75 36 Z" fill="url(#g3dFair)"/>
     <path d="M75 36 L95 36 L94 32 L76 32 Z" fill="#4ca055"/>
     <path d="M71 66 L99 66 L98 60 L72 60 Z" fill="#2a6531" opacity="0.4"/><path d="M67 86 L103 86 L102 80 L68 80 Z" fill="#2a6531" opacity="0.32"/>
-    <ellipse cx="85" cy="66" rx="2" ry="0.9" fill="#2f9e54" opacity="0"><animate attributeName="rx" values="2;2;10;13" keyTimes="0;.5;.62;.7" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.5;.56;.7" dur="3s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="85" cy="66" rx="2" ry="0.9" fill="#C7EE54" opacity="0"><animate attributeName="rx" values="2;2;10;13" keyTimes="0;.5;.62;.7" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.5;.56;.7" dur="3s" repeatCount="indefinite"/></ellipse>
     <circle r="4.4" ${ball}><animateMotion dur="3s" repeatCount="indefinite" path="M16 92 Q 48 -8 85 66" keyPoints="0;1;1;1" keyTimes="0;.5;.9;1" calcMode="linear"/></circle>
     ${okBadge(85, 22, '3s')}
   </svg>`;
   if (kind === 'gir') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
     ${green3d(85, 58, 43, 20)}
     <circle cx="85" cy="52" r="2.2" fill="#06120a"/>${flag(85, 52, 16)}
-    <ellipse cx="83" cy="60" rx="2" ry="0.9" fill="#2f9e54" opacity="0"><animate attributeName="rx" values="2;2;10;13" keyTimes="0;.5;.62;.7" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.5;.56;.7" dur="3s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="83" cy="60" rx="2" ry="0.9" fill="#C7EE54" opacity="0"><animate attributeName="rx" values="2;2;10;13" keyTimes="0;.5;.62;.7" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.5;.56;.7" dur="3s" repeatCount="indefinite"/></ellipse>
     <circle r="4.4" ${ball}><animateMotion dur="3s" repeatCount="indefinite" path="M16 92 Q 48 -10 83 60" keyPoints="0;1;1;1" keyTimes="0;.5;.9;1" calcMode="linear"/></circle>
     ${okBadge(85, 22, '3s')}
   </svg>`;
@@ -134,7 +134,7 @@ function statScene(kind) {
     <ellipse cx="28" cy="82" rx="24" ry="10" fill="#13301a"/><ellipse cx="24" cy="79" rx="13" ry="4" fill="#1d4528" opacity="0.7"/>
     ${green3d(114, 58, 27, 13)}
     <circle cx="114" cy="53" r="2" fill="#06120a"/>${flag(114, 53, 15)}
-    <path d="M30 76 Q 72 -6 106 58" fill="none" stroke="#2f9e54" stroke-width="1.6" stroke-dasharray="2 5" opacity="0.5"/>
+    <path d="M30 76 Q 72 -6 106 58" fill="none" stroke="#C7EE54" stroke-width="1.6" stroke-dasharray="2 5" opacity="0.5"/>
     <circle r="4.2" ${ball}><animateMotion dur="3.2s" repeatCount="indefinite" path="M30 76 Q 72 -6 106 58 L114 53" keyPoints="0;0.85;0.85;1;1" keyTimes="0;.5;.64;.85;1" calcMode="linear"/></circle>
     ${okBadge(114, 24, '3.2s')}
   </svg>`;
@@ -142,7 +142,7 @@ function statScene(kind) {
     ${green3d(85, 58, 50, 28)}
     <path d="M85 80 L85 40" stroke="#06120a" stroke-width="1" stroke-dasharray="2 4" opacity="0.3"/>
     <ellipse cx="85" cy="41" rx="6" ry="2.8" fill="#04100a"/><ellipse cx="85" cy="40" rx="5" ry="2.3" fill="#0c1c11"/>${flag(85, 39, 16)}
-    <ellipse cx="85" cy="41" rx="6" ry="2.8" fill="none" stroke="#2f9e54" stroke-width="1.2" opacity="0"><animate attributeName="rx" values="6;6;15" keyTimes="0;.74;.88" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.74;.8;.88" dur="2.8s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="85" cy="41" rx="6" ry="2.8" fill="none" stroke="#C7EE54" stroke-width="1.2" opacity="0"><animate attributeName="rx" values="6;6;15" keyTimes="0;.74;.88" dur="2.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.74;.8;.88" dur="2.8s" repeatCount="indefinite"/></ellipse>
     <g><animateTransform attributeName="transform" type="translate" values="0 7;0 7;0 -2;0 1;0 1" keyTimes="0;.06;.16;.24;1" dur="2.8s" repeatCount="indefinite"/>
       <rect x="84.1" y="60" width="1.9" height="22" rx="0.9" fill="#cdd5d7"/><rect x="75" y="82" width="20" height="4.4" rx="2.2" fill="#9aa6a8"/><rect x="75" y="82" width="20" height="1.6" rx="0.8" fill="#e9eef0" opacity="0.6"/></g>
     <circle ${ball}><animateMotion dur="2.8s" repeatCount="indefinite" path="M85 78 L85 41" keyPoints="0;0;1;1" keyTimes="0;.2;.76;1" calcMode="linear"/><animate attributeName="r" values="4.2;4.2;4.2;0;0" keyTimes="0;.2;.74;.8;1" dur="2.8s" repeatCount="indefinite"/></circle>
@@ -150,7 +150,7 @@ function statScene(kind) {
   if (kind === 'par') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
     ${green3d(85, 52, 36, 17)}
     <circle cx="85" cy="46" r="2" fill="#06120a"/>${flag(85, 46, 15)}
-    <ellipse cx="80" cy="53" rx="2" ry="0.9" fill="#2f9e54" opacity="0"><animate attributeName="rx" values="2;2;9;12" keyTimes="0;.44;.56;.66" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.44;.5;.66" dur="3s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="80" cy="53" rx="2" ry="0.9" fill="#C7EE54" opacity="0"><animate attributeName="rx" values="2;2;9;12" keyTimes="0;.44;.56;.66" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;.85;0" keyTimes="0;.44;.5;.66" dur="3s" repeatCount="indefinite"/></ellipse>
     <circle r="4.2" ${ball}><animateMotion dur="3s" repeatCount="indefinite" path="M16 92 Q 48 -12 80 53" keyPoints="0;1;1;1" keyTimes="0;.5;.9;1" calcMode="linear"/></circle>
     <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.52;.6;.92;1" dur="3s" repeatCount="indefinite"/>
       <rect x="68" y="17" width="34" height="17" rx="8.5" fill="url(#g3dLime)"/><text x="85" y="29" fill="#0a0f06" font-family="Inter,system-ui,sans-serif" font-size="10.5" font-weight="900" letter-spacing="0.5" text-anchor="middle">PAR</text></g>
@@ -162,12 +162,12 @@ function statScene(kind) {
     <g><animateMotion dur="5s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.6 1;0.4 0 0.6 1" path="M-26 32 Q 50 10 92 26 Q 134 42 198 14"/>
       <g transform="scale(1.25)">
         <ellipse cx="0" cy="0" rx="4.4" ry="2.1" fill="#11220c"/><circle cx="3.8" cy="-1.1" r="1.8" fill="#11220c"/><path d="M5.4 -1.6 l3.4 -0.5 -3.4 1.7 z" fill="#ffcf5a"/>
-        <path fill="#2f9e54"><animate attributeName="d" dur="0.42s" repeatCount="indefinite" values="M-5 -0.6 Q -1 -8 2.4 -0.6 Q 5.8 -8 9.4 -0.6 Q 5.8 -3 2.4 -2 Q -1 -3 -5 -0.6 Z;M-5 -0.6 Q -1 5 2.4 -0.6 Q 5.8 5 9.4 -0.6 Q 5.8 1 2.4 0.6 Q -1 1 -5 -0.6 Z;M-5 -0.6 Q -1 -8 2.4 -0.6 Q 5.8 -8 9.4 -0.6 Q 5.8 -3 2.4 -2 Q -1 -3 -5 -0.6 Z"/></path>
+        <path fill="#C7EE54"><animate attributeName="d" dur="0.42s" repeatCount="indefinite" values="M-5 -0.6 Q -1 -8 2.4 -0.6 Q 5.8 -8 9.4 -0.6 Q 5.8 -3 2.4 -2 Q -1 -3 -5 -0.6 Z;M-5 -0.6 Q -1 5 2.4 -0.6 Q 5.8 5 9.4 -0.6 Q 5.8 1 2.4 0.6 Q -1 1 -5 -0.6 Z;M-5 -0.6 Q -1 -8 2.4 -0.6 Q 5.8 -8 9.4 -0.6 Q 5.8 -3 2.4 -2 Q -1 -3 -5 -0.6 Z"/></path>
       </g>
     </g>
     <g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.5;.58;.9;1" dur="5s" repeatCount="indefinite"/>
       <circle cx="85" cy="30" r="12" fill="url(#g3dLime)"/><text x="85" y="34.4" fill="#0a0f06" font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="900" text-anchor="middle">−1</text>
-      <path d="M67 24 l1.8 0 M67.9 22.2 l0 1.8" stroke="#2f9e54" stroke-width="1.5" stroke-linecap="round"/><path d="M101 35 l1.8 0 M101.9 33.2 l0 1.8" stroke="#2f9e54" stroke-width="1.5" stroke-linecap="round"/></g>
+      <path d="M67 24 l1.8 0 M67.9 22.2 l0 1.8" stroke="#C7EE54" stroke-width="1.5" stroke-linecap="round"/><path d="M101 35 l1.8 0 M101.9 33.2 l0 1.8" stroke="#C7EE54" stroke-width="1.5" stroke-linecap="round"/></g>
   </svg>`;
   if (kind === 'bogey') return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
     ${green3d(95, 50, 30, 14)}
@@ -199,9 +199,9 @@ function statScene(kind) {
   return `<svg viewBox="0 0 170 100" class="rscene" aria-hidden="true">${bg}
     ${green3d(85, 56, 48, 29)}
     <circle cx="85" cy="32" r="5" fill="#06120a"/>${flag(85, 32, 16)}
-    <circle cx="85" cy="40" r="12" fill="none" stroke="#2f9e54" stroke-width="0.9" stroke-dasharray="3 3" opacity="0.55"/>
+    <circle cx="85" cy="40" r="12" fill="none" stroke="#C7EE54" stroke-width="0.9" stroke-dasharray="3 3" opacity="0.55"/>
     <circle r="4" ${ball}><animateMotion dur="3s" repeatCount="indefinite" path="M85 86 L85 41" keyPoints="0;1;1" keyTimes="0;.62;1" calcMode="linear"/></circle>
-    <text x="85" y="94" fill="#2f9e54" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" text-anchor="middle" opacity="0">dada<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.62;.68;.96;1" dur="3s" repeatCount="indefinite"/></text>
+    <text x="85" y="94" fill="#C7EE54" font-family="Inter,system-ui,sans-serif" font-size="9" font-weight="800" text-anchor="middle" opacity="0">dada<animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.62;.68;.96;1" dur="3s" repeatCount="indefinite"/></text>
   </svg>`;
 }
 /* reel horizontal de stats animadas (scroll automático infinito) */
