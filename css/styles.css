@@ -1973,6 +1973,14 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .sp-areab.on { border-color: var(--lime); background: var(--lime-faint); }
 .sp-areaic { display: inline-flex; } .sp-areaic .gi { width: 18px; height: 18px; }
 .sp-back { display: block; margin: 12px auto 0; background: none; border: none; color: var(--muted); font-size: 12.5px; font-weight: 700; cursor: pointer; }
+.free-clockbox { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 18px; border-radius: 18px; background: var(--card2); }
+.free-clock { font-size: 46px; font-weight: 900; letter-spacing: -.02em; color: var(--text); font-variant-numeric: tabular-nums; }
+.free-lab { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--lime-ink); }
+/* tarjeta de evento en iniciar ronda */
+.su-event { text-align: center; }
+.su-ev-ic { width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center; background: var(--lime-faint); margin: 0 auto 10px; }
+.su-ev-ic .gi { width: 26px; height: 26px; color: var(--lime-ink); }
+.su-event b { font-size: 17px; font-weight: 900; color: var(--text); }
 .sp-head { display: flex; align-items: center; justify-content: space-between; }
 .sp-total { font-size: 14px; font-weight: 900; color: var(--lime-ink); }
 .sp-timeline { position: relative; display: flex; flex-direction: column; gap: 2px; }
@@ -2603,7 +2611,7 @@ svg.fd-av { object-fit: contain; }
 /* ===== Tarjeta de ronda creativa (rc4) ===== */
 .rc4 { display: block; width: 100%; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 0 0 14px; overflow: hidden; cursor: pointer; box-shadow: 0 10px 26px rgba(20,40,15,.08); transition: transform .12s, box-shadow .2s; }
 .rc4:active { transform: scale(.992); }
-.rc4-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 15px 16px 14px; background: color-mix(in srgb, var(--rc) 16%, var(--card)); border-bottom: 1px solid var(--line-soft); }
+.rc4-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 12px 14px; background: color-mix(in srgb, var(--rc) 16%, var(--card)); border-bottom: 1px solid var(--line-soft); }
 .rc4-id { min-width: 0; }
 .rc4-rank { display: inline-block; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em; color: color-mix(in srgb, var(--rc) 72%, #15240a); background: color-mix(in srgb, var(--rc) 22%, var(--card)); border: 1px solid color-mix(in srgb, var(--rc) 45%, transparent); padding: 3px 9px; border-radius: 99px; margin-bottom: 7px; }
 [data-theme="dark"] .rc4-rank { color: color-mix(in srgb, var(--rc) 75%, #ffffff); }
@@ -2611,25 +2619,25 @@ svg.fd-av { object-fit: contain; }
 .rc4-party { color: var(--lime-ink); } .rc4-party .gi { width: 14px; height: 14px; }
 .rc4-date { font-size: 11.5px; font-weight: 600; color: var(--muted); }
 .rc4-score { flex: none; text-align: right; }
-.rc4-score b { display: block; font-size: 36px; font-weight: 900; letter-spacing: -.03em; line-height: 1; color: var(--text); }
+.rc4-score b { display: block; font-size: 30px; font-weight: 900; letter-spacing: -.03em; line-height: 1; color: var(--text); }
 .rc4-score span { font-size: 13px; font-weight: 800; color: var(--lime-ink); }
 .rc4-score.good span { color: #2fa36b; } .rc4-score.over span { color: #e0873a; }
 .rc4-vibe { font-size: 16px; margin-right: 3px; }
-.rc4-rings { display: flex; justify-content: space-around; gap: 6px; padding: 14px 12px 8px; }
-.rc4-ring { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.rc4-rwrap { position: relative; width: 52px; height: 52px; }
-.rc4-rwrap svg { width: 52px; height: 52px; transform: rotate(-90deg); }
+.rc4-rings { display: flex; justify-content: space-around; gap: 6px; padding: 11px 12px 6px; }
+.rc4-ring { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.rc4-rwrap { position: relative; width: 46px; height: 46px; }
+.rc4-rwrap svg { width: 46px; height: 46px; transform: rotate(-90deg); }
 .rc4-rt { fill: none; stroke: var(--card2); stroke-width: 5; }
 .rc4-rp { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset .6s cubic-bezier(.2,.8,.2,1); }
-.rc4-rv { position: absolute; inset: 0; display: grid; place-items: center; font-size: 15px; font-weight: 900; color: var(--text); }
-.rc4-rv i { font-size: 9px; font-style: normal; color: var(--muted); margin-left: 1px; }
-.rc4-rl { font-size: 10.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .02em; }
-.rc4-pills { display: flex; gap: 8px; padding: 2px 14px 0; }
-.rc4-pill { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 9px 6px; border-radius: 13px; background: var(--card2); }
-.rc4-pill b { font-size: 18px; font-weight: 900; color: var(--text); }
-.rc4-pill span { font-size: 9.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .02em; }
+.rc4-rv { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; font-weight: 900; color: var(--text); }
+.rc4-rv i { font-size: 8px; font-style: normal; color: var(--muted); margin-left: 1px; }
+.rc4-rl { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .02em; }
+.rc4-pills { display: flex; gap: 7px; padding: 2px 14px 0; }
+.rc4-pill { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 7px 6px; border-radius: 12px; background: var(--card2); }
+.rc4-pill b { font-size: 16px; font-weight: 900; color: var(--text); }
+.rc4-pill span { font-size: 9px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .02em; }
 .rc4-pill.good b { color: #2fa36b; } .rc4-pill.bad b { color: var(--danger); }
-.rc4 .tm { padding: 12px 14px 0; }
+.rc4 .tm { padding: 10px 14px 0; }
 .app-content.view-in .rc-list .rc4 { animation: rowIn .5s cubic-bezier(.2,.8,.2,1) both; }
 .app-content.view-in .rc-list .rc4:nth-child(2) { animation-delay: .05s; }
 .app-content.view-in .rc-list .rc4:nth-child(3) { animation-delay: .1s; }

@@ -403,7 +403,7 @@ function spDrill(k) { const d = (typeof Trainer !== 'undefined' && Trainer.DRILL
 function vSessionPlanner() {
   const u = cur();
   const agg = Stats.aggregate(myRounds());
-  const step = ['mode', 'areas', 'plan'].includes(V.planStep) ? V.planStep : 'time';
+  const step = ['mode', 'areas', 'plan', 'free'].includes(V.planStep) ? V.planStep : 'time';
   const T = V.sessionMin || 60;
 
   if (step === 'time') {
@@ -419,7 +419,25 @@ function vSessionPlanner() {
       <h2 class="sp-q">¿Cómo armamos tu sesión?</h2>
       <button class="sp-modecard" data-act="plan-mode" data-m="ai"><span class="sp-modeic">${golfIcon('flag')}</span><div><b>Que la IA la arme por mí</b><span>Reparte el tiempo priorizando tus puntos débiles.</span></div></button>
       <button class="sp-modecard" data-act="plan-mode" data-m="me"><span class="sp-modeic">${golfIcon('bucket')}</span><div><b>Yo elijo qué entrenar</b><span>Escoge las áreas y nosotros repartimos el tiempo.</span></div></button>
+      <button class="sp-modecard" data-act="plan-mode" data-m="free"><span class="sp-modeic">${golfIcon('putter')}</span><div><b>Entrenamiento libre</b><span>Elige un bastón y dale al cronómetro. Guardamos cuánto entrenaste.</span></div></button>
       <button class="sp-back" data-act="plan-reset">← Cambiar tiempo</button>
+    </div>`;
+  }
+  if (step === 'free') {
+    const t = V.freeTimer || { secs: 0, running: false };
+    const clubs = ['Driver', 'Maderas', 'Híbridos', 'Hierros', 'Wedges', 'Putter', 'Juego corto'];
+    const chips = clubs.map(c => `<button class="chip sm ${V.freeClub === c ? 'on' : ''}" data-act="free-club" data-c="${esc(c)}">${c}</button>`).join('');
+    return `<div class="card sp-card">
+      <div class="sp-phase">Entrenamiento libre</div>
+      <h2 class="sp-q">${golfIcon('putter')} ¿Qué bastón entrenas?</h2>
+      <div class="chips" style="flex-wrap:wrap;margin-bottom:16px">${chips}</div>
+      <div class="free-clockbox"><span class="free-clock" id="free-clock">${fmtClock(t.secs)}</span><span class="free-lab">${V.freeClub ? esc(V.freeClub) : 'elige un bastón'}</span></div>
+      <div class="ddt2-ctrls" style="margin-top:14px">
+        ${t.running ? `<button class="btn" data-act="free-pause">⏸ Pausar</button>` : `<button class="btn primary" data-act="free-start" ${V.freeClub ? '' : 'disabled'}>${t.secs > 0 ? 'Reanudar' : 'Iniciar'} ▶</button>`}
+        <button class="btn ghost" data-act="free-reset">↺</button>
+      </div>
+      <button class="btn primary" data-act="free-finish" ${t.secs > 0 && V.freeClub ? '' : 'disabled'} style="margin-top:10px">Terminar y guardar</button>
+      <button class="sp-back" data-act="plan-reset">← Salir</button>
     </div>`;
   }
   if (step === 'areas') {

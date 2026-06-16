@@ -257,6 +257,44 @@ function vSetup() {
         <span class="tee-opt-go">→</span>
       </button>`).join('')}</div>
     </div></div>` : '';
+  const holesNineBlock = (() => {
+    const ro = roundOptions(cid);
+    const holes = (V.setupHoles && ro.opts18.length) ? V.setupHoles : (ro.opts18.length ? (V.setupHoles || 18) : 9);
+    const opts = holes === 18 ? ro.opts18 : ro.opts9;
+    const start = opts.some(o => o.start === V.setupStart) ? V.setupStart : (opts[0] ? opts[0].start : 0);
+    const par = roundPar(cid, start, holes);
+    const holesToggle = ro.opts18.length ? `<div class="su-block">
+      <span class="su-lab">Hoyos</span>
+      <div class="chips">
+        <button class="chip ${holes === 9 ? 'on' : ''}" data-act="setup-holes" data-h="9">9 hoyos</button>
+        <button class="chip ${holes === 18 ? 'on' : ''}" data-act="setup-holes" data-h="18">18 hoyos</button>
+      </div>
+    </div>` : '';
+    const nineSel = opts.length > 1 ? `<div class="su-block">
+      <span class="su-lab">${holes === 18 ? '¿Qué vueltas?' : '¿Qué vuelta?'}</span>
+      <div class="chips">${opts.map(o => `<button class="chip ${o.start === start ? 'on' : ''}" data-act="setup-nine" data-s="${o.start}">${esc(o.label)}</button>`).join('')}</div>
+    </div>` : '';
+    return `${holesToggle}${nineSel}<p class="su-meta">Jugarás <b class="lime">${holes} hoyos</b> · Par ${par}.</p>`;
+  })();
+  const when = V.setupWhen === 'prog' ? 'prog' : 'ahora';
+  const whenToggle = `<div class="su-block">
+      <span class="su-lab">¿Cuándo juegas?</span>
+      <div class="chips">
+        <button class="chip ${when === 'ahora' ? 'on' : ''}" data-act="setup-when" data-w="ahora">Ahora</button>
+        <button class="chip ${when === 'prog' ? 'on' : ''}" data-act="setup-when" data-w="prog">Programar tee time</button>
+      </div>
+    </div>`;
+  const body = when === 'prog'
+    ? `<div class="card su-event">
+        <div class="su-ev-ic">${golfIcon('flag')}</div>
+        <b>Programa una jugada futura</b>
+        <p class="note" style="margin:6px 0 12px">Agenda el día y el tee time, elige modalidad e invita a tus amigos. Les llega y cada quien confirma su lugar.</p>
+        <button class="btn primary" data-act="event-new">${golfIcon('flag')} Crear evento e invitar →</button>
+      </div>`
+    : `<div class="su-block"><span class="su-lab">Campo</span><div class="su-courses">${courseCards}</div></div>
+      ${holesNineBlock}
+      <button class="btn primary big su-go" data-act="start-round">${golfIcon('flag')} Comenzar ronda</button>
+      <div class="su-block"><span class="su-lab">¿Juegas con amigos?</span>${partyCard()}</div>`;
   return `<div class="su-hero2 su-hero-course">
       <div class="su-hero2-txt">
         <span class="su-hero-tag">${golfIcon('flag')} Nueva ronda</span>
@@ -265,35 +303,10 @@ function vSetup() {
       </div>
       <div class="su-hero2-art">${courseCrest(cid)}</div>
     </div>
-    <div class="su-block">
-      <span class="su-lab">Campo</span>
-      <div class="su-courses">${courseCards}</div>
-    </div>
-    ${(() => {
-      const ro = roundOptions(cid);
-      const holes = (V.setupHoles && ro.opts18.length) ? V.setupHoles : (ro.opts18.length ? (V.setupHoles || 18) : 9);
-      const opts = holes === 18 ? ro.opts18 : ro.opts9;
-      const start = opts.some(o => o.start === V.setupStart) ? V.setupStart : (opts[0] ? opts[0].start : 0);
-      const par = roundPar(cid, start, holes);
-      const holesToggle = ro.opts18.length ? `<div class="su-block">
-        <span class="su-lab">Hoyos</span>
-        <div class="chips">
-          <button class="chip ${holes === 9 ? 'on' : ''}" data-act="setup-holes" data-h="9">9 hoyos</button>
-          <button class="chip ${holes === 18 ? 'on' : ''}" data-act="setup-holes" data-h="18">18 hoyos</button>
-        </div>
-      </div>` : '';
-      const nineSel = opts.length > 1 ? `<div class="su-block">
-        <span class="su-lab">${holes === 18 ? '¿Qué vueltas?' : '¿Qué vuelta?'}</span>
-        <div class="chips">${opts.map(o => `<button class="chip ${o.start === start ? 'on' : ''}" data-act="setup-nine" data-s="${o.start}">${esc(o.label)}</button>`).join('')}</div>
-      </div>` : '';
-      return `${holesToggle}${nineSel}<p class="su-meta">Jugarás <b class="lime">${holes} hoyos</b> · Par ${par}.</p>`;
-    })()}
-    <button class="btn primary big su-go" data-act="start-round">${golfIcon('flag')} Comenzar ronda</button>
+    ${whenToggle}
+    ${body}
     <button class="btn su-cancel" data-act="nav" data-view="ronda">Cancelar</button>
-    <div class="su-block">
-      <span class="su-lab">¿Juegas con amigos?</span>
-      ${partyCard()}
-    </div>
+    ${typeof vEventComposer === 'function' && V.eventDraft ? vEventComposer(cur()) : ''}
     ${teeSheet}`;
 }
 

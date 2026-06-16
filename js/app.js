@@ -6,7 +6,7 @@ let V = {
   view: S.session ? 'inicio' : 'landing',
   err: null, authVals: null,
   profileOpen: false, wipeArm: false,
-  setupCourseId: null, setupTee: 'blancas', setupHoles: 18, setupStart: 0,
+  setupCourseId: null, setupTee: 'blancas', setupHoles: 18, setupStart: 0, setupWhen: 'ahora',
   hole: null, scoreTouched: false, confirmExit: false,
   detail: null, delArm: null,
   trainerTab: 'diag', diag: null, diagBusy: false, sessionMin: 60, planStep: 'time', planMode: 'ai', planAreas: ['driving', 'approach', 'short', 'putting'],
@@ -360,6 +360,7 @@ const actions = {
     V.setupStart = 0;
     render();
   },
+  'setup-when'(d) { V.setupWhen = d.w === 'prog' ? 'prog' : 'ahora'; render(); window.scrollTo(0, 0); },
   'setup-holes'(d) { V.setupHoles = Number(d.h) === 9 ? 9 : 18; V.setupStart = 0; render(); },
   'setup-nine'(d) { V.setupStart = Number(d.s) || 0; render(); },
   'setup-pick-tee'(d) { if (TEES.some(t => t.id === d.t)) V.setupTee = d.t; render(); },
@@ -390,8 +391,8 @@ const actions = {
     u.clubs = clubs; commit();
   },
   'bag-close'() { V.bagEdit = false; render(); },
-  'set-sex'(d) { const u = cur(); if (!u) return; u.avatarSex = ['n', 'm', 'w'].includes(d.s) ? d.s : 'n'; const b = u.avatarSex === 'w' ? 6 : u.avatarSex === 'm' ? 12 : 0; u.avatar = b + (u.avatarSkin || 0); u.golfer = null; commit(); },
-  'set-avskin'(d) { const u = cur(); if (!u) return; u.avatarSkin = Math.max(0, Math.min(5, Number(d.i) || 0)); const b = u.avatarSex === 'w' ? 6 : u.avatarSex === 'm' ? 12 : 0; u.avatar = b + u.avatarSkin; u.golfer = null; commit(); },
+  'set-sex'(d) { const u = cur(); if (!u) return; u.avatarSex = d.s === 'w' ? 'w' : 'm'; u.avatarHue = 0; const b = u.avatarSex === 'w' ? 6 : 12; u.avatar = b + (u.avatarSkin || 0); u.golfer = null; commit(); },
+  'set-avskin'(d) { const u = cur(); if (!u) return; if (!u.avatarSex || u.avatarSex === 'n') u.avatarSex = 'm'; u.avatarSkin = Math.max(0, Math.min(5, Number(d.i) || 0)); u.avatarHue = 0; const b = u.avatarSex === 'w' ? 6 : 12; u.avatar = b + u.avatarSkin; u.golfer = null; commit(); },
   'set-avatar'(d) { const u = cur(); if (u) { u.avatar = Number(d.i) || 0; u.golfer = null; commit(); } },
   'set-hue'(d) { const u = cur(); if (u) { u.avatarHue = Number(d.h) || 0; u.golfer = null; commit(); } },
   'golfer-custom'() { const u = cur(); if (u && !u.golfer) { u.golfer = Object.assign({}, GOLF_DEFAULT); commit(); } },
@@ -580,7 +581,35 @@ const actions = {
   'timer-adjust'(d) { stopDrillTimer(); const cur = (V.timer && V.timer.total) || 300; const total = Math.max(60, Math.min(3600, cur + Number(d.d) * 60)); V.timer = { left: total, total, running: false }; render(); },
   'session-min'(d) { V.sessionMin = Number(d.m) || 60; render(); },
   'plan-time'(d) { V.sessionMin = Number(d.m) || 60; V.planStep = 'mode'; render(); window.scrollTo(0, 0); },
-  'plan-mode'(d) { V.planMode = d.m; V.planStep = d.m === 'me' ? 'areas' : 'plan'; render(); window.scrollTo(0, 0); },
+  'plan-mode'(d) { V.planMode = d.m; if (d.m === 'me') V.planStep = 'areas'; else if (d.m === 'free') { V.planStep = 'free'; V.freeTimer = { secs: 0, running: false }; } else V.planStep = 'plan'; render(); window.scrollTo(0, 0); },
+  'free-club'(d) { V.freeClub = d.c; render(); },
+  'free-start'() {
+    if (!V.freeClub) return;
+    if (!V.freeTimer) V.freeTimer = { secs: 0, running: false };
+    if (V.freeTimer.running) return;
+    V.freeTimer.running = true; render();
+    clearInterval(V._ftid);
+    V._ftid = setInterval(() => {
+      if (!V.freeTimer) { clearInterval(V._ftid); return; }
+      V.freeTimer.secs++;
+      const el = document.getElementById('free-clock');
+      if (!el) { clearInterval(V._ftid); return; }
+      el.textContent = fmtClock(V.freeTimer.secs);
+    }, 1000);
+  },
+  'free-pause'() { clearInterval(V._ftid); if (V.freeTimer) V.freeTimer.running = false; render(); },
+  'free-reset'() { clearInterval(V._ftid); V.freeTimer = { secs: 0, running: false }; render(); },
+  'free-finish'() {
+    clearInterval(V._ftid);
+    const t = V.freeTimer || { secs: 0 }; const u = cur();
+    if (!u || t.secs < 1) { V.freeTimer = { secs: 0, running: false }; render(); return; }
+    const mins = Math.max(1, Math.round(t.secs / 60)); const club = V.freeClub || 'Práctica libre';
+    S.practices = S.practices || [];
+    S.practices.push({ id: Store.uid(), userId: S.session, date: today(), drill: 'Entrenamiento libre · ' + club, area: club, minutes: mins, notes: 'libre' });
+    V.freeTimer = { secs: 0, running: false }; V.planStep = 'time';
+    if (typeof celebrate === 'function') celebrate(false, mins + ' min de ' + club + ' ✓');
+    commit();
+  },
   'plan-mode-back'() { V.planStep = 'mode'; render(); },
   'plan-area'(d) { V.planAreas = (V.planAreas && V.planAreas.length) ? V.planAreas : ['driving', 'approach', 'short', 'putting']; const i = V.planAreas.indexOf(d.k); if (i >= 0) V.planAreas.splice(i, 1); else V.planAreas.push(d.k); render(); },
   'plan-build'() { V.planStep = 'plan'; render(); window.scrollTo(0, 0); },
