@@ -579,21 +579,8 @@ function vAvatarCreator(u) {
   const curOutfit = (u && u.outfit) || 'rank';
   const curBg = (u && u.bg) || 'rank';
   const curAv = (u && u.avatar != null) ? u.avatar : 0;
-  const usingCustom = !!(u && u.golfer);
-  const g = golferCfg(u);
-  const personas = AVATARS.map((src, i) => `<button class="cre-av${(!usingCustom && i === curAv) ? ' on' : ''}" data-act="set-avatar" data-i="${i}"><img src="${src}" alt="Golfista ${i + 1}" loading="lazy"></button>`).join('')
-    + `<button class="cre-av cre-customtile${usingCustom ? ' on' : ''}" data-act="golfer-custom" title="Crea el tuyo">${golfAvatarSVG(g, 'cre-customsvg')}<i class="cre-custom-lab">Tú</i></button>`;
-  const swRow = (k, items, curV) => `<div class="cre-row cre-sws">${items.map(v => v === 'none'
-    ? `<button class="cre-sw cre-none${curV === 'none' ? ' on' : ''}" data-act="gset" data-k="${k}" data-v="none" title="Sin gorra"><span>∅</span></button>`
-    : `<button class="cre-sw${curV === v ? ' on' : ''}" data-act="gset" data-k="${k}" data-v="${v}"><span style="background:${v}"></span></button>`).join('')}</div>`;
-  const customUI = usingCustom ? `
-    <div class="cre-grp"><span class="cre-lab">Tipo</span><div class="cre-row">${GOLF_TYPE.map(([v, n]) => `<button class="chip sm${g.type === v ? ' on' : ''}" data-act="gset" data-k="type" data-v="${v}">${n}</button>`).join('')}</div></div>
-    <div class="cre-grp"><span class="cre-lab">Piel</span>${swRow('skin', GOLF_SKIN, g.skin)}</div>
-    <div class="cre-grp"><span class="cre-lab">Pelo</span>${swRow('hair', GOLF_HAIR, g.hair)}</div>
-    <div class="cre-grp"><span class="cre-lab">Gorra</span>${swRow('cap', GOLF_CAP, g.cap)}</div>
-    <div class="cre-grp"><span class="cre-lab">Playera</span>${swRow('shirt', GOLF_SHIRT, g.shirt)}</div>
-    <div class="cre-grp"><span class="cre-lab">Pantalón</span>${swRow('pants', GOLF_PANTS, g.pants)}</div>
-    <div class="cre-grp"><span class="cre-lab">Rasgos</span><div class="cre-row">${GOLF_FACE.map(([v, n]) => `<button class="chip sm${g.face === v ? ' on' : ''}" data-act="gset" data-k="face" data-v="${v}">${n}</button>`).join('')}</div></div>` : '';
+  const personas = AVATARS.map((src, i) => `<button class="cre-av${i === curAv ? ' on' : ''}" data-act="set-avatar" data-i="${i}"><img src="${src}" alt="Golfista ${i + 1}" loading="lazy"></button>`).join('');
+  const customUI = '';
   const outfits = OUTFITS.map(o => {
     const sw = o.sw === 'rank' ? `background:conic-gradient(${RANKS.map(r => r.c).join(',')})` : `background:${o.sw}`;
     return `<button class="cre-sw${curOutfit === o.k ? ' on' : ''}" data-act="set-outfit" data-k="${o.k}" title="${o.n}"><span style="${sw}"></span></button>`;

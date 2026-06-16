@@ -45,13 +45,13 @@ function vPartySetup() {
   const stakeChips = [0, 10, 20, 50, 100].map(v => `<button class="chip ${(d.stake || 0) === v ? 'on' : ''}" data-act="pd-stake" data-v="${v}">${v === 0 ? 'Sin dinero' : '$' + v}</button>`).join('');
   return `<div class="shell no-nav fade-in">
     <button class="auth-back" data-act="nav" data-view="social">← Social</button>
-    <div class="su-hero2 party-hero">
+    <div class="su-hero2 party-hero su-hero-course">
       <div class="su-hero2-txt">
         <span class="su-hero-tag">${golfIcon('flag')} Nueva party</span>
         <h1 class="su-hero-h">Juega con amigos</h1>
-        <p class="su-hero-sub">Elige el juego, pon la apuesta y comparte el código.</p>
+        <p class="su-hero-sub">${esc(sname(cid))} · ${COURSES[cid].holes.length} hoyos</p>
       </div>
-      <div class="su-hero2-art">${holeScene(4)}</div>
+      <div class="su-hero2-art">${courseHolesArt(cid)}</div>
     </div>
     <div class="su-block">
       <span class="su-lab">Campo</span>

@@ -2054,3 +2054,14 @@ svg.fd-av { object-fit: contain; }
 .rs-h.rs-o { background: #f0b35a; } .rs-h.rs-o i { color: #5a3d00; }
 .rs-h.rs-b { background: #e2873a; } .rs-h.rs-b i { color: #fff; }
 .rs-h.rs-na { background: var(--line); opacity: .5; }
+
+/* ===== Arte del campo (hoyos del campo seleccionado) en hero Empezar ronda ===== */
+.su-hero-course .su-hero2-art { display: grid; place-items: center; padding: 12px 12px 12px 4px; }
+.csa { width: 100%; max-width: 165px; background: rgba(255,255,255,.32); border: 1px solid rgba(255,255,255,.4); border-radius: 14px; padding: 8px; backdrop-filter: blur(3px); }
+.csa-grid { display: grid; gap: 3px; }
+.csa-n9 .csa-grid { grid-template-columns: repeat(3, 1fr); }
+.csa-n18 .csa-grid { grid-template-columns: repeat(6, 1fr); }
+.csa-h { height: 21px; border-radius: 5px; display: flex; align-items: center; justify-content: center; gap: 3px; box-shadow: 0 1px 2px rgba(20,40,10,.14); }
+.csa-h b { font-size: 7.5px; font-weight: 800; color: rgba(20,40,15,.5); }
+.csa-h i { font-size: 11px; font-weight: 900; font-style: normal; color: #16241A; }
+.csa-p3 { background: #9fdcef; } .csa-p4 { background: #d8fb6a; } .csa-p5 { background: #ffd76a; }

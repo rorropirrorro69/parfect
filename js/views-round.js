@@ -167,6 +167,14 @@ function vRoundStatCard(r, hcp, idx) {
 }
 
 /* ---------- Setup de ronda ---------- */
+/* arte del campo seleccionado: sus hoyos con par (par3 azul · par4 lima · par5 oro) */
+function courseHolesArt(cid) {
+  const c = COURSES[cid]; if (!c) return '';
+  const parCls = p => p === 3 ? 'p3' : p === 5 ? 'p5' : 'p4';
+  const cells = c.holes.map((h, i) => `<span class="csa-h csa-${parCls(h.par)}"><b>${i + 1}</b><i>${h.par}</i></span>`).join('');
+  return `<div class="csa csa-n${c.holes.length}"><div class="csa-grid">${cells}</div></div>`;
+}
+
 function vSetup() {
   const cid = V.setupCourseId || 'campestre';
   const tid = V.setupTee || 'blancas';
@@ -187,13 +195,14 @@ function vSetup() {
   const teeRow = TEES.map(t => `<button class="su-tee ${tid === t.id ? 'on' : ''}" data-act="setup-pick-tee" data-t="${t.id}">
       <span class="su-tee-dot" style="background:${teeCol[t.id] || '#ccc'}"></span>${esc(t.name)}
     </button>`).join('');
-  return `<div class="su-hero2">
+  const curPar = COURSES[cid].holes.reduce((a, h) => a + h.par, 0);
+  return `<div class="su-hero2 su-hero-course">
       <div class="su-hero2-txt">
         <span class="su-hero-tag">${golfIcon('flag')} Nueva ronda</span>
-        <h1 class="su-hero-h">¿Listo para jugar?</h1>
-        <p class="su-hero-sub">Arma tu ronda en segundos.</p>
+        <h1 class="su-hero-h">${esc(sname(cid))}</h1>
+        <p class="su-hero-sub">${COURSES[cid].holes.length} hoyos · Par ${curPar} · ${COURSES[cid].approx ? 'aprox' : 'real'}</p>
       </div>
-      <div class="su-hero2-art">${holeScene(4)}</div>
+      <div class="su-hero2-art">${courseHolesArt(cid)}</div>
     </div>
     <div class="su-block">
       <span class="su-lab">Campo</span>

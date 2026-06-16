@@ -394,7 +394,6 @@ function avatarImg(u, cls, lit) {
     const sat = spark < 0.5 ? 'saturate(0.82) ' : '';   // a media chispa todavía se está "prendiendo"
     fil = `${sat}${glow}`.trim();
   }
-  if (u && u.golfer) return golfAvatarSVG(u.golfer, cls, fil);
   return `<img class="golfer ${cls || ''}" src="${avatarSrc(u)}"${fil ? ` style="filter:${fil}"` : ''} alt="" loading="lazy">`;
 }
 
