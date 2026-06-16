@@ -136,18 +136,15 @@ function vTrainerPlan(agg) {
     <div class="tr-areas">${cards}</div>`;
 }
 function vTrainer() {
-  const agg = Stats.aggregate(myRounds());
-  if (!agg) {
-    return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
-      <div class="card empty"><div class="e-ico">${golfIcon('green')}</div><h3>Tu sensei necesita datos</h3>
-      <p>Registra una ronda y te diré exactamente dónde pierdes golpes y qué practicar primero.</p>
-      <button class="btn primary" data-act="quick-round">Registrar ronda</button></div>`;
-  }
-  const tab = V.trainerTab === 'drills' ? 'drills' : 'plan';
+  const u = cur();
+  const tab = ['entreno', 'objetivos'].includes(V.trainerTab) ? V.trainerTab : 'diag';
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
+  const body = tab === 'entreno' ? (vTrackerPlan() + vDrillsLibrary())
+    : tab === 'objetivos' ? vKeyTargets(u)
+      : vDiag();
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
-    <div class="tabs">${T('plan', 'Tu plan')}${T('drills', 'Drills')}</div>
-    ${tab === 'drills' ? vDrillsLibrary() : vTrainerPlan(agg)}`;
+    <div class="tabs scroll">${T('diag', 'Resumen')}${T('entreno', 'Entrenamiento')}${T('objetivos', 'Objetivos')}</div>
+    ${body}`;
 }
 
 function vDiag() {
@@ -176,16 +173,13 @@ function vDiag() {
       <p class="small muted" style="margin-top:4px">~${f.lost.toFixed(1)} golpes/ronda en juego</p>
       <p style="font-size:14px;margin-top:10px">${esc(f.diag)}</p>
       ${i < 2 ? `
-        <p class="label" style="margin-top:16px">Prescripción de drills</p>
-        ${f.drills.map(dr => `<div class="drill"><b>${esc(dr.name)}</b>
-          ${drillScene(dr.name, f.key)}
-          <p>${esc(dr.desc)}</p>
-          <div class="d-meta"><span>${golfIcon('card')} ${esc(dr.dose)}</span><span>${golfIcon('green')} ${esc(dr.metric)}</span></div></div>`).join('')}
-        <div class="drill" style="border-color:var(--lime)"><b>${golfIcon('green')} Reto: 7 de 7 seguidas</b>
-          <p>Mete 7 bolas seguidas (de 7) con timer. Si fallas una, vuelves a empezar. Así llevas el drill a presión real.</p>
-          <button class="btn sm" data-act="go-entreno" style="margin-top:8px">Entrenar con timer →</button></div>
+        <p class="label" style="margin-top:16px">Drills que te toca practicar</p>
+        ${f.drills.map(dr => `<button class="dlc" data-act="drill-open" data-name="${esc(dr.name)}" style="margin-top:8px">
+          <div class="dlc-info"><b>${esc(dr.name)}</b><p class="dlc-desc">${esc(dr.desc)}</p>
+          <div class="dlc-meta"><span>${golfIcon('bucket')} ${esc(dr.dose)}</span><span>${golfIcon('green')} ${esc(dr.metric)}</span></div></div>
+          <span class="dlc-go">Ver →</span></button>`).join('')}
       ` : ''}
-      <p class="label" style="margin-top:14px">Estrategia de campo</p>
+      <p class="label" style="margin-top:16px">Estrategia de campo</p>
       ${f.tips.map(t => `<p class="tip">${esc(t)}</p>`).join('')}
     </div>`).join('') +
     `<button class="btn ghost" data-act="diagnose">Recalcular diagnóstico</button>

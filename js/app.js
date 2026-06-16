@@ -405,9 +405,12 @@ const actions = {
   'drill-open'(d) {
     const drill = (typeof DRILL_LIBRARY !== 'undefined') ? DRILL_LIBRARY.find(x => x.name === d.name) : null;
     if (drill) { V.drillDetail = drill; render(); return; }
-    // fallback (datos sueltos)
-    const timer = Number(d.timer) || 20;
-    V.drillLog = { name: d.name, target: Number(d.target) || 7, area: d.area || '', goal: d.goal || '', desc: d.desc || '', timer, streak: 0, best: 0, secs: timer * 60, running: false };
+    // práctica de bastón/área (no está en la biblioteca): detalle simple
+    V.drillDetail = {
+      name: d.name, cat: '', desc: d.goal || 'Práctica enfocada en este bastón/área.',
+      dose: d.area || 'Práctica', metric: 'meta ' + (Number(d.target) || 7) + ' seguidas',
+      steps: ['Ponte en posición y haz tu rutina completa antes de cada bola.', 'Apunta a un objetivo claro y pega buscando contacto sólido.', 'Repite hasta llegar a tu meta; si fallas, vuelve a empezar la serie.'],
+    };
     render();
   },
   'drill-start'() {
