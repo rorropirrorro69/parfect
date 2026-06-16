@@ -780,7 +780,8 @@ function vRanking(u) {
 
 function vPerfil() {
   const u = cur();
-  return `${vStories(u)}
+  return `${partyCard()}
+    ${vStories(u)}
     ${vRanking(u)}
     ${vSocialFeed()}`;
 }

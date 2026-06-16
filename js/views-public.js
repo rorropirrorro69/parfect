@@ -73,22 +73,6 @@ function vLanding() {
       </div>
 
       <div class="lp-stage">
-        <svg class="lp-course" viewBox="0 0 400 380" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-          <defs>
-            <linearGradient id="lpsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe8f7"/><stop offset="1" stop-color="#e7f6da"/></linearGradient>
-            <linearGradient id="lpfair" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#9fdc5f"/><stop offset="1" stop-color="#6cbd4c"/></linearGradient>
-          </defs>
-          <rect width="400" height="380" fill="url(#lpsky)"/>
-          <circle cx="318" cy="78" r="34" fill="#fff3bf"/>
-          <path d="M0 196 Q120 150 230 184 T400 168 V380 H0 Z" fill="#bfe39a"/>
-          <path d="M0 232 Q150 196 290 224 T400 214 V380 H0 Z" fill="#8ecf63"/>
-          <path d="M120 380 Q150 250 196 210 L240 210 Q210 270 250 380 Z" fill="url(#lpfair)"/>
-          <ellipse cx="218" cy="210" rx="46" ry="15" fill="#cdeeaa" stroke="#5fa83f" stroke-width="2"/>
-          <ellipse cx="276" cy="232" rx="26" ry="9" fill="#f1dca0"/>
-          <line x1="206" y1="210" x2="206" y2="168" stroke="#2a3550" stroke-width="3"/>
-          <path d="M206 168 L234 176 L206 184 Z" fill="#ff5a4d"/>
-          <circle cx="226" cy="212" r="4.5" fill="#fff"/>
-        </svg>
         <div class="lp-glow"></div>
         <img class="lp-golfer parallax" data-speed="0.16" src="assets/golfer.png" alt="Golfista PARFECT" />
         <div class="lp-shadow" aria-hidden="true"></div>

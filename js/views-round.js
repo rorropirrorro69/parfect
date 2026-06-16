@@ -193,11 +193,7 @@ function vSetup() {
       <p class="su-meta">${esc(tee.name)} · ${esc(tee.sub)} · <b>${totalYds} yds</b> en total</p>
     </div>
     <button class="btn primary big su-go" data-act="start-round">${golfIcon('flag')} Comenzar ronda</button>
-    <button class="btn su-cancel" data-act="nav" data-view="ronda">Cancelar</button>
-    <div class="su-block">
-      <span class="su-lab">¿Juegas con amigos?</span>
-      ${partyCard()}
-    </div>`;
+    <button class="btn su-cancel" data-act="nav" data-view="ronda">Cancelar</button>`;
 }
 
 /* ---------- Captura de hoyo ---------- */

@@ -1326,11 +1326,11 @@ body.is-scrolling .lp-bird, body.is-scrolling .lp-fly { animation-play-state: pa
 .lp-ghostbtn { background: var(--card); border: 1px solid var(--line); color: var(--text); font-weight: 800; font-size: 15px; padding: 15px 24px; border-radius: 16px; box-shadow: 0 6px 18px rgba(20,40,15,.06); }
 .lp-trust { margin-top: 16px; font-size: 12.5px; color: var(--text); opacity: .62; font-weight: 700; }
 
-.lp-stage { position: relative; z-index: 3; aspect-ratio: 1/1.04; display: grid; place-items: end center; }
-.lp-course { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 82%; border-radius: 28px; box-shadow: 0 24px 50px rgba(30,70,25,.28); z-index: 1; }
-.lp-glow { position: absolute; left: 50%; top: 18%; transform: translateX(-50%); width: 62%; height: 62%; border-radius: 50%; background: radial-gradient(circle, rgba(199,247,84,.5) 0%, rgba(199,247,84,.15) 44%, transparent 70%); filter: blur(8px); z-index: 1; animation: lp-pulse 5s ease-in-out infinite; }
-.lp-shadow { position: absolute; left: 50%; bottom: 9%; transform: translateX(-50%); width: 46%; height: 5%; background: radial-gradient(ellipse, rgba(20,50,15,.32), transparent 72%); z-index: 1; }
-.lp-golfer { position: relative; z-index: 2; width: 64%; margin-bottom: 7%; filter: drop-shadow(0 16px 16px rgba(20,40,15,.22)); animation: lp-float 6s ease-in-out infinite; will-change: transform; }
+.lp-stage { position: relative; z-index: 3; aspect-ratio: 1/1.04; display: grid; place-items: center; }
+.lp-glow { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 70%; height: 70%; border-radius: 50%; background: radial-gradient(circle, rgba(199,247,84,.5) 0%, rgba(199,247,84,.15) 46%, transparent 72%); filter: blur(10px); z-index: 1; animation: lp-pulse 5s ease-in-out infinite; }
+.lp-shadow { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); width: 42%; height: 5%; background: radial-gradient(ellipse, rgba(20,50,15,.28), transparent 72%); z-index: 1; animation: lp-shadow 6s ease-in-out infinite; }
+@keyframes lp-shadow { 0%,100% { transform: translateX(-50%) scale(1); opacity: .8; } 50% { transform: translateX(-50%) scale(.9); opacity: .6; } }
+.lp-golfer { position: relative; z-index: 2; width: 74%; filter: drop-shadow(0 20px 22px rgba(20,40,15,.24)); animation: lp-float 6s ease-in-out infinite; will-change: transform; }
 @keyframes lp-pulse { 0%,100% { opacity: .75; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.05); } }
 @keyframes lp-float { 0%,100% { transform: translateY(-2px); } 50% { transform: translateY(2px); } }
 .lp-fcard { position: absolute; z-index: 4; display: inline-flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 10px 14px; box-shadow: 0 12px 30px rgba(20,40,15,.14); will-change: transform; }
@@ -1961,12 +1961,12 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 
 /* ===== Hero "Listo para jugar" v2 ===== */
 .su-hero2 { --hb-sky1:#cdeefb; --hb-sky2:#a9def0; --hb-sun:#ffe48a; --hb-far:#9fd97a; --hb-grass:#6ec24f; --hb-grass2:#3f8f3a; --hb-fair:#bde878; --hb-green:#d9f3ad; --hb-flag:#ff5a4d;
-  position: relative; display: flex; align-items: stretch; gap: 0; margin-top: 8px; border-radius: 24px; overflow: hidden; background: linear-gradient(135deg,#3f9d54,#1f6b39); box-shadow: 0 16px 36px rgba(30,90,30,.3); min-height: 132px; }
-.su-hero2-txt { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 18px 4px 18px 20px; color: #fff; z-index: 2; }
-.su-hero2 .su-hero-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #dff8c2; }
+  position: relative; display: flex; align-items: stretch; gap: 0; margin-top: 8px; border-radius: 24px; overflow: hidden; background: linear-gradient(135deg,#d8fb5e,#a6e22e 60%,#7fc91f); box-shadow: 0 16px 36px rgba(150,210,40,.4); min-height: 132px; }
+.su-hero2-txt { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 18px 4px 18px 20px; color: #16241A; z-index: 2; }
+.su-hero2 .su-hero-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: #2c5212; }
 .su-hero2 .su-hero-tag .gi { width: 14px; height: 14px; }
-.su-hero2 .su-hero-h { font-size: 26px; font-weight: 900; letter-spacing: -.02em; color: #fff; }
-.su-hero2 .su-hero-sub { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.82); }
+.su-hero2 .su-hero-h { font-size: 26px; font-weight: 900; letter-spacing: -.02em; color: #14230f; }
+.su-hero2 .su-hero-sub { font-size: 13px; font-weight: 700; color: rgba(20,35,15,.78); }
 .su-hero2-art { flex: 0 0 42%; max-width: 175px; position: relative; }
 .su-hero2-art .hb-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 

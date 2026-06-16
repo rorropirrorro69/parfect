@@ -213,42 +213,33 @@ function vPartyLive() {
       if (h.par >= 4 && c.tee) sl.push(c.tee === 'fw' ? 'Fairway ✓' : c.tee === 'penal' ? 'OB/Penal' : c.tee === 'izq' ? 'Salida izq' : 'Salida der');
       if (c.app) sl.push(c.app === 'gir' ? 'Green ✓' : c.app === 'corto' ? 'Corto' : c.app === 'largo' ? 'Largo' : c.app === 'izq' ? 'Falló izq' : 'Falló der');
       if (c.putts != null) sl.push(c.putts + ' putt' + (c.putts !== 1 ? 's' : ''));
+      const gir = c.app === 'gir';
+      const scoreCls = score == null ? '' : (score - h.par <= -1 ? 'good' : score - h.par === 0 ? 'par' : score - h.par === 1 ? 'over' : 'bad');
       return `
     <div class="group">
       <div class="g-lab"><span class="label">Jugador</span><span class="small muted">cada quien llena su hoyo</span></div>
       <div class="chips">${p.players.map(pl => `<button class="chip ${pl.pid === ap ? 'on' : ''}" data-act="pa-player" data-pid="${pl.pid}">${filled(pl) ? '✓ ' : ''}${esc(pl.name.split(' ')[0])}${scoreOf(pl) != null ? ` · ${scoreOf(pl)}` : ''}</button>`).join('')}</div>
     </div>
 
-    ${holeViz(c, chole, (V.holeIdx != null ? V.holeIdx + 1 : null), 1)}
-    <p class="note" style="text-align:center;margin:8px 0 0"><b>${esc(apl.name.split(' ')[0])}</b>${bdg ? ` · ${bdg}` : ''}${net != null ? ` · corta ${net >= 0 ? '+' : ''}${net}` : ''}</p>
-
-    ${h.par !== 3 ? `<div class="group">
-      <div class="g-lab"><span class="label">1 · Salida</span></div>
-      ${pchipRow([['fw', 'Fairway'], ['izq', '← Izq'], ['der', 'Der →'], ['penal', 'Penal']], 'tee', c.tee, ap)}
-    </div>` : ''}
-
-    <div class="group">
-      <div class="g-lab"><span class="label">2 · Approach</span></div>
-      ${pchipRow([['gir', 'GIR ✓'], ['corto', 'Corto'], ['largo', 'Largo'], ['izq', '← Izq'], ['der', 'Der →']], 'app', c.app, ap)}
+    <div class="card hole-card">
+      <span class="hc-title">${golfIcon('tee')} ${esc(apl.name.split(' ')[0])} · toca lo que logró</span>
+      <div class="hs-grid">
+        ${h.par !== 3 ? `<button class="hs-tile ic-fw ${c.tee === 'fw' ? 'on' : ''}" data-act="pa-cap" data-pid="${ap}" data-k="tee" data-v="fw"><div class="hs-art">${chkScene('fw', c.tee === 'fw')}</div><span class="hs-lab">Fairway<small>le pegó a la calle</small></span><span class="hs-box">${c.tee === 'fw' ? '✓' : ''}</span></button>` : ''}
+        <button class="hs-tile ic-gir ${gir ? 'on' : ''}" data-act="pa-cap" data-pid="${ap}" data-k="app" data-v="gir"><div class="hs-art">${chkScene('gir', gir)}</div><span class="hs-lab">Green<small>llegó a tiempo</small></span><span class="hs-box">${gir ? '✓' : ''}</span></button>
+        ${!gir ? `<button class="hs-tile ic-ud ${c.upDown === true ? 'on' : ''}" data-act="pa-cap" data-pid="${ap}" data-k="upDown" data-v="${c.upDown === true ? 'no' : 'si'}"><div class="hs-art">${chkScene('ud', c.upDown === true)}</div><span class="hs-lab">Up &amp; down<small>salvó el par</small></span><span class="hs-box">${c.upDown === true ? '✓' : ''}</span></button>` : ''}
+        <button class="hs-tile ic-pen ${c.tee === 'penal' ? 'on' : ''}" data-act="pa-cap" data-pid="${ap}" data-k="tee" data-v="penal"><div class="hs-art">${chkScene('pen', c.tee === 'penal')}</div><span class="hs-lab">Penalti / OB<small>agua, fuera</small></span><span class="hs-box">${c.tee === 'penal' ? '✓' : ''}</span></button>
+      </div>
     </div>
 
-    ${c.app && c.app !== 'gir' ? `<div class="group">
-      <div class="g-lab"><span class="label">3 · Alrededor del green</span><span class="small muted">¿Up & down?</span></div>
-      ${pchipRow([['si', 'Salvé el par'], ['no', 'No lo salvé']], 'upDown', c.upDown === true ? 'si' : c.upDown === false ? 'no' : null, ap)}
-    </div>` : ''}
-
-    <div class="group">
-      <div class="g-lab"><span class="label">4 · Putts</span></div>
+    <div class="card">
+      <div class="g-lab"><span class="chk-ic chk-ic-sm ic-putt">${golfIcon('putter')}</span><span class="label">Putts</span></div>
       ${pchipRow([[0, '0'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']], 'putts', c.putts, ap)}
-    </div>
-
-    <div class="group">
-      <div class="g-lab"><span class="label">Distancia 1er putt</span><span class="small muted">opcional</span></div>
+      <div class="g-lab" style="margin-top:14px"><span class="label">Distancia 1er putt</span><span class="small muted">opcional</span></div>
       ${pchipRow([['0-3', '0–3 ft'], ['3-8', '3–8 ft'], ['8-20', '8–20 ft'], ['20+', '+20 ft']], 'dist', c.dist, ap)}
     </div>
 
-    <div class="group">
-      <div class="g-lab"><span class="label">Score del hoyo</span><span class="small muted">${score != null ? 'auto · ajústalo si hace falta' : 'completa los toques'}</span></div>
+    <div class="score-card ${scoreCls}">
+      <div class="sc-lab"><span class="label">Score de ${esc(apl.name.split(' ')[0])}</span><span class="small muted">${score != null ? 'auto · ajústalo' : 'completa los toques'}</span></div>
       <div class="score-row">
         <div class="sc-val"><span class="sc-num">${score != null ? score : '–'}</span><span class="sc-rel">${score != null ? relScore(score - h.par) : ''}</span></div>
         <div class="stepper">
