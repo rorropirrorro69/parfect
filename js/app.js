@@ -325,7 +325,7 @@ const actions = {
   'event-del'(d) { S.events = (S.events || []).filter(x => x.id !== d.id); commit(); },
   'academia-start'() { V.profileOpen = false; V.lesson = null; V.view = 'academia'; render(); window.scrollTo(0, 0); },
   'onboard-academy'() { const u = cur(); if (u) u.onboarded = true; V.lesson = null; V.view = 'academia'; commit(); window.scrollTo(0, 0); },
-  'academia-exit'() { V.lesson = null; V.trainerTab = 'biblioteca'; V.view = 'trainer'; render(); window.scrollTo(0, 0); },
+  'academia-exit'() { V.lesson = null; V.trainerTab = 'academia'; V.view = 'trainer'; render(); window.scrollTo(0, 0); },
   'profile-close'() { V.profileOpen = false; V.wipeArm = false; render(); },
   'prof-campo'(d) {
     const u = cur();

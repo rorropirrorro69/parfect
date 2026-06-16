@@ -137,14 +137,15 @@ function vTrainerPlan(agg) {
 }
 function vTrainer() {
   const u = cur();
-  const tab = ['entreno', 'biblioteca', 'logros'].includes(V.trainerTab) ? V.trainerTab : 'diag';
+  const tab = ['entreno', 'biblioteca', 'logros', 'academia'].includes(V.trainerTab) ? V.trainerTab : 'diag';
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
   const body = tab === 'entreno' ? vSessionPlanner()
     : tab === 'biblioteca' ? vBiblioteca()
       : tab === 'logros' ? (vKeyTargets(u) + `<div style="margin-top:22px"></div>` + vLogros())
-        : vDiag();
+        : tab === 'academia' ? vAcademyLaunch()
+          : vDiag();
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
-    <div class="tabs scroll">${T('diag', 'Resumen')}${T('entreno', 'Entrenamiento')}${T('biblioteca', 'Biblioteca')}${T('logros', 'Logros')}</div>
+    <div class="tabs scroll">${T('diag', 'Resumen')}${T('entreno', 'Entrenamiento')}${T('biblioteca', 'Biblioteca')}${T('logros', 'Logros')}${T('academia', 'Academia')}</div>
     ${body}`;
 }
 
@@ -514,20 +515,24 @@ function vSessionRunner() {
 }
 
 function vBiblioteca() {
+  return vTrackerPlan() + vDrillsLibrary();
+}
+/* pestaña Academia: tarjeta de lanzamiento a la ruta inmersiva */
+function vAcademyLaunch() {
   const u = cur();
   const prog = (typeof academyProgress === 'function') ? academyProgress(u) : { done: 0, total: 0 };
   const pct = prog.total ? Math.round(prog.done / prog.total * 100) : 0;
-  const acCard = `<button class="ac-launch" data-act="academia-start">
+  return `<button class="ac-launch" data-act="academia-start">
       <div class="ac-launch-bird">${senseiBird('')}</div>
       <div class="ac-launch-tx">
         <b>Academia de golf</b>
-        <span>Recorre el campo hoyo por hoyo con tu guía. De 0 a élite.</span>
+        <span>Aprende de 0 a élite, hoyo por hoyo, con tu guía.</span>
         <div class="ac-launch-bar"><i style="width:${pct}%"></i></div>
         <small>${prog.done}/${prog.total} hoyos</small>
       </div>
       <span class="ac-launch-go">${prog.done ? 'Seguir' : 'Empezar'} →</span>
-    </button>`;
-  return acCard + vTrackerPlan() + vDrillsLibrary();
+    </button>
+    <p class="note" style="margin-top:12px">Abre una pantalla a pantalla completa con la ruta de lecciones (estilo Duolingo) y un quiz por hoyo.</p>`;
 }
 
 function vTrackerPlan() {
