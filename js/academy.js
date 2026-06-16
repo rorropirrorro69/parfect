@@ -204,35 +204,34 @@ function vAcademy() {
   const prog = academyProgress(u);
   const pct = Math.round((prog.done / prog.total) * 100);
   const currentId = ACADEMY_FLAT.find(id => !d[id]) || null;
-  let holeNo = 0;
+  const off = [0, 44, 66, 44, 0, -44, -66, -44];   // serpentina tipo Duolingo
+  let n = 0;
   const units = ACADEMY.map((unit, ui) => {
-    const holes = unit.lessons.map(l => {
-      holeNo++;
+    const nodes = unit.lessons.map(l => {
       const isDone = !!d[l.id];
       const unlocked = academyUnlocked(u, l.id);
       const isCur = l.id === currentId;
       const state = isDone ? 'done' : isCur ? 'cur' : unlocked ? 'open' : 'lock';
-      const side = holeNo % 2 ? 'l' : 'r';
-      const sub = isCur ? '¡te toca!' : isDone ? 'completado' : unlocked ? 'disponible' : 'bloqueado';
-      return `<div class="ac-hole ${side} ${state}">
-        <button class="ac-flag" ${unlocked ? `data-act="lesson-open" data-id="${l.id}"` : 'disabled'} aria-label="Hoyo ${holeNo}: ${esc(l.t)}">
-          ${isDone ? '<span class="ac-check">✓</span>' : isCur ? `<span class="ac-ball"></span>` : !unlocked ? '<span class="ac-lk">🔒</span>' : ''}
-          ${acFlagSVG()}
-          <span class="ac-hnum">${holeNo}</span>
-        </button>
-        <div class="ac-htx"><b>Hoyo ${holeNo} · ${esc(l.t)}</b><span>${esc(unit.unit)} · ${sub}</span></div>
+      const dx = off[n % off.length]; n++;
+      const ic = isDone ? '<span class="duo-ic chk">✓</span>' : !unlocked ? '<span class="duo-ic lk">🔒</span>' : `<span class="duo-ic">${golfIcon(unit.icon)}</span>`;
+      return `<div class="duo-row" style="transform:translateX(${dx}px)">
+        ${isCur ? `<span class="duo-start">EMPIEZA</span>` : ''}
+        <button class="duo-node ${state}" ${unlocked ? `data-act="lesson-open" data-id="${l.id}"` : 'disabled'} style="--uc:${unit.color}" aria-label="${esc(l.t)}">${ic}</button>
+        <span class="duo-cap">${esc(l.t)}</span>
       </div>`;
     }).join('');
-    return `<div class="ac-vuelta">
-      <div class="ac-vh" style="--uc:${unit.color}">${golfIcon(unit.icon)} Vuelta ${ui + 1} · ${esc(unit.unit)} <i>${esc(unit.tag)}</i></div>
-      <div class="ac-fairway">${holes}</div>
-    </div>`;
+    const doneU = unit.lessons.filter(l => d[l.id]).length;
+    return `<div class="duo-sec" style="--uc:${unit.color}">
+        <div class="duo-sec-tx"><span class="duo-sec-k">Sección ${ui + 1}</span><b>${esc(unit.unit)}</b></div>
+        <span class="duo-sec-n">${doneU}/${unit.lessons.length}</span>
+      </div>
+      <div class="duo-path">${nodes}</div>`;
   }).join('');
   const curLesson = currentId ? academyLesson(currentId) : null;
   const curNo = prog.done + 1;
   const bubble = curLesson
     ? `¡Vamos al hoyo ${curNo}!<br><b>${esc(curLesson.t)}</b>`
-    : `🏆 ¡Recorriste todo el campo!<br><b>Eres leyenda de la Academia.</b>`;
+    : `🏆 ¡Terminaste el campo!<br><b>Eres leyenda de la Academia.</b>`;
   return `<div class="shell no-nav fade-in acw">
     <svg class="acw-hills" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
       <path d="M0,120 Q110,80 210,104 T400,96 L400,200 L0,200 Z" fill="#cfe9a8"/>
@@ -247,8 +246,7 @@ function vAcademy() {
       <div class="acw-bird">${senseiBird('')}</div>
       <div class="acw-bubble">${bubble}</div>
     </div>
-    <div class="ac-progwrap acw-prog"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>Hoyo ${Math.min(curNo, prog.total)} de ${prog.total}</span></div>
-    ${curLesson ? `<button class="btn primary big ac-play" data-act="lesson-open" data-id="${currentId}">${golfIcon('flag')} Jugar hoyo ${curNo} →</button>` : ''}
+    <div class="ac-progwrap acw-prog"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>${prog.done}/${prog.total} lecciones</span></div>
     ${units}
     ${V.lesson ? vLessonSheet() : ''}
   </div>`;

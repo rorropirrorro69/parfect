@@ -939,6 +939,13 @@ function vOnboard() {
     <div class="onb-body">
       <h1 class="onb-h1">¡Bienvenido,<br/><span class="lime">${esc((u.name || '').split(' ')[0])}</span>!</h1>
       <p class="onb-sub">Crea tu golfista y dinos cómo juegas. Toma 1 minuto y lo cambias cuando quieras.</p>
+      <div class="onb-intro">
+        <div class="onb-bird">${senseiBird('')}</div>
+        <b class="onb-intro-h">¿Nuevo en el golf?</b>
+        <p>Te enseñamos cómo funciona y por qué PARFECT te hace mejor: registra tus rondas, la IA encuentra tus fallas y entrenas justo lo que toca.</p>
+        <button class="btn primary" data-act="onboard-academy">${golfIcon('flag')} Aprende a jugar · tour rápido →</button>
+        <span class="onb-or">o arma tu perfil aquí abajo ↓</span>
+      </div>
       ${vAvatarCreator(u)}
       <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Cómo juegas</h2></div>
       <div class="card">

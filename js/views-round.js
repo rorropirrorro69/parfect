@@ -149,7 +149,7 @@ function rcRing(label, pct, color) {
     <span class="rc4-rl">${label}</span>
   </div>`;
 }
-/* Tarjeta de ronda creativa: color por rango de la tirada + anillos + ribbon del campo */
+/* Tarjeta de ronda limpia estilo Duolingo: acento por rango + stats simples + cuadrícula de hoyos */
 function vRoundStatCard(r, hcp) {
   const s = Stats.roundStats(r);
   const course = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : r.course;
@@ -159,23 +159,26 @@ function vRoundStatCard(r, hcp) {
   const birdies = holes.filter(x => x.score != null && x.score - x.par <= -1).length;
   const pct = (n, d) => d ? Math.round((n / d) * 100) : 0;
   const scoreCls = s.toPar <= 0 ? 'good' : s.toPar <= Math.round(s.holes * 0.33) ? 'par' : 'over';
-  const pill = (label, val, cls) => `<div class="rc4-pill ${cls || ''}"><b>${val}</b><span>${label}</span></div>`;
-  return `<button class="rc4" style="--rc:${rk.c}" data-act="round-detail" data-id="${r.id}">
-    <div class="rc4-head">
-      <div class="rc4-id"><span class="rc4-rank">${esc(rk.n)}</span><b>${esc(course)}${r.partyId ? ` <span class="rc4-party">${golfIcon('flag')}</span>` : ''}</b><span class="rc4-date">${fmtDate(r.date)} · ${s.holes} hoyos</span></div>
-      <div class="rc4-score ${scoreCls}">${vibe ? `<i class="rc4-vibe">${vibe.ic}</i>` : ''}<b>${s.score}</b><span>${fmtToPar(s.toPar)}</span></div>
+  const stat = (label, val) => `<div class="rc5-stat"><b>${val}</b><span>${label}</span></div>`;
+  const cells = (r.holes || []).map(h => {
+    if (!h || h.score == null) return `<span class="rc5-cell na"></span>`;
+    const d = h.score - h.par; const c = d <= -1 ? 'u' : d === 0 ? 'p' : d === 1 ? 'o' : 'b';
+    return `<span class="rc5-cell ${c}">${h.score}</span>`;
+  }).join('');
+  return `<button class="rc5" style="--rc:${rk.c}" data-act="round-detail" data-id="${r.id}">
+    <div class="rc5-bar"></div>
+    <div class="rc5-head">
+      <div class="rc5-id"><span class="rc5-rank">${esc(rk.n)}</span><b>${esc(course)}${r.partyId ? ` <span class="rc5-party">${golfIcon('flag')}</span>` : ''}</b><span class="rc5-date">${fmtDate(r.date)} · ${s.holes} hoyos</span></div>
+      <div class="rc5-score ${scoreCls}">${vibe ? `<i>${vibe.ic}</i>` : ''}<b>${s.score}</b><span>${fmtToPar(s.toPar)}</span></div>
     </div>
-    <div class="rc4-rings">
-      ${rcRing('Fairway', pct(s.fw, s.fwTot), rk.c)}
-      ${rcRing('GIR', pct(s.gir, s.girTot), rk.c)}
-      ${rcRing('Up&down', pct(s.scr, s.scrTot), rk.c)}
+    <div class="rc5-stats">
+      ${stat('Fairway', pct(s.fw, s.fwTot) + '%')}
+      ${stat('GIR', pct(s.gir, s.girTot) + '%')}
+      ${stat('Up&D', pct(s.scr, s.scrTot) + '%')}
+      ${stat('Putts', s.putts)}
+      ${stat('Birdies', birdies)}
     </div>
-    <div class="rc4-pills">
-      ${pill('Putts', s.putts)}
-      ${pill('Birdies', birdies, birdies > 0 ? 'good' : '')}
-      ${pill('3 putts', s.threeP, s.threeP > 0 ? 'bad' : '')}
-    </div>
-    ${vTourneyMini(r)}
+    <div class="rc5-holes">${cells}</div>
   </button>`;
 }
 
