@@ -71,13 +71,7 @@ function vLanding() {
   const feat = (kind, t, d) => `<div class="lp-feat reveal"><div class="lp-feat-art lpa-${kind}">${lpFeatArt(kind)}</div><h3>${t}</h3><p>${d}</p></div>`;
   // (lpFeatArt definida abajo, a nivel de módulo)
   return `<div class="lp">
-    <div class="lp-sky" aria-hidden="true">
-      <div class="lp-sun"></div>
-      <span class="lp-cloud lc1"></span><span class="lp-cloud lc2"></span><span class="lp-cloud lc3"></span><span class="lp-cloud lc4"></span>
-      <img class="lp-fbird lpf1" src="assets/bird.png" alt="" />
-      <img class="lp-fbird lpf2" src="assets/bird.png" alt="" />
-    </div>
-    <div class="lp-ground" aria-hidden="true">
+    <div class="lp-life parallax" data-speed="0.22" aria-hidden="true">
       <svg class="lp-hills" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <path d="M0,96 Q110,58 210,80 T400,70 L400,160 L0,160 Z" fill="#cfe9a8"/>
         <path d="M0,124 Q120,92 250,112 T400,104 L400,160 L0,160 Z" fill="#a9d877"/>
@@ -103,19 +97,28 @@ function vLanding() {
         <path d="M11 25 q-4 1 -5 4" stroke="#7a4a22" stroke-width="1" fill="none"/>
         <ellipse cx="26" cy="40" rx="6" ry="8" fill="#e6c79a"/>
       </svg>
+      <img class="lp-fbird lpf1" src="assets/bird.png" alt="" />
+      <img class="lp-fbird lpf2" src="assets/bird.png" alt="" />
       <div class="lp-tree" aria-hidden="true">
         <svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg>
         <img class="lp-perch lpp1" src="assets/bird.png" alt="" />
         <img class="lp-perch lpp2" src="assets/bird.png" alt="" />
       </div>
     </div>
-    <header class="lp-nav">
+    <header class="lp-nav lp-nav-intro">
       <span class="lp-logo">${logoMark(18)} PARFECT</span>
       <nav class="lp-links">
         <button data-act="go" data-view="login">Entrar</button>
         <button class="lp-cta-sm" data-act="go" data-view="signup">Empezar</button>
       </nav>
     </header>
+    <section class="lp-intro" aria-label="PARFECT">
+      <div class="lp-intro-sun"></div>
+      <span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span>
+      <div class="lp-intrologo">${logoMark(56)} PARFECT</div>
+      <p class="lp-introtag">Tu mejor golf empieza aquí.</p>
+      <span class="lp-introhint">Desliza ↓ y entra al club</span>
+    </section>
 
     <section class="lp-hero">
       <div class="lp-hero-copy reveal">
