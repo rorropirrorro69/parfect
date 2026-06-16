@@ -446,11 +446,28 @@ const actions = {
     V.timer = { left: 300, total: 300, running: false };
     const drill = (typeof DRILL_LIBRARY !== 'undefined') ? DRILL_LIBRARY.find(x => x.name === d.name) : null;
     if (drill) { V.drillDetail = drill; render(); return; }
+    // drill de diagnóstico (motor Trainer): trae sus propios pasos personalizados
+    if (typeof Trainer !== 'undefined' && Trainer.DRILLS) {
+      const catMap = { driving: 'fw', approach: 'gir', short: 'ud', putting: 'putt' };
+      for (const k of Object.keys(Trainer.DRILLS)) {
+        const t = Trainer.DRILLS[k].find(x => x.name === d.name);
+        if (t) {
+          V.drillDetail = { name: t.name, cat: catMap[k] || '', desc: t.desc || '', dose: t.dose || 'Práctica', metric: t.metric || '', steps: t.steps || [] };
+          render(); return;
+        }
+      }
+    }
     // práctica de bastón/área (no está en la biblioteca): detalle simple
+    const club = d.name || 'este palo';
+    const meta = Number(d.target) || 7;
     V.drillDetail = {
-      name: d.name, cat: '', desc: d.goal || 'Práctica enfocada en este bastón/área.',
-      dose: d.area || 'Práctica', metric: 'meta ' + (Number(d.target) || 7) + ' seguidas',
-      steps: ['Ponte en posición y haz tu rutina completa antes de cada bola.', 'Apunta a un objetivo claro y pega buscando contacto sólido.', 'Repite hasta llegar a tu meta; si fallas, vuelve a empezar la serie.'],
+      name: d.name, cat: '', desc: d.goal || ('Práctica enfocada en tu ' + club + '.'),
+      dose: d.area || 'Práctica', metric: 'meta ' + meta + ' seguidas',
+      steps: [
+        'Calienta y haz tu rutina completa con el ' + club,
+        'Elige un objetivo y pega 1 bola buscando contacto sólido',
+        'Lleva ' + meta + ' golpes buenos seguidos; si fallas, reinicia la cuenta',
+      ],
     };
     render();
   },
