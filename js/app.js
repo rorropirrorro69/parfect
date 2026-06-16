@@ -396,10 +396,22 @@ const actions = {
   'trk-tab'(d) { V.trkTab = d.t; V.err = null; render(); },
   'drill-cat'(d) { V.drillCat = d.c; render(); },
   'drill-open'(d) {
+    const drill = (typeof DRILL_LIBRARY !== 'undefined') ? DRILL_LIBRARY.find(x => x.name === d.name) : null;
+    if (drill) { V.drillDetail = drill; render(); return; }
+    // fallback (datos sueltos)
     const timer = Number(d.timer) || 20;
-    V.drillLog = { name: d.name, target: Number(d.target), area: d.area || '', goal: d.goal || '', desc: d.desc || '', timer, streak: 0, best: 0, secs: timer * 60, running: false };
+    V.drillLog = { name: d.name, target: Number(d.target) || 7, area: d.area || '', goal: d.goal || '', desc: d.desc || '', timer, streak: 0, best: 0, secs: timer * 60, running: false };
     render();
   },
+  'drill-start'() {
+    const drill = V.drillDetail; if (!drill) return;
+    const timer = 20, target = drill.cat === 'putt' ? 10 : 7;
+    const area = (typeof DRILL_CATS !== 'undefined' && (DRILL_CATS.find(c => c.id === drill.cat) || {}).label) || '';
+    V.drillLog = { name: drill.name, target, area, goal: drill.metric || '', desc: drill.desc || '', timer, streak: 0, best: 0, secs: timer * 60, running: false };
+    V.drillDetail = null;
+    render();
+  },
+  'drill-close-detail'() { V.drillDetail = null; render(); },
   'drill-hit'() {
     if (!V.drillLog) return;
     const d = V.drillLog;

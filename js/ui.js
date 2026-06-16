@@ -407,7 +407,8 @@ function drillScene(name, areaKey) {
     const dots = [0, 1, 2, 3, 4, 5, 6, 7].map(i => { const a = i / 8 * Math.PI * 2; return `<circle cx="${(cx + Math.cos(a) * R).toFixed(0)}" cy="${(cy + Math.sin(a) * R * 0.7).toFixed(0)}" r="2.2" fill="rgba(201,247,62,0.4)"/>`; }).join('');
     return svg(`<ellipse cx="${cx}" cy="${cy}" rx="8" ry="4" fill="#0a0f06" stroke="#c9f73e" stroke-width="1.5"/>${dots}<circle fill="#fff"><animateMotion dur="2.2s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1;1" keyTimes="0;.6;1" path="M${cx + R} ${cy} L${cx} ${cy}"/><animate attributeName="r" values="4.5;4.5;0;0" keyTimes="0;.56;.62;1" dur="2.2s" repeatCount="indefinite"/></circle>${cap('Reloj de 1.5 m')}`);
   }
-  return drillArt(areaKey || 'putting');
+  const artMap = { fw: 'driving', gir: 'approach', ud: 'short', putt: 'putting' };
+  return drillArt(artMap[areaKey] || areaKey || 'putting');
 }
 
 /* stat card with progress bar */

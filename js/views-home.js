@@ -27,6 +27,7 @@ function vShell(content) {
       ${item('perfil', t('nav_profile'))}
     </nav>
     ${V.profileOpen ? vProfile() : ''}
+    ${V.drillDetail ? vDrillDetail() : ''}
     ${V.drillLog ? vDrillSheet() : ''}
     ${V.bagEdit ? vBagSheet() : ''}
   </div>`;

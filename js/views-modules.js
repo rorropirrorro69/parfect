@@ -90,9 +90,7 @@ function vRecommendedDrills(u, agg) {
 function vTrainer() {
   const u = cur();
   const tab = V.trainerTab || 'diag';
-  const entreno = vTracker()
-    + `<div class="sec-h" style="margin-top:20px"><h2 style="font-size:18px">Biblioteca de drills</h2></div>`
-    + vDrillsLibrary();
+  const entreno = vTrainFeatured() + vDrillsLibrary();
   const body = tab === 'entreno' ? entreno : tab === 'objetivos' ? vKeyTargets(u) : vDiag();
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
@@ -144,28 +142,71 @@ function vDiag() {
      <p class="note">Registra los drills en Parfect Tracker para medir tu progreso real.</p>`;
 }
 
-/* ---------- Biblioteca de drills (50) — lista estilo Inicio ---------- */
+/* ---------- Sesión recomendada (por tu punto débil) ---------- */
+function vTrainFeatured() {
+  const agg = Stats.aggregate(myRounds());
+  let cat = 'fw';
+  if (agg) {
+    const sc = {
+      fw: agg.fwPct, gir: agg.girPct, ud: agg.scrPct,
+      putt: Math.max(0, Math.min(100, (36 - agg.putts18) / 12 * 100)),
+    };
+    cat = Object.entries(sc).sort((a, b) => a[1] - b[1])[0][0];
+  }
+  const lab = { fw: 'tus salidas', gir: 'tus hierros al green', ud: 'tu juego corto', putt: 'tu putt' }[cat];
+  const drill = DRILL_LIBRARY.find(d => d.cat === cat) || DRILL_LIBRARY[0];
+  return `<div class="tr-feat">
+    <span class="tr-feat-tag">${golfIcon('green')} Tu sesión de hoy</span>
+    <div class="tr-feat-art">${drillScene(drill.name, cat)}</div>
+    <h3 class="tr-feat-name">${esc(drill.name)}</h3>
+    <p class="tr-feat-why">${agg ? `Tu mayor fuga está en <b>${lab}</b>. Empieza por aquí.` : 'Arranca con un fundamento clave. Registra rondas y te recomiendo según tus números.'}</p>
+    <button class="btn primary" data-act="drill-open" data-name="${esc(drill.name)}">Ver ejercicio →</button>
+  </div>`;
+}
+
+/* ---------- Biblioteca de drills (50) — tarjetas profesionales ---------- */
 function vDrillsLibrary() {
   const cat = V.drillCat || 'fw';
-  const meta = DRILL_CATS.find(c => c.id === cat);
   const list = DRILL_LIBRARY.filter(d => d.cat === cat);
   const chips = DRILL_CATS.map(c => {
     const n = DRILL_LIBRARY.filter(d => d.cat === c.id).length;
     return `<button class="tab ${c.id === cat ? 'on' : ''}" data-act="drill-cat" data-c="${c.id}">${esc(c.label)} <span class="muted">${n}</span></button>`;
   }).join('');
-  const items = list.map(d => {
-    const target = d.cat === 'putt' ? 10 : 7;
-    return `<button class="drillc" data-act="drill-open" data-name="${esc(d.name)}" data-target="${target}" data-area="${esc(meta.label)}" data-goal="${esc(d.desc)}" data-timer="20">
-      <b>${esc(d.name)}</b>
-      <p>${esc(d.desc)}</p>
-      <div class="drillc-meta"><span>${golfIcon('bucket')} ${esc(d.dose)}</span><span>${golfIcon('green')} ${esc(d.metric)}</span></div>
-      <span class="drillc-go">Entrenar →</span>
-    </button>`;
-  }).join('');
-  return `<p class="note" style="margin-top:14px">${DRILL_LIBRARY.length} drills para cada parte de tu juego. Elige categoría y toca uno para entrenar.</p>
-    <div class="tabs" style="flex-wrap:wrap">${chips}</div>
-    <div class="card drill-hero"><span class="label">${esc(meta.label)} · ${list.length} drills</span>${drillArt(meta.art, true)}</div>
-    <div class="drillc-list">${items}</div>`;
+  const items = list.map(d => `<button class="dlc" data-act="drill-open" data-name="${esc(d.name)}">
+      <div class="dlc-art">${drillScene(d.name, d.cat)}</div>
+      <div class="dlc-info">
+        <b>${esc(d.name)}</b>
+        <div class="dlc-meta"><span>${golfIcon('bucket')} ${esc(d.dose)}</span><span>${golfIcon('green')} ${esc(d.metric)}</span></div>
+      </div>
+      <span class="dlc-go">Ver →</span>
+    </button>`).join('');
+  return `<div class="sec-h" style="margin-top:22px"><h2 style="font-size:18px">Biblioteca de drills</h2><span class="small muted">${DRILL_LIBRARY.length} ejercicios</span></div>
+    <div class="tabs scroll">${chips}</div>
+    <div class="dlc-list">${items}</div>`;
+}
+
+/* ---------- Detalle de drill: imagen + pasos + meta + entrenar ---------- */
+function vDrillDetail() {
+  const d = V.drillDetail; if (!d) return '';
+  const catLab = (DRILL_CATS.find(c => c.id === d.cat) || {}).label || '';
+  const steps = (d.steps || []).map((s, i) => `<li><span class="dd-n">${i + 1}</span><span>${esc(s)}</span></li>`).join('');
+  return `<div class="overlay panel-ov" data-act="drill-close-detail">
+    <div class="panel" data-act="noop">
+      <div class="panel-head"><h2>${esc(d.name)}</h2><button class="panel-x" data-act="drill-close-detail" aria-label="Cerrar">✕</button></div>
+      <div class="panel-body">
+        <span class="dd-cat">${golfIcon('green')} ${esc(catLab)}</span>
+        <div class="dd-hero">${drillScene(d.name, d.cat)}</div>
+        <p class="dd-why">${esc(d.desc)}</p>
+        <div class="dd-goals">
+          <div class="dd-goal"><span>Dosis</span><b>${esc(d.dose)}</b></div>
+          <div class="dd-goal"><span>Meta</span><b>${esc(d.metric)}</b></div>
+        </div>
+        <h3 class="dd-h3">Paso a paso</h3>
+        <ol class="dd-steps">${steps}</ol>
+        <button class="btn primary big" data-act="drill-start">▶ Entrenar con timer</button>
+      </div>
+    </div>
+  </div>`;
 }
 
 /* ---------- Parfect Tracker (personalizado por palos) ---------- */
