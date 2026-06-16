@@ -90,13 +90,22 @@ body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg
 .bg-gball { position: absolute; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #cdd5d7); box-shadow: 0 1px 4px rgba(0,0,0,0.2); left: 0; bottom: 32%; animation: bgball 11s ease-in-out infinite; }
 [data-theme="dark"] .bg-gball { opacity: 0.4; }
 @keyframes bgball { 0% { transform: translate(-6vw, 0); opacity: 0; } 12% { opacity: 1; } 50% { transform: translate(45vw, -120px); } 90% { opacity: 1; } 100% { transform: translate(96vw, 30px); opacity: 0; } }
-.bg-hill { position: absolute; left: 50%; bottom: -40px; transform: translateX(-50%); border-radius: 50%; }
-.bh1 { width: 200%; height: 230px; background: #5a9a3c; }
-.bh2 { width: 165%; height: 300px; background: #6fae47; bottom: 30px; }
-.bh3 { width: 135%; height: 370px; background: #84c057; bottom: 120px; opacity: 0.85; }
-[data-theme="dark"] .bh1 { background: #122038; }
-[data-theme="dark"] .bh2 { background: #0d1830; }
-[data-theme="dark"] .bh3 { background: #0c1428; opacity: 0.9; }
+/* fondo: campo de golf estilizado (en vez de montañas lisas) */
+.bg-course { position: absolute; left: 0; bottom: 0; width: 100%; height: 62%; display: block; }
+.bgc-far { fill: #8fc75a; }
+.bgc-mid { fill: #6fae47; }
+.bgc-front { fill: #569338; }
+.bgc-green { fill: #57b15c; }
+.bgc-green-sh { fill: #2f6b39; opacity: 0.5; }
+.bgc-sand { fill: #ecd99f; }
+.bgc-fair { stroke: #7cc24a; opacity: 0.55; }
+[data-theme="dark"] .bgc-far { fill: #122038; }
+[data-theme="dark"] .bgc-mid { fill: #0e1a32; }
+[data-theme="dark"] .bgc-front { fill: #0b1428; }
+[data-theme="dark"] .bgc-green { fill: #1c3a4a; }
+[data-theme="dark"] .bgc-green-sh { fill: #0a1530; }
+[data-theme="dark"] .bgc-sand { fill: #2a3550; }
+[data-theme="dark"] .bgc-fair { stroke: #1a2c44; opacity: 0.5; }
 body.is-scrolling .bg-cloud, body.is-scrolling .bg-bird, body.is-scrolling .bg-gball { animation-play-state: paused !important; }
 @media (prefers-reduced-motion: reduce) { .bg-cloud, .bg-bird, .bg-gball, .bg-stars { animation: none !important; } .bg-bird { display: none; } }
 
@@ -973,18 +982,23 @@ button.row { cursor: pointer; }
 
 /* ---- Práctica inmersiva: timer + contador ---- */
 /* timer del drill: anillo circular */
-.dtimer { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 16px; }
-.dtimer-ring { position: relative; width: 158px; height: 158px; background: none; border: none; padding: 0; cursor: pointer; }
-.dtimer-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); display: block; }
-.dtimer-track { fill: none; stroke: var(--line); stroke-width: 9; }
-.dtimer-prog { fill: none; stroke: #C7EE54; stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
-.dtimer.up .dtimer-prog { stroke: var(--danger); }
-.dtimer-mid { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; pointer-events: none; }
-.dtimer-time { font-size: 38px; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--text); line-height: 1; }
-.dtimer-hint { font-size: 12px; font-weight: 800; color: var(--muted); }
-.dtimer.run .dtimer-hint { color: var(--lime); }
-.dtimer.up .dtimer-time, .dtimer.up .dtimer-hint { color: var(--danger); }
-.dtimer-ring:active { transform: scale(0.97); }
+/* timer del drill: el sol cruza el cielo conforme corre el tiempo */
+.suntimer { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 16px; }
+.st-sky { position: relative; width: 100%; height: 168px; border: none; border-radius: 20px; overflow: hidden; padding: 0; cursor: pointer; background: linear-gradient(180deg, #aee0f5 0%, #d8eef0 38%, #ffe3a8 72%, #ffd089 100%); box-shadow: inset 0 0 0 1px rgba(20,50,15,0.1); }
+.suntimer.run .st-sky { background: linear-gradient(180deg, #9fd6f2 0%, #ffe0a0 60%, #ffb877 100%); }
+.suntimer.up .st-sky { background: linear-gradient(180deg, #2a3566 0%, #4a3f7a 55%, #6b4a6e 100%); }
+.st-hills { position: absolute; left: 0; bottom: 0; width: 100%; height: 46px; }
+.suntimer.up .st-hills path { fill: #1a2f1e; opacity: 0.92; }
+.st-sun { position: absolute; width: 30px; height: 30px; margin: -15px; border-radius: 50%; background: radial-gradient(circle at 40% 38%, #fff7cc, #ffd86b 70%); box-shadow: 0 0 26px 9px rgba(255,216,107,0.55); transition: left 1s linear, top 1s linear; }
+.suntimer.up .st-sun { background: radial-gradient(circle at 42% 36%, #ffffff, #cfd6ea 72%); box-shadow: 0 0 22px 7px rgba(210,220,250,0.4); }
+.st-flag { position: absolute; right: 16px; bottom: 26px; width: 26px; height: 26px; opacity: 0.95; }
+.st-flag .gi, .st-flag svg { width: 26px; height: 26px; }
+.st-mid { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; text-shadow: 0 2px 8px rgba(255,255,255,0.55); }
+.suntimer.up .st-mid { text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+.st-time { font-size: 42px; font-weight: 900; font-variant-numeric: tabular-nums; color: #1B2A18; line-height: 1; }
+.st-hint { font-size: 13px; font-weight: 800; color: #2f6b39; }
+.suntimer.up .st-time, .suntimer.up .st-hint { color: #fff; }
+.st-sky:active { transform: scale(0.99); }
 .dtimer-reset { background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 700; text-decoration: underline; padding: 4px; }
 .drill-count { text-align: center; margin: 20px 0 16px; }
 .dc-num { font-size: 56px; font-weight: 900; line-height: 1; }

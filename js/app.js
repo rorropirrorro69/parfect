@@ -432,6 +432,8 @@ const actions = {
       if (V.drillLog.secs <= 0) { V.drillLog.secs = 0; V.drillLog.running = false; stopDrillTimer(); render(); return; }
       const el = document.getElementById('drill-time');
       if (el) el.textContent = String(Math.floor(V.drillLog.secs / 60)).padStart(2, '0') + ':' + String(V.drillLog.secs % 60).padStart(2, '0');
+      const sun = document.getElementById('drill-sun'), full = V.drillLog.timer * 60;
+      if (sun && full > 0) { const e = (full - V.drillLog.secs) / full; sun.style.left = (8 + e * 84).toFixed(1) + '%'; sun.style.top = (82 - Math.sin(e * Math.PI) * 66).toFixed(1) + '%'; }
     }, 1000);
   },
   'drill-timer-reset'() { if (!V.drillLog) return; stopDrillTimer(); V.drillLog.secs = V.drillLog.timer * 60; V.drillLog.running = false; render(); },

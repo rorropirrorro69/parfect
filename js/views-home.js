@@ -16,7 +16,7 @@ function vShell(content) {
     <div class="hdr">
       <span style="width:40px"></span>
       <span class="logo-word">${logoMark(16)} PARFECT</span>
-      <button class="avatar-btn" data-act="profile-edit" aria-label="Personaliza tu perfil">${avatarImg(u)}</button>
+      <button class="avatar-btn" data-act="profile-open" aria-label="Tu perfil">${avatarImg(u)}</button>
     </div>
     <div class="app-content">${content}</div>
     <nav class="nav">
@@ -419,9 +419,7 @@ function vDashboard() {
   }
 
   return head + `
-    ${vHcpHero(u)}
-    ${vKeyStats(agg)}
-    <button class="pl-cta" data-act="quick-round">${t('start_round')} <i class="pl-cta-arrow">→</i></button>
+    ${vPlayerCard(u, agg)}
     ${vRecentRounds(rounds)}`;
 }
 
@@ -624,10 +622,45 @@ function pstRing(label, pct, icon) {
 /* ============ Perfil (página) ============ */
 function vPerfil() {
   const u = cur();
-  const agg = Stats.aggregate(myRounds());
-  return `<div class="sec-h"><h2>Tu perfil</h2><button class="sec-edit" data-act="profile-edit" aria-label="Ajustes">⚙ Ajustes</button></div>
-    ${vPlayerCard(u, agg)}
-    ${vLogros()}`;
+  return `<div class="sec-h"><h2>Tu perfil</h2></div>
+    ${vAvatarCreator(u)}
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Tus datos</h2></div>
+    <div class="card">
+      <div class="field"><label>Nombre</label><input id="p-name" value="${esc(u.name)}"></div>
+      <div class="field-row">
+        <div class="field"><label>Hándicap</label><input id="p-hcp" type="number" step="1" value="${esc(u.hcp)}"></div>
+        <div class="field"><label>Meta</label><input id="p-goal" type="number" step="1" value="${esc(u.goal)}"></div>
+      </div>
+      <div class="field"><label>Campo de casa</label>
+        <div class="chips">${COURSE_ORDER.map(id => `<button class="chip sm ${(u.homeCourse || 'campestre') === id ? 'on' : ''}" data-act="prof-campo" data-c="${id}">${esc(COURSES[id].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', ''))}</button>`).join('')}</div>
+      </div>
+      <button class="btn primary" data-act="profile-save">Guardar cambios</button>
+    </div>
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">${t('sec_bag')}</h2></div>
+    ${vBagEditor(u)}
+    ${vLogros()}
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">${t('settings')}</h2></div>
+    <div class="card">
+      <div class="set-row"><span class="set-lab">${t('language')}</span><div class="chips">
+        <button class="chip sm ${curLang() === 'es' ? 'on' : ''}" data-act="set-lang" data-v="es">Español</button>
+        <button class="chip sm ${curLang() === 'en' ? 'on' : ''}" data-act="set-lang" data-v="en">English</button></div></div>
+      <div class="set-row" style="margin-top:12px"><span class="set-lab">${t('theme')}</span><div class="chips">
+        <button class="chip sm ${(S.settings && S.settings.theme) === 'light' ? '' : 'on'}" data-act="set-theme" data-v="dark">${golfIcon('peak')} ${t('dark')}</button>
+        <button class="chip sm ${(S.settings && S.settings.theme) === 'light' ? 'on' : ''}" data-act="set-theme" data-v="light">${t('light')}</button></div></div>
+      <hr class="set-div">
+      <p class="set-lab" style="margin-bottom:9px">Respaldo de tus datos</p>
+      <div class="bk-row">
+        <button class="btn ghost" data-act="export-data">⬇ Exportar copia</button>
+        <button class="btn ghost" data-act="import-data">⬆ Importar copia</button>
+      </div>
+      <input type="file" id="import-file" accept="application/json,.json" style="display:none" onchange="parfectImport(this)">
+      <p class="note">Tus datos viven en este dispositivo. Exporta una copia cada tanto para no perderlos.</p>
+      <hr class="set-div">
+      <button class="btn ghost" data-act="seed-demo">${t('load_demo')}</button>
+      <button class="btn danger" data-act="wipe-mine">${V.wipeArm ? t('wipe_confirm') : t('wipe')}</button>
+      <button class="btn" data-act="logout">${t('logout')}</button>
+      <p class="note">${t('local_note')} · ${esc(u.email)}</p>
+    </div>`;
 }
 
 /* ============ Bienvenida / onboarding (primer ingreso) ============ */

@@ -340,17 +340,16 @@ function vDrillSheet() {
     <p class="auth-sub">Mete <b style="color:var(--text)">${d.target} seguidas</b>${d.goal ? ' · ' + esc(d.goal) : ''} antes de que acabe el timer. Si fallas, vuelves a 0.</p>
 
     ${(() => {
-      const R = 52, CIRC = 2 * Math.PI * R;
-      const frac = full > 0 ? Math.max(0, Math.min(1, secs / full)) : 0;
-      const off = (CIRC * (1 - frac)).toFixed(1);
-      const hint = d.running ? '❚❚ Pausar' : (timeUp ? '¡Se acabó!' : (secs < full ? '▶ Reanudar' : '▶ Iniciar'));
-      return `<div class="dtimer ${d.running ? 'run' : ''} ${timeUp ? 'up' : ''}">
-      <button class="dtimer-ring" data-act="drill-timer-toggle" aria-label="${d.running ? 'Pausar' : 'Iniciar'} timer">
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <circle class="dtimer-track" cx="60" cy="60" r="${R}"/>
-          <circle class="dtimer-prog" cx="60" cy="60" r="${R}" stroke-dasharray="${CIRC.toFixed(1)}" stroke-dashoffset="${off}"/>
-        </svg>
-        <span class="dtimer-mid"><span class="dtimer-time" id="drill-time">${mm}:${ss}</span><span class="dtimer-hint">${hint}</span></span>
+      const e = full > 0 ? Math.max(0, Math.min(1, (full - secs) / full)) : 0;
+      const left = (8 + e * 84).toFixed(1);
+      const top = (82 - Math.sin(e * Math.PI) * 66).toFixed(1);
+      const hint = d.running ? '❚❚ Pausar' : (timeUp ? '🌙 ¡Se acabó!' : (secs < full ? '▶ Reanudar' : '▶ Iniciar'));
+      return `<div class="suntimer ${d.running ? 'run' : ''} ${timeUp ? 'up' : ''}">
+      <button class="st-sky" data-act="drill-timer-toggle" aria-label="${d.running ? 'Pausar' : 'Iniciar'} timer">
+        <span class="st-sun" id="drill-sun" style="left:${left}%;top:${top}%"></span>
+        <svg class="st-hills" viewBox="0 0 200 50" preserveAspectRatio="none" aria-hidden="true"><path d="M0,50 L0,34 Q40,20 80,30 T160,26 T200,32 L200,50 Z" fill="#3f8f3a" opacity="0.9"/><path d="M0,50 L0,42 Q50,30 110,38 T200,40 L200,50 Z" fill="#2f7a38"/></svg>
+        <span class="st-flag">${golfIcon('flag')}</span>
+        <span class="st-mid"><span class="st-time" id="drill-time">${mm}:${ss}</span><span class="st-hint">${hint}</span></span>
       </button>
       <button class="dtimer-reset" data-act="drill-timer-reset">↻ Reiniciar timer</button>
     </div>`;
