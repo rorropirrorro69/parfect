@@ -1837,3 +1837,34 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .fd-like.on { color: #ff5a6a; }
 .fd-like.on .fdi { fill: #ff5a6a; stroke: #ff5a6a; }
 .fd-like:active { transform: scale(.92); }
+
+/* ===== Tarjetas de ronda v2 (banda de color + escena 3D + logros) ===== */
+.rc2 { display: block; width: 100%; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; cursor: pointer; box-shadow: 0 8px 22px rgba(20,40,15,.08); transition: transform .12s, box-shadow .2s; }
+.rc2:active { transform: scale(.99); }
+.rc2.vibe-fire { box-shadow: 0 8px 22px rgba(255,120,40,.18); }
+.rc2.vibe-ice { box-shadow: 0 8px 22px rgba(70,150,230,.16); }
+.rc2-bar { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 16px; background: var(--rc-grad); }
+.rc2-bar.skin-dark { color: #fff; }
+.rc2-bar.skin-light { color: #1f3d12; }
+.rc2-vibe { position: absolute; top: 8px; right: 10px; font-size: 17px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.25)); }
+.rc2-id { min-width: 0; }
+.rc2-id b { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 900; }
+.rc2-party .gi { width: 13px; height: 13px; }
+.rc2-id span { display: block; font-size: 11.5px; font-weight: 600; opacity: .85; margin-top: 1px; }
+.rc2-score { flex: none; display: flex; align-items: baseline; gap: 6px; margin-right: 14px; }
+.rc2-score b { font-size: 30px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+.rc2-score span { font-size: 13px; font-weight: 800; opacity: .85; }
+.rc2-body { display: flex; align-items: center; gap: 14px; padding: 12px 16px 6px; --sc-grass:#7fcf5a; --sc-grass2:#3f9d44; --sc-lit:#d8f86a; --sc-dim:#d2e4c2; --sc-line:#9fb98c; --sc-flag:#ff5a4d; --sc-ball:#fff; --sc-cup:#1f3a16; --sc-shadow:rgba(30,60,20,.1); }
+[data-theme="dark"] .rc2-body { --sc-grass:#5fb84a; --sc-grass2:#2f7d3a; --sc-lit:#bdf24a; --sc-dim:#2c4030; --sc-line:#4a5e44; --sc-flag:#ff6a5a; --sc-ball:#eef5ee; --sc-cup:#0c1a0a; --sc-shadow:rgba(0,0,0,.3); }
+.rc2-scene { flex: 0 0 120px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.rc2-scene .psc-svg { width: 120px; height: 60px; transform: rotateX(14deg); transform-origin: 50% 80%; filter: drop-shadow(0 5px 6px rgba(20,40,10,.16)); }
+.rc2-scene-cap { font-size: 10px; font-weight: 800; color: var(--muted); text-align: center; text-transform: uppercase; letter-spacing: .02em; }
+.rc2-badges { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.rc2-badges > .gi { width: 16px; height: 16px; color: #e8b53a; }
+.rc2-badge { font-size: 11px; font-weight: 800; color: var(--text); background: var(--card2); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; }
+.rc2 .rc-stats { margin: 6px 0 0; padding: 12px 16px 15px; border-top: 1px solid var(--line-soft); }
+.app-content.view-in .rc-list .rc2 { animation: rowIn .5s cubic-bezier(.2,.8,.2,1) both; }
+.app-content.view-in .rc-list .rc2:nth-child(2) { animation-delay: .05s; }
+.app-content.view-in .rc-list .rc2:nth-child(3) { animation-delay: .1s; }
+.app-content.view-in .rc-list .rc2:nth-child(4) { animation-delay: .15s; }
+.app-content.view-in .rc-list .rc2:nth-child(n+5) { animation-delay: .2s; }
