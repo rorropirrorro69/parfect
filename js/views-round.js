@@ -173,6 +173,29 @@ function courseHolesArt(cid) {
   return `<div class="csa csa-n${c.holes.length}"><div class="csa-grid">${cells}</div></div>`;
 }
 
+/* escudo/logo del campo (emblema estilo club de golf) */
+const COURSE_CREST = {
+  campestre: { ini: 'C', col: '#2f8f4f' },
+  tresmarias: { ini: 'TM', col: '#2f7fb0' },
+  altozano: { ini: 'A', col: '#1f9a86' },
+};
+function courseCrest(cid) {
+  const c = COURSES[cid]; if (!c) return '';
+  const m = COURSE_CREST[cid] || { ini: (c.name[0] || 'G').toUpperCase(), col: '#2f8f4f' };
+  return `<div class="ccrest" style="--cc:${m.col}">
+    <svg viewBox="0 0 120 120" class="ccrest-svg" aria-hidden="true">
+      <circle cx="60" cy="60" r="56" fill="var(--card)"/>
+      <circle cx="60" cy="60" r="56" fill="none" stroke="var(--cc)" stroke-width="3"/>
+      <circle cx="60" cy="60" r="48" fill="none" stroke="var(--cc)" stroke-width="1.4" opacity=".45"/>
+      <line x1="60" y1="44" x2="60" y2="26" stroke="var(--cc)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M60 26 L76 30.5 L60 35 Z" fill="var(--cc)"/>
+      <circle cx="60" cy="44" r="2.4" fill="var(--cc)"/>
+      <text x="60" y="78" text-anchor="middle" class="ccrest-ini">${m.ini}</text>
+      <text x="60" y="98" text-anchor="middle" class="ccrest-tag">GOLF CLUB</text>
+    </svg>
+  </div>`;
+}
+
 function vSetup() {
   const cid = V.setupCourseId || 'campestre';
   const tid = V.setupTee || 'blancas';
@@ -190,33 +213,36 @@ function vSetup() {
       <span class="su-c-check">${on ? '✓' : ''}</span>
     </button>`;
   }).join('');
-  const teeRow = TEES.map(t => `<button class="su-tee ${tid === t.id ? 'on' : ''}" data-act="setup-pick-tee" data-t="${t.id}">
-      <span class="su-tee-dot" style="background:${teeCol[t.id] || '#ccc'}"></span>${esc(t.name)}
-    </button>`).join('');
   const curPar = COURSES[cid].holes.reduce((a, h) => a + h.par, 0);
+  const teeSheet = V.teeSheet ? `<div class="overlay" data-act="tee-cancel"><div class="sheet" data-act="noop">
+      <div class="grab"></div>
+      <h2>¿De dónde sales?</h2>
+      <p class="auth-sub">Elige tu salida en ${esc(sname(cid))}.</p>
+      <div class="tee-opts">${TEES.map(t => `<button class="tee-opt ${tid === t.id ? 'on' : ''}" data-act="confirm-tee" data-t="${t.id}">
+        <span class="su-tee-dot" style="background:${teeCol[t.id] || '#ccc'}"></span>
+        <span class="tee-opt-info"><b>${esc(t.name)}</b><span>${esc(t.sub)} · ${Math.round(COURSES[cid].holes.reduce((a, h) => a + h.yds, 0) * t.f)} yds</span></span>
+        <span class="tee-opt-go">→</span>
+      </button>`).join('')}</div>
+    </div></div>` : '';
   return `<div class="su-hero2 su-hero-course">
       <div class="su-hero2-txt">
         <span class="su-hero-tag">${golfIcon('flag')} Nueva ronda</span>
         <h1 class="su-hero-h">${esc(sname(cid))}</h1>
         <p class="su-hero-sub">${COURSES[cid].holes.length} hoyos · Par ${curPar} · ${COURSES[cid].approx ? 'aprox' : 'real'}</p>
       </div>
-      <div class="su-hero2-art">${courseHolesArt(cid)}</div>
+      <div class="su-hero2-art">${courseCrest(cid)}</div>
     </div>
     <div class="su-block">
       <span class="su-lab">Campo</span>
       <div class="su-courses">${courseCards}</div>
-    </div>
-    <div class="su-block">
-      <span class="su-lab">Salida (tees)</span>
-      <div class="su-tees">${teeRow}</div>
-      <p class="su-meta">${esc(tee.name)} · ${esc(tee.sub)} · <b>${totalYds} yds</b> en total</p>
     </div>
     <button class="btn primary big su-go" data-act="start-round">${golfIcon('flag')} Comenzar ronda</button>
     <button class="btn su-cancel" data-act="nav" data-view="ronda">Cancelar</button>
     <div class="su-block">
       <span class="su-lab">¿Juegas con amigos?</span>
       ${partyCard()}
-    </div>`;
+    </div>
+    ${teeSheet}`;
 }
 
 /* ---------- Captura de hoyo ---------- */

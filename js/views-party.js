@@ -51,7 +51,7 @@ function vPartySetup() {
         <h1 class="su-hero-h">Juega con amigos</h1>
         <p class="su-hero-sub">${esc(sname(cid))} · ${COURSES[cid].holes.length} hoyos</p>
       </div>
-      <div class="su-hero2-art">${courseHolesArt(cid)}</div>
+      <div class="su-hero2-art">${courseCrest(cid)}</div>
     </div>
     <div class="su-block">
       <span class="su-lab">Campo</span>

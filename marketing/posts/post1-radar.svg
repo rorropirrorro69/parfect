@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <defs>
+    <radialGradient id="glow1" cx="50%" cy="60%" r="42%">
+      <stop offset="0%" stop-color="#c9f73e" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#c9f73e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig1" cx="50%" cy="42%" r="78%">
+      <stop offset="58%" stop-color="#070b06" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.55"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1080" fill="#070b06"/>
+  <rect width="1080" height="1080" fill="url(#glow1)"/>
+  <rect width="1080" height="1080" fill="url(#vig1)"/>
+
+  <text x="540" y="98" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="30" letter-spacing="16" fill="#c9f73e">PARFECT</text>
+
+  <text x="540" y="195" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="74" letter-spacing="1" fill="#eef3e6">¿SABES DE VERDAD</text>
+  <text x="540" y="275" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="74" letter-spacing="1" fill="#eef3e6">CÓMO JUEGAS?</text>
+
+  <g fill="none" stroke="#1d2917" stroke-width="1.5">
+    <polygon points="540,440 721.9,545 721.9,755 540,860 358.1,755 358.1,545"/>
+    <polygon points="540,511.4 660,580.7 660,719.3 540,788.6 420,719.3 420,580.7"/>
+    <polygon points="540,580.7 600,615.35 600,684.65 540,719.3 480,684.65 480,615.35"/>
+    <line x1="540" y1="650" x2="540" y2="440"/>
+    <line x1="540" y1="650" x2="721.9" y2="545"/>
+    <line x1="540" y1="650" x2="721.9" y2="755"/>
+    <line x1="540" y1="650" x2="540" y2="860"/>
+    <line x1="540" y1="650" x2="358.1" y2="755"/>
+    <line x1="540" y1="650" x2="358.1" y2="545"/>
+  </g>
+
+  <polygon points="540,482 640,592 621.8,697 540,797 449.1,702.5 430.9,587" fill="#c9f73e" fill-opacity="0.22" stroke="#c9f73e" stroke-width="3.5" stroke-linejoin="round"/>
+  <g fill="#c9f73e">
+    <circle cx="540" cy="482" r="8"/>
+    <circle cx="640" cy="592" r="8"/>
+    <circle cx="621.8" cy="697" r="8"/>
+    <circle cx="540" cy="797" r="8"/>
+    <circle cx="449.1" cy="702.5" r="8"/>
+    <circle cx="430.9" cy="587" r="8"/>
+  </g>
+
+  <g font-family="'Helvetica Neue',Arial,sans-serif" font-weight="800" font-size="25" letter-spacing="3" fill="#aebfa0">
+    <text x="540" y="408" text-anchor="middle">SALIDA</text>
+    <text x="752" y="530" text-anchor="start">APPROACH</text>
+    <text x="752" y="775" text-anchor="start">CHIP</text>
+    <text x="540" y="905" text-anchor="middle">PUTT</text>
+    <text x="328" y="775" text-anchor="end">GIR</text>
+    <text x="328" y="530" text-anchor="end">SCRAMBLE</text>
+  </g>
+
+  <text x="540" y="1000" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="34" letter-spacing="2" fill="#c9f73e">@parfect.golf</text>
+  <text x="540" y="1042" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="22" letter-spacing="6" fill="#8fa183">TU GOLF, CON DATOS · GRATIS EN MORELIA</text>
+</svg>

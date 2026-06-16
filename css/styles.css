@@ -62,8 +62,8 @@ input, select, textarea { font-size: 16px; }
 /* ============ Fondo inmersivo de toda la app (día/noche) ============ */
 .app-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: linear-gradient(180deg, #bfe6f7 0%, #d9efbf 48%, #b6dd86 100%); }
 /* dentro de la app, el fondo es un ambiente sutil para que la app sea lo principal */
-body.in-app .app-bg::after { content: ''; position: absolute; inset: 0; background: var(--bg); opacity: 0.6; }
-body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg .bg-gball { opacity: 0.35; }
+body.in-app .app-bg::after { content: ''; position: absolute; inset: 0; background: var(--bg); opacity: 0.9; }
+body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg .bg-gball, body.in-app .app-bg .bg-course, body.in-app .app-bg .bg-orb { opacity: 0.14; }
 [data-theme="dark"] .app-bg { background: linear-gradient(180deg, #0a1230 0%, #111d40 46%, #0a1124 100%); }
 .app-bg .bg-orb { position: absolute; top: 5%; right: 9%; width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 40% 38%, #fff7cc, #ffd86b 70%); box-shadow: 0 0 60px 18px rgba(255,216,107,0.38); }
 [data-theme="dark"] .app-bg .bg-orb { background: radial-gradient(circle at 42% 36%, #ffffff, #cfd6ea 72%); box-shadow: 0 0 46px 12px rgba(200,210,240,0.16); }
@@ -2251,3 +2251,21 @@ svg.fd-av { object-fit: contain; }
 .app-content.view-in .rc-list .rc3:nth-child(2) { animation-delay: .05s; }
 .app-content.view-in .rc-list .rc3:nth-child(3) { animation-delay: .1s; }
 .app-content.view-in .rc-list .rc3:nth-child(n+4) { animation-delay: .15s; }
+
+/* ===== Escudo/logo del campo en hero ===== */
+.su-hero-course .su-hero2-art { display: grid; place-items: center; padding: 10px; }
+.ccrest { width: 100%; max-width: 130px; }
+.ccrest-svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 6px 12px rgba(20,40,15,.14)); }
+.ccrest-ini { font-family: var(--font); font-weight: 900; font-size: 34px; fill: var(--cc); letter-spacing: -.02em; }
+.ccrest-tag { font-family: var(--font); font-weight: 800; font-size: 9px; letter-spacing: .18em; fill: var(--cc); opacity: .7; }
+
+/* ===== Sheet "¿De dónde sales?" ===== */
+.tee-opts { display: flex; flex-direction: column; gap: 9px; margin-top: 8px; }
+.tee-opt { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; background: var(--card2); border: 1.5px solid var(--line); border-radius: 16px; padding: 13px 15px; cursor: pointer; transition: transform .12s, border-color .15s; }
+.tee-opt:active { transform: scale(.98); }
+.tee-opt.on { border-color: var(--lime); }
+.tee-opt .su-tee-dot { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line); flex: none; }
+.tee-opt-info { flex: 1; min-width: 0; }
+.tee-opt-info b { display: block; font-size: 15px; font-weight: 800; color: var(--text); }
+.tee-opt-info span { font-size: 12px; color: var(--muted); }
+.tee-opt-go { color: var(--lime-ink); font-weight: 900; font-size: 16px; }

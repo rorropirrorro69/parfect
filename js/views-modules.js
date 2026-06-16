@@ -169,32 +169,27 @@ function vDiag() {
   return warn + d.focus.map((f, i) => {
     const parts = String(f.diag).split('. ').map(s => s.trim()).filter(Boolean);
     const lead = parts[0] ? parts[0].replace(/\.$/, '') + '.' : '';
-    const rest = parts.slice(1).join('. ');
     return `
     <div class="card">
       <span class="prio ${i > 0 ? 'p2' : ''}">${i === 0 ? 'Prioridad 1 · enfoque' : `Prioridad ${i + 1}`}</span>
       <h3 style="margin-top:12px;font-size:17px;font-weight:900">${esc(f.titulo)}</h3>
-      <p class="small muted" style="margin-top:4px">~${f.lost.toFixed(1)} golpes/ronda en juego</p>
       <p class="diag-lead">${esc(lead)}</p>
-      ${rest ? `<p class="diag-rest">${esc(rest)}</p>` : ''}
       ${i < 2 ? (() => {
       const done = (cur() || {}).drillsDone || {};
       const td = today();
       const total = f.drills.length;
       const doneN = f.drills.filter(dr => done[dr.name] === td).length;
       return `
-        <p class="label" style="margin-top:16px">Drills que te toca practicar <span class="dlc-count">${doneN}/${total} hoy</span></p>
+        <p class="label" style="margin-top:14px">Tu ejercicio <span class="dlc-count">${doneN}/${total} hoy</span></p>
         ${f.drills.map(dr => {
         const isDone = done[dr.name] === td;
         return `<button class="dlc ${isDone ? 'done' : ''}" data-act="drill-open" data-name="${esc(dr.name)}" style="margin-top:8px">
           <span class="dlc-check">${isDone ? '✓' : ''}</span>
-          <div class="dlc-info"><b>${esc(dr.name)}</b><p class="dlc-desc">${esc(dr.desc)}</p>
+          <div class="dlc-info"><b>${esc(dr.name)}</b>
           <div class="dlc-meta"><span>${golfIcon('bucket')} ${esc(dr.dose)}</span><span>${golfIcon('green')} ${esc(dr.metric)}</span></div></div>
           <span class="dlc-go">${isDone ? 'Hecho' : 'Ver →'}</span></button>`;
       }).join('')}`;
     })() : ''}
-      <p class="label" style="margin-top:16px">Tu plan en el campo</p>
-      <ol class="diag-steps">${f.tips.map(t => `<li><span class="ds-n">${golfIcon('flag')}</span><span>${esc(t)}</span></li>`).join('')}</ol>
     </div>`;
   }).join('') +
     `<button class="btn ghost" data-act="diagnose">Recalcular diagnóstico</button>

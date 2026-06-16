@@ -306,12 +306,16 @@ const actions = {
     if (S.active && S.active.userId === S.session) { loadHole(); go('play'); }
     else actions['go-setup']();
   },
-  'start-round'() {
+  'start-round'() { V.teeSheet = true; render(); },
+  'tee-cancel'() { V.teeSheet = false; render(); },
+  'confirm-tee'(d) {
+    if (d && d.t) V.setupTee = d.t;
     const cid = (V.setupCourseId && COURSES[V.setupCourseId]) ? V.setupCourseId : 'campestre';
     const course = COURSES[cid].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '');
     const holesCount = COURSES[cid].holes.length;
     const tee = teeById(V.setupTee);
     S.active = { userId: S.session, course, courseId: cid, holesCount, holes: [], idx: 0, startedAt: Date.now(), teeId: tee.id, teeName: tee.name, teeF: tee.f };
+    V.teeSheet = false;
     loadHole();
     V.view = 'play';
     commit(); window.scrollTo(0, 0);

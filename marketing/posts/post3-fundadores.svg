@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <defs>
+    <radialGradient id="glow3" cx="50%" cy="46%" r="46%">
+      <stop offset="0%" stop-color="#c9f73e" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#c9f73e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig3" cx="50%" cy="44%" r="80%">
+      <stop offset="55%" stop-color="#070b06" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.55"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1080" fill="#070b06"/>
+  <rect width="1080" height="1080" fill="url(#glow3)"/>
+  <rect width="1080" height="1080" fill="url(#vig3)"/>
+
+  <text x="540" y="100" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="30" letter-spacing="16" fill="#c9f73e">PARFECT</text>
+
+  <text x="540" y="240" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="52" letter-spacing="12" fill="#eef3e6">BUSCO</text>
+
+  <text x="540" y="610" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="360" letter-spacing="-6" fill="#c9f73e">50</text>
+
+  <text x="540" y="725" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="78" letter-spacing="3" fill="#eef3e6">FUNDADORES</text>
+  <text x="540" y="810" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="78" letter-spacing="3" fill="#eef3e6">EN MORELIA</text>
+
+  <text x="540" y="908" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="38" letter-spacing="2" fill="#c9f73e">Estrena PARFECT. Gratis. Hoy.</text>
+
+  <text x="540" y="1000" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="32" letter-spacing="2" fill="#eef3e6">@parfect.golf</text>
+  <text x="540" y="1042" text-anchor="middle" font-family="'Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="21" letter-spacing="4" fill="#8fa183">RORROPIRRORRO69.GITHUB.IO/PARFECT</text>
+</svg>
