@@ -580,7 +580,9 @@ function vAvatarCreator(u) {
   const curBg = (u && u.bg) || 'rank';
   const curAv = (u && u.avatar != null) ? u.avatar : 0;
   const personas = AVATARS.map((src, i) => `<button class="cre-av${i === curAv ? ' on' : ''}" data-act="set-avatar" data-i="${i}"><img src="${src}" alt="Golfista ${i + 1}" loading="lazy"></button>`).join('');
-  const customUI = '';
+  const curHue = u.avatarHue || 0;
+  const colors = GOLF_HUES.map(o => `<button class="cre-gcolor${curHue === o.h ? ' on' : ''}" data-act="set-hue" data-h="${o.h}"><img src="${avatarSrc(u)}" style="filter:hue-rotate(${o.h}deg)" alt="" loading="lazy"></button>`).join('');
+  const customUI = `<div class="cre-grp"><span class="cre-lab">Color del golfista</span><div class="cre-row cre-gcolors">${colors}</div></div>`;
   const outfits = OUTFITS.map(o => {
     const sw = o.sw === 'rank' ? `background:conic-gradient(${RANKS.map(r => r.c).join(',')})` : `background:${o.sw}`;
     return `<button class="cre-sw${curOutfit === o.k ? ' on' : ''}" data-act="set-outfit" data-k="${o.k}" title="${o.n}"><span style="${sw}"></span></button>`;

@@ -2220,3 +2220,10 @@ svg.fd-av { object-fit: contain; }
 [data-theme="dark"] .rc-st.st-fw .rc-st-ic, [data-theme="dark"] .rc-st.st-fw b { color: #6fc94f; }
 [data-theme="dark"] .rc-st.st-gir .rc-st-ic, [data-theme="dark"] .rc-st.st-gir b { color: #45c98a; }
 [data-theme="dark"] .rc-st.st-bird .rc-st-ic, [data-theme="dark"] .rc-st.st-bird b { color: #c7ee54; }
+
+/* ===== Selector de color del golfista ===== */
+.cre-gcolors { display: flex; gap: 8px; flex-wrap: wrap; }
+.cre-gcolor { width: 52px; height: 52px; border-radius: 14px; border: 2px solid var(--line); background: var(--card2); display: grid; place-items: center; overflow: hidden; padding: 2px; cursor: pointer; }
+.cre-gcolor img { width: 100%; height: 100%; object-fit: contain; }
+.cre-gcolor.on { border-color: var(--lime); box-shadow: 0 4px 14px rgba(199,238,84,.45); }
+.cre-gcolor:active { transform: scale(.94); }

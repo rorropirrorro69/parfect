@@ -223,44 +223,37 @@ function vPartyLive() {
       const lpv = (h.longputt && h.longputt[ap]) || 0;
       const net = p.games.corta ? Party.unidades(p, p.idx + 1)[ap] : null;
       const bdg = score != null ? (score - h.par <= -2 ? 'Águila' : score - h.par === -1 ? 'Birdie' : '') : '';
-      const sl = [];
-      if (h.par >= 4 && c.tee) sl.push(c.tee === 'fw' ? 'Fairway ✓' : c.tee === 'penal' ? 'OB/Penal' : c.tee === 'izq' ? 'Salida izq' : 'Salida der');
-      if (c.app) sl.push(c.app === 'gir' ? 'Green ✓' : c.app === 'corto' ? 'Corto' : c.app === 'largo' ? 'Largo' : c.app === 'izq' ? 'Falló izq' : 'Falló der');
-      if (c.putts != null) sl.push(c.putts + ' putt' + (c.putts !== 1 ? 's' : ''));
       const gir = c.app === 'gir';
       const scoreCls = score == null ? '' : (score - h.par <= -1 ? 'good' : score - h.par === 0 ? 'par' : score - h.par === 1 ? 'over' : 'bad');
+      const nm = esc(apl.name.split(' ')[0]);
+      const steps = partySteps(c, h.par);
+      const curK = (V.pWizStep && steps.includes(V.pWizStep)) ? V.pWizStep : partyDerived(c, h.par);
+      const tabLab = { tee: 'Calle', app: 'Green', ud: 'Up&D', putts: 'Putts', score: 'Score' };
+      const ansOf = k => k === 'tee' ? (c.tee === 'fw' ? 'Sí' : c.tee === 'penal' ? 'OB' : c.tee ? 'No' : null)
+        : k === 'app' ? (c.app === 'gir' ? 'Sí' : c.app ? 'No' : null)
+          : k === 'ud' ? (c.upDown === true ? 'Sí' : c.upDown === false ? 'No' : null)
+            : k === 'putts' ? (c.putts != null ? c.putts + 'p' : null)
+              : (score != null ? String(score) : null);
+      const tabs = steps.map(s => `<button class="wz-tab ${s === curK ? 'on' : ''} ${ansOf(s) != null ? 'ans' : ''}" data-act="pa-wiz-tab" data-s="${s}"><span>${tabLab[s]}</span><b>${ansOf(s) || '·'}</b></button>`).join('');
+      const yn = (scene, onYes, onNo, yesAttr, noAttr, q, extra) => `<h3 class="wz-q">${q}</h3><div class="wz-art">${chkScene(scene, onYes)}</div><div class="wz-yn"><button class="wz-opt yes ${onYes ? 'on' : ''}" data-act="pa-fast" ${yesAttr}>Sí</button><button class="wz-opt no ${onNo ? 'on' : ''}" data-act="pa-fast" ${noAttr}>No</button></div>${extra || ''}`;
+      const penPill = `<div class="wz-extra"><button class="wz-pen ${c.tee === 'penal' ? 'on' : ''}" data-act="pa-pen" data-pid="${ap}">${c.tee === 'penal' ? '✓ ' : ''}Penalti / OB</button></div>`;
+      let body;
+      if (curK === 'tee') body = yn('fw', c.tee === 'fw', !!c.tee && c.tee !== 'fw' && c.tee !== 'penal', `data-pid="${ap}" data-k="tee" data-v="fw"`, `data-pid="${ap}" data-k="tee" data-v="rough"`, `¿${nm} pegó a la calle?`, penPill);
+      else if (curK === 'app') body = yn('gir', gir, !!c.app && !gir, `data-pid="${ap}" data-k="app" data-v="gir"`, `data-pid="${ap}" data-k="app" data-v="miss"`, '¿Green en regulación?', h.par === 3 ? penPill : '');
+      else if (curK === 'ud') body = yn('ud', c.upDown === true, c.upDown === false, `data-pid="${ap}" data-k="ud" data-v="si"`, `data-pid="${ap}" data-k="ud" data-v="no"`, '¿Salvó el par? (up &amp; down)');
+      else if (curK === 'putts') { const opts = c.upDown === true ? [[0, '0'], [1, '1']] : [[0, '0'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']]; body = `<h3 class="wz-q">¿Cuántos putts?</h3><div class="wz-putts ${opts.length === 2 ? 'wz-putts2' : ''}">${opts.map(([v, l]) => `<button class="wz-putt ${c.putts === v ? 'on' : ''}" data-act="pa-fast" data-pid="${ap}" data-k="putts" data-v="${v}">${l}</button>`).join('')}</div>`; }
+      else body = `<h3 class="wz-q">Score de ${nm}</h3><div class="wz-scorebox ${scoreCls}"><span class="sc-num">${score != null ? score : '–'}</span><span class="sc-rel">${score != null ? relScore(score - h.par) : ''}</span><div class="stepper"><button data-act="pa-cap-score" data-pid="${ap}" data-d="-1">−</button><button data-act="pa-cap-score" data-pid="${ap}" data-d="1">+</button></div></div>`;
+      const ci = steps.indexOf(curK);
       return `
     <div class="group">
       <div class="g-lab"><span class="label">Jugador</span><span class="small muted">cada quien llena su hoyo</span></div>
       <div class="chips">${p.players.map(pl => `<button class="chip ${pl.pid === ap ? 'on' : ''}" data-act="pa-player" data-pid="${pl.pid}">${filled(pl) ? '✓ ' : ''}${esc(pl.name.split(' ')[0])}${scoreOf(pl) != null ? ` · ${scoreOf(pl)}` : ''}</button>`).join('')}</div>
     </div>
 
-    <div class="card hole-card">
-      <span class="hc-title">${golfIcon('tee')} ${esc(apl.name.split(' ')[0])} · toca lo que logró</span>
-      <div class="hs-grid">
-        ${h.par !== 3 ? `<button class="hs-tile ic-fw ${c.tee === 'fw' ? 'on' : ''}" data-act="pa-cap" data-pid="${ap}" data-k="tee" data-v="fw"><div class="hs-art">${chkScene('fw', c.tee === 'fw')}</div><span class="hs-lab">Fairway<small>le pegó a la calle</small></span><span class="hs-box">${c.tee === 'fw' ? '✓' : ''}</span></button>` : ''}
-        <button class="hs-tile ic-gir ${gir ? 'on' : ''}" data-act="pa-cap" data-pid="${ap}" data-k="app" data-v="gir"><div class="hs-art">${chkScene('gir', gir)}</div><span class="hs-lab">Green<small>llegó a tiempo</small></span><span class="hs-box">${gir ? '✓' : ''}</span></button>
-        ${!gir ? `<button class="hs-tile ic-ud ${c.upDown === true ? 'on' : ''}" data-act="pa-cap" data-pid="${ap}" data-k="upDown" data-v="${c.upDown === true ? 'no' : 'si'}"><div class="hs-art">${chkScene('ud', c.upDown === true)}</div><span class="hs-lab">Up &amp; down<small>salvó el par</small></span><span class="hs-box">${c.upDown === true ? '✓' : ''}</span></button>` : ''}
-        <button class="hs-tile ic-pen ${c.tee === 'penal' ? 'on' : ''}" data-act="pa-cap" data-pid="${ap}" data-k="tee" data-v="penal"><div class="hs-art">${chkScene('pen', c.tee === 'penal')}</div><span class="hs-lab">Penalti / OB<small>agua, fuera</small></span><span class="hs-box">${c.tee === 'penal' ? '✓' : ''}</span></button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="g-lab"><span class="chk-ic chk-ic-sm ic-putt">${golfIcon('putter')}</span><span class="label">Putts</span></div>
-      ${pchipRow([[0, '0'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']], 'putts', c.putts, ap)}
-      <div class="g-lab" style="margin-top:14px"><span class="label">Distancia 1er putt</span><span class="small muted">opcional</span></div>
-      ${pchipRow([['0-3', '0–3 ft'], ['3-8', '3–8 ft'], ['8-20', '8–20 ft'], ['20+', '+20 ft']], 'dist', c.dist, ap)}
-    </div>
-
-    <div class="score-card ${scoreCls}">
-      <div class="sc-lab"><span class="label">Score de ${esc(apl.name.split(' ')[0])}</span><span class="small muted">${score != null ? 'auto · ajústalo' : 'completa los toques'}</span></div>
-      <div class="score-row">
-        <div class="sc-val"><span class="sc-num">${score != null ? score : '–'}</span><span class="sc-rel">${score != null ? relScore(score - h.par) : ''}</span></div>
-        <div class="stepper">
-          <button data-act="pa-cap-score" data-pid="${ap}" data-d="-1" ${score == null ? 'disabled' : ''}>−</button>
-          <button data-act="pa-cap-score" data-pid="${ap}" data-d="1" ${score == null ? 'disabled' : ''}>+</button>
-        </div>
-      </div>
+    <div class="card wz">
+      <div class="wz-tabs">${tabs}</div>
+      <div class="wz-body">${body}</div>
+      ${ci > 0 ? `<button class="wz-back" data-act="pa-wiz-back">← Atrás</button>` : ''}
     </div>
 
     ${p.games.corta ? `<div class="card cx">
@@ -384,6 +377,20 @@ function makeHoleForParty(p, i) {
   return { par, scores: {}, putts: {}, cap: {}, fw: [], gir: [], ud: [], sandy: [], holeout: [], threeputt: [], espanol: [], reg: {}, longputt: {} };
 }
 
+/* pasos del wizard de party (por jugador) */
+function partySteps(c, par) {
+  const s = []; if (par >= 4) s.push('tee'); s.push('app');
+  if (c.app && c.app !== 'gir') s.push('ud');
+  s.push('putts'); s.push('score'); return s;
+}
+function partyDerived(c, par) {
+  if (par >= 4 && !c.tee) return 'tee';
+  if (!c.app) return 'app';
+  if (c.app !== 'gir' && c.upDown == null) return 'ud';
+  if (c.putts == null) return 'putts';
+  return 'score';
+}
+
 const partyActions = {
   'party-new'() {
     V.partyDraft = { courseId: 'campestre', useNet: false, stake: 20, games: { corta: false, skins: false, larga: false, gogo: false, birdie: false, medal: true, nassau: false, match: false } };
@@ -498,7 +505,25 @@ const partyActions = {
   },
   'party-exit'() { V.showMoney = false; go('social'); },
 
-  'pa-player'(d) { V.capPid = d.pid; render(); window.scrollTo(0, 0); },
+  'pa-player'(d) { V.capPid = d.pid; V.pWizStep = null; render(); window.scrollTo(0, 0); },
+  'pa-fast'(d) {
+    const p = activeParty(); const h = p.holes[p.idx]; const c = pcap(h, d.pid, h.par);
+    const k = d.k;
+    if (k === 'tee') c.tee = d.v;
+    else if (k === 'app') { c.app = d.v; if (d.v === 'gir') c.upDown = null; }
+    else if (k === 'ud') c.upDown = (d.v === 'si');
+    else if (k === 'putts') c.putts = Number(d.v);
+    V.pWizStep = null; psync(h, d.pid); pcommit(p);
+  },
+  'pa-pen'(d) { const p = activeParty(); const h = p.holes[p.idx]; const c = pcap(h, d.pid, h.par); c.tee = (c.tee === 'penal') ? null : 'penal'; psync(h, d.pid); pcommit(p); },
+  'pa-wiz-tab'(d) { V.pWizStep = d.s; render(); },
+  'pa-wiz-back'() {
+    const p = activeParty(); const h = p.holes[p.idx];
+    const ap = (V.capPid && p.players.some(x => x.pid === V.capPid)) ? V.capPid : p.players[0].pid;
+    const c = pcap(h, ap, h.par); const steps = partySteps(c, h.par);
+    const curK = (V.pWizStep && steps.includes(V.pWizStep)) ? V.pWizStep : partyDerived(c, h.par);
+    const i = steps.indexOf(curK); V.pWizStep = steps[Math.max(0, i - 1)]; render();
+  },
   'pa-cap'(d) {
     const p = activeParty(); const h = p.holes[p.idx];
     const c = pcap(h, d.pid, h.par);
@@ -560,10 +585,10 @@ const partyActions = {
     if (p.idx + 1 >= p.holesCount) return;
     p.idx++;
     if (!p.holes[p.idx]) p.holes[p.idx] = makeHoleForParty(p, p.idx);
-    V.capPid = p.players[0].pid;
+    V.capPid = p.players[0].pid; V.pWizStep = null;
     pcommit(p); window.scrollTo(0, 0);
   },
-  'pa-prev'() { const p = activeParty(); if (p.idx > 0) { p.idx--; V.capPid = p.players[0].pid; pcommit(p); window.scrollTo(0, 0); } },
+  'pa-prev'() { const p = activeParty(); if (p.idx > 0) { p.idx--; V.capPid = p.players[0].pid; V.pWizStep = null; pcommit(p); window.scrollTo(0, 0); } },
   'pa-money'() { V.showMoney = true; render(); },
   'pa-money-close'() { V.showMoney = false; render(); },
   'pa-finish'() {

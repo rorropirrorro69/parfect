@@ -394,8 +394,12 @@ function avatarImg(u, cls, lit) {
     const sat = spark < 0.5 ? 'saturate(0.82) ' : '';   // a media chispa todavía se está "prendiendo"
     fil = `${sat}${glow}`.trim();
   }
+  const hue = (u && u.avatarHue) ? `hue-rotate(${u.avatarHue}deg) ` : '';
+  fil = (hue + (fil || '')).trim();
   return `<img class="golfer ${cls || ''}" src="${avatarSrc(u)}"${fil ? ` style="filter:${fil}"` : ''} alt="" loading="lazy">`;
 }
+/* tonos de color para el golfista (hue-rotate sobre el png base) */
+const GOLF_HUES = [{ h: 0, c: '#ff8a3d' }, { h: 330, c: '#ff5a6a' }, { h: 285, c: '#9a5cd0' }, { h: 210, c: '#3a8fe0' }, { h: 165, c: '#2fa36b' }, { h: 95, c: '#7bbf3a' }, { h: 45, c: '#f2c33a' }, { h: 250, c: '#5a6ad0' }];
 
 /* ============ Íconos de golf (SVG con look 3D + animación sutil) ============ */
 const GOLF_ICONS = {
