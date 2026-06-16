@@ -51,6 +51,12 @@ function vPartySetup() {
           <span class="g-check">${d.games[k] ? '✓' : ''}</span>
         </button>`).join('')}
     </div>
+    <div class="card">
+      <span class="label">${golfIcon('card')} Apuesta por unidad</span>
+      <p class="note" style="margin-top:0;margin-bottom:8px">Cuánto vale cada unidad/punto ganado. Déjalo en cero para jugar solo por honor.</p>
+      <div class="chips">${[0, 10, 20, 50, 100].map(v => `<button class="chip ${(d.stake || 0) === v ? 'on' : ''}" data-act="pd-stake" data-v="${v}">${v === 0 ? 'Sin dinero' : '$' + v}</button>`).join('')}</div>
+      ${(d.stake || 0) > 0 ? `<p class="note" style="margin:10px 0 0">El que pierde paga <b class="lime">$${d.stake}</b> por cada unidad de diferencia. Se liquida al final.</p>` : ''}
+    </div>
     <button class="btn primary" data-act="party-create">Crear party y generar código →</button>
   </div>`;
 }
@@ -132,6 +138,27 @@ function psync(h, pid) {
   setArr('ud', c.upDown === true);
 }
 
+/* marcador de La corta siempre visible en el room */
+function vCortaBar(p, idx) {
+  if (!p.games.corta) return '';
+  const net = Party.unidades(p, idx);
+  const order = p.players.slice().sort((a, b) => net[b.pid] - net[a.pid]);
+  const stake = p.stake || 0;
+  const cells = order.map((pl, i) => {
+    const u = net[pl.pid];
+    return `<div class="cb-cell ${i === 0 && u > 0 ? 'lead' : ''}">
+      ${i === 0 && u > 0 ? `<span class="cb-crown">${golfIcon('trophy')}</span>` : ''}
+      <span class="cb-nm">${esc(pl.name.split(' ')[0])}</span>
+      <b class="cb-u ${u > 0 ? 'up' : u < 0 ? 'dn' : ''}">${u > 0 ? '+' : ''}${u}</b>
+      ${stake ? `<span class="cb-money">${u >= 0 ? '+' : '−'}$${Math.abs(u * stake)}</span>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="corta-bar">
+    <div class="cb-h"><span>${golfIcon('card')} La corta · unidades${idx === 0 ? ' · arranca el reto' : ''}</span><button class="cb-more" data-act="pa-money">Tabla →</button></div>
+    <div class="cb-row">${cells}</div>
+  </div>`;
+}
+
 function vPartyLive() {
   const p = activeParty();
   if (!p || p.status === 'cancelled') { S.activeParty = null; V.view = 'social'; return vShell(vSocial()); }
@@ -151,6 +178,7 @@ function vPartyLive() {
     <div class="progress"><i style="width:${(p.idx / p.holesCount) * 100}%"></i></div>
     <div class="hole-head"><span class="hnum">Hoyo ${p.idx + 1}</span>
       <span class="hof">Par ${h.par}${chole && chole.yds ? ` · ${chole.yds} yds` : ''}${ms ? ` · ${ms.text}` : ''}</span></div>
+    ${vCortaBar(p, p.idx)}
 
     ${(() => {
       const ap = (V.capPid && p.players.some(x => x.pid === V.capPid)) ? V.capPid : p.players[0].pid;
@@ -263,13 +291,17 @@ function vPartyTable(p, limit) {
   let out = '';
   if (p.games.corta) {
     const net = Party.unidades(p, limit);
+    const stake = Number(p.stake) || 0;
     const order = p.players.slice().sort((a, b) => net[b.pid] - net[a.pid]);
-    out += `<div class="sec-h" style="margin-top:4px"><h2 style="font-size:15px">La corta</h2><span class="small muted">cada quien vs cada quien</span></div>`;
-    out += order.map((pl, i) => `<div class="pl-row">
+    out += `<div class="sec-h" style="margin-top:4px"><h2 style="font-size:15px">La corta</h2><span class="small muted">${stake ? `$${stake} por unidad` : 'cada quien vs cada quien'}</span></div>`;
+    out += order.map((pl, i) => {
+      const u = net[pl.pid];
+      return `<div class="pl-row">
       <span class="rank">${i + 1}</span>
-      <div class="r-main" style="flex:1"><b>${esc(pl.name)}</b></div>
-      <div class="r-side"><b style="color:${net[pl.pid] >= 0 ? 'var(--lime)' : 'var(--danger)'}">${net[pl.pid] >= 0 ? '+' : ''}${net[pl.pid]}</b><span>unidades</span></div>
-    </div>`).join('');
+      <div class="r-main" style="flex:1"><b>${esc(pl.name)}</b>${stake ? `<span>${u >= 0 ? 'cobra' : 'paga'} $${Math.abs(u * stake)}</span>` : ''}</div>
+      <div class="r-side"><b style="color:${u >= 0 ? 'var(--lime)' : 'var(--danger)'}">${u >= 0 ? '+' : ''}${u}</b><span>unidades</span></div>
+    </div>`;
+    }).join('');
   }
   if (p.games.match) {
     const ms = Party.matchStatus(p, limit);
@@ -340,12 +372,13 @@ function makeHoleForParty(p, i) {
 
 const partyActions = {
   'party-new'() {
-    V.partyDraft = { courseId: 'campestre', useNet: false, games: { corta: false, skins: false, larga: false, gogo: false, birdie: false, medal: true, nassau: false, match: false } };
+    V.partyDraft = { courseId: 'campestre', useNet: false, stake: 20, games: { corta: false, skins: false, larga: false, gogo: false, birdie: false, medal: true, nassau: false, match: false } };
     go('party-setup');
   },
   'pd-pick-course'(d) { if (COURSES[d.c]) V.partyDraft.courseId = d.c; render(); },
   'pd-game'(d) { V.partyDraft.games[d.g] = !V.partyDraft.games[d.g]; render(); },   // multi-selección
   'pd-net'() { V.partyDraft.useNet = !V.partyDraft.useNet; render(); },
+  'pd-stake'(d) { V.partyDraft.stake = Number(d.v) || 0; render(); },
   'party-create'() {
     const d = V.partyDraft;
     const u = cur();
@@ -361,6 +394,7 @@ const partyActions = {
       holesCount: COURSES[cid].holes.length,
       games: { ...d.games },
       useNet: !!d.useNet,
+      stake: Number(d.stake) || 0,
       players: [{ pid: hostPid, name: u.name, userId: u.id, strokes: 0, device: DEVICE_ID }],
       holes: [], idx: 0,
       status: 'setup',
