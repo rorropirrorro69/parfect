@@ -72,13 +72,13 @@ function vLanding() {
   // (lpFeatArt definida abajo, a nivel de módulo)
   return `<div class="lp">
     <div class="lp-life parallax" data-speed="0.22" aria-hidden="true">
-      <img class="lp-bird lb1" src="assets/bird.png" alt="" />
-      <img class="lp-bird lb2" src="assets/bird.png" alt="" />
-      <img class="lp-bird lb3" src="assets/bird.png" alt="" />
-      <span class="lp-fly lf1"></span>
-      <span class="lp-fly lf2"></span>
-      <span class="lp-fly lf3"></span>
-      <span class="lp-fly lf4"></span>
+      <img class="lp-fbird lpf1" src="assets/bird.png" alt="" />
+      <img class="lp-fbird lpf2" src="assets/bird.png" alt="" />
+      <div class="lp-tree" aria-hidden="true">
+        <svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg>
+        <img class="lp-perch lpp1" src="assets/bird.png" alt="" />
+        <img class="lp-perch lpp2" src="assets/bird.png" alt="" />
+      </div>
     </div>
     <header class="lp-nav">
       <span class="lp-logo">${logoMark(18)} PARFECT</span>
@@ -102,7 +102,7 @@ function vLanding() {
 
       <div class="lp-stage">
         <div class="lp-glow"></div>
-        <img class="lp-golfer parallax" data-speed="0.16" src="assets/golfer.png" alt="Golfista PARFECT" />
+        <div class="lp-golfer-stack parallax" data-speed="0.16">${AVATARS.map((src, i) => `<img class="lp-golfer lpg${i}" src="${src}" alt="${i === 0 ? 'Golfista PARFECT' : ''}" />`).join('')}</div>
         <div class="lp-shadow" aria-hidden="true"></div>
         <div class="lp-fcard lp-fc1 parallax" data-speed="0.7"><span class="lp-fc-k">Hándicap</span><b class="lp-fc-v">12.4 <i>▾</i></b></div>
         <div class="lp-fcard lp-fc2 parallax" data-speed="0.95"><img class="lp-fc-img" src="assets/bird.png" alt="" /><span>¡Birdie!</span></div>
