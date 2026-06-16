@@ -87,6 +87,45 @@ function positionOrb() {
 const AVATARS = ['assets/avatars/a1.png', 'assets/avatars/a2.png', 'assets/avatars/a3.png', 'assets/avatars/a4.png', 'assets/avatars/a5.png', 'assets/avatars/a6.png'];
 function avatarSrc(u) { const i = (u && u.avatar != null) ? u.avatar : 0; return AVATARS[i] || AVATARS[0]; }
 
+/* ====== Golfista personalizable (SVG): piel, gorra, playera, pantalón, rasgos ====== */
+const GOLF_SKIN = ['#f6d0aa', '#eab07c', '#c98f5f', '#9c6b40', '#6f4a2c'];
+const GOLF_HAIR = ['#2a1c12', '#5a3a1e', '#a86b2e', '#d8b25a', '#8a8a8a', '#1a1a1a'];
+const GOLF_CAP = ['none', '#C7EE54', '#e8483a', '#2a3550', '#3a8fe0', '#f2c33a', '#ffffff', '#16241A'];
+const GOLF_SHIRT = ['#C7EE54', '#e8483a', '#3a8fe0', '#ff8a3d', '#9a5cd0', '#2fa36b', '#16241A', '#ffffff'];
+const GOLF_PANTS = ['#2a3550', '#5b6470', '#16241A', '#b5651d', '#3f8f3a', '#cdd3da', '#8a3d3d', '#5a3da0'];
+const GOLF_FACE = [['normal', 'Normal'], ['glasses', 'Lentes'], ['shades', 'Gafas de sol'], ['beard', 'Barba']];
+const GOLF_DEFAULT = { skin: '#f6d0aa', hair: '#2a1c12', cap: '#C7EE54', shirt: '#C7EE54', pants: '#2a3550', face: 'normal' };
+function golferCfg(u) { return Object.assign({}, GOLF_DEFAULT, (u && u.golfer) || {}); }
+function golfAvatarSVG(cfg, cls, fil) {
+  const c = Object.assign({}, GOLF_DEFAULT, cfg || {});
+  const hasCap = c.cap && c.cap !== 'none';
+  const beard = c.face === 'beard' ? `<path d="M33 40 Q33 60 50 62 Q67 60 67 40 Q60 51 50 51 Q40 51 33 40Z" fill="${c.hair}"/>` : '';
+  let eyes = `<circle cx="43.5" cy="39" r="2.4" fill="#2a2118"/><circle cx="56.5" cy="39" r="2.4" fill="#2a2118"/>`, glasses = '';
+  if (c.face === 'glasses') glasses = `<g stroke="#2a2118" stroke-width="1.7" fill="none"><circle cx="43.5" cy="39" r="5.3"/><circle cx="56.5" cy="39" r="5.3"/><line x1="48.8" y1="39" x2="51.2" y2="39"/></g>`;
+  if (c.face === 'shades') { eyes = ''; glasses = `<g fill="#15161a"><rect x="36.5" y="36" width="11" height="7.5" rx="2.4"/><rect x="52.5" y="36" width="11" height="7.5" rx="2.4"/><rect x="47" y="38.4" width="6" height="2.4"/></g>`; }
+  const hair = !hasCap ? `<path d="M31 34 Q30 13 50 13 Q70 13 69 34 Q63 23 50 23 Q37 23 31 34Z" fill="${c.hair}"/>` : '';
+  const cap = hasCap ? `<g><path d="M30 31 Q30 9 50 9 Q70 9 70 31 Q50 25 30 31Z" fill="${c.cap}"/><path d="M68 31 Q78 30 80 35 Q74 36 66 34 Z" fill="${c.cap}"/><circle cx="50" cy="11.5" r="2.3" fill="${c.cap}" stroke="rgba(0,0,0,.14)"/></g>` : '';
+  const sty = fil ? ` style="filter:${fil}"` : '';
+  return `<svg viewBox="0 0 100 120" class="golfer ${cls || ''}"${sty} preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+    <rect x="40" y="84" width="8" height="27" rx="3.5" fill="${c.pants}"/>
+    <rect x="52" y="84" width="8" height="27" rx="3.5" fill="${c.pants}"/>
+    <ellipse cx="44" cy="113" rx="7" ry="4" fill="#1c1c1c"/>
+    <ellipse cx="56" cy="113" rx="7" ry="4" fill="#1c1c1c"/>
+    <path d="M33 60 Q50 53 67 60 L70 90 Q50 96 30 90 Z" fill="${c.shirt}"/>
+    <rect x="25" y="60" width="9" height="27" rx="4.5" fill="${c.shirt}"/>
+    <rect x="66" y="60" width="9" height="27" rx="4.5" fill="${c.shirt}"/>
+    <circle cx="29.5" cy="87" r="4.6" fill="${c.skin}"/>
+    <circle cx="70.5" cy="87" r="4.6" fill="${c.skin}"/>
+    <path d="M44 56 L50 63 L56 56 L54 54 L50 59 L46 54 Z" fill="#ffffff" opacity=".9"/>
+    <rect x="46" y="50" width="8" height="9" fill="${c.skin}"/>
+    <circle cx="31" cy="39" r="3.2" fill="${c.skin}"/><circle cx="69" cy="39" r="3.2" fill="${c.skin}"/>
+    <circle cx="50" cy="37" r="18.5" fill="${c.skin}"/>
+    ${beard}${eyes}${glasses}
+    <path d="M44 46.5 Q50 51.5 56 46.5" stroke="#9c5b3b" stroke-width="2" fill="none" stroke-linecap="round"/>
+    ${hair}${cap}
+  </svg>`;
+}
+
 /* salida: dirección (h.tee: izq/c/der) + resultado (h.teeLie: calle/rough/bunker/ob). Compatibles con datos viejos (h.tee: fw/penal) */
 function teeIsFairway(h) { return h.teeLie ? h.teeLie === 'calle' : h.tee === 'fw'; }
 function teeIsPenal(h) { return !!h.pen || (h.teeLie ? h.teeLie === 'ob' : h.tee === 'penal'); }
@@ -341,6 +380,7 @@ function avatarImg(u, cls, lit) {
     const sat = spark < 0.5 ? 'saturate(0.82) ' : '';   // a media chispa todavía se está "prendiendo"
     fil = `${sat}${glow}`.trim();
   }
+  if (u && u.golfer) return golfAvatarSVG(u.golfer, cls, fil);
   return `<img class="golfer ${cls || ''}" src="${avatarSrc(u)}"${fil ? ` style="filter:${fil}"` : ''} alt="" loading="lazy">`;
 }
 

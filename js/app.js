@@ -290,7 +290,9 @@ const actions = {
     u.clubs = clubs; commit();
   },
   'bag-close'() { V.bagEdit = false; render(); },
-  'set-avatar'(d) { const u = cur(); if (u) { u.avatar = Number(d.i) || 0; commit(); } },
+  'set-avatar'(d) { const u = cur(); if (u) { u.avatar = Number(d.i) || 0; u.golfer = null; commit(); } },
+  'golfer-custom'() { const u = cur(); if (u && !u.golfer) { u.golfer = Object.assign({}, GOLF_DEFAULT); commit(); } },
+  'gset'(d) { const u = cur(); if (!u) return; u.golfer = Object.assign({}, GOLF_DEFAULT, u.golfer); u.golfer[d.k] = d.v; commit(); },
   'set-outfit'(d) { const u = cur(); if (u) { u.outfit = d.k || 'rank'; commit(); } },
   'set-pbg'(d) { const u = cur(); if (u && PROFILE_BGS.some(b => b.k === d.k && rankIdx(u.hcp) >= b.min)) { u.bg = d.k; commit(); } },
   'stat-pop'(d, el) {

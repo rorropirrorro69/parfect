@@ -2003,3 +2003,12 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .pg-check { flex: none; width: 26px; height: 26px; border-radius: 8px; border: 2px solid var(--line); display: grid; place-items: center; color: transparent; font-size: 15px; font-weight: 900; }
 .pg-card.on .pg-check { background: #C7EE54; border-color: #C7EE54; color: #16241A; }
 .net-card .pg-ic { color: var(--muted); }
+
+/* ===== Golfista personalizable ===== */
+.avatar-btn .golfer { width: 36px; height: 36px; }
+.cre-customtile { position: relative; padding: 0 !important; overflow: hidden; }
+.cre-customsvg { width: 100%; height: 100%; }
+.cre-custom-lab { position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); font-size: 8px; font-style: normal; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.cre-customtile.on .cre-custom-lab { color: #2c5212; }
+.cre-none span { display: grid !important; place-items: center; color: var(--muted); font-size: 15px; background: var(--card2) !important; }
+.cre-sw.cre-none.on { border-color: var(--text); }
