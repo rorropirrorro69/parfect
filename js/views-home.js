@@ -578,11 +578,9 @@ function vAvatarCreator(u) {
   const idx = rankIdx(u.hcp);
   const curOutfit = (u && u.outfit) || 'rank';
   const curBg = (u && u.bg) || 'rank';
-  const curAv = (u && u.avatar != null) ? u.avatar : 0;
-  const personas = AVATARS.map((src, i) => `<button class="cre-av${i === curAv ? ' on' : ''}" data-act="set-avatar" data-i="${i}"><img src="${src}" alt="Golfista ${i + 1}" loading="lazy"></button>`).join('');
-  const curHue = u.avatarHue || 0;
-  const colors = GOLF_HUES.map(o => `<button class="cre-gcolor${curHue === o.h ? ' on' : ''}" data-act="set-hue" data-h="${o.h}"><img src="${avatarSrc(u)}" style="filter:hue-rotate(${o.h}deg)" alt="" loading="lazy"></button>`).join('');
-  const customUI = `<div class="cre-grp"><span class="cre-lab">Color del golfista</span><div class="cre-row cre-gcolors">${colors}</div></div>`;
+  const golfistas = `<button class="cre-otfit ${!u.golfer ? 'on' : ''}" data-act="set-avatar" data-i="0"><img class="cre-otpng" src="${AVATARS[0]}" alt="" loading="lazy"><i class="cre-ot-lab">Original</i></button>`
+    + GOLF_OUTFITS.map(o => `<button class="cre-otfit ${(u.golfer && u.golfer.k === o.k) ? 'on' : ''}" data-act="set-golfer" data-k="${o.k}">${golfAvatarSVG(o.cfg, 'cre-otsvg')}<i class="cre-ot-lab">${o.n}</i></button>`).join('');
+  const customUI = '';
   const outfits = OUTFITS.map(o => {
     const sw = o.sw === 'rank' ? `background:conic-gradient(${RANKS.map(r => r.c).join(',')})` : `background:${o.sw}`;
     return `<button class="cre-sw${curOutfit === o.k ? ' on' : ''}" data-act="set-outfit" data-k="${o.k}" title="${o.n}"><span style="${sw}"></span></button>`;
@@ -602,7 +600,7 @@ function vAvatarCreator(u) {
   return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Crea tu golfista</h2><span class="small muted">hazlo tuyo</span></div>
     <div class="card cre-card">
       <div class="cre-preview" style="background:${profileBgGrad(u)}">${avatarImg(u, 'cre-hero', true)}<span class="cre-rank">${RANKS[idx].n}</span></div>
-      <div class="cre-grp"><span class="cre-lab">Golfista</span><div class="cre-row">${personas}</div></div>
+      <div class="cre-grp"><span class="cre-lab">Golfista · outfit</span><div class="cre-row cre-otfits">${golfistas}</div></div>
       ${customUI}
       <div class="cre-grp"><span class="cre-lab">Aura</span><div class="cre-row cre-sws">${outfits}</div></div>
       <div class="cre-grp"><span class="cre-lab">Fondo de perfil</span><div class="cre-row cre-bgs">${bgs}</div></div>

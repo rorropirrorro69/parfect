@@ -88,19 +88,30 @@ Sí / No:
 
 ---
 
-## 8. Sistema visual (ya definido — respétalo)
+## 8. Sistema visual (tokens REALES de la app — respétalos)
+> Tomados directo del CSS y de capturas en vivo (no del kit viejo, que decía negro `#070b06` — eso ya **no es** PARFECT).
+
+PARFECT es **lúdico y luminoso**, no austero. Personajes **3D estilo emoji** (golfista, bandera, águila, trofeo), tarjetas blancas redondeadas, números enormes y un fondo vivo de campo (cielo de día con nubes/sol/pájaros/pelotas, o navy de noche).
+
+**Modo claro / día (el look por defecto, el de tus posts):**
 | Token | Valor | Uso |
 |---|---|---|
-| Fondo | `#070b06` (negro verdoso) | base de todo |
-| Acento | `#c9f73e` (verde lima) | *un* brillo, no fondos enteros |
-| Texto claro | `#eef3e6` | cuerpo |
-| Frío aurora | `#7fe9c6` (menta/cian) | profundidad, halos (uso premium) |
-| Tipografía | Inter (gruesa, mayúsculas, tracking amplio) | titulares enormes, números protagonistas |
+| Fondo | `#EAF1DD` → degradado verde-cielo | base luminosa |
+| Texto | `#1B2A18` (verde-navy oscuro) | titulares y números |
+| Muted | `#7C8A6E` | etiquetas, subtítulos |
+| Lima | `#C7EE54` | acento, píldoras, hero card |
+| Cards | `#ffffff`, radio **18px** | contenedores |
+
+**Modo oscuro / noche:** Fondo `#0C1226` (navy), cards `#161F3A`, texto `#E7EBF6`, líneas azuladas `rgba(150,175,255,.16)`, mismo lima.
+
+- **Tipografía:** Inter. Números/score/hándicap = protagonistas, peso 900.
+- **Wordmark:** `PARFECT` en **itálica**, peso 900, tracking `0.18em`, con la **banderita lima** al frente.
+- **Esquinas redondeadas** (radio 18px) siempre. Nada de bordes duros.
 
 Reglas de imagen:
-- **Capturas reales de la app en modo oscuro = tu mejor contenido.** Lucen premium sin esfuerzo.
+- **Capturas reales de la app = tu mejor contenido.** Salen perfectas (dashboard, radar, diagnóstico, Liga de amigos).
+- **Los personajes 3D son parte de la marca** — úsalos (golfista, bandera, trofeo, águila).
 - Los **números van grandes** (score, hándicap, putts). Son el héroe.
-- Mucho espacio negro. El lima se usa para **señalar**, no para rellenar.
 - Sin stock de "señores de negocios chocando palos". Golf real, tuyo, de Morelia.
 
 ---
@@ -119,4 +130,5 @@ Reglas de imagen:
 - ❌ No prometer lo que la app aún no hace bien (ojo: cuentas locales por dispositivo — ver nota en PLAN-50).
 - ❌ No usar plantillas genéricas de "app de fitness". PARFECT es de golf, de Morelia, con datos.
 - ❌ No spamear grupos. Aporta valor primero (un dato, un tip), CTA después.
-- ❌ No cambiar la paleta ni meter un segundo acento de moda. Negro + lima. Punto.
+- ❌ No cambiar la paleta ni meter un segundo acento de moda. Verde-día (o navy) + lima `#C7EE54`. Punto.
+- ❌ No volver al look austero/negro del kit viejo. PARFECT es **luminoso, redondeado y con personajes 3D**.

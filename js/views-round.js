@@ -173,27 +173,45 @@ function courseHolesArt(cid) {
   return `<div class="csa csa-n${c.holes.length}"><div class="csa-grid">${cells}</div></div>`;
 }
 
-/* escudo/logo del campo (emblema estilo club de golf) */
-const COURSE_CREST = {
-  campestre: { ini: 'C', col: '#2f8f4f' },
-  tresmarias: { ini: 'TM', col: '#2f7fb0' },
-  altozano: { ini: 'A', col: '#1f9a86' },
-};
+/* logos reales de los campos (recreados en SVG) */
 function courseCrest(cid) {
   const c = COURSES[cid]; if (!c) return '';
-  const m = COURSE_CREST[cid] || { ini: (c.name[0] || 'G').toUpperCase(), col: '#2f8f4f' };
-  return `<div class="ccrest" style="--cc:${m.col}">
-    <svg viewBox="0 0 120 120" class="ccrest-svg" aria-hidden="true">
-      <circle cx="60" cy="60" r="56" fill="var(--card)"/>
-      <circle cx="60" cy="60" r="56" fill="none" stroke="var(--cc)" stroke-width="3"/>
-      <circle cx="60" cy="60" r="48" fill="none" stroke="var(--cc)" stroke-width="1.4" opacity=".45"/>
-      <line x1="60" y1="44" x2="60" y2="26" stroke="var(--cc)" stroke-width="3" stroke-linecap="round"/>
-      <path d="M60 26 L76 30.5 L60 35 Z" fill="var(--cc)"/>
-      <circle cx="60" cy="44" r="2.4" fill="var(--cc)"/>
-      <text x="60" y="78" text-anchor="middle" class="ccrest-ini">${m.ini}</text>
-      <text x="60" y="98" text-anchor="middle" class="ccrest-tag">GOLF CLUB</text>
-    </svg>
-  </div>`;
+  if (cid === 'campestre') {
+    let dimples = '';
+    for (let row = 0; row < 6; row++) for (let col = 0; col < 7; col++) {
+      const x = 36 + col * 8, y = 58 + row * 7.5;
+      if (Math.hypot(x - 60, y - 66) < 31 && y > 56) dimples += `<path d="M${x - 2.4} ${y} q2.4 2.6 4.8 0" fill="none" stroke="#cdb24e" stroke-width="1.5" stroke-linecap="round"/>`;
+    }
+    return `<div class="clogo"><svg viewBox="0 0 120 150" class="clogo-svg" aria-hidden="true">
+      <path d="M98 36 A48 48 0 1 0 98 100" fill="none" stroke="#5e8c3f" stroke-width="17" stroke-linecap="round"/>
+      <circle cx="60" cy="66" r="34" fill="#ffffff" stroke="#e6dcb4" stroke-width="1"/>
+      ${dimples}
+      <text x="60" y="124" text-anchor="middle" class="clogo-t1" fill="#5e8c3f">Club Campestre</text>
+      <text x="60" y="142" text-anchor="middle" class="clogo-t2" fill="#5e8c3f">Morelia</text>
+    </svg></div>`;
+  }
+  if (cid === 'tresmarias') {
+    const tree = (x, h, w) => `<path d="M${x} ${96 - h} q${w} 4 ${w} ${h * 0.45} q0 ${h * 0.55} -${w} ${h * 0.55} q-${w} 0 -${w} -${h * 0.55} q0 -${h * 0.45} ${w} -${h * 0.45} Z" fill="none" stroke="#cdb87a" stroke-width="2.4"/>`;
+    return `<div class="clogo"><svg viewBox="0 0 130 130" class="clogo-svg" aria-hidden="true">
+      <rect x="6" y="6" width="118" height="118" rx="4" fill="#1f7a3f"/>
+      <rect x="6" y="6" width="118" height="118" rx="4" fill="none" stroke="#cdb87a" stroke-width="4"/>
+      <path d="M30 96 Q65 86 100 96" fill="none" stroke="#cdb87a" stroke-width="2.4"/>
+      ${tree(55, 54, 9)}${tree(70, 60, 10)}${tree(83, 40, 7)}
+      <text x="65" y="116" text-anchor="middle" class="clogo-tm" fill="#cdb87a">TRES MARÍAS</text>
+    </svg></div>`;
+  }
+  if (cid === 'altozano') {
+    return `<div class="clogo"><svg viewBox="0 0 130 120" class="clogo-svg" aria-hidden="true">
+      <path d="M4 78 Q65 56 126 78" fill="none" stroke="#5a9c3f" stroke-width="3"/>
+      <ellipse cx="78" cy="46" rx="26" ry="24" fill="#8cc24a"/>
+      <ellipse cx="48" cy="42" rx="30" ry="28" fill="#3a7d3a"/>
+      <rect x="46" y="58" width="4" height="22" fill="#3a7d3a"/>
+      <rect x="76" y="62" width="3.5" height="18" fill="#5a9c3f"/>
+      <text x="65" y="100" text-anchor="middle" class="clogo-alt1" fill="#c0651f">Golf</text>
+      <text x="65" y="116" text-anchor="middle" class="clogo-alt2" fill="#c0651f">ALTOZANO</text>
+    </svg></div>`;
+  }
+  return `<div class="clogo"><svg viewBox="0 0 120 120" class="clogo-svg"><circle cx="60" cy="55" r="40" fill="none" stroke="#5e8c3f" stroke-width="4"/><text x="60" y="64" text-anchor="middle" class="clogo-t1" fill="#5e8c3f">${esc((c.name[0] || 'G'))}</text></svg></div>`;
 }
 
 function vSetup() {

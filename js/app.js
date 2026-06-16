@@ -292,7 +292,7 @@ const actions = {
   },
   'bag-close'() { V.bagEdit = false; render(); },
   'set-avatar'(d) { const u = cur(); if (u) { u.avatar = Number(d.i) || 0; u.golfer = null; commit(); } },
-  'set-hue'(d) { const u = cur(); if (u) { u.avatarHue = Number(d.h) || 0; commit(); } },
+  'set-golfer'(d) { const u = cur(); if (!u) return; const o = (typeof GOLF_OUTFITS !== 'undefined') && GOLF_OUTFITS.find(x => x.k === d.k); if (o) { u.golfer = Object.assign({}, o.cfg, { k: o.k }); commit(); } },
   'golfer-custom'() { const u = cur(); if (u && !u.golfer) { u.golfer = Object.assign({}, GOLF_DEFAULT); commit(); } },
   'gset'(d) { const u = cur(); if (!u) return; u.golfer = Object.assign({}, GOLF_DEFAULT, u.golfer); u.golfer[d.k] = d.v; commit(); },
   'set-outfit'(d) { const u = cur(); if (u) { u.outfit = d.k || 'rank'; commit(); } },

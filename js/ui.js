@@ -394,12 +394,20 @@ function avatarImg(u, cls, lit) {
     const sat = spark < 0.5 ? 'saturate(0.82) ' : '';   // a media chispa todavía se está "prendiendo"
     fil = `${sat}${glow}`.trim();
   }
-  const hue = (u && u.avatarHue) ? `hue-rotate(${u.avatarHue}deg) ` : '';
-  fil = (hue + (fil || '')).trim();
+  if (u && u.golfer) return golfAvatarSVG(u.golfer, cls, fil);
   return `<img class="golfer ${cls || ''}" src="${avatarSrc(u)}"${fil ? ` style="filter:${fil}"` : ''} alt="" loading="lazy">`;
 }
-/* tonos de color para el golfista (hue-rotate sobre el png base) */
-const GOLF_HUES = [{ h: 0, c: '#ff8a3d' }, { h: 330, c: '#ff5a6a' }, { h: 285, c: '#9a5cd0' }, { h: 210, c: '#3a8fe0' }, { h: 165, c: '#2fa36b' }, { h: 95, c: '#7bbf3a' }, { h: 45, c: '#f2c33a' }, { h: 250, c: '#5a6ad0' }];
+/* outfits icónicos del golf — preconfigurados (SVG) */
+const GOLF_OUTFITS = [
+  { k: 'tiger', n: 'Tiger domingo', cfg: { type: 'hombre', skin: '#9c6b40', hair: '#1a1a1a', cap: '#1a1a1a', shirt: '#d11f2a', pants: '#16181c', face: 'normal' } },
+  { k: 'vintage', n: 'Vintage', cfg: { type: 'hombre', skin: '#f6d0aa', hair: '#5a3a1e', cap: '#efe2c2', shirt: '#efe2c2', pants: '#7a5a32', face: 'glasses' } },
+  { k: 'happy', n: 'Happy Gilmore', cfg: { type: 'hombre', skin: '#f6d0aa', hair: '#a86b2e', cap: 'none', shirt: '#15457a', pants: '#2a3550', face: 'normal' } },
+  { k: 'clasico', n: 'Clásico', cfg: { type: 'hombre', skin: '#eab07c', hair: '#2a1c12', cap: '#2a3550', shirt: '#ffffff', pants: '#2a3550', face: 'normal' } },
+  { k: 'lima', n: 'Lima', cfg: { type: 'hombre', skin: '#f6d0aa', hair: '#2a1c12', cap: '#16241A', shirt: '#C7EE54', pants: '#16241A', face: 'shades' } },
+  { k: 'sky', n: 'Cielo', cfg: { type: 'hombre', skin: '#c98f5f', hair: '#1a1a1a', cap: '#ffffff', shirt: '#3a8fe0', pants: '#16241A', face: 'normal' } },
+  { k: 'rosa', n: 'Rosa', cfg: { type: 'mujer', skin: '#eab07c', hair: '#2a1c12', cap: 'none', shirt: '#ff6a88', pants: '#ffffff', face: 'normal' } },
+  { k: 'sunset', n: 'Atardecer', cfg: { type: 'mujer', skin: '#9c6b40', hair: '#1a1a1a', cap: 'none', shirt: '#ff8a3d', pants: '#2a3550', face: 'shades' } },
+];
 
 /* ============ Íconos de golf (SVG con look 3D + animación sutil) ============ */
 const GOLF_ICONS = {
