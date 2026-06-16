@@ -62,8 +62,8 @@ input, select, textarea { font-size: 16px; }
 /* ============ Fondo inmersivo de toda la app (día/noche) ============ */
 .app-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: linear-gradient(180deg, #bfe6f7 0%, #d9efbf 48%, #b6dd86 100%); }
 /* dentro de la app, el fondo es un ambiente sutil para que la app sea lo principal */
-body.in-app .app-bg::after { content: ''; position: absolute; inset: 0; background: var(--bg); opacity: 0.82; }
-body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg .bg-gball { opacity: 0.4; }
+body.in-app .app-bg::after { content: ''; position: absolute; inset: 0; background: var(--bg); opacity: 0.5; }
+body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg .bg-gball { opacity: 0.72; }
 [data-theme="dark"] .app-bg { background: linear-gradient(180deg, #0a1230 0%, #111d40 46%, #0a1124 100%); }
 .app-bg .bg-orb { position: absolute; top: 5%; right: 9%; width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 40% 38%, #fff7cc, #ffd86b 70%); box-shadow: 0 0 60px 18px rgba(255,216,107,0.38); }
 [data-theme="dark"] .app-bg .bg-orb { background: radial-gradient(circle at 42% 36%, #ffffff, #cfd6ea 72%); box-shadow: 0 0 46px 12px rgba(200,210,240,0.16); }
@@ -1323,7 +1323,7 @@ button.row { cursor: pointer; }
 .lp { position: relative; width: 100%; overflow: hidden; color: var(--text); background: linear-gradient(180deg, #a9d877 0%, #c6e6a4 14%, #e3edd4 50%); }
 [data-theme="dark"] .lp { background: linear-gradient(180deg, #16341f 0%, #102a18 26%, var(--bg) 62%); }
 .lp > header, .lp > section, .lp > footer { position: relative; z-index: 2; }
-.lp-life { display: none; }   /* escenario fijo viejo: ahora la escena vive dentro de la intro */
+.lp-oldlife { display: none; }   /* escenario fijo viejo (oculto): la vida vuela en .lp-life */
 
 /* intro: PARFECT flotando en el cielo y bajas suave al campo con casa club */
 .lp-intro { position: relative; z-index: 2; min-height: 132svh; overflow: hidden; background: linear-gradient(180deg, #5fbdef 0%, #86c9ef 22%, #b6e0f5 42%, #d6ecc6 60%, #bfe39a 80%, #a9d877 100%); }
@@ -2908,7 +2908,6 @@ svg.fd-av { object-fit: contain; }
 .cre-golf:active { transform: scale(.95); }
 
 /* ===== Landing: pájaros que vuelan + posados en árbol (no amontonados) ===== */
-.bg-bird { display: none !important; } /* quita los pájaros del fondo compartido (se amontonaban) */
 .lp-fbird { position: absolute; width: 34px; height: 34px; filter: drop-shadow(0 5px 7px rgba(20,40,15,.18)); will-change: transform; }
 .lpf1 { top: 13%; animation: lpFlyR 26s linear infinite, flyBob .9s ease-in-out infinite alternate; }
 .lpf2 { top: 28%; width: 26px; filter: hue-rotate(120deg) saturate(1.2) drop-shadow(0 5px 7px rgba(20,40,15,.18)); animation: lpFlyL 34s linear infinite, flyBob 1.1s ease-in-out infinite alternate; }
@@ -2922,6 +2921,31 @@ svg.fd-av { object-fit: contain; }
 @keyframes lpPerch { from { transform: translateY(0) rotate(-2deg); } to { transform: translateY(-2px) rotate(2deg); } }
 [data-theme="dark"] .lp-tree { opacity: .85; }
 @media (prefers-reduced-motion: reduce) { .lp-fbird { display: none; } }
+
+/* ===== Landing viva: sol/luna por hora, más vida y campo frondoso ===== */
+/* el cielo de la intro lo manda el reloj (no el tema): de día azul→verde, de noche azul noche→verde oscuro */
+.lp-intro.is-day { background: linear-gradient(180deg, #5fbdef 0%, #86c9ef 20%, #b6e0f5 40%, #d8edc8 58%, #bfe39a 78%, #a9d877 100%) !important; }
+.lp-intro.is-night { background: linear-gradient(180deg, #0a1430 0%, #122247 30%, #1b2f3e 52%, #173820 78%, #103018 100%) !important; }
+.lp-intro.is-night .lp-icloud { opacity: .16; }
+.lp-intro.is-night .lp-intrologo { text-shadow: 0 0 24px rgba(150,180,255,.45), 0 12px 32px rgba(0,10,30,.5); }
+.lp-night .lp { background: linear-gradient(180deg, #a9d877 0%, #c6e6a4 14%, #e3edd4 50%); }
+/* luna + estrellas */
+.lp-moon { position: absolute; top: 8%; right: 14%; width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle at 38% 36%, #fdfdf2, #d7dcec 72%); box-shadow: 0 0 60px 22px rgba(205,216,250,.4); z-index: 0; }
+.lp-moon::after { content: ''; position: absolute; top: 20%; right: 16%; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 60% 45%, rgba(180,190,215,.55), transparent 70%); }
+.lp-star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 4px 1px rgba(255,255,255,.7); z-index: 0; animation: lpTwinkle 3s ease-in-out infinite alternate; }
+@keyframes lpTwinkle { from { opacity: .2; } to { opacity: 1; } }
+/* nube extra + tercer pájaro + bolas voladoras dentro de la intro */
+.lp-icloud.i4 { top: 16%; left: 44%; width: 58px; animation: lpDrift 74s linear infinite; animation-delay: -40s; }
+.lpf3 { top: 20%; width: 30px; filter: hue-rotate(260deg) saturate(1.2) drop-shadow(0 5px 7px rgba(20,40,15,.18)); animation: lpFlyR 30s linear infinite, flyBob 1s ease-in-out infinite alternate; animation-delay: -12s; }
+.lp-intro .lp-fly { position: absolute; z-index: 0; }
+.lp-intro .lf-i1 { top: 44%; animation: lpBallArc 15s ease-in-out infinite; }
+.lp-intro .lf-i2 { top: 60%; width: 12px; animation: lpBallArcR 19s ease-in-out infinite; animation-delay: -7s; }
+/* golfista en el campo de la intro */
+.lp-course .lp-cgolfer { position: absolute; width: 56px; height: auto; z-index: 1; filter: drop-shadow(0 7px 9px rgba(20,40,15,.22)); animation: lpFloat3 5s ease-in-out infinite; }
+/* fondo de la app por hora: luna + estrellas + cielo nocturno */
+.app-bg.night .bg-orb { background: radial-gradient(circle at 38% 36%, #fdfdf2, #cfd6ea 72%) !important; box-shadow: 0 0 50px 16px rgba(200,212,245,.32) !important; }
+.app-bg.night .bg-stars { opacity: .85; }
+[data-theme="light"] .app-bg.night { background: linear-gradient(180deg, #14264a 0%, #1c3450 44%, #1b3a26 100%); }
 
 /* fondo de la landing: colinas, lago con fuente, ardilla */
 .lp-hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 34vh; opacity: .55; }

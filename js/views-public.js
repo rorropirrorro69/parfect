@@ -70,8 +70,19 @@ function lpFeatArt(kind) {
 function vLanding() {
   const feat = (kind, t, d) => `<div class="lp-feat reveal"><div class="lp-feat-art lpa-${kind}">${lpFeatArt(kind)}</div><h3>${t}</h3><p>${d}</p></div>`;
   // (lpFeatArt definida abajo, a nivel de módulo)
-  return `<div class="lp">
-    <div class="lp-life parallax" data-speed="0.22" aria-hidden="true">
+  const lpHour = new Date().getHours();
+  const lpNight = (lpHour < 7 || lpHour >= 19);
+  const lpTree = (st) => `<div class="lp-tree" style="${st}"><svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg></div>`;
+  const lpStars = lpNight ? Array.from({ length: 16 }, (_, i) => `<span class="lp-star" style="left:${(i * 37 % 95) + 2}%;top:${(i * 29 % 48) + 3}%;animation-delay:${(i % 5) * 0.5}s"></span>`).join('') : '';
+  const lpSky = lpNight ? `<div class="lp-moon"></div>${lpStars}` : `<div class="lp-intro-sun"></div>`;
+  return `<div class="lp ${lpNight ? 'lp-night' : 'lp-day'}">
+    <div class="lp-life" aria-hidden="true">
+      <img class="lp-bird lb1" src="assets/bird.png" alt="" />
+      <img class="lp-bird lb2" src="assets/bird.png" alt="" />
+      <img class="lp-bird lb3" src="assets/bird.png" alt="" />
+      <span class="lp-fly lf1"></span><span class="lp-fly lf2"></span><span class="lp-fly lf3"></span><span class="lp-fly lf4"></span>
+    </div>
+    <div class="lp-oldlife" hidden aria-hidden="true">
       <svg class="lp-hills" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <path d="M0,96 Q110,58 210,80 T400,70 L400,160 L0,160 Z" fill="#cfe9a8"/>
         <path d="M0,124 Q120,92 250,112 T400,104 L400,160 L0,160 Z" fill="#a9d877"/>
@@ -105,11 +116,13 @@ function vLanding() {
         <img class="lp-perch lpp2" src="assets/bird.png" alt="" />
       </div>
     </div>
-    <section class="lp-intro" aria-label="PARFECT">
-      <div class="lp-intro-sun"></div>
-      <span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span>
+    <section class="lp-intro ${lpNight ? 'is-night' : 'is-day'}" aria-label="PARFECT">
+      ${lpSky}
+      <span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span><span class="lp-icloud i4"></span>
       <img class="lp-fbird lpf1" src="assets/bird.png" alt="" />
       <img class="lp-fbird lpf2" src="assets/bird.png" alt="" />
+      <img class="lp-fbird lpf3" src="assets/bird.png" alt="" />
+      <span class="lp-fly lf-i1"></span><span class="lp-fly lf-i2"></span>
       <div class="lp-introtop">
         <div class="lp-intrologo">PARFECT</div>
         <p class="lp-introtag">IA Tracker</p>
@@ -117,10 +130,14 @@ function vLanding() {
       </div>
       <div class="lp-course" aria-hidden="true">
         <svg class="lp-hills" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice">
-          <path d="M0,70 Q90,40 190,58 T400,48 L400,180 L0,180Z" fill="#c4e493"/>
-          <path d="M0,104 Q120,72 250,94 T400,86 L400,180 L0,180Z" fill="#a9d877"/>
-          <path d="M0,140 Q140,112 280,130 T400,122 L400,180 L0,180Z" fill="#90c557"/>
-          <path d="M150,180 Q180,134 250,120 Q330,104 392,72" fill="none" stroke="#d3ecae" stroke-width="22" stroke-linecap="round" opacity=".7"/>
+          <path d="M0,62 Q90,32 190,52 T400,42 L400,180 L0,180Z" fill="#c9e89a"/>
+          <path d="M0,98 Q120,66 250,88 T400,80 L400,180 L0,180Z" fill="#aedd7c"/>
+          <path d="M0,138 Q140,110 280,128 T400,120 L400,180 L0,180Z" fill="#8fc857"/>
+          <path d="M150,180 Q180,134 250,118 Q330,100 396,60" fill="none" stroke="#d7eeb0" stroke-width="22" stroke-linecap="round" opacity=".75"/>
+          <path d="M0,156 Q90,144 170,154 Q250,164 340,152 L400,156" fill="none" stroke="#cfe8a4" stroke-width="15" stroke-linecap="round" opacity=".6"/>
+          <ellipse cx="306" cy="120" rx="25" ry="8.5" fill="#f1e3b6"/>
+          <ellipse cx="120" cy="150" rx="30" ry="10" fill="#7fbf52"/>
+          <rect x="118" y="122" width="2" height="28" fill="#cfd6d8"/><path d="M120 122 L133 126 L120 130 Z" fill="#ff5a4d"/>
         </svg>
         <svg class="lp-clubhouse" viewBox="0 0 150 120">
           <ellipse cx="75" cy="112" rx="60" ry="7" fill="#1a3a14" opacity=".14"/>
@@ -143,6 +160,12 @@ function vLanding() {
           <svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg>
           <img class="lp-perch lpp1" src="assets/bird.png" alt="" />
         </div>
+        ${lpTree('left:2%;bottom:13%;width:90px')}
+        ${lpTree('left:19%;bottom:7%;width:56px')}
+        ${lpTree('right:5%;bottom:21%;width:76px')}
+        ${lpTree('right:20%;bottom:8%;width:50px')}
+        ${lpTree('left:40%;bottom:24%;width:44px')}
+        <img class="lp-cgolfer" src="${AVATARS[0]}" alt="" style="left:60%;bottom:6%;" />
         <svg class="lp-squirrel" viewBox="0 0 60 60" aria-hidden="true">
           <path class="lp-sqtail" d="M44 50 q22 -2 14 -24 q-3 -12 -14 -8 q10 2 11 12 q1 12 -11 14 Z" fill="#b06a35"/>
           <ellipse cx="30" cy="52" rx="13" ry="6" fill="#000" opacity=".12"/>
