@@ -2269,3 +2269,12 @@ svg.fd-av { object-fit: contain; }
 .tee-opt-info b { display: block; font-size: 15px; font-weight: 800; color: var(--text); }
 .tee-opt-info span { font-size: 12px; color: var(--muted); }
 .tee-opt-go { color: var(--lime-ink); font-weight: 900; font-size: 16px; }
+
+/* ===== Drill detail como popup (bottom sheet) ===== */
+.dd-sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.dd-sheet-head h2 { font-size: 19px; font-weight: 900; color: var(--text); }
+.dd-sheet .ddt2 { padding: 14px; }
+.dd-sheet .ddt2-ring { width: 108px; height: 108px; }
+.dd-sheet .ddt2-clock { font-size: 28px; }
+.dd-sheet .dd-h3 { margin-top: 14px; }
+.dd-sheet .btn.primary.big { margin-top: 14px; }

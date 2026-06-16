@@ -269,16 +269,15 @@ function vDrillDetail() {
         <button class="btn ghost" data-act="timer-reset">↺</button>
       </div>
     </div>`;
-  return `<div class="overlay panel-ov" data-act="drill-close-detail">
-    <div class="panel" data-act="noop">
-      <div class="panel-head"><h2>${esc(d.name)}</h2><button class="panel-x" data-act="drill-close-detail" aria-label="Cerrar">✕</button></div>
-      <div class="panel-body">
-        <div class="dd-chips"><span class="dd-chip">${golfIcon('green')} ${esc(catLab)}</span><span class="dd-chip">${golfIcon('bucket')} ${esc(d.dose)}</span><span class="dd-chip">${golfIcon('flag')} ${esc(d.metric)}</span></div>
-        <h3 class="dd-h3">Pasos</h3>
-        <ol class="dd-steps">${steps}</ol>
-        ${timerHtml}
-        <button class="btn primary big" data-act="drill-done">${doneToday ? 'Entrenado hoy ✓ · marcar otra vez' : 'Listo, lo entrené ✓'}</button>
-      </div>
+  return `<div class="overlay" data-act="drill-close-detail">
+    <div class="sheet dd-sheet" data-act="noop">
+      <div class="grab"></div>
+      <div class="dd-sheet-head"><h2>${esc(d.name)}</h2><button class="panel-x" data-act="drill-close-detail" aria-label="Cerrar">✕</button></div>
+      <div class="dd-chips"><span class="dd-chip">${golfIcon('green')} ${esc(catLab)}</span><span class="dd-chip">${golfIcon('bucket')} ${esc(d.dose)}</span><span class="dd-chip">${golfIcon('flag')} ${esc(d.metric)}</span></div>
+      <h3 class="dd-h3">Pasos</h3>
+      <ol class="dd-steps">${steps}</ol>
+      ${timerHtml}
+      <button class="btn primary big" data-act="drill-done">${doneToday ? 'Entrenado hoy ✓ · marcar otra vez' : 'Listo, lo entrené ✓'}</button>
     </div>
   </div>`;
 }
