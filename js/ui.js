@@ -338,17 +338,17 @@ function girScene(p) {
 }
 /* Up&down: el hoyo se acerca a la bola conforme sube el % */
 function udScene(p) {
-  const farX = 74, farY = 26, nearX = 46, nearY = 52;
-  const cx = (farX + (nearX - farX) * p / 100).toFixed(1);
-  const cy = (farY + (nearY - farY) * p / 100).toFixed(1);
-  const cr = (3.4 + 2.4 * p / 100).toFixed(1);
+  // la bola se acerca al hoyo conforme sube el % (chip salvado)
+  const bx = (28 + 22 * p / 100).toFixed(1), by = (58 - 14 * p / 100).toFixed(1);
   return `<svg viewBox="0 0 100 84" class="psc-svg" preserveAspectRatio="xMidYMid meet">
-    <ellipse cx="50" cy="66" rx="46" ry="11" fill="var(--sc-dim)"/>
-    <path d="M28 60 Q ${cx} ${(+cy + 6).toFixed(1)} ${cx} ${cy}" fill="none" stroke="var(--sc-line)" stroke-width="1.4" stroke-dasharray="2.5 3.5" opacity=".7"/>
-    <ellipse class="psc-cup" cx="${cx}" cy="${cy}" rx="${cr}" ry="${(+cr * 0.42).toFixed(1)}" fill="var(--sc-cup)"/>
-    <g class="psc-flag"><line x1="${cx}" y1="${cy}" x2="${cx}" y2="${(+cy - 24).toFixed(1)}" stroke="var(--sc-cup)" stroke-width="1.6"/>
-      <path d="M${cx} ${(+cy - 24).toFixed(1)} L${(+cx + 12).toFixed(1)} ${(+cy - 20.5).toFixed(1)} L${cx} ${(+cy - 17).toFixed(1)} Z" fill="var(--sc-flag)"/></g>
-    <circle cx="28" cy="60" r="3.6" fill="var(--sc-ball)" stroke="var(--sc-line)" stroke-width=".6"/>
+    <defs><radialGradient id="udg" cx="52%" cy="38%" r="70%"><stop offset="0" stop-color="var(--sc-lit)"/><stop offset="1" stop-color="var(--sc-grass2)"/></radialGradient></defs>
+    <ellipse cx="50" cy="62" rx="44" ry="10" fill="var(--sc-dim)"/>
+    <ellipse cx="55" cy="42" rx="28" ry="12" fill="url(#udg)" stroke="var(--sc-grass2)" stroke-width="1"/>
+    <ellipse cx="55" cy="40" rx="2.6" ry="1.1" fill="var(--sc-cup)"/>
+    <line x1="55" y1="40" x2="55" y2="18" stroke="var(--sc-cup)" stroke-width="1.6"/>
+    <path d="M55 18 L67 21 L55 24 Z" fill="var(--sc-flag)"/>
+    <path d="M${bx} ${by} Q ${((+bx + 55) / 2).toFixed(1)} ${(+by - 16).toFixed(1)} 53 41" fill="none" stroke="var(--sc-line)" stroke-width="1.3" stroke-dasharray="2.5 3" opacity=".6"/>
+    <circle cx="${bx}" cy="${by}" r="3.3" fill="var(--sc-ball)" stroke="var(--sc-line)" stroke-width=".6"/>
   </svg>`;
 }
 /* "chispa": qué tan encendido va tu golfista según tus jugadas buenas recientes (0..1) */

@@ -230,14 +230,20 @@ function vDrillsLibrary() {
     const n = DRILL_LIBRARY.filter(d => d.cat === c.id).length;
     return `<button class="tab ${c.id === cat ? 'on' : ''}" data-act="drill-cat" data-c="${c.id}">${esc(c.label)} <span class="muted">${n}</span></button>`;
   }).join('');
-  const items = list.map(d => `<button class="dlc" data-act="drill-open" data-name="${esc(d.name)}">
+  const done = (cur() || {}).drillsDone || {};
+  const td = today();
+  const items = list.map(d => {
+    const isDone = done[d.name] === td;
+    return `<button class="dlc ${isDone ? 'done' : ''}" data-act="drill-open" data-name="${esc(d.name)}">
+      <span class="dlc-check">${isDone ? '✓' : ''}</span>
       <div class="dlc-info">
         <b>${esc(d.name)}</b>
         <p class="dlc-desc">${esc(d.desc)}</p>
         <div class="dlc-meta"><span>${golfIcon('bucket')} ${esc(d.dose)}</span><span>${golfIcon('green')} ${esc(d.metric)}</span></div>
       </div>
-      <span class="dlc-go">Ver →</span>
-    </button>`).join('');
+      <span class="dlc-go">${isDone ? 'Hecho' : 'Ver →'}</span>
+    </button>`;
+  }).join('');
   return `<div class="sec-h" style="margin-top:22px"><h2 style="font-size:18px">Biblioteca de drills</h2><span class="small muted">${DRILL_LIBRARY.length} ejercicios</span></div>
     <div class="tabs scroll">${chips}</div>
     <div class="dlc-list">${items}</div>`;
@@ -247,17 +253,21 @@ function vDrillsLibrary() {
 function vDrillDetail() {
   const d = V.drillDetail; if (!d) return '';
   const catLab = (DRILL_CATS.find(c => c.id === d.cat) || {}).label || '';
-  const steps = (d.steps || []).map((s, i) => `<li><span class="dd-n">${i + 1}</span><span>${esc(s)}</span></li>`).join('');
+  const short = s => { let t = String(s).split('. ')[0].trim(); if (t.length > 46) t = t.split(/[,;]/)[0].trim(); return t.replace(/\.$/, ''); };
+  const steps = (d.steps || []).map((s, i) => `<li><span class="dd-n">${i + 1}</span><span>${esc(short(s))}</span></li>`).join('');
+  const doneToday = ((cur() || {}).drillsDone || {})[d.name] === today();
   const tm = V.timer || { left: 300, total: 300, running: false };
   const presets = [180, 300, 600];
-  const pct = tm.total ? (tm.left / tm.total) * 100 : 0;
+  const R = 46, C = 2 * Math.PI * R, off = (C * (1 - (tm.left / (tm.total || 1)))).toFixed(1);
   const timerHtml = `
-    <h3 class="dd-h3">Cronómetro de práctica</h3>
-    <div class="dd-timer ${tm.running ? 'run' : ''}">
-      <div class="ddt-clock" id="dd-timer">${fmtClock(tm.left)}</div>
-      <div class="ddt-bar"><i style="width:${pct}%"></i></div>
-      <div class="ddt-presets">${presets.map(s => `<button class="chip sm ${tm.total === s ? 'on' : ''}" data-act="timer-set" data-s="${s}">${s / 60} min</button>`).join('')}</div>
-      <div class="ddt-ctrls">
+    <h3 class="dd-h3">Cronómetro</h3>
+    <div class="ddt2 ${tm.running ? 'run' : ''}">
+      <div class="ddt2-ring">
+        <svg viewBox="0 0 110 110"><circle class="ddt2-track" cx="55" cy="55" r="${R}"/><circle class="ddt2-prog" id="dd-ring" cx="55" cy="55" r="${R}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off}"/></svg>
+        <span class="ddt2-clock" id="dd-timer">${fmtClock(tm.left)}</span>
+      </div>
+      <div class="ddt2-presets">${presets.map(s => `<button class="chip sm ${tm.total === s ? 'on' : ''}" data-act="timer-set" data-s="${s}">${s / 60} min</button>`).join('')}</div>
+      <div class="ddt2-ctrls">
         ${tm.running
       ? `<button class="btn" data-act="timer-pause">⏸ Pausar</button>`
       : `<button class="btn primary" data-act="timer-start" ${tm.left <= 0 ? 'disabled' : ''}>${tm.left < tm.total ? 'Reanudar' : 'Iniciar'} ▶</button>`}
@@ -268,16 +278,11 @@ function vDrillDetail() {
     <div class="panel" data-act="noop">
       <div class="panel-head"><h2>${esc(d.name)}</h2><button class="panel-x" data-act="drill-close-detail" aria-label="Cerrar">✕</button></div>
       <div class="panel-body">
-        <span class="dd-cat">${golfIcon('green')} ${esc(catLab)}</span>
-        <p class="dd-why">${esc(d.desc)}</p>
-        <div class="dd-goals">
-          <div class="dd-goal"><span>Dosis</span><b>${esc(d.dose)}</b></div>
-          <div class="dd-goal"><span>Meta</span><b>${esc(d.metric)}</b></div>
-        </div>
-        <h3 class="dd-h3">Paso a paso</h3>
+        <div class="dd-chips"><span class="dd-chip">${golfIcon('green')} ${esc(catLab)}</span><span class="dd-chip">${golfIcon('bucket')} ${esc(d.dose)}</span><span class="dd-chip">${golfIcon('flag')} ${esc(d.metric)}</span></div>
+        <h3 class="dd-h3">Pasos</h3>
         <ol class="dd-steps">${steps}</ol>
         ${timerHtml}
-        <button class="btn primary big" data-act="drill-done">Listo, lo entrené ✓</button>
+        <button class="btn primary big" data-act="drill-done">${doneToday ? 'Entrenado hoy ✓ · marcar otra vez' : 'Listo, lo entrené ✓'}</button>
       </div>
     </div>
   </div>`;

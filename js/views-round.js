@@ -151,7 +151,7 @@ function vRoundStatCard(r, hcp, idx) {
   const best = [['Fairways', fwP], ['GIR', girP], ['Up&down', udP]].sort((a, b) => b[1] - a[1])[0];
   const verdict = vibe && vibe.k === 'fire' ? 'En fuego' : vibe && vibe.k === 'ice' ? 'Ronda fría' : 'Ronda sólida';
   const comment = `<b>${verdict}.</b> ${birdies ? birdies + ' birdie' + (birdies > 1 ? 's' : '') + ' · ' : ''}tu fuerte: ${best[0]} ${best[1]}%`;
-  const st = (label, val, sub) => `<div class="rc-st"><b>${val}</b><span>${label}</span>${sub ? `<i>${sub}</i>` : ''}</div>`;
+  const st = (cls, ic, label, val, sub) => `<div class="rc-st ${cls}"><span class="rc-st-ic">${golfIcon(ic)}</span><b>${val}</b><span>${label}</span>${sub ? `<i>${sub}</i>` : ''}</div>`;
   return `<button class="rc2 ${vibe ? 'vibe-' + vibe.k : ''}" data-act="round-detail" data-id="${r.id}" style="--rc-grad:${skin.g}">
     <div class="rc2-bar skin-${skin.t}">
       ${vibe ? `<span class="rc2-vibe">${vibe.ic}</span>` : ''}
@@ -159,12 +159,12 @@ function vRoundStatCard(r, hcp, idx) {
       <div class="rc2-score"><b>${s.score}</b><span>${fmtToPar(s.toPar)}</span></div>
     </div>
     <div class="rc-stats">
-      ${st('Fairway', fwP + '%', `${s.fw}/${s.fwTot}`)}
-      ${st('GIR', girP + '%', `${s.gir}/${s.girTot}`)}
-      ${st('Up&down', udP + '%', `${s.scr}/${s.scrTot}`)}
-      ${st('Putts', s.putts, `${putts18}/18`)}
-      ${st('Birdies', birdies, birdies === 1 ? '1 hoyo' : birdies + ' hoyos')}
-      ${st('Penales', s.penals, s.threeP + ' × 3-putt')}
+      ${st('st-fw', 'tee', 'Fairway', fwP + '%', `${s.fw}/${s.fwTot}`)}
+      ${st('st-gir', 'green', 'GIR', girP + '%', `${s.gir}/${s.girTot}`)}
+      ${st('st-ud', 'flag', 'Up&down', udP + '%', `${s.scr}/${s.scrTot}`)}
+      ${st('st-putt', 'putter', 'Putts', s.putts, `${putts18}/18`)}
+      ${st('st-bird', 'bird', 'Birdies', birdies, birdies === 1 ? '1 hoyo' : birdies + ' hoyos')}
+      ${st('st-pen', 'bucket', 'Penales', s.penals, s.threeP + ' × 3-putt')}
     </div>
     <p class="rc2-comment">${comment}</p>
     ${vTourneyMini(r)}
