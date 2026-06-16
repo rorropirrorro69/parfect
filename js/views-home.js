@@ -595,6 +595,8 @@ function vAvatarCreator(u) {
       <div class="rank-meta"><b>${r.n}</b><span>HCP ${rankRange(i)}</span></div>
       ${i === idx ? '<span class="rank-now">aquí</span>' : ''}
     </div>`).join('');
+  const curSkin = (u.cardSkin || 'calle');
+  const skins = CARD_SKINS.map(s => `<button class="cre-skin${s.k === curSkin ? ' on' : ''}" data-act="set-skin" data-k="${s.k}" title="${s.n}"><span style="background:${s.g}">${s.k === curSkin ? '✓' : ''}</span></button>`).join('');
   return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Crea tu golfista</h2><span class="small muted">hazlo tuyo</span></div>
     <div class="card cre-card">
       <div class="cre-preview" style="background:${profileBgGrad(u)}">${avatarImg(u, 'cre-hero', true)}<span class="cre-rank">${RANKS[idx].n}</span></div>
@@ -604,6 +606,8 @@ function vAvatarCreator(u) {
       <div class="cre-grp"><span class="cre-lab">Fondo de perfil</span><div class="cre-row cre-bgs">${bgs}</div></div>
       <p class="note" style="margin:10px 2px 0">Tu golfista está apagado (gris) y <b>se enciende</b> con tus buenas jugadas; brilla más fuerte con cada rango que subes. Algunos fondos se desbloquean al mejorar tu hándicap.</p>
     </div>
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Diseño de tu tarjeta de inicio</h2><span class="small muted">${CARD_SKINS.length} estilos</span></div>
+    <div class="card"><div class="cre-skins">${skins}</div></div>
     <div class="rank-ladder" style="margin-top:12px">${steps}</div>`;
 }
 function vAvatarPicker(u) { return vAvatarCreator(u); }
@@ -644,7 +648,6 @@ function vPlayerCard(u, agg) {
   }
   const sk = cardSkin(u);
   return `<div class="pl-hero skin-${sk.t}" style="background:${sk.g}">
-      <button class="pl-hero-skin" data-act="card-picker" aria-label="Cambiar diseño">${golfIcon('flag')}<span>Diseño</span></button>
       <div class="pl-hero-txt">
         <span class="pl-hero-lab">${esc(u.name)} · ${rk.n}</span>
         <div class="pl-hero-num">${fmtHcp(u.hcp)}</div>

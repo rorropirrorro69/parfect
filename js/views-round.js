@@ -128,7 +128,16 @@ function vHoleStrip(r) {
   return `<div class="rs-holes"><div class="rs-holes-bar">${cells}</div></div>`;
 }
 
-/* Tarjeta de ronda: banda de color + escena 3D + logros + stats */
+/* mini tarjeta tipo torneo: cada hoyo con su marca círculo/cuadro (monocromo) */
+function vTourneyMini(r) {
+  const seg = (a, b) => Array.from({ length: Math.max(0, b - a) }, (_, k) => a + k);
+  const n = r.holes.length, has18 = n > 9;
+  const front = seg(0, Math.min(9, n)), back = has18 ? seg(9, n) : [];
+  const row = arr => `<div class="tm-row">${arr.map(i => { const h = r.holes[i]; return `<div class="tm-c"><span class="tm-n">${i + 1}</span><span class="tm-m">${h ? scoreMarker(h.score, h.par) : '·'}</span></div>`; }).join('')}</div>`;
+  return `<div class="tm">${row(front)}${has18 ? row(back) : ''}</div>`;
+}
+
+/* Tarjeta de ronda estilo torneo: stats + comentario arriba, marcas círculo/cuadro */
 function vRoundStatCard(r, hcp, idx) {
   const s = Stats.roundStats(r);
   const course = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : r.course;
@@ -139,10 +148,9 @@ function vRoundStatCard(r, hcp, idx) {
   const fwP = pct(s.fw, s.fwTot), girP = pct(s.gir, s.girTot), udP = pct(s.scr, s.scrTot);
   const putts18 = s.holes ? (s.putts / s.holes * 18).toFixed(0) : s.putts;
   const skin = RC_SKINS[idx % RC_SKINS.length];
-  // escena 3D del área más fuerte de la ronda
-  const best = [['fw', fwP, 'Fairways'], ['gir', girP, 'GIR'], ['ud', udP, 'Up&down']].sort((a, b) => b[1] - a[1])[0];
-  const scene = best[0] === 'fw' ? fwScene(best[1]) : best[0] === 'gir' ? girScene(best[1]) : udScene(best[1]);
-  const badges = roundBadges(r, s).map(t => `<span class="rc2-badge">${esc(t)}</span>`).join('');
+  const best = [['Fairways', fwP], ['GIR', girP], ['Up&down', udP]].sort((a, b) => b[1] - a[1])[0];
+  const verdict = vibe && vibe.k === 'fire' ? 'En fuego' : vibe && vibe.k === 'ice' ? 'Ronda fría' : 'Ronda sólida';
+  const comment = `<b>${verdict}.</b> ${birdies ? birdies + ' birdie' + (birdies > 1 ? 's' : '') + ' · ' : ''}tu fuerte: ${best[0]} ${best[1]}%`;
   const st = (label, val, sub) => `<div class="rc-st"><b>${val}</b><span>${label}</span>${sub ? `<i>${sub}</i>` : ''}</div>`;
   return `<button class="rc2 ${vibe ? 'vibe-' + vibe.k : ''}" data-act="round-detail" data-id="${r.id}" style="--rc-grad:${skin.g}">
     <div class="rc2-bar skin-${skin.t}">
@@ -150,11 +158,6 @@ function vRoundStatCard(r, hcp, idx) {
       <div class="rc2-id"><b>${esc(course)}${r.partyId ? ` <span class="rc2-party">${golfIcon('flag')}</span>` : ''}</b><span>${fmtDate(r.date)} · ${s.holes} hoyos</span></div>
       <div class="rc2-score"><b>${s.score}</b><span>${fmtToPar(s.toPar)}</span></div>
     </div>
-    <div class="rc2-body">
-      <div class="rc2-scene">${scene}<span class="rc2-scene-cap">Tu fuerte · ${best[2]} ${best[1]}%</span></div>
-      ${badges ? `<div class="rc2-badges">${golfIcon('trophy')}${badges}</div>` : ''}
-    </div>
-    ${vHoleStrip(r)}
     <div class="rc-stats">
       ${st('Fairway', fwP + '%', `${s.fw}/${s.fwTot}`)}
       ${st('GIR', girP + '%', `${s.gir}/${s.girTot}`)}
@@ -163,6 +166,8 @@ function vRoundStatCard(r, hcp, idx) {
       ${st('Birdies', birdies, birdies === 1 ? '1 hoyo' : birdies + ' hoyos')}
       ${st('Penales', s.penals, s.threeP + ' × 3-putt')}
     </div>
+    <p class="rc2-comment">${comment}</p>
+    ${vTourneyMini(r)}
   </button>`;
 }
 

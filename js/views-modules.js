@@ -166,12 +166,17 @@ function vDiag() {
   const d = V.diag;
   const warn = d.readiness === 'low'
     ? `<p class="note">Con menos de 3 rondas el diagnóstico es preliminar. Cada ronda nueva lo afina.</p>` : '';
-  return warn + d.focus.map((f, i) => `
+  return warn + d.focus.map((f, i) => {
+    const parts = String(f.diag).split('. ').map(s => s.trim()).filter(Boolean);
+    const lead = parts[0] ? parts[0].replace(/\.$/, '') + '.' : '';
+    const rest = parts.slice(1).join('. ');
+    return `
     <div class="card">
       <span class="prio ${i > 0 ? 'p2' : ''}">${i === 0 ? 'Prioridad 1 · enfoque' : `Prioridad ${i + 1}`}</span>
       <h3 style="margin-top:12px;font-size:17px;font-weight:900">${esc(f.titulo)}</h3>
       <p class="small muted" style="margin-top:4px">~${f.lost.toFixed(1)} golpes/ronda en juego</p>
-      <p style="font-size:14px;margin-top:10px">${esc(f.diag)}</p>
+      <p class="diag-lead">${esc(lead)}</p>
+      ${rest ? `<p class="diag-rest">${esc(rest)}</p>` : ''}
       ${i < 2 ? (() => {
       const done = (cur() || {}).drillsDone || {};
       const td = today();
@@ -188,9 +193,10 @@ function vDiag() {
           <span class="dlc-go">${isDone ? 'Hecho' : 'Ver →'}</span></button>`;
       }).join('')}`;
     })() : ''}
-      <p class="label" style="margin-top:16px">Estrategia de campo</p>
-      ${f.tips.map(t => `<p class="tip">${esc(t)}</p>`).join('')}
-    </div>`).join('') +
+      <p class="label" style="margin-top:16px">Tu plan en el campo</p>
+      <ol class="diag-steps">${f.tips.map(t => `<li><span class="ds-n">${golfIcon('flag')}</span><span>${esc(t)}</span></li>`).join('')}</ol>
+    </div>`;
+  }).join('') +
     `<button class="btn ghost" data-act="diagnose">Recalcular diagnóstico</button>
      <p class="note">Registra los drills en Parfect Tracker para medir tu progreso real.</p>`;
 }

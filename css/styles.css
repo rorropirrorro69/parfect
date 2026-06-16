@@ -2065,3 +2065,68 @@ svg.fd-av { object-fit: contain; }
 .csa-h b { font-size: 7.5px; font-weight: 800; color: rgba(20,40,15,.5); }
 .csa-h i { font-size: 11px; font-weight: 900; font-style: normal; color: #16241A; }
 .csa-p3 { background: #9fdcef; } .csa-p4 { background: #d8fb6a; } .csa-p5 { background: #ffd76a; }
+
+/* ===== Hero "Empezar ronda"/party en blanco (no verde) ===== */
+.su-hero2.su-hero-course { background: var(--card); border: 1px solid var(--line); box-shadow: 0 8px 22px rgba(20,40,15,.07); }
+.su-hero-course .su-hero2-txt { color: var(--text); }
+.su-hero-course .su-hero-tag { color: var(--lime); }
+.su-hero-course .su-hero-h { color: var(--text); }
+.su-hero-course .su-hero-sub { color: var(--muted); }
+.su-hero-course .csa { background: var(--card2); border-color: var(--line); }
+
+/* ===== Selector de diseño de tarjeta en Ajustes ===== */
+.cre-skins { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.cre-skin { padding: 0; border: none; background: none; cursor: pointer; }
+.cre-skin span { display: grid; place-items: center; width: 100%; aspect-ratio: 1.4; border-radius: 10px; border: 2.5px solid transparent; color: #fff; font-weight: 900; font-size: 13px; box-shadow: 0 3px 8px rgba(20,40,15,.12); }
+.cre-skin.on span { border-color: var(--lime); box-shadow: 0 4px 12px rgba(199,238,84,.4); }
+.cre-skin:active span { transform: scale(.94); }
+
+/* ===== Tarjeta de ronda estilo torneo (círculo/cuadro) ===== */
+.rc2-comment { font-size: 12.5px; color: var(--muted); padding: 4px 16px 0; line-height: 1.4; }
+.rc2-comment b { color: var(--text); font-weight: 800; }
+.tm { padding: 8px 16px 14px; display: flex; flex-direction: column; gap: 4px; }
+.tm-row { display: flex; gap: 2px; }
+.tm-c { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 0; }
+.tm-n { font-size: 8px; font-weight: 800; color: var(--muted2); }
+.tm-m { font-size: 12px; font-weight: 800; color: var(--text); }
+.tm .sc-mark { color: var(--text) !important; min-width: 19px; height: 19px; }
+.tm .sc-mark.mk-circ2, .tm .sc-mark.mk-sq2 { box-shadow: 0 0 0 2px var(--card), 0 0 0 3.4px var(--text); }
+
+/* ===== La corta v2: marcador (tarjeta limpia) ===== */
+.corta2 { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 12px 14px; box-shadow: 0 8px 22px rgba(20,40,15,.07); }
+.corta2-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.corta2-t { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+.corta2-t .gi { width: 15px; height: 15px; color: var(--lime); }
+.corta2-more { background: var(--card2); border: none; color: var(--text); font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 99px; cursor: pointer; }
+.corta2-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.corta2-row::-webkit-scrollbar { display: none; }
+.c2-cell { position: relative; flex: 1 0 auto; min-width: 76px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 10px 8px; border-radius: 14px; background: var(--card2); border: 1.5px solid transparent; }
+.c2-cell.lead { border-color: var(--lime); background: var(--lime-faint); }
+.c2-crown { position: absolute; top: -8px; right: -3px; } .c2-crown .gi { width: 16px; height: 16px; color: #e8b53a; filter: drop-shadow(0 1px 2px rgba(0,0,0,.2)); }
+.c2-nm { font-size: 11.5px; font-weight: 700; color: var(--muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c2-u { font-size: 24px; font-weight: 900; letter-spacing: -.03em; line-height: 1; color: var(--text); }
+.c2-cell.up .c2-u, .c2-cell.up .c2-m { color: #3aa055; }
+.c2-cell.dn .c2-u, .c2-cell.dn .c2-m { color: var(--danger); }
+.c2-m { font-size: 11px; font-weight: 800; color: var(--muted); }
+
+/* extras de la corta con formato */
+.cx-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+.cx-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 13px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--card2); cursor: pointer; text-align: left; }
+.cx-btn:active { transform: scale(.97); }
+.cx-btn.on { border-color: var(--lime); background: var(--lime-faint); }
+.cx-btn.neg.on { border-color: var(--danger); background: rgba(255,122,107,.1); }
+.cx-lab { font-size: 13.5px; font-weight: 800; color: var(--text); display: flex; flex-direction: column; }
+.cx-lab i { font-size: 10px; font-style: normal; font-weight: 600; color: var(--muted); }
+.cx-val { font-size: 13px; font-weight: 900; flex: none; }
+.cx-val.pos { color: #3aa055; } .cx-val.neg { color: var(--danger); }
+.cx-step { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 11px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--card2); }
+.cx-ctrl { display: flex; align-items: center; gap: 8px; flex: none; }
+.cx-ctrl b { font-size: 16px; font-weight: 900; min-width: 16px; text-align: center; color: var(--text); }
+
+/* ===== Diagnóstico IA más escaneable (menos texto, plan por pasos) ===== */
+.diag-lead { font-size: 14.5px; font-weight: 800; color: var(--text); margin-top: 10px; line-height: 1.4; }
+.diag-rest { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+.diag-steps { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.diag-steps li { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: var(--text); line-height: 1.4; }
+.ds-n { flex: none; width: 24px; height: 24px; border-radius: 8px; background: var(--lime-faint); display: grid; place-items: center; margin-top: 1px; }
+.ds-n .gi { width: 13px; height: 13px; color: var(--lime); }

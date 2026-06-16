@@ -175,16 +175,17 @@ function vCortaBar(p, idx) {
   const stake = p.stake || 0;
   const cells = order.map((pl, i) => {
     const u = net[pl.pid];
-    return `<div class="cb-cell ${i === 0 && u > 0 ? 'lead' : ''}">
-      ${i === 0 && u > 0 ? `<span class="cb-crown">${golfIcon('trophy')}</span>` : ''}
-      <span class="cb-nm">${esc(pl.name.split(' ')[0])}</span>
-      <b class="cb-u ${u > 0 ? 'up' : u < 0 ? 'dn' : ''}">${u > 0 ? '+' : ''}${u}</b>
-      ${stake ? `<span class="cb-money">${u >= 0 ? '+' : '−'}$${Math.abs(u * stake)}</span>` : ''}
+    const lead = i === 0 && u > 0;
+    return `<div class="c2-cell ${lead ? 'lead' : ''} ${u > 0 ? 'up' : u < 0 ? 'dn' : ''}">
+      ${lead ? `<span class="c2-crown">${golfIcon('trophy')}</span>` : ''}
+      <span class="c2-nm">${esc(pl.name.split(' ')[0])}</span>
+      <b class="c2-u">${u > 0 ? '+' : ''}${u}</b>
+      ${stake ? `<span class="c2-m">${u >= 0 ? '+' : '−'}$${Math.abs(u * stake)}</span>` : ''}
     </div>`;
   }).join('');
-  return `<div class="corta-bar">
-    <div class="cb-h"><span>${golfIcon('card')} La corta · unidades${idx === 0 ? ' · arranca el reto' : ''}</span><button class="cb-more" data-act="pa-money">Tabla →</button></div>
-    <div class="cb-row">${cells}</div>
+  return `<div class="corta2">
+    <div class="corta2-h"><span class="corta2-t">${golfIcon('card')} La corta${stake ? ` · $${stake}/u` : ''}</span><button class="corta2-more" data-act="pa-money">Tabla →</button></div>
+    <div class="corta2-row">${cells}</div>
   </div>`;
 }
 
@@ -262,23 +263,15 @@ function vPartyLive() {
       </div>
     </div>
 
-    ${p.games.corta ? `<div class="group">
-      <div class="g-lab"><span class="label">La corta · extras de ${esc(apl.name.split(' ')[0])}</span></div>
-      <div class="ev-group">
-        <button class="chip xs ${has('sandy') ? 'on' : ''}" data-act="pa-sandy" data-pid="${ap}">Sandy</button>
-        <button class="chip xs ${has('holeout') ? 'on' : ''}" data-act="pa-holeout" data-pid="${ap}">Hole-out</button>
-        <span class="ph-putts">Reg
-          <button class="ph-pbtn" data-act="pa-reg" data-pid="${ap}" data-d="-1">−</button>
-          <b>${reg || '—'}</b>
-          <button class="ph-pbtn" data-act="pa-reg" data-pid="${ap}" data-d="1">+</button></span>
-        <span class="ph-putts">Banderas
-          <button class="ph-pbtn" data-act="pa-longputt" data-pid="${ap}" data-d="-1">−</button>
-          <b>${lpv}</b>
-          <button class="ph-pbtn" data-act="pa-longputt" data-pid="${ap}" data-d="1">+</button></span>
-      </div>
-      <div class="ev-group" style="margin-top:8px">
-        <button class="chip xs ev-sub ${has('threeputt') ? 'on' : ''}" data-act="pa-3putt" data-pid="${ap}">3-putt</button>
-        <button class="chip xs ev-sub ${has('espanol') ? 'on' : ''}" data-act="pa-espanol" data-pid="${ap}">Español</button>
+    ${p.games.corta ? `<div class="card cx">
+      <span class="label">La corta · extras de ${esc(apl.name.split(' ')[0])}</span>
+      <div class="cx-grid">
+        <button class="cx-btn ${has('sandy') ? 'on' : ''}" data-act="pa-sandy" data-pid="${ap}"><span class="cx-lab">Sandy</span><span class="cx-val pos">+1</span></button>
+        <button class="cx-btn ${has('holeout') ? 'on' : ''}" data-act="pa-holeout" data-pid="${ap}"><span class="cx-lab">Hole-out</span><span class="cx-val pos">+1</span></button>
+        <div class="cx-step"><span class="cx-lab">Más cerca <i>reg</i></span><div class="cx-ctrl"><button class="ph-pbtn" data-act="pa-reg" data-pid="${ap}" data-d="-1">−</button><b>${reg || 0}</b><button class="ph-pbtn" data-act="pa-reg" data-pid="${ap}" data-d="1">+</button></div></div>
+        <div class="cx-step"><span class="cx-lab">Banderas <i>putt largo</i></span><div class="cx-ctrl"><button class="ph-pbtn" data-act="pa-longputt" data-pid="${ap}" data-d="-1">−</button><b>${lpv}</b><button class="ph-pbtn" data-act="pa-longputt" data-pid="${ap}" data-d="1">+</button></div></div>
+        <button class="cx-btn neg ${has('threeputt') ? 'on' : ''}" data-act="pa-3putt" data-pid="${ap}"><span class="cx-lab">3-putt</span><span class="cx-val neg">−1</span></button>
+        <button class="cx-btn neg ${has('espanol') ? 'on' : ''}" data-act="pa-espanol" data-pid="${ap}"><span class="cx-lab">Español</span><span class="cx-val neg">−1</span></button>
       </div>
     </div>` : ''}`;
     })()}
