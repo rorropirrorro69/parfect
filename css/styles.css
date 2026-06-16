@@ -2271,7 +2271,13 @@ svg.fd-av { object-fit: contain; }
 .ddt2-track { fill: none; stroke: var(--line); stroke-width: 8; }
 .ddt2-prog { fill: none; stroke: #C7EE54; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
 .ddt2-clock { position: absolute; inset: 0; display: grid; place-items: center; font-size: 34px; font-weight: 900; letter-spacing: -.03em; color: var(--text); font-variant-numeric: tabular-nums; }
-.ddt2-presets { display: flex; gap: 8px; }
+.ddt2-presets { display: flex; gap: 8px; flex-wrap: wrap; }
+.ddt2-custom { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); }
+.ddt2-clab { font-size: 12px; font-weight: 800; color: var(--muted); }
+.ddt2-step { display: flex; align-items: center; gap: 10px; }
+.ddt2-step b { font-size: 14px; font-weight: 900; color: var(--text); min-width: 54px; text-align: center; }
+.ddt2-step button { width: 32px; height: 32px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--card2); color: var(--text); font-size: 18px; font-weight: 900; cursor: pointer; line-height: 1; }
+.ddt2-step button:active { transform: scale(.92); }
 .ddt2-ctrls { display: flex; gap: 10px; width: 100%; }
 .ddt2-ctrls .btn { flex: 1; }
 .ddt2-ctrls .btn.ghost { flex: 0 0 52px; }

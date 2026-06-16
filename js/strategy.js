@@ -22,9 +22,10 @@ function buildHoles(pars, yards, dogs) {
     return { n, par, yds: yards[i], dog, risks: [{ at: 'green', side, kind }], tips: [`Par ${par} de ${yards[i]} yds.`] };
   });
 }
-const TM_PARS = [4, 4, 3, 4, 5, 3, 4, 5, 4, 4, 4, 4, 3, 3, 4, 5, 4, 5];
-const TM_YDS = [433, 466, 207, 434, 555, 187, 389, 530, 404, 520, 380, 374, 214, 216, 509, 541, 350, 545];
-const TM_DOGS = ['left', 'right', 'straight', 'straight', 'left', 'straight', 'left', 'right', 'straight', 'straight', 'left', 'right', 'straight', 'straight', 'left', 'left', 'left', 'right'];
+/* Tres Marías tiene 27 hoyos = 3 vueltas (A, B, C). Datos aprox. */
+const TM_PARS = [4, 4, 3, 4, 5, 3, 4, 5, 4, /*B*/ 4, 4, 4, 3, 3, 4, 5, 4, 5, /*C*/ 4, 3, 5, 4, 4, 3, 4, 5, 4];
+const TM_YDS = [433, 466, 207, 434, 555, 187, 389, 530, 404, /*B*/ 520, 380, 374, 214, 216, 509, 541, 350, 545, /*C*/ 410, 180, 540, 420, 400, 200, 430, 520, 405];
+const TM_DOGS = ['left', 'right', 'straight', 'straight', 'left', 'straight', 'left', 'right', 'straight', /*B*/ 'straight', 'left', 'right', 'straight', 'straight', 'left', 'left', 'left', 'right', /*C*/ 'right', 'straight', 'left', 'left', 'right', 'straight', 'right', 'left', 'right'];
 const ALT_PARS = [4, 5, 4, 4, 3, 5, 3, 4, 4, 4, 4, 3, 4, 3, 4, 5, 4, 5];
 const ALT_YDS = ALT_PARS.map(p => p === 3 ? 195 : p === 4 ? 420 : 565);
 const ALT_DOGS = ['left', 'left', 'right', 'left', 'straight', 'right', 'straight', 'left', 'right', 'left', 'right', 'straight', 'right', 'straight', 'right', 'left', 'left', 'left'];
@@ -50,11 +51,30 @@ const ALT_GREENS = [
   { d: 27, pf: 0.81, px: 0.4, sh: 'round', bk: ['br'] },         // 18
 ];
 const COURSES = {
-  campestre: { id: 'campestre', name: 'Club Campestre Morelia', sub: '9 hoyos · Par 36', holes: CAMP_HOLES },
-  tresmarias: { id: 'tresmarias', name: 'Tres Marías · El Reto', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(TM_PARS, TM_YDS, TM_DOGS) },
-  altozano: { id: 'altozano', name: 'Altozano Morelia', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(ALT_PARS, ALT_YDS, ALT_DOGS).map((h, i) => Object.assign(h, { g: ALT_GREENS[i] })) },
+  campestre: { id: 'campestre', name: 'Club Campestre Morelia', sub: '9 hoyos · Par 36', holes: CAMP_HOLES, nines: [{ label: 'Vuelta única', start: 0 }] },
+  tresmarias: { id: 'tresmarias', name: 'Tres Marías · El Reto', sub: '27 hoyos · 3 vueltas', approx: true, holes: buildHoles(TM_PARS, TM_YDS, TM_DOGS), nines: [{ label: 'Vuelta A', start: 0 }, { label: 'Vuelta B', start: 9 }, { label: 'Vuelta C', start: 18 }] },
+  altozano: { id: 'altozano', name: 'Altozano Morelia', sub: '18 hoyos · Par 72', approx: true, holes: buildHoles(ALT_PARS, ALT_YDS, ALT_DOGS).map((h, i) => Object.assign(h, { g: ALT_GREENS[i] })), nines: [{ label: 'Primeros 9', start: 0 }, { label: 'Segundos 9', start: 9 }] },
 };
 const COURSE_ORDER = ['campestre', 'tresmarias', 'altozano'];
+
+/* opciones de ronda: combinaciones válidas de 9 y 18 hoyos según las vueltas del campo */
+function roundOptions(cid) {
+  const c = COURSES[cid]; const total = c.holes.length;
+  const nines = c.nines || [{ label: '9 hoyos', start: 0 }];
+  const nineLabel = start => (nines.find(n => n.start === start) || {}).label || ('Hoyo ' + (start + 1));
+  const shortLabel = start => nineLabel(start).replace('Vuelta ', '').replace('Primeros 9', '1ª').replace('Segundos 9', '2ª');
+  const opts9 = nines.map(n => ({ holes: 9, start: n.start, label: n.label }));
+  const opts18 = [];
+  const multi = total > 18;
+  for (let i = 0; i + 18 <= total; i += 9) opts18.push({ holes: 18, start: i, label: multi ? `${shortLabel(i)} + ${shortLabel(i + 9)}` : '18 hoyos' });
+  return { opts9, opts18, total };
+}
+/* par total de una ronda (offset + nº de hoyos) en un campo */
+function roundPar(cid, start, holes) {
+  const hs = COURSES[cid].holes; let p = 0;
+  for (let i = 0; i < holes; i++) { const h = hs[start + i]; if (h) p += h.par; }
+  return p;
+}
 /* salidas (tees): factor sobre la yardaja del campo (las yardas base son de campeonato) */
 const TEES = [
   { id: 'negras', name: 'Negras', sub: 'Campeonato', f: 1.0 },

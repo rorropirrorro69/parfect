@@ -28,10 +28,10 @@ function vPartySetup() {
   const sname = id => COURSES[id].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '');
   const selGames = Object.keys(d.games).filter(k => d.games[k] && ['medal', 'match', 'corta'].includes(k));
   const courseCards = COURSE_ORDER.map(id => {
-    const c = COURSES[id]; const on = cid === id; const par = c.holes.reduce((a, h) => a + h.par, 0);
+    const c = COURSES[id]; const on = cid === id; const nh = Math.min(c.holes.length, 18); const par = c.holes.slice(0, nh).reduce((a, h) => a + h.par, 0);
     return `<button class="su-course ${on ? 'on' : ''}" data-act="pd-pick-course" data-c="${id}">
       <span class="su-c-ic">${golfIcon('flag')}</span>
-      <span class="su-c-info"><b>${esc(sname(id))}</b><span>${c.holes.length} hoyos · Par ${par}</span></span>
+      <span class="su-c-info"><b>${esc(sname(id))}</b><span>${nh} hoyos · Par ${par}</span></span>
       <span class="su-c-check">${on ? '✓' : ''}</span>
     </button>`;
   }).join('');
@@ -49,7 +49,7 @@ function vPartySetup() {
       <div class="su-hero2-txt">
         <span class="su-hero-tag">${golfIcon('flag')} Nueva party</span>
         <h1 class="su-hero-h">Juega con amigos</h1>
-        <p class="su-hero-sub">${esc(sname(cid))} · ${COURSES[cid].holes.length} hoyos</p>
+        <p class="su-hero-sub">${esc(sname(cid))} · ${Math.min(COURSES[cid].holes.length, 18)} hoyos</p>
       </div>
       <div class="su-hero2-art">${courseCrest(cid)}</div>
     </div>
@@ -548,7 +548,7 @@ const partyActions = {
       hostUserId: u.id, hostPid,
       course: COURSES[cid].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', ''),
       courseId: cid,
-      holesCount: COURSES[cid].holes.length,
+      holesCount: Math.min(COURSES[cid].holes.length, 18),
       games: { ...d.games },
       useNet: !!d.useNet,
       stake: Number(d.stake) || 0,
@@ -768,7 +768,7 @@ function buildDemoParty(hostUser, friendNames, cid, k) {
   const hostPid = Store.uid();
   const players = [{ pid: hostPid, name: hostUser.name, userId: hostUser.id, strokes: 0 }];
   friendNames.forEach(fn => players.push({ pid: Store.uid(), name: fn, strokes: 0 }));
-  const holes = course.holes.map(ch => {
+  const holes = course.holes.slice(0, 18).map(ch => {
     const par = ch.par;
     const hole = { par, scores: {}, putts: {}, fw: [], gir: [], ud: [], sandy: [], holeout: [], threeputt: [], espanol: [], reg: {}, longputt: {} };
     let rank = 1;
@@ -794,9 +794,9 @@ function buildDemoParty(hostUser, friendNames, cid, k) {
     date: new Date(Date.now() - (5 - k) * 5 * 864e5).toISOString().slice(0, 10),
     hostUserId: hostUser.id, hostPid,
     course: course.name.split(' · ')[0].replace('Club ', '').replace(' Morelia', ''),
-    courseId: cid, holesCount: course.holes.length,
+    courseId: cid, holesCount: holes.length,
     games: { corta: true, medal: true, match: false }, useNet: false,
-    players, holes, idx: course.holes.length - 1, status: 'done', rev: 0, ts: Date.now(),
+    players, holes, idx: holes.length - 1, status: 'done', rev: 0, ts: Date.now(),
   };
 }
 function seedDemoAccount() {

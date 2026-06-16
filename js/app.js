@@ -6,7 +6,7 @@ let V = {
   view: S.session ? 'inicio' : 'landing',
   err: null, authVals: null,
   profileOpen: false, wipeArm: false,
-  setupCourseId: null, setupTee: 'blancas',
+  setupCourseId: null, setupTee: 'blancas', setupHoles: 18, setupStart: 0,
   hole: null, scoreTouched: false, confirmExit: false,
   detail: null, delArm: null,
   trainerTab: 'diag', diag: null, diagBusy: false,
@@ -47,9 +47,15 @@ function suggestScore(h) {
   return Math.max(1, h.par - 1 + h.putts + penal); // sin GIR = chip/approach + putts
 }
 
+/* hoyo de origen en el campo para el índice de juego (respeta la vuelta elegida) */
+function srcHole(a, idx) {
+  if (!a || !a.courseId || typeof COURSES === 'undefined' || !COURSES[a.courseId]) return null;
+  return COURSES[a.courseId].holes[(a.holeOffset || 0) + idx] || null;
+}
 function parForActive(a, idx) {
-  if (a && a.courseId && typeof COURSES !== 'undefined' && COURSES[a.courseId] && COURSES[a.courseId].holes[idx]) return COURSES[a.courseId].holes[idx].par;
-  return Stats.PAR_SEQ[idx % 18];
+  const h = srcHole(a, idx);
+  if (h) return h.par;
+  return Stats.PAR_SEQ[((a && a.holeOffset || 0) + idx) % 18];
 }
 function loadHole() {
   const a = S.active;
@@ -261,8 +267,16 @@ const actions = {
   },
 
   /* ---- rondas ---- */
-  'go-setup'() { V.setupCourseId = (V.setupCourseId && COURSES[V.setupCourseId]) ? V.setupCourseId : 'campestre'; go('nueva'); },
-  'setup-pick-course'(d) { if (COURSES[d.c]) V.setupCourseId = d.c; render(); },
+  'go-setup'() { V.setupCourseId = (V.setupCourseId && COURSES[V.setupCourseId]) ? V.setupCourseId : 'campestre'; const total = COURSES[V.setupCourseId].holes.length; V.setupHoles = total >= 18 ? 18 : 9; V.setupStart = 0; go('nueva'); },
+  'setup-pick-course'(d) {
+    if (COURSES[d.c]) V.setupCourseId = d.c;
+    const total = COURSES[V.setupCourseId].holes.length;
+    V.setupHoles = total >= 18 ? 18 : 9;   // default por campo
+    V.setupStart = 0;
+    render();
+  },
+  'setup-holes'(d) { V.setupHoles = Number(d.h) === 9 ? 9 : 18; V.setupStart = 0; render(); },
+  'setup-nine'(d) { V.setupStart = Number(d.s) || 0; render(); },
   'setup-pick-tee'(d) { if (TEES.some(t => t.id === d.t)) V.setupTee = d.t; render(); },
   'strat-course'(d) { if (COURSES[d.c]) { V.stratCid = d.c; V.stratIdx = 0; V.stratTeeId = null; } render(); },
   'strat-hole'(d) { V.stratIdx = Number(d.i); V.stratTeeId = null; render(); },
@@ -312,9 +326,12 @@ const actions = {
     if (d && d.t) V.setupTee = d.t;
     const cid = (V.setupCourseId && COURSES[V.setupCourseId]) ? V.setupCourseId : 'campestre';
     const course = COURSES[cid].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '');
-    const holesCount = COURSES[cid].holes.length;
+    const total = COURSES[cid].holes.length;
+    const holesCount = Math.min(V.setupHoles || (total >= 18 ? 18 : 9), total);
+    let holeOffset = V.setupStart || 0;
+    if (holeOffset + holesCount > total) holeOffset = Math.max(0, total - holesCount);
     const tee = teeById(V.setupTee);
-    S.active = { userId: S.session, course, courseId: cid, holesCount, holes: [], idx: 0, startedAt: Date.now(), teeId: tee.id, teeName: tee.name, teeF: tee.f };
+    S.active = { userId: S.session, course, courseId: cid, holesCount, holeOffset, holes: [], idx: 0, startedAt: Date.now(), teeId: tee.id, teeName: tee.name, teeF: tee.f };
     V.teeSheet = false;
     loadHole();
     V.view = 'play';
@@ -413,7 +430,7 @@ const actions = {
   },
   'finish-round'() {
     const a = S.active;
-    const round = { id: Store.uid(), userId: a.userId, course: a.course, courseId: a.courseId, date: today(), holes: a.holes.slice(0, a.holesCount) };
+    const round = { id: Store.uid(), userId: a.userId, course: a.course, courseId: a.courseId, holeOffset: a.holeOffset || 0, date: today(), holes: a.holes.slice(0, a.holesCount) };
     S.rounds.push(round);
     S.active = null;
     V.diag = null; V.detail = round.id; V.view = 'detalle';
@@ -472,6 +489,7 @@ const actions = {
     render();
   },
   'timer-set'(d) { if (!V.timer) V.timer = {}; stopDrillTimer(); const s = Number(d.s) || 300; V.timer = { left: s, total: s, running: false }; render(); },
+  'timer-adjust'(d) { stopDrillTimer(); const cur = (V.timer && V.timer.total) || 300; const total = Math.max(60, Math.min(3600, cur + Number(d.d) * 60)); V.timer = { left: total, total, running: false }; render(); },
   'timer-start'() {
     if (!V.timer || V.timer.running || V.timer.left <= 0) return;
     V.timer.running = true; render();

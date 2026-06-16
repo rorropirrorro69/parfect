@@ -145,14 +145,15 @@ function teeIsFairway(h) { return h.teeLie ? h.teeLie === 'calle' : h.tee === 'f
 function teeIsPenal(h) { return !!h.pen || (h.teeLie ? h.teeLie === 'ob' : h.tee === 'penal'); }
 function teeDone(h) { return h.par === 3 ? true : (h.teeLie != null || h.tee != null); }
 
-/* clasifica una ronda 🔥/🧊 según qué tan buena fue vs tu hándicap */
+/* clasifica una ronda 🔥/🧊 por tu score NETO (después del hándicap):
+   bajo par neto = fuego, arriba de par neto = hielo */
 function roundVibe(s, hcp) {
   if (!s || !s.holes) return null;
-  const exp = (Number(hcp) || 18) * (s.holes / 18);   // golpes sobre par esperados
-  const delta = s.toPar - exp;                          // negativo = mejor que tu hcp
-  if (delta <= -1) return { k: 'fire', ic: '🔥', t: 'En fuego' };
-  if (delta >= 4) return { k: 'ice', ic: '🧊', t: 'Ronda fría' };
-  return null;
+  const exp = (Number(hcp) || 18) * (s.holes / 18);   // golpes de hándicap prorrateados
+  const net = s.toPar - exp;                            // score neto vs par
+  if (net < -0.01) return { k: 'fire', ic: '🔥', t: 'Bajo par' };
+  if (net > 0.01) return { k: 'ice', ic: '🧊', t: 'Sobre par' };
+  return { k: 'fire', ic: '🔥', t: 'En par' };          // par neto cuenta como fuego
 }
 
 /* Sensei: pájaro mítico (SVG con aura, alas que aletean, destellos) */
@@ -190,14 +191,14 @@ function senseiTip(view) {
 const RANKS = [
   { max: 36, n: 'Novato', c: '#9aa6b0', f: 'saturate(.35) brightness(1.08)', aura: 0 },
   { max: 27, n: 'Aficionado', c: '#57a83e', f: 'hue-rotate(95deg) saturate(1.25)', aura: 1 },
-  { max: 18, n: 'Competidor', c: '#3a7fd4', f: 'hue-rotate(195deg) saturate(1.35)', aura: 2 },
-  { max: 12, n: 'Cazador de pares', c: '#8a4fc0', f: 'hue-rotate(258deg) saturate(1.3)', aura: 3 },
-  { max: 6, n: 'Élite', c: '#ef8b3c', f: 'none', aura: 4 },
+  { max: 19, n: 'Competidor', c: '#3a7fd4', f: 'hue-rotate(195deg) saturate(1.35)', aura: 2 },
+  { max: 14, n: 'Cazador de pares', c: '#8a4fc0', f: 'hue-rotate(258deg) saturate(1.3)', aura: 3 },
+  { max: 7, n: 'Élite', c: '#ef8b3c', f: 'none', aura: 4 },
   { max: 2, n: 'Maestro', c: '#d8423a', f: 'hue-rotate(-26deg) saturate(1.5)', aura: 5 },
   { max: 0, n: 'Leyenda', c: '#f5d33a', f: 'hue-rotate(14deg) saturate(1.45) brightness(1.05)', aura: 6 },
 ];
 function rankIdx(hcp) { const h = Math.round(Number(hcp)); if (isNaN(h)) return 0; let best = 0, bm = Infinity; RANKS.forEach((r, i) => { if (r.max >= h && r.max < bm) { bm = r.max; best = i; } }); return best; }
-function rankRange(i) { const lo = i + 1 < RANKS.length ? RANKS[i + 1].max + 1 : 0; return lo === RANKS[i].max ? `${lo}` : `${lo}–${RANKS[i].max}`; }
+function rankRange(i) { if (i === RANKS.length - 1) return '0 o menos'; const lo = i + 1 < RANKS.length ? RANKS[i + 1].max + 1 : 0; return lo === RANKS[i].max ? `${lo}` : `${lo}–${RANKS[i].max}`; }
 /* outfits: el color de tu golfista (lo elige el jugador; por defecto = color de rango) */
 const OUTFITS = [
   { k: 'rank', n: 'Rango', sw: 'rank', f: null },

@@ -254,7 +254,7 @@ function vDrillDetail() {
   const steps = (d.steps || []).map((s, i) => `<li class="dd2-step"><span class="dd2-n">${i + 1}</span><span class="dd2-stext">${esc(short(s))}</span></li>`).join('');
   const doneToday = ((cur() || {}).drillsDone || {})[d.name] === today();
   const tm = V.timer || { left: 300, total: 300, running: false };
-  const presets = [180, 300, 600];
+  const presets = [300, 600, 900, 1200];
   const R = 40, C = 2 * Math.PI * R, off = (C * (1 - (tm.left / (tm.total || 1)))).toFixed(1);
   const timerHtml = `
     <div class="ddt2 ${tm.running ? 'run' : ''}">
@@ -264,6 +264,10 @@ function vDrillDetail() {
       </div>
       <div class="ddt2-side">
         <div class="ddt2-presets">${presets.map(s => `<button class="chip sm ${tm.total === s ? 'on' : ''}" data-act="timer-set" data-s="${s}">${s / 60} min</button>`).join('')}</div>
+        <div class="ddt2-custom" ${tm.running ? 'style="opacity:.45;pointer-events:none"' : ''}>
+          <span class="ddt2-clab">Tiempo por sesión</span>
+          <div class="ddt2-step"><button data-act="timer-adjust" data-d="-1" aria-label="Menos">−</button><b>${Math.round(tm.total / 60)} min</b><button data-act="timer-adjust" data-d="1" aria-label="Más">+</button></div>
+        </div>
         <div class="ddt2-ctrls">
           ${tm.running ? `<button class="btn" data-act="timer-pause">⏸ Pausar</button>` : `<button class="btn primary" data-act="timer-start" ${tm.left <= 0 ? 'disabled' : ''}>${tm.left < tm.total ? 'Reanudar' : 'Iniciar'} ▶</button>`}
           <button class="btn ghost" data-act="timer-reset">↺</button>

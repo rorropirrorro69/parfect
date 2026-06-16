@@ -254,6 +254,25 @@ function vSetup() {
       <span class="su-lab">Campo</span>
       <div class="su-courses">${courseCards}</div>
     </div>
+    ${(() => {
+      const ro = roundOptions(cid);
+      const holes = (V.setupHoles && ro.opts18.length) ? V.setupHoles : (ro.opts18.length ? (V.setupHoles || 18) : 9);
+      const opts = holes === 18 ? ro.opts18 : ro.opts9;
+      const start = opts.some(o => o.start === V.setupStart) ? V.setupStart : (opts[0] ? opts[0].start : 0);
+      const par = roundPar(cid, start, holes);
+      const holesToggle = ro.opts18.length ? `<div class="su-block">
+        <span class="su-lab">Hoyos</span>
+        <div class="chips">
+          <button class="chip ${holes === 9 ? 'on' : ''}" data-act="setup-holes" data-h="9">9 hoyos</button>
+          <button class="chip ${holes === 18 ? 'on' : ''}" data-act="setup-holes" data-h="18">18 hoyos</button>
+        </div>
+      </div>` : '';
+      const nineSel = opts.length > 1 ? `<div class="su-block">
+        <span class="su-lab">${holes === 18 ? '¿Qué vueltas?' : '¿Qué vuelta?'}</span>
+        <div class="chips">${opts.map(o => `<button class="chip ${o.start === start ? 'on' : ''}" data-act="setup-nine" data-s="${o.start}">${esc(o.label)}</button>`).join('')}</div>
+      </div>` : '';
+      return `${holesToggle}${nineSel}<p class="su-meta">Jugarás <b class="lime">${holes} hoyos</b> · Par ${par}.</p>`;
+    })()}
     <button class="btn primary big su-go" data-act="start-round">${golfIcon('flag')} Comenzar ronda</button>
     <button class="btn su-cancel" data-act="nav" data-view="ronda">Cancelar</button>
     <div class="su-block">
@@ -616,7 +635,8 @@ function vPlay() {
   if (!a) return vRondaTab();
   if (a.idx >= a.holesCount) return vSummary(a);
   const h = V.hole;
-  const chole = (a.courseId && COURSES[a.courseId] && COURSES[a.courseId].holes[a.idx]) ? COURSES[a.courseId].holes[a.idx] : null;
+  const chole = (a.courseId && COURSES[a.courseId] && COURSES[a.courseId].holes[(a.holeOffset || 0) + a.idx]) ? COURSES[a.courseId].holes[(a.holeOffset || 0) + a.idx] : null;
+  const holeNo = chole && chole.n ? chole.n : (a.idx + 1);
   const yds = chole && chole.yds ? Math.round(chole.yds * (a.teeF || 1)) : null;
   const sugg = suggestScore(h);
   const score = (V.scoreTouched && h.score != null) ? h.score : sugg;
@@ -644,7 +664,7 @@ function vPlay() {
       <div class="hb-info">
         <span class="hb-course">${esc(a.course)}${a.teeName ? ` · ${esc(a.teeName)}` : ''}</span>
         <div class="hb-head">
-          <span class="hb-num">Hoyo ${a.idx + 1}</span>
+          <span class="hb-num">Hoyo ${holeNo}</span>
           <div class="hb-meta"><span class="hb-par">Par ${h.par}</span>${yds ? `<span class="hb-yds">${yds} yds</span>` : ''}</div>
         </div>
       </div>
@@ -822,10 +842,12 @@ function vRoundDetail() {
   const pct = (x, t) => (t ? Math.round((x / t) * 100) + '%' : '—');
   const course = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId] : null;
   const courseName = course ? course.name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : r.course;
+  const off = r.holeOffset || 0;
   const ch = course ? course.holes : null;
-  const parOf = i => (ch && ch[i]) ? ch[i].par : (r.holes[i] ? r.holes[i].par : 4);
-  const ydsOf = (ch && ch.some(h => h.yds)) ? (i => (ch[i] ? ch[i].yds : null)) : null;
-  const totYds = ch ? ch.slice(0, r.holes.length).reduce((a, h) => a + (h.yds || 0), 0) : 0;
+  const chAt = i => ch ? ch[off + i] : null;
+  const parOf = i => (r.holes[i] && r.holes[i].par != null) ? r.holes[i].par : (chAt(i) ? chAt(i).par : 4);
+  const ydsOf = (ch && ch.some(h => h.yds)) ? (i => (chAt(i) ? chAt(i).yds : null)) : null;
+  const totYds = ch ? ch.slice(off, off + r.holes.length).reduce((a, h) => a + (h.yds || 0), 0) : 0;
   return `<button class="auth-back" data-act="nav" data-view="ronda">← Tus rondas</button>
     <div class="greet">
       <h1 style="font-size:26px">${esc(courseName)}</h1>
