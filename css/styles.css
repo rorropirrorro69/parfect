@@ -994,6 +994,14 @@ button.row { cursor: pointer; }
 .rs-card:active { transform: scale(.98); }
 .rs-vibe { position: absolute; top: -7px; right: -5px; font-size: 18px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.22)); }
 .rs-card.vibe-fire { border-color: rgba(255,140,60,.5); } .rs-card.vibe-ice { border-color: rgba(90,170,230,.5); }
+/* color por resultado de la tirada (borde superior + tinte) */
+.rs-card { border-top-width: 4px; border-top-style: solid; }
+.rs-card.band-great { border-top-color: #2fa36b; background: linear-gradient(180deg, rgba(47,163,107,.12), var(--card) 46%); }
+.rs-card.band-good { border-top-color: #8fce3f; background: linear-gradient(180deg, rgba(143,206,63,.12), var(--card) 46%); }
+.rs-card.band-ok { border-top-color: #f0a83a; background: linear-gradient(180deg, rgba(240,168,58,.12), var(--card) 46%); }
+.rs-card.band-tough { border-top-color: #e8665a; background: linear-gradient(180deg, rgba(232,102,90,.12), var(--card) 46%); }
+.rs-card.band-great .rs-par { color: #2fa36b; }
+.rs-card.band-tough .rs-par { color: #e8665a; }
 .rs-date { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
 .rs-score { font-size: 34px; font-weight: 900; letter-spacing: -.03em; color: var(--text); line-height: 1.05; }
 .rs-par { font-size: 13px; font-weight: 800; color: var(--lime-ink); }

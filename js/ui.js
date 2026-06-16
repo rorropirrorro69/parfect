@@ -84,7 +84,11 @@ function positionOrb() {
 }
 
 /* avatares 3D (monitos) — Fluent Emoji 3D (MIT) */
-const AVATARS = ['assets/avatars/a1.png', 'assets/avatars/a2.png', 'assets/avatars/a3.png', 'assets/avatars/a4.png', 'assets/avatars/a5.png', 'assets/avatars/a6.png'];
+const AVATARS = [
+  'assets/avatars/a1.png', 'assets/avatars/a2.png', 'assets/avatars/a3.png', 'assets/avatars/a4.png', 'assets/avatars/a5.png', 'assets/avatars/a6.png',
+  'assets/avatars/wg1.png', 'assets/avatars/wg2.png', 'assets/avatars/wg3.png', 'assets/avatars/wg4.png', 'assets/avatars/wg5.png', 'assets/avatars/wg6.png',
+  'assets/avatars/mg1.png', 'assets/avatars/mg2.png', 'assets/avatars/mg3.png', 'assets/avatars/mg4.png', 'assets/avatars/mg5.png', 'assets/avatars/mg6.png',
+];
 function avatarSrc(u) { const i = (u && u.avatar != null) ? u.avatar : 0; return AVATARS[i] || AVATARS[0]; }
 
 /* ====== Golfista personalizable (SVG): piel, gorra, playera, pantalón, rasgos ====== */

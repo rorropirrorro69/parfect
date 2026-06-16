@@ -163,12 +163,9 @@ function vLanding() {
       <span class="lp-eyebrow reveal">Presencia real en el golf</span>
       <h2 class="lp-h2 reveal">Más que una app,<br/><span class="lime">una comunidad.</span></h2>
       <div class="lp-statrow reveal">
-        <div class="lp-stat"><b>3</b><span>campos en Morelia</span></div>
+        <div class="lp-stat"><b>+10</b><span>campos en México</span></div>
         <div class="lp-stat"><b>+50</b><span>golfistas activos</span></div>
         <div class="lp-stat"><b>+1,200</b><span>hoyos registrados</span></div>
-      </div>
-      <div class="lp-clubs reveal">
-        ${['campestre', 'tresmarias', 'altozano'].map(id => `<div class="lp-club">${courseCrest(id)}</div>`).join('')}
       </div>
       <div class="lp-presgrid">
         ${[['trophy', 'Torneos en vivo', 'La Copa Parfect corre con leaderboard en tiempo real, hoyo por hoyo.'],

@@ -431,8 +431,7 @@ function vDashboard() {
 
   return `<div class="dash">${head}
     ${vPlayerCard(u, agg)}
-    ${rounds.length ? vRecentStrip(rounds) : ''}
-    ${vHomeLearn()}</div>`;
+    ${rounds.length ? vRecentStrip(rounds) : ''}</div>`;
 }
 
 /* acceso a la Academia desde Inicio (hasta abajo) */
@@ -456,7 +455,9 @@ function vRecentStrip(rounds) {
     const s = Stats.roundStats(r);
     const course = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : r.course;
     const vibe = roundVibe(s, u.hcp);
-    return `<button class="rs-card ${vibe ? 'vibe-' + vibe.k : ''}" data-act="round-detail" data-id="${r.id}">
+    const per = s.toPar / Math.max(1, s.holes);            // golpes sobre par por hoyo
+    const band = per <= 0 ? 'great' : per <= 0.34 ? 'good' : per <= 0.78 ? 'ok' : 'tough';
+    return `<button class="rs-card band-${band} ${vibe ? 'vibe-' + vibe.k : ''}" data-act="round-detail" data-id="${r.id}">
       ${vibe ? `<span class="rs-vibe">${vibe.ic}</span>` : ''}
       <span class="rs-date">${fmtDate(r.date)}</span>
       <span class="rs-score">${s.score}</span>
