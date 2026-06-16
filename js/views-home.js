@@ -731,7 +731,7 @@ function vSocialFeed() {
   const pct = (n, d) => d ? Math.round((n / d) * 100) : 0;
   const myPosts = myRounds().filter(r => shared.includes(r.id)).map(r => {
     const s = Stats.roundStats(r);
-    return { id: 'me-' + r.id, mine: true, name: u.name, course: r.courseId ? sname(r.courseId) : r.course, holes: s.holes, score: s.score, toPar: s.toPar, fw: pct(s.fw, s.fwTot), gir: pct(s.gir, s.girTot), putts: s.putts, when: fmtDate(r.date), cmt: 0, likes: 0, cap: '' };
+    return { id: 'me-' + r.id, mine: true, name: u.name, course: r.courseId ? sname(r.courseId) : r.course, holes: s.holes, score: s.score, toPar: s.toPar, fw: pct(s.fw, s.fwTot), gir: pct(s.gir, s.girTot), putts: s.putts, when: fmtDate(r.date), cmt: 0, likes: 0, cap: r.caption || '', media: r.media || null };
   });
   const feed = [...myPosts, ...FRIENDS_FEED];
   const cards = feed.map(p => {
@@ -745,6 +745,7 @@ function vSocialFeed() {
         <div class="fd-who"><b>${esc(p.name)}${p.mine ? ' <span class="fd-you">tú</span>' : ''}</b><span>${p.mine ? 'Tú · ' + p.when : 'HCP ' + fmtHcp(p.hcp) + ' · ' + p.when}</span></div>
       </div>
       ${p.cap ? `<p class="fd-cap">${esc(p.cap)}</p>` : ''}
+      ${p.media ? `<div class="fd-media">${p.media.type === 'video' ? `<video src="${p.media.src}" controls playsinline preload="metadata"></video>` : `<img src="${p.media.src}" alt="" loading="lazy">`}</div>` : ''}
       <div class="fd-round">
         <div class="fd-course"><b>${esc(p.course)}</b><span>${p.holes} hoyos</span></div>
         <div class="fd-score ${scoreCls}"><b>${p.score}</b><span>${fmtToPar(p.toPar)}</span></div>
@@ -760,8 +761,37 @@ function vSocialFeed() {
     </div>`;
   }).join('');
   return `<div class="sec-h" style="margin-top:6px"><h2>Feed de amigos</h2></div>
-    <button class="fd-share" data-act="share-round">${golfIcon('flag')} Comparte tu última ronda</button>
-    <div class="fd-list">${cards}</div>`;
+    <button class="fd-share" data-act="share-open">${golfIcon('flag')} Comparte tu ronda con foto o video</button>
+    <div class="fd-list">${cards}</div>
+    ${V.shareDraft ? vShareComposer(u) : ''}`;
+}
+
+/* Composer para compartir una ronda con caption + foto/video */
+function vShareComposer(u) {
+  const d = V.shareDraft;
+  const rs = myRounds();
+  if (!rs.length) return '';
+  const sname = c => (c && COURSES[c]) ? COURSES[c].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : c;
+  const rChips = rs.slice(0, 6).map(r => {
+    const s = Stats.roundStats(r);
+    return `<button class="chip sm ${d.roundId === r.id ? 'on' : ''}" data-act="share-pick" data-id="${r.id}">${esc(r.courseId ? sname(r.courseId) : r.course)} · ${s.score} · ${fmtDate(r.date)}</button>`;
+  }).join('');
+  const m = d.media;
+  return `<div class="overlay" data-act="share-close"><div class="sheet" data-act="noop">
+    <div class="grab"></div>
+    <h2>Compartir ronda</h2>
+    <p class="auth-sub">Elige la ronda, escribe algo y súbele una foto o video.</p>
+    <div class="field"><label>Ronda</label><div class="chips" style="flex-wrap:wrap">${rChips}</div></div>
+    <div class="field"><label>¿Qué tal estuvo?</label><textarea id="share-cap" rows="2" placeholder="Ej. ¡Por fin rompí 80!">${esc(d.caption || '')}</textarea></div>
+    <label class="share-up">
+      <input type="file" accept="image/*,video/*" style="display:none" onchange="parfectShareMedia(this)">
+      ${m ? (m.type === 'video' ? `<video src="${m.src}" class="share-prev" muted></video>` : `<img src="${m.src}" class="share-prev" alt="">`) : `<span class="share-uptx">${golfIcon('card')} Toca para subir foto o video</span>`}
+    </label>
+    ${m ? `<button class="btn ghost sm" data-act="share-clearmedia">Quitar ${m.type === 'video' ? 'video' : 'foto'}</button>` : ''}
+    ${V.shareErr ? `<p class="form-err">${esc(V.shareErr)}</p>` : ''}
+    <button class="btn primary" data-act="share-post">Publicar en el feed</button>
+    <button class="btn" data-act="share-close">Cancelar</button>
+  </div></div>`;
 }
 
 /* tabla de tu liga de amigos (mejor ronda de la semana, normalizada a 18) */

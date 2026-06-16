@@ -147,38 +147,54 @@ function academyUnlocked(u, id) {
   return !!academyDone(u)[ACADEMY_FLAT[i - 1]];
 }
 
-/* ---------- Vista: ruta serpenteante de unidades y lecciones ---------- */
+/* mini gráfico de hoyo (green + bandera) para los marcadores del campo */
+function acFlagSVG() {
+  return `<svg class="ac-flagsvg" viewBox="0 0 44 48" aria-hidden="true">
+    <ellipse cx="22" cy="38" rx="17" ry="7" fill="#3f9d44"/><ellipse cx="22" cy="36.5" rx="11" ry="4.5" fill="#57b15c"/>
+    <ellipse cx="26" cy="36" rx="3" ry="1.4" fill="#16401c"/>
+    <rect x="25" y="12" width="2" height="24" rx="1" fill="#cdd6c2"/>
+    <path d="M27 12 L40 16 L27 20 Z" fill="#ff5a4d"/>
+  </svg>`;
+}
+
+/* ---------- Vista: recorrido del campo, hoyo por hoyo ---------- */
 function vAcademy() {
   const u = cur();
   const d = academyDone(u);
   const prog = academyProgress(u);
   const pct = Math.round((prog.done / prog.total) * 100);
+  const currentId = ACADEMY_FLAT.find(id => !d[id]) || null;
+  let holeNo = 0;
   const units = ACADEMY.map((unit, ui) => {
-    const nodes = unit.lessons.map((l, li) => {
+    const holes = unit.lessons.map(l => {
+      holeNo++;
       const isDone = !!d[l.id];
       const unlocked = academyUnlocked(u, l.id);
-      const state = isDone ? 'done' : unlocked ? 'open' : 'lock';
-      const side = li % 2 === 0 ? 'l' : 'r';
-      const ic = isDone ? '✓' : unlocked ? golfIcon(unit.icon) : '🔒';
-      return `<div class="ac-node ${side}">
-        <button class="ac-dot ${state}" ${unlocked ? `data-act="lesson-open" data-id="${l.id}"` : 'disabled'} style="--uc:${unit.color}">
-          <span class="ac-ic">${ic}</span>
+      const isCur = l.id === currentId;
+      const state = isDone ? 'done' : isCur ? 'cur' : unlocked ? 'open' : 'lock';
+      const side = holeNo % 2 ? 'l' : 'r';
+      const sub = isCur ? '¡te toca!' : isDone ? 'completado' : unlocked ? 'disponible' : 'bloqueado';
+      return `<div class="ac-hole ${side} ${state}">
+        <button class="ac-flag" ${unlocked ? `data-act="lesson-open" data-id="${l.id}"` : 'disabled'} aria-label="Hoyo ${holeNo}: ${esc(l.t)}">
+          ${isDone ? '<span class="ac-check">✓</span>' : isCur ? `<span class="ac-ball"></span>` : !unlocked ? '<span class="ac-lk">🔒</span>' : ''}
+          ${acFlagSVG()}
+          <span class="ac-hnum">${holeNo}</span>
         </button>
-        <span class="ac-lt">${esc(l.t)}</span>
+        <div class="ac-htx"><b>Hoyo ${holeNo} · ${esc(l.t)}</b><span>${esc(unit.unit)} · ${sub}</span></div>
       </div>`;
     }).join('');
-    const doneU = unit.lessons.filter(l => d[l.id]).length;
-    return `<div class="ac-unit">
-      <div class="ac-uhead" style="--uc:${unit.color}">
-        <div class="ac-uic">${golfIcon(unit.icon)}</div>
-        <div class="ac-utx"><b>Unidad ${ui + 1} · ${esc(unit.unit)}</b><span>${esc(unit.tag)} · ${doneU}/${unit.lessons.length}</span></div>
-      </div>
-      <div class="ac-path">${nodes}</div>
+    return `<div class="ac-vuelta">
+      <div class="ac-vh" style="--uc:${unit.color}">${golfIcon(unit.icon)} Vuelta ${ui + 1} · ${esc(unit.unit)} <i>${esc(unit.tag)}</i></div>
+      <div class="ac-fairway">${holes}</div>
     </div>`;
   }).join('');
+  const curLesson = currentId ? academyLesson(currentId) : null;
+  const curNo = prog.done + 1;
   return `<div class="ac-top">
-      <div class="ac-progwrap"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>${prog.done}/${prog.total} lecciones</span></div>
-      <p class="note" style="margin:8px 0 0">Aprende golf desde cero hasta nivel élite. Completa cada lección para avanzar.</p>
+      <div class="ac-progwrap"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>Hoyo ${Math.min(curNo, prog.total)} de ${prog.total}</span></div>
+      ${curLesson
+      ? `<button class="btn primary big ac-play" data-act="lesson-open" data-id="${currentId}">${golfIcon('flag')} Jugar hoyo ${curNo}: ${esc(curLesson.t)} →</button>`
+      : `<p class="note" style="margin:10px 0 0">🏆 ¡Recorriste todo el campo! Eres leyenda de la Academia.</p>`}
     </div>
     ${units}
     ${V.lesson ? vLessonSheet() : ''}`;
@@ -198,10 +214,12 @@ function vLessonSheet() {
   }).join('');
   const answered = V.lessonPick != null;
   const correct = answered && V.lessonPick === l.q.a;
+  const holeNo = ACADEMY_FLAT.indexOf(l.id) + 1;
+  let nivel = ''; for (const un of ACADEMY) if (un.lessons.some(x => x.id === l.id)) { nivel = un.unit; break; }
   return `<div class="overlay" data-act="lesson-close"><div class="sheet lsheet" data-act="noop">
     <div class="grab"></div>
     <button class="dd2-x" data-act="lesson-close" aria-label="Cerrar">✕</button>
-    <span class="ls-tag">${golfIcon('green')} Lección</span>
+    <span class="ls-tag">${golfIcon('flag')} Hoyo ${holeNo} · ${esc(nivel)}</span>
     <h2 class="ls-h">${esc(l.t)}</h2>
     ${!showQ ? `<ul class="ls-body">${body}</ul>
       <button class="btn primary" data-act="lesson-quiz">Entendido · hacer quiz →</button>` : `

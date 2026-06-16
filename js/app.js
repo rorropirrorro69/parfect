@@ -95,6 +95,38 @@ function parfectImport(input) {
   reader.readAsText(file);
 }
 
+/* sube foto/video para compartir una ronda (comprime imágenes, limita video) */
+function parfectShareMedia(input) {
+  const file = input && input.files && input.files[0];
+  input.value = '';
+  if (!file || !V.shareDraft) return;
+  V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption;
+  V.shareErr = null;
+  if (/^video\//.test(file.type)) {
+    if (file.size > 2.6 * 1024 * 1024) { V.shareErr = 'El video pesa mucho para guardarlo aquí (máx ~2.5 MB). Sube un clip más corto o una foto.'; render(); return; }
+    const fr = new FileReader();
+    fr.onload = () => { V.shareDraft.media = { type: 'video', src: fr.result }; render(); };
+    fr.readAsDataURL(file);
+    return;
+  }
+  const fr = new FileReader();
+  fr.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 1000; let w = img.width, h = img.height;
+      if (w > h && w > max) { h = Math.round(h * max / w); w = max; }
+      else if (h >= w && h > max) { w = Math.round(w * max / h); h = max; }
+      let src;
+      try { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; cv.getContext('2d').drawImage(img, 0, 0, w, h); src = cv.toDataURL('image/jpeg', 0.72); }
+      catch (e) { src = fr.result; }
+      V.shareDraft.media = { type: 'image', src }; render();
+    };
+    img.onerror = () => { V.shareDraft.media = { type: 'image', src: fr.result }; render(); };
+    img.src = fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+
 function App() {
   const u = cur();
   if (!u) {
@@ -203,6 +235,29 @@ const actions = {
     u.shared = u.shared || [];
     const last = rs[0].id;
     if (!u.shared.includes(last)) u.shared.unshift(last);
+    if (typeof celebrate === 'function') celebrate(false, '¡Ronda compartida!');
+    commit();
+  },
+  'share-open'() {
+    const rs = myRounds();
+    if (!rs.length) { alert('Primero registra una ronda para compartirla.'); return; }
+    V.shareDraft = { roundId: rs[0].id, caption: '', media: null }; V.shareErr = null; render();
+  },
+  'share-pick'(d) { if (V.shareDraft) { V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption; V.shareDraft.roundId = d.id; } render(); },
+  'share-clearmedia'() { if (V.shareDraft) { V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption; V.shareDraft.media = null; } render(); },
+  'share-close'() { V.shareDraft = null; V.shareErr = null; render(); },
+  'share-post'() {
+    const u = cur(); const d = V.shareDraft; if (!u || !d) return;
+    d.caption = (document.getElementById('share-cap') || {}).value || d.caption;
+    const r = myRounds().find(x => x.id === d.roundId);
+    if (r) {
+      const pc = r.caption, pm = r.media;
+      r.caption = (d.caption || '').trim(); r.media = d.media || null;
+      try { Store.save(S); }
+      catch (e) { r.caption = pc; r.media = pm; V.shareErr = 'No se pudo guardar (espacio lleno). Prueba con una foto más ligera o sin video.'; render(); return; }
+      u.shared = u.shared || []; if (!u.shared.includes(r.id)) u.shared.unshift(r.id);
+    }
+    V.shareDraft = null; V.shareErr = null;
     if (typeof celebrate === 'function') celebrate(false, '¡Ronda compartida!');
     commit();
   },
