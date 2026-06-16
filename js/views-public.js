@@ -72,6 +72,31 @@ function vLanding() {
   // (lpFeatArt definida abajo, a nivel de módulo)
   return `<div class="lp">
     <div class="lp-life parallax" data-speed="0.22" aria-hidden="true">
+      <svg class="lp-hills" viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <path d="M0,96 Q110,58 210,80 T400,70 L400,160 L0,160 Z" fill="#cfe9a8"/>
+        <path d="M0,124 Q120,92 250,112 T400,104 L400,160 L0,160 Z" fill="#a9d877"/>
+        <path d="M150,160 Q185,120 250,108 Q320,96 380,66" fill="none" stroke="#bfe28a" stroke-width="26" stroke-linecap="round" opacity=".8"/>
+        <ellipse cx="300" cy="120" rx="42" ry="13" fill="#8fc85e"/>
+      </svg>
+      <svg class="lp-lake" viewBox="0 0 140 70" aria-hidden="true">
+        <defs><radialGradient id="lpLakeG" cx="40%" cy="32%" r="80%"><stop offset="0" stop-color="#8fd6f0"/><stop offset="1" stop-color="#2f87b0"/></radialGradient></defs>
+        <ellipse cx="70" cy="46" rx="64" ry="20" fill="url(#lpLakeG)"/>
+        <ellipse class="lp-lakeshine" cx="54" cy="40" rx="24" ry="5" fill="#ffffff" opacity=".4"/>
+        <g class="lp-fountain"><rect x="68" y="22" width="4" height="22" rx="2" fill="#9fb0b3"/>
+          <path class="lp-fjet" d="M70 24 q-9 -16 -18 -2 M70 24 q9 -16 18 -2 M70 22 v-14" fill="none" stroke="#bfeaf6" stroke-width="2.4" stroke-linecap="round"/>
+          <circle class="lp-fdrop d1" cx="55" cy="26" r="1.8" fill="#cdeefb"/><circle class="lp-fdrop d2" cx="85" cy="26" r="1.8" fill="#cdeefb"/><circle class="lp-fdrop d3" cx="70" cy="14" r="1.8" fill="#cdeefb"/>
+        </g>
+      </svg>
+      <svg class="lp-squirrel" viewBox="0 0 60 60" aria-hidden="true">
+        <path class="lp-sqtail" d="M44 50 q22 -2 14 -24 q-3 -12 -14 -8 q10 2 11 12 q1 12 -11 14 Z" fill="#b06a35"/>
+        <ellipse cx="30" cy="52" rx="13" ry="6" fill="#000" opacity=".12"/>
+        <path d="M22 50 q-6 -22 10 -26 q14 -3 14 12 q0 14 -12 16 Z" fill="#c87a40"/>
+        <circle cx="20" cy="24" r="9" fill="#c87a40"/>
+        <path d="M14 16 q-1 -6 4 -5 q1 4 -1 7 Z M22 15 q3 -5 6 -2 q-1 4 -4 5 Z" fill="#a85f2c"/>
+        <circle cx="18" cy="23" r="1.6" fill="#241308"/>
+        <path d="M11 25 q-4 1 -5 4" stroke="#7a4a22" stroke-width="1" fill="none"/>
+        <ellipse cx="26" cy="40" rx="6" ry="8" fill="#e6c79a"/>
+      </svg>
       <img class="lp-fbird lpf1" src="assets/bird.png" alt="" />
       <img class="lp-fbird lpf2" src="assets/bird.png" alt="" />
       <div class="lp-tree" aria-hidden="true">
@@ -131,6 +156,26 @@ function vLanding() {
            ['ai', 'Tu entrenador IA', 'Revisa tus rondas, te dice por qué pierdes golpes y arma tus drills.'],
            ['social', 'Juega con amigos', 'Arma una partida con código y lleva La corta en vivo.']]
           .map(([k, t, d]) => feat(k, t, d)).join('')}
+      </div>
+    </section>
+
+    <section class="lp-sec lp-presence">
+      <span class="lp-eyebrow reveal">Presencia real en el golf</span>
+      <h2 class="lp-h2 reveal">Ya se vive<br/><span class="lime">en los campos.</span></h2>
+      <div class="lp-statrow reveal">
+        <div class="lp-stat"><b>3</b><span>campos en Morelia</span></div>
+        <div class="lp-stat"><b>+50</b><span>golfistas activos</span></div>
+        <div class="lp-stat"><b>+1,200</b><span>hoyos registrados</span></div>
+      </div>
+      <div class="lp-clubs reveal">
+        ${['campestre', 'tresmarias', 'altozano'].map(id => `<div class="lp-club">${courseCrest(id)}</div>`).join('')}
+      </div>
+      <div class="lp-presgrid">
+        ${[[golfIcon('trophy'), 'Torneos en vivo', 'La Copa Parfect corre con leaderboard en tiempo real, hoyo por hoyo.'],
+           [golfIcon('flag'), 'Liga infantil', 'Las futuras estrellas entrenan con datos y suben de rango jugando.'],
+           [golfIcon('card'), 'La corta con amigos', 'Apuestas amistosas que se liquidan solas. El que pierde, paga.'],
+           [golfIcon('medal'), 'Academias y clubes', 'Los coaches ven las stats de sus alumnos y les agendan clases.']]
+          .map(([ic, t, d]) => `<div class="lp-prescard reveal"><div class="lp-presic">${ic}</div><h3>${t}</h3><p>${d}</p></div>`).join('')}
       </div>
     </section>
 
