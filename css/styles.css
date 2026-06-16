@@ -1366,6 +1366,10 @@ body.is-scrolling .lp-bird, body.is-scrolling .lp-fly { animation-play-state: pa
 .lp-flown { font-size: 13px; font-weight: 900; color: #16241A; background: #C7EE54; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(199,247,84,.45); }
 .lp-flowc-ic { width: 34px; height: 34px; color: var(--lime-ink); }
 .lp-flowc-ic svg, .lp-flowc-ic .gi { width: 34px; height: 34px; }
+.lp-flowc-art { width: 58px; height: 46px; }
+.lp-flowc-art .lpa { width: 100%; height: 100%; display: block; }
+.lp-presic.lpa-round, .lp-presic.lpa-stats, .lp-presic.lpa-ai, .lp-presic.lpa-trophy { width: 46px; height: 40px; padding: 0; background: transparent; }
+.lp-presic .lpa { width: 100%; height: 100%; display: block; }
 .lp-flowc h3 { font-size: 17px; font-weight: 900; margin: 16px 0 7px; letter-spacing: -.01em; }
 .lp-flowc p { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
 
@@ -1869,6 +1873,26 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 
 /* ===== Planificador de sesión ===== */
 .sp-card { margin-top: 4px; }
+.sp-phase { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--lime-ink); }
+.sp-q { font-size: 19px; font-weight: 900; color: var(--text); margin: 6px 0 16px; line-height: 1.25; }
+.sp-q .gi { width: 19px; height: 19px; vertical-align: -2px; }
+.sp-timeopts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sp-timeb { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 18px; border-radius: 16px; border: 2px solid var(--line); background: var(--card2); cursor: pointer; }
+.sp-timeb:active { transform: scale(.97); }
+.sp-timeb.on { border-color: var(--lime); background: var(--lime-faint); }
+.sp-timeb b { font-size: 20px; font-weight: 900; color: var(--text); }
+.sp-timeb span { font-size: 11px; font-weight: 700; color: var(--muted); }
+.sp-modecard { display: flex; align-items: center; gap: 13px; width: 100%; text-align: left; padding: 16px; border-radius: 16px; border: 2px solid var(--line); background: var(--card2); cursor: pointer; margin-bottom: 10px; }
+.sp-modecard:active { transform: scale(.99); }
+.sp-modeic { flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--lime-faint); }
+.sp-modeic .gi { width: 24px; height: 24px; }
+.sp-modecard b { display: block; font-size: 15px; font-weight: 900; color: var(--text); }
+.sp-modecard div span { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+.sp-areas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.sp-areab { display: flex; align-items: center; gap: 8px; padding: 14px 12px; border-radius: 14px; border: 2px solid var(--line); background: var(--card2); font-size: 14px; font-weight: 800; color: var(--text); cursor: pointer; }
+.sp-areab.on { border-color: var(--lime); background: var(--lime-faint); }
+.sp-areaic { display: inline-flex; } .sp-areaic .gi { width: 18px; height: 18px; }
+.sp-back { display: block; margin: 12px auto 0; background: none; border: none; color: var(--muted); font-size: 12.5px; font-weight: 700; cursor: pointer; }
 .sp-head { display: flex; align-items: center; justify-content: space-between; }
 .sp-total { font-size: 14px; font-weight: 900; color: var(--lime-ink); }
 .sp-timeline { position: relative; display: flex; flex-direction: column; gap: 2px; }

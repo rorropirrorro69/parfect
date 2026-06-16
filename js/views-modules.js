@@ -137,15 +137,16 @@ function vTrainerPlan(agg) {
 }
 function vTrainer() {
   const u = cur();
-  const tab = ['entreno', 'objetivos', 'academia', 'coach'].includes(V.trainerTab) ? V.trainerTab : 'diag';
+  const tab = ['entreno', 'biblioteca', 'objetivos', 'academia', 'coach'].includes(V.trainerTab) ? V.trainerTab : 'diag';
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
-  const body = tab === 'entreno' ? (vSessionPlanner() + vTrackerPlan() + vDrillsLibrary())
-    : tab === 'objetivos' ? (vKeyTargets(u) + `<div style="margin-top:22px"></div>` + vLogros())
-      : tab === 'academia' ? vAcademy()
-        : tab === 'coach' ? vCoach()
-          : vDiag();
+  const body = tab === 'entreno' ? vSessionPlanner()
+    : tab === 'biblioteca' ? vBiblioteca()
+      : tab === 'objetivos' ? (vKeyTargets(u) + `<div style="margin-top:22px"></div>` + vLogros())
+        : tab === 'academia' ? vAcademy()
+          : tab === 'coach' ? vCoach()
+            : vDiag();
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
-    <div class="tabs scroll">${T('diag', 'Resumen')}${T('academia', 'Academia')}${T('entreno', 'Entrenamiento')}${T('objetivos', 'Objetivos')}${T('coach', 'Clases')}</div>
+    <div class="tabs scroll">${T('diag', 'Resumen')}${T('academia', 'Academia')}${T('entreno', 'Entrenamiento')}${T('biblioteca', 'Biblioteca')}${T('objetivos', 'Objetivos')}${T('coach', 'Clases')}</div>
     ${body}`;
 }
 
@@ -398,51 +399,80 @@ const SP_AREAS = {
   short: { label: 'Juego corto', icon: 'bucket' },
   putting: { label: 'Putting', icon: 'putter' },
 };
+const spFmtMin = m => m >= 60 ? (m % 60 ? (m / 60).toFixed(1) : (m / 60)) + ' h' : m + ' min';
+function spDrill(k) { const d = (typeof Trainer !== 'undefined' && Trainer.DRILLS && Trainer.DRILLS[k]) ? Trainer.DRILLS[k] : null; return d && d[0] ? d[0].name : null; }
+
 function vSessionPlanner() {
   const u = cur();
   const agg = Stats.aggregate(myRounds());
+  const step = ['mode', 'areas', 'plan'].includes(V.planStep) ? V.planStep : 'time';
   const T = V.sessionMin || 60;
-  const opts = [30, 60, 90, 120];
-  const fmtMin = m => m >= 60 ? (m % 60 ? (m / 60).toFixed(1) : (m / 60)) + ' h' : m + ' min';
-  const chips = opts.map(m => `<button class="chip ${T === m ? 'on' : ''}" data-act="session-min" data-m="${m}">${fmtMin(m)}</button>`).join('');
-  let focus = agg ? Trainer.analyze(agg, u).focus.slice(0, 4) : [];
-  if (!focus.length) focus = Object.keys(SP_AREAS).map(k => ({ key: k, titulo: SP_AREAS[k].label, lost: 1, drills: [] }));
+
+  if (step === 'time') {
+    return `<div class="card sp-card">
+      <div class="sp-phase">Paso 1 de 2</div>
+      <h2 class="sp-q">${golfIcon('flag')} ¿Cuánto tiempo tienes para entrenar?</h2>
+      <div class="sp-timeopts">${[30, 60, 90, 120].map(m => `<button class="sp-timeb ${T === m ? 'on' : ''}" data-act="plan-time" data-m="${m}"><b>${spFmtMin(m)}</b><span>${m <= 30 ? 'rápida' : m <= 60 ? 'estándar' : m <= 90 ? 'completa' : 'intensa'}</span></button>`).join('')}</div>
+    </div>`;
+  }
+  if (step === 'mode') {
+    return `<div class="card sp-card">
+      <div class="sp-phase">Paso 2 de 2 · ${spFmtMin(T)}</div>
+      <h2 class="sp-q">¿Cómo armamos tu sesión?</h2>
+      <button class="sp-modecard" data-act="plan-mode" data-m="ai"><span class="sp-modeic">${golfIcon('flag')}</span><div><b>Que la IA la arme por mí</b><span>Reparte el tiempo priorizando tus puntos débiles.</span></div></button>
+      <button class="sp-modecard" data-act="plan-mode" data-m="me"><span class="sp-modeic">${golfIcon('bucket')}</span><div><b>Yo elijo qué entrenar</b><span>Escoge las áreas y nosotros repartimos el tiempo.</span></div></button>
+      <button class="sp-back" data-act="plan-reset">← Cambiar tiempo</button>
+    </div>`;
+  }
+  if (step === 'areas') {
+    const sel = (V.planAreas && V.planAreas.length) ? V.planAreas : ['driving', 'approach', 'short', 'putting'];
+    const areas = Object.keys(SP_AREAS).map(k => `<button class="sp-areab ${sel.includes(k) ? 'on' : ''}" data-act="plan-area" data-k="${k}"><span class="sp-areaic">${golfIcon(SP_AREAS[k].icon)}</span>${SP_AREAS[k].label}${sel.includes(k) ? ' ✓' : ''}</button>`).join('');
+    return `<div class="card sp-card">
+      <div class="sp-phase">${spFmtMin(T)} · tú eliges</div>
+      <h2 class="sp-q">¿Qué quieres entrenar?</h2>
+      <div class="sp-areas">${areas}</div>
+      <button class="btn primary" data-act="plan-build" ${sel.length ? '' : 'disabled'}>Armar mi sesión →</button>
+      <button class="sp-back" data-act="plan-mode-back">← Atrás</button>
+    </div>`;
+  }
+  // step plan: arma la línea de tiempo
   const warm = Math.max(5, Math.round(T * 0.12));
-  let rem = T - warm;
-  const totalLost = focus.reduce((a, f) => a + Math.max(0.25, f.lost), 0);
-  let blocks = focus.map(f => ({
-    key: f.key,
-    label: (SP_AREAS[f.key] || {}).label || f.titulo,
-    icon: (SP_AREAS[f.key] || {}).icon || 'green',
-    drill: (f.drills && f.drills[0]) ? f.drills[0].name : null,
-    min: Math.max(6, Math.round(rem * Math.max(0.25, f.lost) / totalLost)),
-  }));
-  // ajusta para cuadrar exactamente con el tiempo restante
-  let sum = blocks.reduce((a, b) => a + b.min, 0);
-  if (blocks.length) blocks[blocks.length - 1].min += (rem - sum);
-  if (blocks.length && blocks[blocks.length - 1].min < 5) blocks[blocks.length - 1].min = 5;
-  // construye la línea de tiempo
+  const rem = T - warm;
+  let blocks;
+  const ai = V.planMode !== 'me';
+  if (ai) {
+    let focus = agg ? Trainer.analyze(agg, u).focus.slice(0, 4) : [];
+    if (!focus.length) focus = Object.keys(SP_AREAS).map(k => ({ key: k, titulo: SP_AREAS[k].label, lost: 1, drills: [] }));
+    const totalLost = focus.reduce((a, f) => a + Math.max(0.25, f.lost), 0);
+    blocks = focus.map(f => ({ label: (SP_AREAS[f.key] || {}).label || f.titulo, icon: (SP_AREAS[f.key] || {}).icon || 'green', drill: (f.drills && f.drills[0]) ? f.drills[0].name : spDrill(f.key), min: Math.max(6, Math.round(rem * Math.max(0.25, f.lost) / totalLost)) }));
+  } else {
+    const sel = (V.planAreas && V.planAreas.length) ? V.planAreas : ['driving', 'approach', 'short', 'putting'];
+    const per = Math.max(6, Math.round(rem / sel.length));
+    blocks = sel.map(k => ({ label: SP_AREAS[k].label, icon: SP_AREAS[k].icon, drill: spDrill(k), min: per }));
+  }
+  const sum = blocks.reduce((a, b) => a + b.min, 0);
+  if (blocks.length) blocks[blocks.length - 1].min = Math.max(5, blocks[blocks.length - 1].min + (rem - sum));
   let clock = 0;
   const seg = (label, icon, min, drill, lead) => {
     const from = clock; clock += min;
     return `<div class="sp-seg">
       <span class="sp-time">${from}–${clock}'</span>
       <span class="sp-dot ${lead ? 'warm' : ''}">${golfIcon(icon)}</span>
-      <div class="sp-body">
-        <b>${esc(label)} <i class="sp-min">${min} min</i></b>
-        ${drill ? `<button class="sp-drill" data-act="drill-open" data-name="${esc(drill)}">${golfIcon('green')} ${esc(drill)} →</button>` : `<span class="sp-note">${esc(lead || 'Calienta progresivo: wedge → hierros → driver')}</span>`}
-      </div>
-    </div>`;
+      <div class="sp-body"><b>${esc(label)} <i class="sp-min">${min} min</i></b>
+        ${drill ? `<button class="sp-drill" data-act="drill-open" data-name="${esc(drill)}">${golfIcon('green')} ${esc(drill)} →</button>` : `<span class="sp-note">${esc(lead || '')}</span>`}
+      </div></div>`;
   };
-  const timeline = seg('Calentamiento', 'bucket', warm, null, 'Calienta progresivo: wedge → hierros → driver')
-    + blocks.map(b => seg(b.label, b.icon, b.min, b.drill)).join('');
+  const timeline = seg('Calentamiento', 'bucket', warm, null, 'Calienta progresivo: wedge → hierros → driver') + blocks.map(b => seg(b.label, b.icon, b.min, b.drill)).join('');
   return `<div class="card sp-card">
-    <div class="sp-head"><span class="label">${golfIcon('flag')} Planifica tu sesión</span><span class="sp-total">${fmtMin(T)}</span></div>
-    <p class="note" style="margin:2px 0 10px">Dinos cuánto tiempo tienes y te acomodamos los drills priorizando tus puntos débiles.</p>
-    <div class="chips" style="margin-bottom:14px">${chips}</div>
+    <div class="sp-head"><span class="label">${golfIcon('flag')} Tu sesión · ${spFmtMin(T)}</span><span class="sp-total">${ai ? 'IA' : 'tú eliges'}</span></div>
     <div class="sp-timeline">${timeline}</div>
-    ${!agg ? `<p class="note" style="margin-top:10px">Registra una ronda para que el plan se ajuste a tus debilidades reales.</p>` : ''}
+    <button class="btn ghost" data-act="plan-reset" style="margin-top:12px">↺ Nueva sesión</button>
+    ${ai && !agg ? `<p class="note" style="margin-top:10px">Registra una ronda para que la IA ajuste el plan a tus debilidades reales.</p>` : ''}
   </div>`;
+}
+
+function vBiblioteca() {
+  return vTrackerPlan() + vDrillsLibrary();
 }
 
 function vTrackerPlan() {

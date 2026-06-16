@@ -139,11 +139,11 @@ function vLanding() {
       <span class="lp-eyebrow reveal">Cómo funciona</span>
       <h2 class="lp-h2 reveal">De tu tarjeta<br/><span class="lime">a tu mejor golf.</span></h2>
       <div class="lp-flow">
-        ${[['01', 'Guarda tu tarjeta', 'Apunta cada hoyo en segundos: salida, green, juego corto y putts. Tu ronda, completa.', ICONS.feat_round],
-           ['02', 'Analízala con IA', 'La inteligencia lee tus rondas y encuentra exactamente dónde se te van los golpes.', ICONS.feat_ai],
-           ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', ICONS.feat_stats],
-           ['04', 'Sé mejor', 'Bajas tu hándicap, subes de rango y lo ves en cada número. Tu progreso, claro.', golfIcon('trophy')]]
-          .map(([n, t, d, ic]) => `<div class="lp-flowc reveal"><div class="lp-flowc-top"><span class="lp-flown">${n}</span><div class="lp-flowc-ic">${ic}</div></div><h3>${t}</h3><p>${d}</p></div>`).join('')}
+        ${[['01', 'Guarda tu tarjeta', 'Apunta cada hoyo en segundos: salida, green, juego corto y putts. Tu ronda, completa.', 'round'],
+           ['02', 'Analízala con IA', 'La inteligencia lee tus rondas y encuentra exactamente dónde se te van los golpes.', 'ai'],
+           ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', 'stats'],
+           ['04', 'Sé mejor', 'Bajas tu hándicap, subes de rango y lo ves en cada número. Tu progreso, claro.', 'trophy']]
+          .map(([n, t, d, kind]) => `<div class="lp-flowc reveal"><div class="lp-flowc-top"><span class="lp-flown">${n}</span><div class="lp-flowc-art lpa-${kind}">${lpFeatArt(kind)}</div></div><h3>${t}</h3><p>${d}</p></div>`).join('')}
       </div>
     </section>
 
@@ -161,7 +161,7 @@ function vLanding() {
 
     <section class="lp-sec lp-presence">
       <span class="lp-eyebrow reveal">Presencia real en el golf</span>
-      <h2 class="lp-h2 reveal">Ya se vive<br/><span class="lime">en los campos.</span></h2>
+      <h2 class="lp-h2 reveal">Más que una app,<br/><span class="lime">una comunidad.</span></h2>
       <div class="lp-statrow reveal">
         <div class="lp-stat"><b>3</b><span>campos en Morelia</span></div>
         <div class="lp-stat"><b>+50</b><span>golfistas activos</span></div>
@@ -171,11 +171,11 @@ function vLanding() {
         ${['campestre', 'tresmarias', 'altozano'].map(id => `<div class="lp-club">${courseCrest(id)}</div>`).join('')}
       </div>
       <div class="lp-presgrid">
-        ${[[golfIcon('trophy'), 'Torneos en vivo', 'La Copa Parfect corre con leaderboard en tiempo real, hoyo por hoyo.'],
-           [golfIcon('flag'), 'Liga infantil', 'Las futuras estrellas entrenan con datos y suben de rango jugando.'],
-           [golfIcon('card'), 'La corta con amigos', 'Apuestas amistosas que se liquidan solas. El que pierde, paga.'],
-           [golfIcon('medal'), 'Academias y clubes', 'Los coaches ven las stats de sus alumnos y les agendan clases.']]
-          .map(([ic, t, d]) => `<div class="lp-prescard reveal"><div class="lp-presic">${ic}</div><h3>${t}</h3><p>${d}</p></div>`).join('')}
+        ${[['trophy', 'Torneos en vivo', 'La Copa Parfect corre con leaderboard en tiempo real, hoyo por hoyo.'],
+           ['round', 'Liga infantil', 'Las futuras estrellas entrenan con datos y suben de rango jugando.'],
+           ['stats', 'La corta con amigos', 'Apuestas amistosas que se liquidan solas. El que pierde, paga.'],
+           ['ai', 'Academias y clubes', 'Los coaches ven las stats de sus alumnos y les agendan clases.']]
+          .map(([kind, t, d]) => `<div class="lp-prescard reveal"><div class="lp-presic lpa-${kind}">${lpFeatArt(kind)}</div><h3>${t}</h3><p>${d}</p></div>`).join('')}
       </div>
     </section>
 
