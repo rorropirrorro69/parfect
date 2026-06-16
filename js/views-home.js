@@ -575,21 +575,27 @@ function vPlayerCard(u, agg) {
   const rs = myRounds().map(Stats.roundStats);
   const holesTot = rs.reduce((a, r) => a + r.holes, 0) || 1;
   const threeP = (rs.reduce((a, r) => a + r.threeP, 0) / holesTot * 18).toFixed(1);
-  const moves = agg ? [
-    ['tee', 'Fairways', Math.round(agg.fwPct) + '%'],
-    ['green', 'Greens · GIR', Math.round(agg.girPct) + '%'],
-    ['hand', 'Up & down', Math.round(agg.scrPct) + '%'],
-    ['putter', 'Putts / ronda', agg.putts18.toFixed(0)],
-    ['bucket', '3-putts / ronda', threeP],
-    ['eagle', 'Águilas', String(sd.eagle)],
-    ['bird', 'Birdies', String(sd.birdie)],
-    ['flag', 'Pares', Math.round((sd.par || 0) / tot * 100) + '%'],
-    ['card', 'Bogeys o peor', Math.round(((sd.bogey || 0) + (sd.dbl || 0)) / tot * 100) + '%'],
-    ['trophy', 'Mejor vuelta', fmtToPar(agg.bestToPar)],
-  ] : [];
-  const rowIcon = ic => ic === 'bird' ? `<img src="assets/bird.png" class="pl-rr-img" alt="">` : ic === 'eagle' ? `<img src="assets/eagle.png" class="pl-rr-img" alt="">` : `<span class="pl-rr-ic">${golfIcon(ic)}</span>`;
-  const rows = moves.map(([ic, name, val]) => `<div class="pl-rr stat"><span class="pl-rr-lead">${rowIcon(ic)}<b>${esc(name)}</b></span><span class="pl-rr-score">${val}</span></div>`).join('');
   const rk = RANKS[rankIdx(u.hcp)];
+  let statsHtml;
+  if (agg) {
+    const rings = [
+      ['Fairways', agg.fwPct, 'tee'],
+      ['GIR', agg.girPct, 'green'],
+      ['Up & down', agg.scrPct, 'flag'],
+    ].map(r => pstRing(r[0], r[1], r[2])).join('');
+    const parPct = Math.round((sd.par || 0) / tot * 100);
+    const tiles = [
+      ['Putts / ronda', agg.putts18.toFixed(0), `<span class="pst-ic">${golfIcon('putter')}</span>`],
+      ['3-putts / ronda', threeP, `<span class="pst-ic">${golfIcon('bucket')}</span>`],
+      ['Birdies', String(sd.birdie), `<img src="assets/bird.png" class="pst-img" alt="">`],
+      ['Águilas', String(sd.eagle), `<img src="assets/eagle.png" class="pst-img" alt="">`],
+      ['Pares', parPct + '%', `<span class="pst-ic">${golfIcon('flag')}</span>`],
+      ['Mejor vuelta', fmtToPar(agg.bestToPar), `<span class="pst-ic">${golfIcon('trophy')}</span>`],
+    ].map(t => `<div class="pst-tile"><span class="pst-th">${t[2]}</span><b class="pst-val">${t[1]}</b><span class="pst-lab">${t[0]}</span></div>`).join('');
+    statsHtml = `<div class="pst-rings">${rings}</div><div class="pst-grid">${tiles}</div>`;
+  } else {
+    statsHtml = `<div class="card pl-empty"><span class="pl-empty-ic">${golfIcon('flag')}</span><b>Aún sin estadísticas</b><p>Registra tu primera ronda y aquí verás tus fairways, greens, putts y más.</p><button class="btn primary" data-act="quick-round">Registrar ronda →</button></div>`;
+  }
   return `<div class="pl-hero" style="background:${profileBgGrad(u)}">
       <div class="pl-hero-txt">
         <span class="pl-hero-lab">${esc(u.name)} · ${rk.n}</span>
@@ -598,8 +604,20 @@ function vPlayerCard(u, agg) {
       </div>
       ${avatarImg(u, 'pl-hero-av')}
     </div>
-    ${agg ? `<div class="pl-rr-list" style="margin-top:12px">${rows}</div>`
-      : `<div class="card pl-empty"><span class="pl-empty-ic">${golfIcon('flag')}</span><b>Aún sin estadísticas</b><p>Registra tu primera ronda y aquí verás tus fairways, greens, putts y más.</p><button class="btn primary" data-act="quick-round">Registrar ronda →</button></div>`}`;
+    ${statsHtml}`;
+}
+
+/* anillo de progreso para una stat % */
+function pstRing(label, pct, icon) {
+  const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
+  const R = 26, C = 2 * Math.PI * R, off = (C * (1 - p / 100)).toFixed(1);
+  return `<div class="pst-ring">
+    <div class="pst-ringsvg">
+      <svg viewBox="0 0 64 64"><circle class="pst-track" cx="32" cy="32" r="${R}"/><circle class="pst-prog" cx="32" cy="32" r="${R}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off}"/></svg>
+      <span class="pst-ringval">${p}<i>%</i></span>
+    </div>
+    <span class="pst-ringlab">${esc(label)}</span>
+  </div>`;
 }
 
 /* ============ Perfil (página) ============ */

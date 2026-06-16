@@ -41,10 +41,10 @@ function newHole(par) {
 }
 
 function suggestScore(h) {
-  if (h.putts == null || !h.app) return null;
-  const penal = teeIsPenal(h) ? 1 : 0;
+  if (h.putts == null) return null;
+  const penal = (teeIsPenal(h) || h.pen) ? 1 : 0;
   if (h.app === 'gir') return Math.max(1, h.par - 2 + h.putts + penal);
-  return Math.max(1, h.par - 1 + h.putts + penal); // regulación fallada + chip + putts
+  return Math.max(1, h.par - 1 + h.putts + penal); // sin GIR = chip/approach + putts
 }
 
 function parForActive(a, idx) {
@@ -302,6 +302,14 @@ const actions = {
     if (k === 'upDown' && v === true) h.putts = 1;
     render();
   },
+  'h-toggle'(d) {
+    const h = V.hole; if (!h) return;
+    if (d.k === 'fw') { h.tee = 'c'; h.teeLie = h.teeLie === 'calle' ? 'rough' : 'calle'; }
+    else if (d.k === 'gir') { h.app = h.app === 'gir' ? 'corto' : 'gir'; if (h.app === 'gir') h.upDown = null; }
+    else if (d.k === 'ud') { h.upDown = !(h.upDown === true); }
+    else if (d.k === 'pen') { h.pen = !h.pen; }
+    render();
+  },
   'fast'(d) {
     const h = V.hole; if (!h) return;
     const k = d.k;
@@ -329,8 +337,10 @@ const actions = {
   },
   'h-next'() {
     const a = S.active, h = V.hole;
-    const ready = h.app && h.putts != null && teeDone(h);
-    if (!ready) return;
+    if (h.putts == null) return;
+    // casillas sin marcar = no logrado (finaliza el registro de la tarjeta)
+    if (h.app == null) h.app = 'corto';
+    if (h.par >= 4 && h.teeLie == null) h.teeLie = 'rough';
     const score = V.scoreTouched && h.score != null ? h.score : suggestScore(h);
     const done = { ...h, score };
     done.upDown = done.app !== 'gir' ? (done.upDown != null ? done.upDown : score <= done.par) : null;

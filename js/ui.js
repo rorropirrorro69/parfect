@@ -89,7 +89,7 @@ function avatarSrc(u) { const i = (u && u.avatar != null) ? u.avatar : 0; return
 
 /* salida: dirección (h.tee: izq/c/der) + resultado (h.teeLie: calle/rough/bunker/ob). Compatibles con datos viejos (h.tee: fw/penal) */
 function teeIsFairway(h) { return h.teeLie ? h.teeLie === 'calle' : h.tee === 'fw'; }
-function teeIsPenal(h) { return h.teeLie ? h.teeLie === 'ob' : h.tee === 'penal'; }
+function teeIsPenal(h) { return !!h.pen || (h.teeLie ? h.teeLie === 'ob' : h.tee === 'penal'); }
 function teeDone(h) { return h.par === 3 ? true : (h.teeLie != null || h.tee != null); }
 
 /* rango por hándicap 0–36 (golf): tu golfista se tiñe y su aura crece al subir */

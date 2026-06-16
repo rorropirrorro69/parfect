@@ -147,7 +147,8 @@ function pauseOffscreenSvgs() {
 function afterRender() {
   if (window.__lpClean) { window.__lpClean(); window.__lpClean = null; }
   const lp = document.querySelector('.lp');
-  if (lp) { initLanding(lp); window.__lastView = 'landing'; return; }
+  if (lp) { document.body.classList.remove('in-app'); initLanding(lp); window.__lastView = 'landing'; return; }
+  document.body.classList.add('in-app');
   setupScrollFlag();
   requestAnimationFrame(pauseOffscreenSvgs);
   // transición de entrada SOLO al cambiar de vista (no en cada re-render por tap)
