@@ -105,9 +105,12 @@ const Party = (() => {
     const net = {};
     pids.forEach(p => { net[p] = 0; });
     const events = [];
-    const stake = Number(party.stake) || 0;
+    // bote separado por modalidad (con respaldo al monto único de parties viejas)
+    const stakeOf = g => party.stakes ? (Number(party.stakes[g]) || 0) : (Number(party.stake) || 0);
 
-    const pay = (winner, units, label, hole, pool = pids) => {
+    const pay = (winner, units, label, hole, pool, game) => {
+      pool = pool || pids;
+      const stake = stakeOf(game);
       const rivals = pool.filter(p => p !== winner);
       for (const p of rivals) { net[p] -= units * stake; net[winner] += units * stake; }
       events.push({ hole, label, winner, amount: units * stake * rivals.length });
@@ -128,7 +131,7 @@ const Party = (() => {
         const min = Math.min(...played.map(p => sc(h, i, p)));
         const winners = played.filter(p => sc(h, i, p) === min);
         if (winners.length === 1) {
-          pay(winners[0], 1 + carry, carry ? `Skin (+${carry} acumuladas)` : 'Skin', i + 1, played);
+          pay(winners[0], 1 + carry, carry ? `Skin (+${carry} acumuladas)` : 'Skin', i + 1, played, 'skins');
           carry = 0;
         } else {
           carry++;
@@ -140,13 +143,13 @@ const Party = (() => {
           if (pts > 0) { cortaPts[p] += pts; events.push({ hole: i + 1, label: 'La corta', winner: p, pts }); }
         }
       }
-      if (party.games.larga && h.par === 5 && h.larga && played.includes(h.larga)) pay(h.larga, 1, 'La larga', i + 1, played);
-      if (party.games.gogo) for (const p of (h.gogos || [])) if (played.includes(p)) pay(p, 1, 'Gogo', i + 1, played);
+      if (party.games.larga && h.par === 5 && h.larga && played.includes(h.larga)) pay(h.larga, 1, 'La larga', i + 1, played, 'larga');
+      if (party.games.gogo) for (const p of (h.gogos || [])) if (played.includes(p)) pay(p, 1, 'Gogo', i + 1, played, 'gogo');
       if (party.games.birdie) {
         for (const p of played) {
           const d = h.scores[p] - h.par;
-          if (d === -1) pay(p, 1, 'Birdie', i + 1, played);
-          else if (d <= -2) pay(p, 2, 'Águila', i + 1, played);
+          if (d === -1) pay(p, 1, 'Birdie', i + 1, played, 'birdie');
+          else if (d <= -2) pay(p, 2, 'Águila', i + 1, played, 'birdie');
         }
       }
     });
@@ -156,8 +159,9 @@ const Party = (() => {
       const active = pids.filter(p => party.holes.slice(0, limit).some(h => h.scores[p] != null));
       const n = active.length;
       if (n >= 2) {
+        const cstake = stakeOf('corta');
         const sumP = active.reduce((a, p) => a + cortaPts[p], 0);
-        for (const p of active) net[p] += stake * (n * cortaPts[p] - sumP);
+        for (const p of active) net[p] += cstake * (n * cortaPts[p] - sumP);
       }
     }
 
@@ -180,7 +184,7 @@ const Party = (() => {
 
       if (party.games.medal) {
         const w = segWinner(0, party.holes.length);
-        if (w) pay(w.winner, 2, 'Medal (total)', null, w.pool);
+        if (w) pay(w.winner, 2, 'Medal (total)', null, w.pool, 'medal');
       }
 
       if (party.games.nassau) {
@@ -189,7 +193,7 @@ const Party = (() => {
           : [['Nassau', 0, party.holes.length]];
         for (const [label, from, to] of segs) {
           const w = segWinner(from, to);
-          if (w) pay(w.winner, 1, label, null, w.pool);
+          if (w) pay(w.winner, 1, label, null, w.pool, 'nassau');
         }
       }
 
@@ -203,7 +207,7 @@ const Party = (() => {
         });
         if (wa !== wb) {
           const winner = wa > wb ? a : b;
-          pay(winner, Math.abs(wa - wb), `Match play (${Math.max(wa, wb)}–${Math.min(wa, wb)})`, null);
+          pay(winner, Math.abs(wa - wb), `Match play (${Math.max(wa, wb)}–${Math.min(wa, wb)})`, null, pids, 'match');
         }
       }
     }

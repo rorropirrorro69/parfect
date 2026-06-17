@@ -3137,6 +3137,33 @@ svg.fd-av { object-fit: contain; }
 .cs-check { position: absolute; z-index: 3; top: 12px; left: 16px; width: 24px; height: 24px; border-radius: 50%; background: #C7EE54; color: #15240a; font-weight: 900; display: grid; place-items: center; font-size: 14px; opacity: 0; transition: opacity .15s; }
 .cs-course.on .cs-check { opacity: 1; }
 
+/* chips en fila desplazable (elegir hoyo inicial) */
+.chips-scroll { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 4px; }
+.chips-scroll::-webkit-scrollbar { display: none; }
+.chips-scroll .chip { flex: 0 0 auto; min-width: 42px; text-align: center; }
+
+/* encabezado del detalle de ronda (limpio, con score) */
+.rd-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 16px 0 6px; }
+.rd-kick { display: inline-block; font-size: 11px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: var(--lime-ink); margin-bottom: 3px; }
+.rd-course-name { font-size: 26px; font-weight: 900; letter-spacing: -.02em; line-height: 1.04; }
+.rd-sub { display: block; margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.rd-score { flex: none; text-align: right; }
+.rd-score b { display: block; font-size: 42px; font-weight: 900; line-height: 1; letter-spacing: -.03em; color: var(--text); }
+.rd-score span { font-size: 14px; font-weight: 800; color: var(--lime-ink); }
+.rd-score.good span { color: #2fa36b; } .rd-score.over span { color: #e0873a; }
+
+/* acento por resultado en las mini-tarjetas de inicio */
+.rs-card { border-top: 3px solid var(--line); }
+.rs-card.rs-good { border-top-color: #2fa36b; }
+.rs-card.rs-par { border-top-color: var(--lime); }
+.rs-card.rs-over { border-top-color: #e0873a; }
+
+/* bote separado por modalidad */
+.bote-list { display: flex; flex-direction: column; gap: 8px; }
+.bote-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--card2); border: 1px solid var(--line-soft); border-radius: 14px; padding: 10px 13px; }
+.bote-row-l b { display: block; font-size: 14.5px; font-weight: 800; color: var(--text); }
+.bote-row-l span { font-size: 11.5px; font-weight: 700; color: var(--muted); }
+
 /* fondo de la landing: colinas, lago con fuente, ardilla */
 .lp-hills { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 34vh; opacity: .55; }
 [data-theme="dark"] .lp-hills { opacity: .22; }

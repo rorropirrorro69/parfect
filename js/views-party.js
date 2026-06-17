@@ -35,17 +35,21 @@ function vPartySetup() {
     </button>`;
   }).join('');
   const gmeta = { medal: { ic: 'trophy', tag: 'Clásico' }, match: { ic: 'flag', tag: 'Hoyo a hoyo' }, corta: { ic: 'card', tag: 'Por unidad' } };
-  const moneyDesc = d.games.corta ? `La corta: el que pierde paga <b class="lime">$${d.stake}</b> por cada unidad de diferencia.`
-    : d.games.match ? `Match play: el que pierde el match pone el bote de <b class="lime">$${d.stake}</b>.`
-      : `Medal: el de menor score se lleva el bote de <b class="lime">$${d.stake}</b>.`;
   const gameCards = Object.entries(Party.GAMES).filter(([k]) => ['medal', 'match', 'corta'].includes(k)).map(([k, g]) => `
     <button class="pg-card ${d.games[k] ? 'on' : ''}" data-act="pd-game" data-g="${k}">
       <span class="pg-ic">${golfIcon(gmeta[k].ic)}</span>
       <div class="pg-tx"><b>${g.name} <i class="pg-tag">${gmeta[k].tag}</i></b><p>${g.desc}</p></div>
       <span class="pg-check">${d.games[k] ? '✓' : ''}</span>
     </button>`).join('');
-  const betOn = (d.stake || 0) > 0;
-  const stakeChips = [10, 20, 50, 100].map(v => `<button class="chip ${d.stake === v ? 'on' : ''}" data-act="pd-stake" data-v="${v}">$${v}</button>`).join('');
+  const gLabel = { medal: 'Medal', match: 'Match play', corta: 'La corta' };
+  const boteDesc = (g, v) => !v ? 'Solo por honor' : g === 'corta' ? `$${v} por unidad de diferencia` : g === 'match' ? `$${v} · el que pierde paga` : `$${v} al ganador`;
+  const boteRows = selGames.map(g => {
+    const v = (d.stakes && d.stakes[g]) || 0;
+    return `<div class="bote-row">
+      <div class="bote-row-l"><b>${gLabel[g]}</b><span>${boteDesc(g, v)}</span></div>
+      <div class="su-stakestep"><button data-act="pd-bote-adj" data-g="${g}" data-d="-1" aria-label="Menos">−</button><b>${v ? '$' + v : 'Honor'}</b><button data-act="pd-bote-adj" data-g="${g}" data-d="1" aria-label="Más">+</button></div>
+    </div>`;
+  }).join('');
   return `<div class="shell no-nav fade-in">
     <button class="auth-back" data-act="nav" data-view="social">← Social</button>
     <div class="su-hero2 party-hero su-hero-course">
@@ -72,18 +76,9 @@ function vPartySetup() {
       <div class="party-games">${gameCards}</div>
     </div>
     ${selGames.length ? `<div class="su-block">
-      <span class="su-lab">Avanzado · bote en juego (opcional)</span>
-      <div class="chips">
-        <button class="chip ${!betOn ? 'on' : ''}" data-act="pd-bet" data-v="0">Solo por honor</button>
-        <button class="chip ${betOn ? 'on' : ''}" data-act="pd-bet" data-v="1">Con bote</button>
-      </div>
-      ${betOn ? `<div class="chips" style="margin-top:8px">${stakeChips}</div>
-        <div class="su-stake-custom">
-          <span class="su-lab" style="margin:0">Monto del bote</span>
-          <div class="su-stakestep"><button data-act="pd-stake-adj" data-d="-1" aria-label="Menos">−</button><b>$${d.stake}</b><button data-act="pd-stake-adj" data-d="1" aria-label="Más">+</button></div>
-        </div>
-        <p class="su-meta">${moneyDesc}</p>
-        <p class="su-meta">Se liquida solo al terminar y puedes pagar con <b class="lime">Apple Pay</b>.</p>` : `<p class="su-meta">Sin bote — solo por honor y para presumir.</p>`}
+      <span class="su-lab">Bote por modalidad (opcional)</span>
+      <div class="bote-list">${boteRows}</div>
+      <p class="su-meta">Cada modalidad lleva su propio bote, separado. Se liquida solo al terminar y puedes pagar con <b class="lime">Apple Pay</b>.</p>
     </div>
     <div class="su-block">
       <span class="su-lab">Ventajas por hándicap</span>
@@ -97,16 +92,19 @@ function vPartySetup() {
   </div>`;
 }
 
-/* Panel de apuesta/corta — estilizado (verde fosfo), arriba al comenzar */
+/* bote de una modalidad (con respaldo al monto único de parties viejas) */
+function partyStake(p, g) { return p && p.stakes ? (Number(p.stakes[g]) || 0) : (Number(p && p.stake) || 0); }
+function partyAnyBote(p) { return (p && p.stakes && Object.values(p.stakes).some(v => v > 0)) || Number(p && p.stake) > 0; }
+
+/* Panel del bote — cada modalidad con su monto, arriba al comenzar */
 function vBetPanel(p) {
-  const stake = Number(p.stake) || 0;
-  const games = Object.entries(p.games).filter(([, v]) => v).map(([k]) => Party.GAMES[k].name);
+  const games = Object.entries(p.games).filter(([, v]) => v).map(([k]) => k);
+  const chip = k => { const v = partyStake(p, k); return `<span class="bet-chip">${esc(Party.GAMES[k].name)}${v ? ` · $${v}` : ''}</span>`; };
   return `<div class="bet-panel">
-    <div class="bet-head"><span class="bet-tag">${golfIcon('card')} El bote</span><span class="bet-players">${p.players.length} jugador${p.players.length !== 1 ? 'es' : ''}</span></div>
-    <div class="bet-amt">${stake ? `$${stake}` : 'Honor'}<i>${stake ? 'en juego' : 'sin bote'}</i></div>
-    <div class="bet-games">${(games.length ? games : ['Sin juego']).map(g => `<span class="bet-chip">${esc(g)}</span>`).join('')}</div>
+    <div class="bet-head"><span class="bet-tag">${golfIcon('card')} El bote por modalidad</span><span class="bet-players">${p.players.length} jugador${p.players.length !== 1 ? 'es' : ''}</span></div>
+    <div class="bet-games">${games.length ? games.map(chip).join('') : '<span class="bet-chip">Sin juego</span>'}</div>
     <p class="bet-note">${golfIcon('flag')} Tee time ${fmtDate(p.date)}${p.time ? ` · ${esc(p.time)}` : ''}</p>
-    ${stake ? `<p class="bet-note">Se liquida solo al terminar · pago con Apple Pay.</p>` : `<p class="bet-note">Sin bote — se juega por honor y para presumir.</p>`}
+    ${partyAnyBote(p) ? `<p class="bet-note">Cada modalidad lleva su propio bote · se liquida al final con Apple Pay.</p>` : `<p class="bet-note">Sin bote — se juega por honor y para presumir.</p>`}
   </div>`;
 }
 
@@ -522,7 +520,7 @@ function vPartyDone() {
       <p class="hcp">${esc(sub)}</p>
     </div>
     <div class="card">${vPartyTable(p, p.holes.length)}</div>
-    ${p.stake ? `<div class="card pay-card">
+    ${partyAnyBote(p) ? `<div class="card pay-card">
       <span class="label">${golfIcon('card')} Liquidar el bote</span>
       ${vPartySettle(p)}
       ${V.paid ? `<div class="pay-done">Pago enviado ✓ <span>demo</span></div>`
@@ -543,18 +541,10 @@ function settleRow(name, money) {
   return `<div class="settle-row"><b>${esc(name)}</b><span class="settle-amt ${money >= 0 ? 'pos' : 'neg'}">${money >= 0 ? `cobra $${money}` : `paga $${Math.abs(money)}`}</span></div>`;
 }
 function vPartySettle(p) {
-  const stake = Number(p.stake) || 0;
-  if (!stake) return '';
-  if (p.games.corta) {
-    const net = Party.unidades(p);
-    return p.players.slice().sort((a, b) => (net[b.pid] || 0) - (net[a.pid] || 0))
-      .map(pl => settleRow(plName(p, pl.pid).split(' ')[0], (net[pl.pid] || 0) * stake)).join('');
-  }
-  const n = p.players.length;
-  let winner = null;
-  if (p.games.match) { const ms = Party.matchStatus(p); winner = ms && ms.leaderWon > ms.runnerWon ? ms.leader : null; }
-  if (!winner) { const played = Party.standings(p).filter(r => r.holes); winner = played[0] ? played[0].pid : null; }
-  return p.players.map(pl => settleRow(plName(p, pl.pid).split(' ')[0], pl.pid === winner ? stake * (n - 1) : (winner ? -stake : 0))).join('');
+  if (!partyAnyBote(p)) return '';
+  const led = Party.ledger(p);                 // suma el bote de cada modalidad (separados)
+  return p.players.slice().sort((a, b) => (led.net[b.pid] || 0) - (led.net[a.pid] || 0))
+    .map(pl => settleRow(plName(p, pl.pid).split(' ')[0], Math.round(led.net[pl.pid] || 0))).join('');
 }
 
 /* ---------- Acciones ---------- */
@@ -581,9 +571,10 @@ function partyDerived(c, par) {
 
 const partyActions = {
   'party-new'() {
-    V.partyDraft = { courseId: 'campestre', date: new Date().toISOString().slice(0, 10), time: '08:00', useNet: false, stake: 0, games: { corta: false, skins: false, larga: false, gogo: false, birdie: false, medal: true, nassau: false, match: false } };
+    V.partyDraft = { courseId: 'campestre', date: new Date().toISOString().slice(0, 10), time: '08:00', useNet: false, stakes: { medal: 0, match: 0, corta: 0 }, games: { corta: false, skins: false, larga: false, gogo: false, birdie: false, medal: true, nassau: false, match: false } };
     go('party-setup');
   },
+  'pd-bote-adj'(d) { const s = V.partyDraft.stakes || (V.partyDraft.stakes = { medal: 0, match: 0, corta: 0 }); s[d.g] = Math.max(0, Math.min(5000, (Number(s[d.g]) || 0) + Number(d.d) * 5)); render(); },
   'pd-pick-course'(d) { if (COURSES[d.c]) V.partyDraft.courseId = d.c; render(); },
   'pd-game'(d) { V.partyDraft.games[d.g] = !V.partyDraft.games[d.g]; render(); },   // multi-selección
   'pd-net'() { V.partyDraft.useNet = !V.partyDraft.useNet; render(); },
@@ -607,7 +598,8 @@ const partyActions = {
       holesCount: Math.min(COURSES[cid].holes.length, 18),
       games: { ...d.games },
       useNet: !!d.useNet,
-      stake: Number(d.stake) || 0,
+      stakes: { ...(d.stakes || {}) },
+      stake: Number((d.stakes && d.stakes.corta) || 0),
       players: [{ pid: hostPid, name: u.name, userId: u.id, strokes: 0, device: DEVICE_ID }],
       holes: [], idx: 0,
       status: 'setup',

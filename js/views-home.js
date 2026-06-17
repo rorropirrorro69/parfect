@@ -451,9 +451,21 @@ function vHomeLearn() {
 function vRecentStrip(rounds) {
   const u = cur();
   const list = rounds.slice(0, 10);
-  const cards = list.map(r => roundSceneCard(r, true)).join('');
+  const cards = list.map(r => {
+    const s = Stats.roundStats(r);
+    const course = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : r.course;
+    const vibe = roundVibe(s, u.hcp);
+    const cls = s.toPar <= 0 ? 'good' : s.toPar <= Math.round(s.holes * 0.33) ? 'par' : 'over';
+    return `<button class="rs-card rs-${cls}" data-act="round-detail" data-id="${r.id}">
+      ${vibe ? `<span class="rs-vibe">${vibe.ic}</span>` : ''}
+      <span class="rs-date">${fmtDate(r.date)}</span>
+      <span class="rs-score">${s.score}</span>
+      <span class="rs-par">${fmtToPar(s.toPar)}</span>
+      <span class="rs-course">${esc(course)} · ${r.holes.length}h</span>
+    </button>`;
+  }).join('');
   return `<div class="sec-h lr-h"><h2>Últimas rondas</h2>${rounds.length > 10 ? `<button class="sec-link" data-act="nav" data-view="ronda">Ver todas →</button>` : ''}</div>
-    <div class="rs-strip rs-strip-scene">${cards}</div>`;
+    <div class="rs-strip">${cards}</div>`;
 }
 
 /* ---- reparto de score: birdies / pares / bogeys… ---- */

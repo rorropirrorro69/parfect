@@ -74,7 +74,7 @@ function vRondaTab() {
     return html;
   }
   const myHcp = u.hcp;
-  rows += rounds.map(r => roundSceneCard(r)).join('');
+  rows += rounds.map(r => vRoundStatCard(r, myHcp)).join('');
   return html + `<div class="rc-list">${rows}</div>`;
 }
 
@@ -247,42 +247,34 @@ function vSetup() {
     </div></div>` : '';
   const holesNineBlock = (() => {
     const ro = roundOptions(cid);
-    const holes = (V.setupHoles && ro.opts18.length) ? V.setupHoles : (ro.opts18.length ? (V.setupHoles || 18) : 9);
-    const opts = holes === 18 ? ro.opts18 : ro.opts9;
-    const start = opts.some(o => o.start === V.setupStart) ? V.setupStart : (opts[0] ? opts[0].start : 0);
+    const has18 = ro.opts18.length > 0;          // el campo tiene más de 9 hoyos
+    const total = COURSES[cid].holes.length;
+    const holes = has18 ? (V.setupHoles || 18) : 9;
+    const start = (V.setupStart != null && V.setupStart < total) ? V.setupStart : 0;
     const par = roundPar(cid, start, holes);
-    const holesToggle = ro.opts18.length ? `<div class="su-block">
+    const holesToggle = has18 ? `<div class="su-block">
       <span class="su-lab">Hoyos</span>
       <div class="chips">
         <button class="chip ${holes === 9 ? 'on' : ''}" data-act="setup-holes" data-h="9">9 hoyos</button>
         <button class="chip ${holes === 18 ? 'on' : ''}" data-act="setup-holes" data-h="18">18 hoyos</button>
       </div>
     </div>` : '';
-    const nineSel = opts.length > 1 ? `<div class="su-block">
-      <span class="su-lab">${holes === 18 ? '¿Qué vueltas?' : '¿Qué vuelta?'}</span>
-      <div class="chips">${opts.map(o => `<button class="chip ${o.start === start ? 'on' : ''}" data-act="setup-nine" data-s="${o.start}">${esc(o.label)}</button>`).join('')}</div>
+    const startSel = total > 9 ? `<div class="su-block">
+      <span class="su-lab">¿En qué hoyo inicias?</span>
+      <div class="chips chips-scroll">${Array.from({ length: total }, (_, i) => `<button class="chip ${i === start ? 'on' : ''}" data-act="setup-nine" data-s="${i}">${i + 1}</button>`).join('')}</div>
     </div>` : '';
-    return `${holesToggle}${nineSel}<p class="su-meta">Jugarás <b class="lime">${holes} hoyos</b> · Par ${par}.</p>`;
+    return `${holesToggle}${startSel}<p class="su-meta">Jugarás <b class="lime">${holes} hoyos</b> desde el <b class="lime">hoyo ${start + 1}</b> · Par ${par}.</p>`;
   })();
-  const when = V.setupWhen === 'prog' ? 'prog' : 'ahora';
   const whenToggle = `<div class="su-block">
       <span class="su-lab">¿Cuándo juegas?</span>
       <div class="chips">
-        <button class="chip ${when === 'ahora' ? 'on' : ''}" data-act="setup-when" data-w="ahora">Ahora</button>
-        <button class="chip ${when === 'prog' ? 'on' : ''}" data-act="setup-when" data-w="prog">Programar tee time</button>
+        <button class="chip on" data-act="setup-when" data-w="ahora">Ahora</button>
+        <button class="chip" data-act="party-new">Programar tee time</button>
       </div>
     </div>`;
-  const body = when === 'prog'
-    ? `<div class="card su-event">
-        <div class="su-ev-ic">${golfIcon('flag')}</div>
-        <b>Programa una jugada futura</b>
-        <p class="note" style="margin:6px 0 12px">Agenda el día y el tee time, elige modalidad e invita a tus amigos. Les llega y cada quien confirma su lugar.</p>
-        <button class="btn primary" data-act="event-new">${golfIcon('flag')} Crear evento e invitar →</button>
-      </div>`
-    : `<div class="su-block"><span class="su-lab">Campo</span><div class="su-courses">${courseCards}</div></div>
+  const body = `<div class="su-block"><span class="su-lab">Campo</span><div class="su-courses">${courseCards}</div></div>
       ${holesNineBlock}
-      <button class="btn primary big su-go" data-act="start-round">${golfIcon('flag')} Comenzar ronda</button>
-      <div class="su-block"><span class="su-lab">¿Juegas con amigos?</span>${partyCard()}</div>`;
+      <button class="btn primary big su-go" data-act="start-round">${golfIcon('flag')} Comenzar ronda</button>`;
   return `<div class="su-hero2 su-hero-course">
       <div class="su-hero2-txt">
         <span class="su-hero-tag">${golfIcon('flag')} Nueva ronda</span>
@@ -924,10 +916,15 @@ function vRoundDetail() {
   const parOf = i => (r.holes[i] && r.holes[i].par != null) ? r.holes[i].par : (chAt(i) ? chAt(i).par : 4);
   const ydsOf = (ch && ch.some(h => h.yds)) ? (i => (chAt(i) ? chAt(i).yds : null)) : null;
   const totYds = ch ? ch.slice(off, off + r.holes.length).reduce((a, h) => a + (h.yds || 0), 0) : 0;
+  const scoreCls = s.toPar <= 0 ? 'good' : s.toPar <= Math.round(s.holes * 0.33) ? 'par' : 'over';
   return `<button class="auth-back" data-act="nav" data-view="ronda">← Tus rondas</button>
-    ${roundScene(r, s, courseName, justFin)}
-    <div class="card rd-course">
-      <span><b>${esc(course ? course.name : r.course)}</b><span>${s.holes} hoyos · Par ${s.par}${totYds ? ` · ${totYds.toLocaleString('es-MX')} yds` : ''}${course && course.approx ? ' · aprox' : ' · real'}</span></span>
+    <div class="rd-head">
+      <div class="rd-head-l">
+        ${justFin ? '<span class="rd-kick">¡Ronda guardada!</span>' : ''}
+        <h1 class="rd-course-name">${esc(courseName)}</h1>
+        <span class="rd-sub">${fmtDate(r.date)} · ${s.holes} hoyos · Par ${s.par}${course && course.approx ? ' · aprox' : ''}</span>
+      </div>
+      <div class="rd-score ${scoreCls}"><b>${s.score}</b><span>${fmtToPar(s.toPar)}</span></div>
     </div>
     <div class="grid2">
       ${statCard(pct(s.fw, s.fwTot), 'Fairways', s.fwTot ? (s.fw / s.fwTot) * 100 : 0)}
