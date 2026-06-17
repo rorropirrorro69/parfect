@@ -183,7 +183,8 @@ function vWeekStrip() {
 function vTrainer() {
   const u = cur();
   const tab = ['entreno', 'logros', 'academia'].includes(V.trainerTab) ? V.trainerTab : 'diag';
-  const body = tab === 'entreno' ? vSessionPlanner()
+  const showHist = (!V.planStep || V.planStep === 'time') && !V.sessionRun && !V.sessionSummary;
+  const body = tab === 'entreno' ? (vSessionPlanner() + (showHist ? vTrainHistory() : ''))
     : tab === 'logros' ? (vKeyTargets(u) + `<div style="margin-top:22px"></div>` + vLogros())
       : tab === 'academia' ? vAcademyLaunch()
         : vDiag();
@@ -442,6 +443,37 @@ const spFmtMin = m => m >= 60 ? (m % 60 ? (m / 60).toFixed(1) : (m / 60)) + ' h'
 function spDrill(k) { const d = (typeof Trainer !== 'undefined' && Trainer.DRILLS && Trainer.DRILLS[k]) ? Trainer.DRILLS[k] : null; return d && d[0] ? d[0].name : null; }
 
 function spSceneFor(lab) { return ({ 'Salida': 'fw', 'Driving': 'fw', 'Hierros': 'gir', 'Juego corto': 'ud', 'Putting': 'putt' })[lab] || 'fw'; }
+
+/* Historial de entrenamientos pasados */
+function thIcon(area) {
+  const a = String(area || '').toLowerCase();
+  if (/putt/.test(a)) return 'putter';
+  if (/salida|fairway|driver|madera|hibrido|híbrido/.test(a)) return 'flag';
+  if (/corto|wedge|up|approach|bunker/.test(a)) return 'bucket';
+  if (/green|hierro|gir/.test(a)) return 'green';
+  return 'bucket';
+}
+function vTrainHistory() {
+  const list = (typeof myPractices === 'function') ? myPractices().slice().reverse() : ((S.practices || []).filter(p => p.userId === S.session).slice().reverse());
+  if (!list.length) {
+    return `<div class="sec-h" style="margin-top:22px"><h2 style="font-size:18px">Historial de entrenamientos</h2></div>
+      <div class="card empty" style="padding:22px 16px"><div class="e-ico">${golfIcon('bucket')}</div><p class="note" style="margin:0">Aún no entrenas. Arma tu sesión y aquí verás tu historial.</p></div>`;
+  }
+  const totalMin = list.reduce((a, p) => a + (Number(p.minutes) || 0), 0);
+  const items = list.slice(0, 15).map(p => {
+    const min = Number(p.minutes) || 0;
+    return `<div class="th-item">
+      <span class="th-ic">${golfIcon(thIcon(p.area || p.drill))}</span>
+      <div class="th-tx"><b>${esc(p.drill || 'Entrenamiento')}</b><span>${fmtDate(p.date)}${p.area ? ' · ' + esc(p.area) : ''}</span></div>
+      <span class="th-min">${min ? min + ' min' : '✓'}</span>
+    </div>`;
+  }).join('');
+  return `<div class="sec-h" style="margin-top:22px"><h2 style="font-size:18px">Historial de entrenamientos</h2><span class="small muted">${list.length} sesión${list.length === 1 ? '' : 'es'}</span></div>
+    <div class="card th-card">
+      <div class="th-sum"><div class="th-sumc"><b>${list.length}</b><span>sesiones</span></div><div class="th-sumc"><b>${totalMin}</b><span>min totales</span></div></div>
+      <div class="th-list">${items}</div>
+    </div>`;
+}
 
 function vSessionSummary() {
   const s = V.sessionSummary || { mins: 0, areas: [], count: 0, completed: true };

@@ -310,8 +310,7 @@ function vAcademyBody(u) {
   const bubble = curIdx >= 0
     ? `¡Nivel ${curIdx + 1}!<br><b>${esc(levelMeta(curIdx).unit)}</b> · 10 preguntas`
     : `🏆 ¡Campo completo!<br><b>Eres leyenda de la Academia.</b>`;
-  return `<div class="acw-guide">
-      <div class="acw-bird">${senseiBird('')}</div>
+  return `<div class="acw-guide nobird">
       <div class="acw-bubble">${bubble}</div>
     </div>
     <div class="ac-progwrap acw-prog"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>${prog.done}/${prog.total} niveles</span></div>

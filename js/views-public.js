@@ -320,6 +320,28 @@ function lpAwardsDeco() {
   </div>`;
 }
 
+/* foto del club: usa assets/<file> si existe; si no, muestra una escena de respaldo */
+function lpClubShot(file, label, grad, big) {
+  return `<figure class="lp-gal-item${big ? ' big' : ''}">
+    <span class="lp-gal-ph" style="background:${grad}"><span class="lp-gal-ic">${golfFlagSvg()}</span></span>
+    <img class="lp-gal-img" src="assets/${file}" alt="${esc(label)}" loading="lazy" onload="if(this.naturalWidth){var p=this.parentElement.querySelector('.lp-gal-ph');if(p)p.style.display='none'}else{this.remove()}" onerror="this.remove()">
+    <figcaption class="lp-gal-cap">${esc(label)}</figcaption>
+  </figure>`;
+}
+function lpGallery() {
+  return `<section class="lp-sec lp-gallery-sec">
+    <span class="lp-eyebrow reveal">Hecha para el club</span>
+    <h2 class="lp-h2 reveal">Del primer tee<br/><span class="lime">al último putt.</span></h2>
+    <p class="lp-lead reveal" style="text-align:center;max-width:34ch;margin:0 auto 16px">Vive el golf como en tu club: cada ronda, cada green y cada atardecer, registrados.</p>
+    <div class="lp-gallery reveal">
+      ${lpClubShot('club-tee.png', 'En el tee de salida', 'linear-gradient(160deg,#86c8ef,#3f9447)', true)}
+      ${lpClubShot('club-green.png', 'Putt en el green', 'linear-gradient(160deg,#bfe6a0,#2f7d3a)')}
+      ${lpClubShot('club-friends.png', 'Ronda con amigos', 'linear-gradient(160deg,#ffe3ca,#4f9540)')}
+      ${lpClubShot('club-sunset.png', 'Atardecer en el campo', 'linear-gradient(160deg,#ffd2bf,#d6a52f)')}
+    </div>
+  </section>`;
+}
+
 function vLanding() {
   const feat = (kind, t, d) => `<div class="lp-feat reveal"><div class="lp-feat-art lpa-${kind}">${lpFeatArt(kind)}</div><h3>${t}</h3><p>${d}</p></div>`;
   // (lpFeatArt definida abajo, a nivel de módulo)
@@ -440,6 +462,8 @@ function vLanding() {
         <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-social.png', lpScrSocial())}<div class="lp-shot-tx"><h3>Juega con amigos</h3><p>Torneos en vivo, leaderboard y partidas por código. El golf es mejor en bola.</p></div></div>
       </div>
     </section>
+
+    ${lpGallery()}
 
 
 

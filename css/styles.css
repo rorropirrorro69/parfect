@@ -2357,6 +2357,30 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .chat-input input:focus { outline: none; border-color: var(--lime); }
 .chat-send-btn { flex: none; width: 42px; height: 42px; border: none; border-radius: 12px; background: var(--lime); color: #0c2913; font-size: 16px; cursor: pointer; }
 .chat-send-btn:active { transform: scale(.92); }
+/* Landing · galería de fotos del club */
+.lp-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lp-gal-item { position: relative; margin: 0; border-radius: 18px; overflow: hidden; aspect-ratio: 1 / 1; box-shadow: 0 12px 30px rgba(20,40,15,.12); }
+.lp-gal-item.big { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+.lp-gal-ph { position: absolute; inset: 0; display: grid; place-items: center; }
+.lp-gal-ic { width: 44px; height: 44px; opacity: .9; filter: drop-shadow(0 4px 8px rgba(0,0,0,.2)); }
+.lp-gal-ic .gflag { width: 100%; height: auto; }
+.lp-gal-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.lp-gal-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 14px 11px; font-size: 13px; font-weight: 800; color: #fff; background: linear-gradient(0deg, rgba(8,20,8,.6), transparent); }
+/* Historial de entrenamientos */
+.th-card { padding: 14px; }
+.th-sum { display: flex; gap: 10px; margin-bottom: 12px; }
+.th-sumc { flex: 1; background: var(--card2); border: 1px solid var(--line); border-radius: 14px; padding: 11px 12px; text-align: center; }
+.th-sumc b { display: block; font-size: 22px; font-weight: 900; color: var(--text); line-height: 1; }
+.th-sumc span { font-size: 11px; color: var(--muted); }
+.th-list { display: flex; flex-direction: column; }
+.th-item { display: grid; grid-template-columns: 38px 1fr auto; gap: 11px; align-items: center; padding: 10px 0; }
+.th-item + .th-item { border-top: 1px solid var(--line); }
+.th-ic { width: 38px; height: 38px; border-radius: 11px; background: var(--lime-faint); display: grid; place-items: center; }
+.th-ic .gi { width: 21px; height: 21px; }
+.th-tx { min-width: 0; }
+.th-tx b { display: block; font-size: 13.5px; font-weight: 800; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.th-tx span { display: block; font-size: 11.5px; color: var(--muted); }
+.th-min { font-size: 12.5px; font-weight: 900; color: var(--lime-ink, #2f8a1f); background: var(--lime-faint); border-radius: 99px; padding: 4px 10px; white-space: nowrap; }
 /* Resumen al terminar la sesión de entrenamiento */
 .sess-sum { text-align: center; }
 .sess-sum .sumcheck { width: 64px; height: 64px; margin: 6px auto 12px; border-radius: 50%; background: var(--lime); color: #0c2913; font-size: 34px; font-weight: 900; display: grid; place-items: center; box-shadow: 0 8px 22px rgba(124,194,74,.4); animation: sumPop .5s cubic-bezier(.2,.9,.3,1.4); }
