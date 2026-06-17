@@ -88,15 +88,19 @@ function appIcon3D() {
     <defs>
       <linearGradient id="aiBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a6e85e"/><stop offset="55%" stop-color="#5fb83f"/><stop offset="100%" stop-color="#2f7d34"/></linearGradient>
       <radialGradient id="aiGloss" cx="34%" cy="20%" r="72%"><stop offset="0" stop-color="rgba(255,255,255,.6)"/><stop offset="48%" stop-color="rgba(255,255,255,.08)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient>
-      <radialGradient id="aiGrn" cx="46%" cy="38%" r="70%"><stop offset="0" stop-color="#d6f4a8"/><stop offset="100%" stop-color="#6fb045"/></radialGradient>
     </defs>
     <rect x="6" y="6" width="188" height="188" rx="46" fill="url(#aiBg)"/>
-    <ellipse cx="100" cy="150" rx="70" ry="22" fill="#236028" opacity=".45"/>
-    <ellipse cx="100" cy="138" rx="58" ry="22" fill="url(#aiGrn)"/>
-    <ellipse cx="92" cy="132" rx="9" ry="4" fill="#0a2e16"/>
-    <line x1="92" y1="132" x2="92" y2="52" stroke="#ffffff" stroke-width="7" stroke-linecap="round"/>
-    <path d="M92 52 L150 68 L92 84 Z" fill="#ff5a4d"/>
-    <circle cx="120" cy="126" r="10" fill="#fff" stroke="#cdd5d7" stroke-width="1.5"/>
+    <ellipse cx="100" cy="184" rx="86" ry="34" fill="#236028" opacity=".32"/>
+    <!-- P de PARFECT -->
+    <g transform="translate(7,-2)">
+      <g transform="translate(3,4)" opacity=".26">
+        <rect x="62" y="50" width="27" height="106" rx="12" fill="#0a2e16"/>
+        <path d="M75 50 A35 35 0 0 1 75 120" fill="none" stroke="#0a2e16" stroke-width="27" stroke-linecap="round"/>
+      </g>
+      <rect x="62" y="50" width="27" height="106" rx="12" fill="#ffffff"/>
+      <path d="M75 50 A35 35 0 0 1 75 120" fill="none" stroke="#ffffff" stroke-width="27" stroke-linecap="round"/>
+      <circle cx="90" cy="85" r="11" fill="#eef3f0" stroke="#cdd5d7" stroke-width="1.4"/>
+    </g>
     <rect x="6" y="6" width="188" height="188" rx="46" fill="url(#aiGloss)"/>
     <rect x="7.5" y="7.5" width="185" height="185" rx="44.5" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
   </svg>`;
@@ -174,20 +178,19 @@ function lpMarqueeItems() {
     ${lpOrg('altozano.png', 'Altozano', 'lpm-org')}`;
 }
 
-// rama de laurel reutilizable para los premios
+// rama de laurel reutilizable para los premios (estilo wreath profesional)
 function lpLaurel() {
+  // puntos a lo largo de la rama izquierda, de abajo hacia arriba: [x, y, rotación, escala]
+  const pts = [[34, 104, -60, .78], [27, 90, -48, .98], [23, 74, -34, 1.16], [23, 57, -20, 1.22], [28, 41, -6, 1.14], [37, 27, 10, .96], [49, 17, 26, .8]];
+  const leaf = (x, y, r, s) => `<ellipse cx="${x}" cy="${y}" rx="${7.6 * s}" ry="${3 * s}" transform="rotate(${r} ${x} ${y})"/>`;
+  const left = pts.map(p => leaf(p[0], p[1], p[2], p[3])).join('');
+  const right = pts.map(p => leaf(120 - p[0], p[1], -p[2], p[3])).join('');
   return `<svg class="lp-laurel" viewBox="0 0 120 120" aria-hidden="true">
-    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
-      <path d="M40 14 C20 34 16 64 30 100"/>
-      <path d="M80 14 C100 34 104 64 90 100"/>
+    <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".92">
+      <path d="M38 112 C19 92 16 58 31 21"/>
+      <path d="M82 112 C101 92 104 58 89 21"/>
     </g>
-    <g fill="currentColor" opacity=".92">
-      ${[20,32,44,56,68].map((y, i) => {
-        const lx = 32 - i * 1.5, rx = 88 + i * 1.5, t = 1 + i * 0.15;
-        return `<ellipse cx="${lx}" cy="${y}" rx="6" ry="3" transform="rotate(-35 ${lx} ${y}) scale(${t})" transform-origin="${lx} ${y}"/>
-                <ellipse cx="${rx}" cy="${y}" rx="6" ry="3" transform="rotate(35 ${rx} ${y}) scale(${t})" transform-origin="${rx} ${y}"/>`;
-      }).join('')}
-    </g>
+    <g fill="currentColor">${left}${right}</g>
   </svg>`;
 }
 
@@ -199,8 +202,8 @@ function lpAwardBadge(top, big, sub) {
 
 function lpAwards() {
   return `<div class="lp-awards">
-    ${lpAwardBadge('App of the Year', '2026', 'Golf & Fitness')}
-    ${lpAwardBadge("Editor's Choice", '★★★★★', 'App Store')}
+    ${lpAwardBadge('App Store', 'App of the Year', '2026')}
+    ${lpAwardBadge('Google Play', "Editors' Choice", '2026')}
     <div class="lp-aw lp-aw-tp reveal">
       <div class="lp-aw-laurels">${lpLaurel()}<div class="lp-aw-mid"><span class="lp-aw-top">Trustpilot</span><span class="lp-aw-big lp-aw-num">4.9<span class="lp-aw-den">/5</span></span><span class="lp-aw-stars">${lpTpStar()}${lpTpStar()}${lpTpStar()}${lpTpStar()}${lpTpStar()}</span></div></div>
     </div>
@@ -281,7 +284,7 @@ function vLanding() {
     <section class="lp-hero2 lp-hero2-clean">
       <div class="lp-hero-copy reveal">
         <h1 class="lp-title">Baja tu hándicap<br/><span class="lime">con datos, no con suerte.</span></h1>
-        <p class="lp-sub">Registra cada ronda en segundos. La IA encuentra dónde pierdes golpes y te arma el entrenamiento exacto. Tus números, tu progreso y tu plan — en una sola app.</p>
+        <p class="lp-sub">Registra cada ronda hoyo por hoyo: salida, fairways, greens, juego corto y putts. La IA analiza tus estadísticas, detecta dónde pierdes golpes y arma tu plan de entrenamiento. Sigue tu hándicap, tu progreso y tu juego completo en una sola app.</p>
         <div class="lp-cta-row">
           <button class="lp-order" data-act="go" data-view="signup">Empezar gratis →</button>
           <button class="lp-ghostbtn" data-act="demo-account">Ver demo</button>
@@ -301,7 +304,7 @@ function vLanding() {
       <span class="lp-eyebrow reveal">Cómo funciona</span>
       <h2 class="lp-h2 reveal">De tu tarjeta<br/><span class="lime">a tu mejor golf.</span></h2>
       <div class="lp-flow">
-        ${[['01', 'Guarda tu tarjeta', 'Apunta cada hoyo en segundos: salida, green, juego corto y putts. Tu ronda, completa.', 'round'],
+        ${[['01', 'Guarda tu tarjeta', 'Apuntas cada hoyo: salida, fairway, green, juego corto y putts. Tu ronda queda completa y ordenada.', 'round'],
            ['02', 'Analízala con IA', 'La inteligencia lee tus rondas y encuentra exactamente dónde se te van los golpes.', 'ai'],
            ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', 'stats'],
            ['04', 'Compite y sube', 'Bajas tu hándicap, subes en el ranking y llegas más lejos.', 'trophy']]
@@ -313,7 +316,7 @@ function vLanding() {
       <span class="lp-eyebrow reveal">La app por dentro</span>
       <h2 class="lp-h2 reveal">Funciones reales,<br/><span class="lime">no promesas.</span></h2>
       <div class="lp-shots">
-        <div class="lp-shot reveal">${lpPhoneShot('shot-rondas.png', lpScrRondas())}<div class="lp-shot-tx"><h3>Registra y revisa tus rondas</h3><p>Cada hoyo en segundos. Fairways, greens, up & down y tu tarjeta completa, lista al instante.</p></div></div>
+        <div class="lp-shot reveal">${lpPhoneShot('shot-rondas.png', lpScrRondas())}<div class="lp-shot-tx"><h3>Registra y revisa tus rondas</h3><p>Fairways, greens, up & down y putts hoyo por hoyo. Tu tarjeta completa y tu historial de rondas, siempre a la mano.</p></div></div>
         <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-analisis.png', lpScrCoach())}<div class="lp-shot-tx"><h3>Tu coach IA</h3><p>Cruza tus rondas, encuentra dónde pierdes golpes y te dice exactamente qué entrenar.</p></div></div>
         <div class="lp-shot reveal">${lpPhoneShot('shot-logros.png', lpScrLogros())}<div class="lp-shot-tx"><h3>Sube de rango con logros</h3><p>Trofeos míticos por cada meta que alcanzas. Tu progreso, gamificado y claro.</p></div></div>
         <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-social.png', lpScrSocial())}<div class="lp-shot-tx"><h3>Juega con amigos</h3><p>Torneos en vivo, leaderboard y partidas por código. El golf es mejor en bola.</p></div></div>
@@ -322,22 +325,44 @@ function vLanding() {
 
 
     <section class="lp-sec lp-presence">
+      <div class="lp-pres-orn" aria-hidden="true">
+        <span class="po po-plane">✈️</span>
+        <span class="po po-tr">🏆</span>
+        <span class="po po-cap">🎓</span>
+        <span class="po po-medal">🏅</span>
+        <span class="po po-flag">🚩</span>
+        <span class="po po-tr2">🏆</span>
+      </div>
       <span class="lp-eyebrow reveal">Tu camino</span>
       <h2 class="lp-h2 reveal">Del torneo local<br/><span class="lime">a una beca afuera.</span></h2>
       <p class="lp-lead reveal" style="text-align:center;max-width:32ch;margin:0 auto 14px">Cada torneo que juegas abre puertas reales para el golfista juvenil mexicano.</p>
-      <div class="lp-presgrid">
-        ${[['Torneos que cuentan', 'Cada torneo suma para el ranking juvenil nacional. Tus resultados te posicionan.'],
-           ['Equipos representativos', 'Los mejores forman los equipos juveniles que representan a México.'],
-           ['Becas en el extranjero', 'Exposición ante universidades y academias de golf fuera del país.'],
-           ['Patrocinios', 'Conecta con marcas que apuestan por las promesas del golf mexicano.'],
-           ['Green fees con descuento', 'Tarifas preferentes en campos aliados para que juegues y compitas más.'],
-           ['Tu progreso, medido', 'La IA registra cada ronda y te dice exactamente qué entrenar para subir.']]
-          .map(([t, d]) => `<div class="lp-prescard reveal"><h3>${t}</h3><p>${d}</p></div>`).join('')}
+      <div class="lp-journey reveal" aria-hidden="true">
+        <svg class="lp-jpath" viewBox="0 0 320 72" preserveAspectRatio="none">
+          <defs><linearGradient id="jgrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--lime)" stop-opacity=".35"/><stop offset="1" stop-color="var(--lime)"/></linearGradient></defs>
+          <path d="M16 58 Q160 -10 304 38" fill="none" stroke="url(#jgrad)" stroke-width="3" stroke-dasharray="1 10" stroke-linecap="round"/>
+        </svg>
+        <span class="lp-j lp-j-a">🇲🇽<small>Torneo local</small></span>
+        <span class="lp-j lp-j-p">✈️</span>
+        <span class="lp-j lp-j-b">🎓<small>Beca afuera</small></span>
       </div>
+      <div class="lp-presgrid">
+        ${[['🏆', 'Torneos que cuentan', 'Cada torneo suma para el ranking juvenil nacional. Tus resultados te posicionan.'],
+           ['🇲🇽', 'Equipos representativos', 'Los mejores forman los equipos juveniles que representan a México.'],
+           ['🎓', 'Becas en el extranjero', 'Exposición ante universidades y academias de golf fuera del país.'],
+           ['🤝', 'Patrocinios', 'Conecta con marcas que apuestan por las promesas del golf mexicano.'],
+           ['⛳', 'Green fees con descuento', 'Tarifas preferentes en campos aliados para que juegues y compitas más.'],
+           ['📈', 'Tu progreso, medido', 'La IA registra cada ronda y te dice exactamente qué entrenar para subir.']]
+          .map(([ic, t, d]) => `<div class="lp-prescard reveal"><span class="lp-presic">${ic}</span><h3>${t}</h3><p>${d}</p></div>`).join('')}
+      </div>
+      <div class="lp-flagstrip reveal"><span class="lp-flagstrip-lab">Destinos</span><span class="lp-flags">🇺🇸 🇪🇸 🇬🇧 🇨🇦 🇦🇺</span></div>
       <div class="lp-statrow reveal" style="margin-top:18px">
         <div class="lp-stat"><b>+10</b><span>campos aliados</span></div>
         <div class="lp-stat"><b>+50</b><span>juveniles activos</span></div>
         <div class="lp-stat"><b>+1,200</b><span>hoyos registrados</span></div>
+      </div>
+      <div class="lp-allies reveal">
+        <span class="lp-allies-lab">Aliados oficiales</span>
+        <div class="lp-allies-row">${lpOrg('fmg.png', 'Federación Mexicana de Golf', 'lp-ally')}${lpOrg('campestre.png', 'Club Campestre Morelia', 'lp-ally')}${lpOrg('tresmarias.png', 'Tres Marías', 'lp-ally')}${lpOrg('altozano.png', 'Altozano', 'lp-ally')}</div>
       </div>
     </section>
 
