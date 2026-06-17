@@ -406,14 +406,14 @@ function lpClubShot(file, label, scene, big) {
 }
 function lpGallery() {
   return `<section class="lp-sec lp-gallery-sec">
-    <span class="lp-eyebrow reveal">Hecha para el club</span>
-    <h2 class="lp-h2 reveal">Del primer tee<br/><span class="lime">al último putt.</span></h2>
-    <p class="lp-lead reveal" style="text-align:center;max-width:34ch;margin:0 auto 16px">Vive el golf como en tu club: cada ronda, cada green y cada atardecer, registrados.</p>
+    <span class="lp-eyebrow reveal">Vívelo en el campo</span>
+    <h2 class="lp-h2 reveal">Torneos que se<br/><span class="lime">viven en grande.</span></h2>
+    <p class="lp-lead reveal" style="text-align:center;max-width:34ch;margin:0 auto 16px">Golf de verdad, con tu equipo y los mejores aliados, dentro y fuera del campo.</p>
     <div class="lp-gallery reveal">
-      ${lpClubShot('club-tee.png', 'En el tee de salida', lpClubTee(), true)}
-      ${lpClubShot('club-green.png', 'Putt en el green', lpClubGreen())}
-      ${lpClubShot('club-friends.png', 'Ronda con amigos', lpClubFriends())}
-      ${lpClubShot('club-sunset.png', 'Atardecer en el campo', lpClubSunset())}
+      ${lpClubShot('club-1.png', 'Torneo Universidad Montrer', lpClubTee(), true)}
+      ${lpClubShot('club-2.png', 'Equipo Panteras', lpClubFriends())}
+      ${lpClubShot('club-3.png', 'Aliados de primer nivel', lpClubGreen())}
+      ${lpClubShot('club-4.png', 'Vive la experiencia', lpClubSunset())}
     </div>
   </section>`;
 }

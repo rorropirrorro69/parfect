@@ -14,6 +14,15 @@ PANTALLAS (screenshots de la app) — van dentro de los iPhones de la landing:
   Recomendado: PNG vertical, relación ~9:19.5 (ej. 540 x 1170 px).
   Si no subes alguno, ese iPhone muestra el componente real (no se rompe).
 
+FOTOS DEL CLUB (galería "Vívelo en el campo" — fotos reales del torneo):
+  club-1.png   -> foto GRANDE (horizontal). Ej: grupo junto al Mercedes-Benz
+  club-2.png   -> Equipo Panteras (los 3 estudiantes)
+  club-3.png   -> Aliados (mujer junto al Mercedes CLA)
+  club-4.png   -> Experiencia (mezcal Sangre de Héroes / Chandon)
+
+  Recomendado: PNG/JPG horizontal. Si no subes alguna, se muestra una
+  ilustración de respaldo (no se rompe).
+
 LOGOS (carrusel "Campos y aliados", scroll infinito):
   fmg.png         -> Federación Mexicana de Golf
   campestre.png   -> Club Campestre Morelia
