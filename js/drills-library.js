@@ -2,9 +2,9 @@
    cat: fw (fairways/driving) · gir (approach/hierros) · ud (up&down/juego corto) · putt */
 
 const DRILL_CATS = [
-  { id: 'fw', label: 'Fairways', art: 'driving' },
-  { id: 'gir', label: 'GIR', art: 'approach' },
-  { id: 'ud', label: 'Up & Down', art: 'short' },
+  { id: 'fw', label: 'Calles', art: 'driving' },
+  { id: 'gir', label: 'Greens', art: 'approach' },
+  { id: 'ud', label: 'Corto', art: 'short' },
   { id: 'putt', label: 'Putts', art: 'putting' },
 ];
 

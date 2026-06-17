@@ -198,26 +198,6 @@ function vLanding() {
       <div class="lp-herophone reveal">${lpPhone(lpScrStats())}</div>
     </section>
 
-    <section class="lp-sec lp-presence">
-      <span class="lp-eyebrow reveal">Tu camino</span>
-      <h2 class="lp-h2 reveal">Del torneo local<br/><span class="lime">a una beca afuera.</span></h2>
-      <p class="lp-lead reveal" style="text-align:center;max-width:32ch;margin:0 auto 14px">Cada torneo que juegas abre puertas reales para el golfista juvenil mexicano.</p>
-      <div class="lp-presgrid">
-        ${[['Torneos que cuentan', 'Cada torneo suma para el ranking juvenil nacional. Tus resultados te posicionan.'],
-           ['Equipos representativos', 'Los mejores forman los equipos juveniles que representan a México.'],
-           ['Becas en el extranjero', 'Exposición ante universidades y academias de golf fuera del país.'],
-           ['Patrocinios', 'Conecta con marcas que apuestan por las promesas del golf mexicano.'],
-           ['Green fees con descuento', 'Tarifas preferentes en campos aliados para que juegues y compitas más.'],
-           ['Tu progreso, medido', 'La IA registra cada ronda y te dice exactamente qué entrenar para subir.']]
-          .map(([t, d]) => `<div class="lp-prescard reveal"><h3>${t}</h3><p>${d}</p></div>`).join('')}
-      </div>
-      <div class="lp-statrow reveal" style="margin-top:18px">
-        <div class="lp-stat"><b>+10</b><span>campos aliados</span></div>
-        <div class="lp-stat"><b>+50</b><span>juveniles activos</span></div>
-        <div class="lp-stat"><b>+1,200</b><span>hoyos registrados</span></div>
-      </div>
-    </section>
-
     <section class="lp-sec">
       <span class="lp-eyebrow reveal">Cómo funciona</span>
       <h2 class="lp-h2 reveal">De tu tarjeta<br/><span class="lime">a tu mejor golf.</span></h2>
@@ -237,6 +217,39 @@ function vLanding() {
         <div class="lp-shot reveal">${lpPhone(lpScrPlay())}<div class="lp-shot-tx"><h3>Registra cada hoyo</h3><p>Salida, green, juego corto y putts en segundos. Tu tarjeta, completa, sin lápiz ni papel.</p></div></div>
         <div class="lp-shot lp-shot-r reveal">${lpPhone(lpScrCoach())}<div class="lp-shot-tx"><h3>Tu coach IA</h3><p>Cruza tus rondas, encuentra dónde pierdes golpes y te dice exactamente qué entrenar.</p></div></div>
         <div class="lp-shot reveal">${lpPhone(lpScrStats())}<div class="lp-shot-tx"><h3>Mira tus números</h3><p>Calles, GIR, up & down, putts y más. Sabes de verdad cómo juegas y cómo subir.</p></div></div>
+      </div>
+    </section>
+
+    <section class="lp-sec lp-cred">
+      <span class="lp-eyebrow reveal">Respaldo</span>
+      <h2 class="lp-h2 reveal">Pensado para el<br/><span class="lime">golf federado.</span></h2>
+      <div class="lp-creds reveal">
+        ${[['#2f6d34', 'Clubes aliados', 'en México'], ['#3a8fe0', 'Ranking juvenil', 'nacional'], ['#e0a13a', 'Coaches', 'certificados']].map(([c, a, b]) => `
+          <div class="lp-cred-item">
+            <svg viewBox="0 0 48 56" class="lp-crest" aria-hidden="true"><path d="M24 2 L44 9 V28 C44 42 34 50 24 54 C14 50 4 42 4 28 V9 Z" fill="${c}" stroke="#16241a" stroke-width="1.6"/><line x1="20" y1="15" x2="20" y2="39" stroke="#fff" stroke-width="2.2"/><path d="M20 15 L33 19 L20 23 Z" fill="#fff"/><circle cx="20" cy="41" r="2.4" fill="#fff"/></svg>
+            <span><b>${a}</b>${b}</span>
+          </div>`).join('')}
+      </div>
+      <p class="lp-cred-note reveal">Rumbo a torneos avalados y al circuito juvenil mexicano.</p>
+    </section>
+
+    <section class="lp-sec lp-presence">
+      <span class="lp-eyebrow reveal">Tu camino</span>
+      <h2 class="lp-h2 reveal">Del torneo local<br/><span class="lime">a una beca afuera.</span></h2>
+      <p class="lp-lead reveal" style="text-align:center;max-width:32ch;margin:0 auto 14px">Cada torneo que juegas abre puertas reales para el golfista juvenil mexicano.</p>
+      <div class="lp-presgrid">
+        ${[['Torneos que cuentan', 'Cada torneo suma para el ranking juvenil nacional. Tus resultados te posicionan.'],
+           ['Equipos representativos', 'Los mejores forman los equipos juveniles que representan a México.'],
+           ['Becas en el extranjero', 'Exposición ante universidades y academias de golf fuera del país.'],
+           ['Patrocinios', 'Conecta con marcas que apuestan por las promesas del golf mexicano.'],
+           ['Green fees con descuento', 'Tarifas preferentes en campos aliados para que juegues y compitas más.'],
+           ['Tu progreso, medido', 'La IA registra cada ronda y te dice exactamente qué entrenar para subir.']]
+          .map(([t, d]) => `<div class="lp-prescard reveal"><h3>${t}</h3><p>${d}</p></div>`).join('')}
+      </div>
+      <div class="lp-statrow reveal" style="margin-top:18px">
+        <div class="lp-stat"><b>+10</b><span>campos aliados</span></div>
+        <div class="lp-stat"><b>+50</b><span>juveniles activos</span></div>
+        <div class="lp-stat"><b>+1,200</b><span>hoyos registrados</span></div>
       </div>
     </section>
 

@@ -442,7 +442,7 @@ function vTracker() {
 
 /* ---------- Planificador de sesión: acomoda tus drills en el tiempo que tengas ---------- */
 const SP_AREAS = {
-  driving: { label: 'Driving', icon: 'flag' },
+  driving: { label: 'Salida', icon: 'flag' },
   approach: { label: 'Hierros', icon: 'green' },
   short: { label: 'Juego corto', icon: 'bucket' },
   putting: { label: 'Putting', icon: 'putter' },
@@ -504,13 +504,12 @@ function vSessionPlanner() {
   if (V.sessionRun) return vSessionRunner();
   const ai = V.planMode !== 'me';
   const blocks = buildSessionBlocks(u, agg, T, V.planMode, V.planAreas);
-  const AREA_C = { 'Calentamiento': '#9a8a4a', 'Driving': '#3f9d44', 'Hierros': '#2fa36b', 'Juego corto': '#e0873a', 'Putting': '#3a8fe0' };
+  const sceneFor = lab => ({ 'Salida': 'fw', 'Driving': 'fw', 'Hierros': 'gir', 'Juego corto': 'ud', 'Putting': 'putt' }[lab] || 'fw');
   let clock = 0;
   const segs = blocks.map(b => {
     const from = clock; clock += b.min;
-    const c = AREA_C[b.label] || '#3f9d44';
-    return `<div class="spt-node ${b.warm ? 'warm' : ''}" style="--c:${c}">
-      <span class="spt-dot">${golfIcon(b.icon)}</span>
+    return `<div class="spt-node ${b.warm ? 'warm' : ''}">
+      <span class="spt-scene">${(typeof statScene === 'function') ? statScene(sceneFor(b.label)) : golfIcon(b.icon)}</span>
       <div class="spt-card">
         <div class="spt-top"><b>${esc(b.label)}</b><span class="spt-time">${from}–${clock}'</span></div>
         ${b.drill ? `<button class="spt-drill" data-act="drill-open" data-name="${esc(b.drill)}">${golfIcon('green')} ${esc(b.drill)} →</button>` : `<span class="spt-note">Calienta progresivo: wedge → hierros → driver</span>`}
