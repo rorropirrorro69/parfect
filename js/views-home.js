@@ -22,7 +22,7 @@ function vShell(content) {
     <nav class="nav">
       ${item('inicio', t('nav_home'))}
       ${item('ronda', t('nav_round'))}
-      <button class="nav-p" data-act="quick-round" aria-label="${esc(t('qa_round'))}"><svg class="navp-flag" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 21V4" fill="none" stroke="#16241A" stroke-width="2.6" stroke-linecap="round"/><path d="M7.4 4.3 L18.5 8 L7.4 11.7 Z" fill="#16241A"/></svg></button>
+      <button class="nav-p" data-act="quick-round" aria-label="${esc(t('qa_round'))}"><span class="navp-p">P</span></button>
       ${item('trainer', t('nav_trainer'))}
       ${item('perfil', t('nav_profile'))}
     </nav>

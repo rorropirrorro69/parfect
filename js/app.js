@@ -270,10 +270,11 @@ const actions = {
     if (typeof celebrate === 'function') celebrate(false, '¡Ronda compartida!');
     commit();
   },
-  'share-open'() {
+  'share-open'(d) {
     const rs = myRounds();
     if (!rs.length) { alert('Primero registra una ronda para compartirla.'); return; }
-    V.shareDraft = { roundId: rs[0].id, caption: '', media: null }; V.shareErr = null; render();
+    const r0 = (d && d.id && rs.find(x => x.id === d.id)) || rs[0];
+    V.shareDraft = { roundId: r0.id, caption: r0.caption || '', media: r0.media || null }; V.shareErr = null; render();
   },
   'share-pick'(d) { if (V.shareDraft) { V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption; V.shareDraft.roundId = d.id; } render(); },
   'share-clearmedia'() { if (V.shareDraft) { V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption; V.shareDraft.media = null; } render(); },

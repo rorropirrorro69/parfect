@@ -1041,5 +1041,13 @@ function vRoundDetail() {
       ${scorecardTable(s.holes, parOf, [{ name: 'Tú', scoreOf: i => (r.holes[i] ? r.holes[i].score : null) }], -1, null)}
     </div>
     ${roundAnalysis(r, s)}
+    <div class="card">
+      <span class="label">${golfIcon('card')} Foto / video de la ronda</span>
+      ${r.caption ? `<p class="note" style="margin:4px 0 0">${esc(r.caption)}</p>` : ''}
+      ${r.media ? `<div class="fd-media" style="margin-top:10px">${r.media.type === 'video' ? `<video src="${r.media.src}" controls playsinline preload="metadata"></video>` : `<img src="${r.media.src}" alt="" loading="lazy">`}</div>`
+        : `<p class="note" style="margin:4px 0 0">Aún sin foto ni video de esta ronda.</p>`}
+      <button class="btn ghost sm" data-act="share-open" data-id="${r.id}" style="margin-top:12px">${golfIcon('card')} ${r.media ? 'Cambiar' : 'Agregar'} foto o video</button>
+    </div>
+    ${typeof vShareComposer === 'function' && V.shareDraft ? vShareComposer(cur()) : ''}
     <button class="btn danger" data-act="round-delete" data-id="${r.id}">${V.delArm === r.id ? '¿Seguro? Toca otra vez para eliminar' : 'Eliminar esta ronda'}</button>`;
 }
