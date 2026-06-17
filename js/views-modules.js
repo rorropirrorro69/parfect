@@ -575,18 +575,18 @@ function vBiblioteca() {
     return `<button class="lib-tab ${c.id === cat ? 'on' : ''}" data-act="drill-cat" data-c="${c.id}" style="--lib:${a.c}"><span class="lib-tab-ic">${golfIcon(a.ic)}</span>${esc(c.label)}<span class="lib-tab-n">${n}</span></button>`;
   }).join('');
   const drills = DRILL_LIBRARY.filter(d => d.cat === cat);
-  const a = AREA[cat] || AREA.fw;
   const LV = ['Básico', 'Intermedio', 'Avanzado'];
   const band = Math.max(1, Math.ceil(drills.length / 3));
+  const scene = (typeof statScene === 'function') ? statScene(cat) : '';
   const items = drills.map((d, i) => {
     const isDone = done[d.name] === td;
     const lvl = LV[Math.min(2, Math.floor(i / band))];
-    return `<button class="lbd ${isDone ? 'done' : ''}" data-act="drill-open" data-name="${esc(d.name)}" style="--lib:${a.c}">
-      <span class="lbd-ico">${golfIcon(a.ic)}</span>
+    return `<button class="lbd ${isDone ? 'done' : ''}" data-act="drill-open" data-name="${esc(d.name)}">
+      <span class="lbd-scene">${scene}</span>
       <div class="lbd-main">
         <div class="lbd-top"><b class="lbd-name">${esc(d.name)}</b>${isDone ? '<span class="lbd-done">✓</span>' : ''}</div>
         <p class="lbd-desc">${esc(d.desc)}</p>
-        <div class="lbd-chips"><span class="lbd-chip lbd-lv lv${Math.min(2, Math.floor(i / band))}">${lvl}</span><span class="lbd-chip">${golfIcon('bucket')} ${esc(d.dose)}</span></div>
+        <div class="lbd-chips"><span class="lbd-chip">${esc(lvl)}</span><span class="lbd-chip">${esc(d.dose)}</span></div>
       </div>
       <span class="lbd-go">›</span></button>`;
   }).join('');

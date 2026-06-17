@@ -2261,8 +2261,8 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .lbd { display: flex; align-items: flex-start; gap: 13px; width: 100%; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 13px 15px; box-shadow: 0 6px 16px rgba(20,40,15,.06); transition: transform .12s; }
 .lbd:active { transform: scale(.99); }
 .lbd.done { opacity: .72; }
-.lbd-ico { flex: none; width: 44px; height: 44px; border-radius: 13px; background: color-mix(in srgb, var(--lib) 15%, transparent); color: var(--lib); display: grid; place-items: center; }
-.lbd-ico .gi, .lbd-ico svg { width: 22px; height: 22px; }
+.lbd-scene { flex: none; width: 66px; height: 50px; border-radius: 12px; overflow: hidden; background: #cdeafb; display: block; box-shadow: inset 0 0 0 1px rgba(20,40,15,.06); }
+.lbd-scene .rscene, .lbd-scene svg { width: 100%; height: 100%; display: block; }
 .lbd-main { flex: 1; min-width: 0; }
 .lbd-top { display: flex; align-items: center; gap: 8px; }
 .lbd-name { font-size: 15.5px; font-weight: 800; color: var(--text); }
@@ -2270,11 +2270,8 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .lbd-desc { font-size: 13px; color: var(--muted); margin: 3px 0 0; line-height: 1.4; }
 .lbd-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
 .lbd-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800; color: var(--muted); background: var(--card2); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
+.lbd-chip:first-child { color: var(--lime-ink); }
 .lbd-chip .gi, .lbd-chip svg { width: 12px; height: 12px; }
-.lbd-lv { border: none; color: #fff; }
-.lbd-lv.lv0 { background: #3aa055; }
-.lbd-lv.lv1 { background: #e0873a; }
-.lbd-lv.lv2 { background: #d8533a; }
 .lbd-go { flex: none; font-size: 20px; color: var(--muted); align-self: center; }
 
 .myt-grp { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 18px 0 8px; }

@@ -632,7 +632,13 @@ function vAvatarCreator(u) {
   const curHue = (u && u.avatarHue) || 0;
   const hueRow = GOLF_HUES.map(g => `<button class="cre-gcolor${curHue === g.h ? ' on' : ''}" data-act="set-avhue" data-h="${g.h}" title="Color de outfit"><span style="display:block;width:100%;height:100%;border-radius:50%;background:${g.c}"></span></button>`).join('');
   const curEmoji = (u && u.avatarEmoji) || '';
-  const AV_EMOJIS = ['⛳', '🏌️', '🦈', '🐊', '🐍', '🦅', '🐯', '🦁', '🐺', '🦊', '🐼', '🦏', '🦌', '🐗', '🦂', '🐉', '🦖', '🐢', '🐧', '🦄', '🐵', '🐶', '🐲', '🦫', '🦬', '🤖', '👽', '🔥', '⭐', '🏆'];
+  const AV_EMOJIS = [
+    '🏌️', '⛳', '🏆',
+    '🦈', '🐊', '🐍', '🦅', '🦉', '🦇', '🐯', '🦁', '🐺', '🦊', '🐻', '🐼', '🐨', '🐸', '🐵', '🦍', '🦧',
+    '🐶', '🐱', '🦝', '🐗', '🦌', '🦏', '🦛', '🐘', '🦒', '🐅', '🐆', '🦓', '🦬', '🦫', '🦔', '🐢', '🦎',
+    '🐉', '🐲', '🦖', '🦕', '🦄', '🐧', '🦦', '🦜', '🦂', '🕷️',
+    '🧑‍🍳', '🥷', '🧑‍🚀', '🦸', '🦹', '🧑‍🎤', '🕵️', '🤴', '👸', '🧙', '🧛', '🤖', '👽', '🤠', '🔥', '⭐'
+  ];
   const emojiRow = `<button class="cre-emoji cre-emoji-def ${!curEmoji ? 'on' : ''}" data-act="set-avemoji" data-e="" title="Golfista"><img src="${avatarSrc(u)}" alt=""></button>`
     + AV_EMOJIS.map(e => `<button class="cre-emoji ${curEmoji === e ? 'on' : ''}" data-act="set-avemoji" data-e="${e}">${e}</button>`).join('');
   const steps = RANKS.map((r, i) => `<div class="rank-step${i === idx ? ' on' : ''}${i < idx ? ' done' : ''}">
