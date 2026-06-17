@@ -5,7 +5,7 @@ const Trainer = (() => {
   const DRILLS = {
     driving: [
       { name: 'Gate Drill con alineación', desc: 'Coloca dos palos en el suelo formando un pasillo hacia tu objetivo. Trabaja el start line del drive sin pensar en distancia.', dose: '3 series × 10 bolas', metric: '≥ 7/10 dentro del pasillo', steps: ['Pon dos palos formando un pasillo hacia el objetivo', 'Pega buscando que la bola arranque por el pasillo', 'Ignora la distancia: solo importa la línea de salida'] },
-      { name: '14 calles bajo presión', desc: 'Simula las 14 salidas de una ronda: cada drive a un "fairway" imaginario distinto, cambiando objetivo cada bola. Sin repetir tras un fallo.', dose: '14 bolas, 1 intento c/u', metric: '≥ 8/14 calles imaginarias', steps: ['Elige 14 objetivos distintos, uno por salida', 'Pega 1 bola a cada uno, sin repetir', 'Cuenta cuántas caen en "calle"'] },
+      { name: '14 fairways bajo presión', desc: 'Simula las 14 salidas de una ronda: cada drive a un "fairway" imaginario distinto, cambiando objetivo cada bola. Sin repetir tras un fallo.', dose: '14 bolas, 1 intento c/u', metric: '≥ 8/14 fairways imaginarias', steps: ['Elige 14 objetivos distintos, uno por salida', 'Pega 1 bola a cada uno, sin repetir', 'Cuenta cuántas caen en "calle"'] },
       { name: 'Madera 3 de control', desc: 'Alterna driver y madera 3 al mismo objetivo. Compara dispersión real: te enseña cuándo el driver no paga.', dose: '2 series × 10 (5+5)', metric: 'Dispersión M3 < 60% de la del driver', steps: ['Alterna driver y madera 3 al mismo objetivo', 'Marca dónde cae cada bola', 'Compara la dispersión de las dos'] },
     ],
     approach: [

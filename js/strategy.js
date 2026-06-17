@@ -7,7 +7,7 @@ const CAMP_HOLES = [
   { n: 3, par: 3, yds: 174, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'water' }], tips: ['Par 3 con laguna a la izquierda del green.'] },
   { n: 4, par: 4, yds: 405, dog: 'right', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['Dogleg suave a la derecha.'] },
   { n: 5, par: 3, yds: 201, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['El par 3 más largo (201y).'] },
-  { n: 6, par: 4, yds: 432, dog: 'right', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['Par 4 largo, dogleg a la derecha; clave estar en calle.'] },
+  { n: 6, par: 4, yds: 432, dog: 'right', risks: [{ at: 'green', side: 'left', kind: 'bunker' }], tips: ['Par 4 largo, dogleg a la derecha; clave estar en fairway.'] },
   { n: 7, par: 5, yds: 529, dog: 'left', risks: [{ at: 'green', side: 'right', kind: 'water' }], tips: ['Dogleg izquierda, alcanzable en dos; laguna a la derecha del green.'] },
   { n: 8, par: 3, yds: 176, dog: 'straight', risks: [{ at: 'green', side: 'left', kind: 'water' }], tips: ['Par 3 con laguna a la izquierda; juega al centro.'] },
   { n: 9, par: 4, yds: 407, dog: 'right', risks: [{ at: 'green', side: 'right', kind: 'bunker' }], tips: ['Cierre con dogleg a la derecha hacia la casa club.'] },
@@ -206,9 +206,9 @@ function holeStance(hole, hcp, reachable) {
   if (hole.par === 5 && reachable && hcp <= 14) return { k: 'Agresivo', t: 'Llegas al green en 2 y el error se castiga poco: vale la pena ir por el birdie/eagle.' };
   if (hole.par === 5 && reachable) return { k: 'Equilibrado', t: 'Llegas en 2 pero con riesgo. Si tu salida queda sólida atácalo; si no, deja un wedge cómodo para el tercer tiro.' };
   if (water) return { k: 'Conservador', t: 'Hay agua cerca del green: apunta al centro y olvida la bandera. El doble bogey aquí nace de buscar el pin.' };
-  if (driveB && hcp >= 16) return { k: 'Conservador', t: 'Coloca la salida con madera o híbrido para evitar el bunker: estar en calle vale más que 20 yardas.' };
+  if (driveB && hcp >= 16) return { k: 'Conservador', t: 'Coloca la salida con madera o híbrido para evitar el bunker: estar en fairway vale más que 20 yardas.' };
   if (hole.par === 3 && hole.yds >= 195) return { k: 'Conservador', t: 'Par 3 largo: toma un palo de más, apunta al centro y confía en tu up & down. El bogey es buen score.' };
-  return { k: 'Equilibrado', t: 'Hoyo noble: salida a calle y tiro al centro del green, sin heroísmos.' };
+  return { k: 'Equilibrado', t: 'Hoyo noble: salida a fairway y tiro al centro del green, sin heroísmos.' };
 }
 /* ¿por qué este objetivo (par vs bogey) para tu HCP? */
 function objectiveWhy(hole, target, hcp) {
@@ -408,7 +408,7 @@ function simStep(s) {
     s.lie = good ? 'fw' : (Math.random() < 0.35 ? 'bunker' : 'rough');
     const prog = 1 - s.dist / hole.yds;
     const side = good ? (Math.random() - 0.5) * 0.3 : (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 0.3);
-    const lbl = (isTee && hole.par >= 4) ? (good ? 'Fairway ✓' : 'fuera de calle') : (good ? 'buen lay-up' : 'lay-up corto');
+    const lbl = (isTee && hole.par >= 4) ? (good ? 'Fairway ✓' : 'fuera de fairway') : (good ? 'buen lay-up' : 'lay-up corto');
     simPush(s, prog, side, s.lie, good, `${cname} → ${lbl}, quedan ${s.dist}y`);
   }
 }
@@ -656,14 +656,14 @@ function idealPath(user, hole, tee, attack) {
     const t = tee || (hole.yds > 240 ? bagInfo(user).slice().sort((a, b) => b.carry - a.carry)[0] : bestClubForDist(user, hole.yds, false));
     const tc = t ? t.carry : 235;
     let rem = Math.max(0, hole.yds - tc);
-    shots.push({ club: t, carry: tc, leaves: rem, to: rem <= 5 ? 'green' : 'la calle' });
+    shots.push({ club: t, carry: tc, leaves: rem, to: rem <= 5 ? 'green' : 'la fairway' });
     if (hole.par === 4) {
       if (rem > 5) { const c2 = bestClubForDist(user, rem, true); shots.push({ club: c2, carry: c2 ? c2.carry : rem, leaves: 0, to: 'green' }); }
     } else if (attack && rem > 5) {
       const c2 = bestClubForDist(user, rem, true); shots.push({ club: c2, carry: c2 ? c2.carry : rem, leaves: 0, to: 'green' });
     } else {
       let lay = rem - 100;
-      if (lay > 30) { const c2 = bestClubForDist(user, lay, true); const cc = c2 ? c2.carry : lay; rem = Math.max(0, rem - cc); shots.push({ club: c2, carry: cc, leaves: rem, to: 'la calle' }); }
+      if (lay > 30) { const c2 = bestClubForDist(user, lay, true); const cc = c2 ? c2.carry : lay; rem = Math.max(0, rem - cc); shots.push({ club: c2, carry: cc, leaves: rem, to: 'la fairway' }); }
       const c3 = bestClubForDist(user, rem, true); shots.push({ club: c3, carry: c3 ? c3.carry : rem, leaves: 0, to: 'green' });
     }
   }
@@ -695,7 +695,7 @@ function objetivosCard(u) {
         ${statCard(`${udPct}%`, 'Up & down', pr.ud * 100)}
         ${statCard(`≤${puttsT}`, 'Putts', 72)}
       </div>
-      <p class="note" style="margin-bottom:0">Pega <b class="lime">${fwT} de ${driveHoles}</b> calles y <b class="lime">${girT} de ${N}</b> greens, salva el ${udPct}% y deja los putts en ${puttsT}.</p>
+      <p class="note" style="margin-bottom:0">Pega <b class="lime">${fwT} de ${driveHoles}</b> fairways y <b class="lime">${girT} de ${N}</b> greens, salva el ${udPct}% y deja los putts en ${puttsT}.</p>
     </div>`;
 }
 
@@ -715,7 +715,7 @@ function vEntreno() {
     { ic: 'club', t: 'Arma tu bolsa', d: 'Carga tus palos y distancias en tu perfil', prog: clubsSet ? 1 : 0, done: clubsSet },
     { ic: 'card', t: 'Primeras 5 prácticas', d: `Registra 5 sesiones · ${Math.min(5, pc)}/5`, prog: cl(pc / 5), done: pc >= 5 },
     { ic: 'club', t: 'Domina tu salida', d: `3 prácticas de Driver · ${Math.min(3, driverP)}/3`, prog: cl(driverP / 3), done: driverP >= 3 },
-    { ic: 'tee', t: `Calles al ${fwG}%`, d: `Tus fairways: ${Math.round(fw)}% → ${fwG}%`, prog: cl(fw / Math.max(1, fwG)), done: fw >= fwG },
+    { ic: 'tee', t: `Fairways al ${fwG}%`, d: `Tus fairways: ${Math.round(fw)}% → ${fwG}%`, prog: cl(fw / Math.max(1, fwG)), done: fw >= fwG },
     { ic: 'green', t: `Greens al ${girG}%`, d: `Tu GIR: ${Math.round(gir)}% → ${girG}%`, prog: cl(gir / Math.max(1, girG)), done: gir >= girG },
     { ic: 'flag', t: `Up & down al ${udG}%`, d: `Tu juego corto: ${Math.round(ud)}% → ${udG}%`, prog: cl(ud / Math.max(1, udG)), done: ud >= udG },
     { ic: 'putter', t: 'Putt sólido', d: `Baja tus 3-putts a ≤10% · hoy ${Math.round(threeP)}%`, prog: cl(10 / Math.max(1, threeP)), done: threeP <= 10 },
@@ -744,18 +744,18 @@ function vEntreno() {
 }
 
 /* CAMPOS → camino ideal por hoyo, analizable por hándicap */
-/* ayuda para conseguir la calle (hoyo + tu patrón de fallo + tu bolsa) */
+/* ayuda para conseguir la fairway (hoyo + tu patrón de fallo + tu bolsa) */
 function fairwayTip(hole, agg, u, bench, teeClub) {
   if (hole.par === 3) return `Par 3: es tiro directo al green. Con tu bolsa${teeClub ? ` el palo es ${teeClub.name} (~${teeClub.carry}y)` : ''}; comprométete al centro.`;
   const fw = agg ? Math.round(agg.fwPct) : null;
   const miss = agg ? (agg.missTee.izq === agg.missTee.der ? null : (agg.missTee.izq > agg.missTee.der ? 'izq' : 'der')) : null;
   let s = hole.dog === 'left' ? 'Dogleg a la izquierda: línea segura por el centro-derecha.'
     : hole.dog === 'right' ? 'Dogleg a la derecha: juega al centro-izquierda.'
-      : 'Calle recta: fija un blanco en el centro y apúntale.';
+      : 'Fairway recta: fija un blanco en el centro y apúntale.';
   if (teeClub) s += ` Con ${teeClub.name} (~${teeClub.carry}y, ${teeClub.eff}% acierto)${fw != null && fw < 55 ? ' priorizas control' : ''}.`;
   if (hole.dog === 'left') s += ' Un draw (de derecha a izquierda) acompaña el dogleg.';
   else if (hole.dog === 'right') s += ' Un fade (de izquierda a derecha) acompaña el dogleg.';
-  if (fw != null) s += ` Vas ${fw}% de calles${miss ? `, fallas a la ${miss === 'izq' ? 'izquierda' : 'derecha'} (apunta al lado contrario)` : ''}${bench ? ` · meta HCP ${bench.hcp}: ${Math.round(bench.fwPct)}%` : ''}.`;
+  if (fw != null) s += ` Vas ${fw}% de fairways${miss ? `, fallas a la ${miss === 'izq' ? 'izquierda' : 'derecha'} (apunta al lado contrario)` : ''}${bench ? ` · meta HCP ${bench.hcp}: ${Math.round(bench.fwPct)}%` : ''}.`;
   return s;
 }
 /* mejor palo de approach que NO se pasa del green (carry ≤ distancia) */
@@ -805,7 +805,7 @@ function objectiveTip(hole, u, bench) {
   try { exp = expectedHole(hole, statProbs(u)); } catch (e) {}
   const tgt = Math.round(exp), d = tgt - hole.par;
   const lab = d <= 0 ? 'par o mejor' : d === 1 ? 'bogey' : `+${d}`;
-  const goalTxt = bench ? ` Cada calle y green que sumes te acerca a HCP ${bench.hcp}.` : '';
+  const goalTxt = bench ? ` Cada fairway y green que sumes te acerca a HCP ${bench.hcp}.` : '';
   return `Apunta a ${tgt} (${lab}). ${d <= 0 ? 'Entra en tu rango: ve por el par sin arriesgar.' : `Un ${lab} aquí es buen número; juega seguro y recupera en los fáciles.`}${goalTxt}`;
 }
 
@@ -813,9 +813,9 @@ function objectiveTip(hole, u, bench) {
 function secondShotRec(hole, lie, apprClub) {
   const club = apprClub ? apprClub.name : 'tu hierro';
   if (hole.par === 3) return 'Par 3: ya estás en (o cerca de) green. Si fallaste, pásate a "si fallas el green".';
-  if (lie === 'fw') return `Calle limpia: ataca con ${club} al centro del green. Tienes la lie para comprometerte al tiro.`;
-  if (lie === 'izq' || lie === 'der') return `Rough ${lie === 'izq' ? 'izquierdo' : 'derecho'}: si la lie está limpia, un palo más y al CENTRO del green (sin spin no para). Si está enterrada, no seas héroe: saca a la calle con un hierro medio y juega el siguiente cómodo.`;
-  return 'Penal / OB: dropa y saca a la calle con un hierro 7-8; juega el green en el siguiente y firma bogey. Evitar el doble es ganar.';
+  if (lie === 'fw') return `Fairway limpia: ataca con ${club} al centro del green. Tienes la lie para comprometerte al tiro.`;
+  if (lie === 'izq' || lie === 'der') return `Rough ${lie === 'izq' ? 'izquierdo' : 'derecho'}: si la lie está limpia, un palo más y al CENTRO del green (sin spin no para). Si está enterrada, no seas héroe: saca a la fairway con un hierro medio y juega el siguiente cómodo.`;
+  return 'Penal / OB: dropa y saca a la fairway con un hierro 7-8; juega el green en el siguiente y firma bogey. Evitar el doble es ganar.';
 }
 /* qué tiro de juego corto jugar según dónde fallaste el green */
 function shortGameRec(miss) {
@@ -873,7 +873,7 @@ function vEstrategia() {
         <div class="path-row"><span class="path-n">P</span><div class="r-main"><b>2 putts</b><span>para anotar tu objetivo</span></div></div>
       </div>
       <div class="strat-tips" style="margin-top:14px">
-        ${tip('tee', 'Conseguir la calle', fairwayTip(hole, agg, u, bench, teeClub))}
+        ${tip('tee', 'Conseguir la fairway', fairwayTip(hole, agg, u, bench, teeClub))}
         ${tip('green', 'Conseguir el green (GIR)', girTip(hole, agg, u, bench, apprClub))}
         ${tip('flag', 'Objetivo · rumbo a tu meta', objectiveTip(hole, u, bench))}
       </div>

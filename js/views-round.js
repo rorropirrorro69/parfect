@@ -673,10 +673,10 @@ function holeViz(h, chole, holeNum, teeF) {
   const rel = score != null ? score - par : null;
   const scoreCls = rel == null ? '' : rel < 0 ? 'good' : rel === 0 ? 'par' : rel <= 1 ? 'over' : 'bad';
   const relLbl = score != null ? (rel === 0 ? 'Par' : rel < 0 ? String(rel) : '+' + rel) : 'Por jugar';
-  const lieLbl = { calle: 'Calle', rough: 'Rough', bunker: 'Bunker', ob: 'OB' };
+  const lieLbl = { calle: 'Fairway', rough: 'Rough', bunker: 'Bunker', ob: 'OB' };
   const appLbl = { gir: 'Green ✓', corto: 'Corto', largo: 'Largo', izq: 'Falló izq', der: 'Falló der' };
   const steps = [];
-  if (par !== 3) steps.push({ ic: 'club', label: 'Salida', done: !!(h.teeLie || h.tee), res: h.teeLie ? (lieLbl[h.teeLie] || '') : (h.tee === 'fw' ? 'Calle' : h.tee ? 'Falló' : '') });
+  if (par !== 3) steps.push({ ic: 'club', label: 'Salida', done: !!(h.teeLie || h.tee), res: h.teeLie ? (lieLbl[h.teeLie] || '') : (h.tee === 'fw' ? 'Fairway' : h.tee ? 'Falló' : '') });
   steps.push({ ic: 'green', label: 'Approach', done: !!h.app, res: h.app ? (appLbl[h.app] || '') : '' });
   if (h.app && h.app !== 'gir') steps.push({ ic: 'flag', label: 'Up & down', done: h.upDown != null, res: h.upDown != null ? (h.upDown ? 'Salvado ✓' : 'Chip') : '' });
   steps.push({ ic: 'putter', label: 'Putts', done: h.putts != null, res: h.putts != null ? (h.putts + ' putt' + (h.putts !== 1 ? 's' : '')) : '' });
@@ -702,40 +702,47 @@ function holeViz(h, chole, holeNum, teeF) {
 function vHoleCoach(a, h, holeNo, yds) {
   const par = h.par;
   const agg = Stats.aggregate(myRounds());
-  let weak = '';
-  if (agg) {
-    const issues = [
-      ['céntrate en meter la bola en juego desde el tee', 55 - (agg.fwPct || 0)],
-      ['apunta al centro del green, no a la bandera', 52 - (agg.girPct || 0)],
-      ['asegura el up&down dejando el chip cuesta arriba', 48 - (agg.scrPct || 0)],
-      ['el primer putt, déjala a un palo del hoyo', ((agg.putts18 || 30) - 31) * 4],
-    ].sort((x, y) => y[1] - x[1]);
-    weak = issues[0][0];
+  const pct = v => (v != null ? Math.round(v) + '%' : '—');
+  const fw = agg ? agg.fwPct : null, gir = agg ? agg.girPct : null, scr = agg ? agg.scrPct : null;
+  // paso actual del hoyo → el coach habla solo de ESE tiro
+  const steps = (typeof playSteps === 'function') ? playSteps(h) : ['app', 'putts'];
+  const ci = (V.fastStep != null && V.fastStep < steps.length) ? V.fastStep : ((typeof fastDerivedIndex === 'function') ? fastDerivedIndex(h, steps) : 0);
+  const step = steps[ci] || 'app';
+  let tag, title, body;
+  if (step === 'tee') {
+    tag = 'Tiro de salida';
+    title = `${yds ? yds + ' yds · ' : ''}busca el fairway`;
+    body = par >= 5
+      ? `Drive al centro; ataca el green en dos solo si quedas bien colocado.${fw != null ? ` Tus fairways: <b>${pct(fw)}</b> — prioriza estar en juego.` : ''}`
+      : `Toma el palo que llegue cómodo, no el más largo: el fairway vale más que 15 yardas.${fw != null ? ` Tus fairways: <b>${pct(fw)}</b>.` : ''}`;
+  } else if (step === 'app') {
+    tag = 'Approach al green';
+    title = par <= 3 ? `${yds ? yds + ' yds · ' : ''}directo a green` : 'apunta al centro';
+    body = `Al <b>centro del green</b>, no a la bandera. Saca tu distancia exacta y comprométete.${gir != null ? ` Tu GIR: <b>${pct(gir)}</b>.` : ''}`;
+  } else if (step === 'ud') {
+    tag = 'Juego corto';
+    title = 'salva el par';
+    body = `Deja el chip <b>cuesta arriba</b> y a un palo del hoyo para subir el siguiente.${scr != null ? ` Tu up & down: <b>${pct(scr)}</b>.` : ''}`;
+  } else if (step === 'putts') {
+    tag = 'Putt';
+    title = 'lee la caída';
+    body = `El primer putt, <b>déjala dada</b> (a un palo del hoyo).${agg ? ` Promedias <b>${(agg.putts18 || 0).toFixed(0)} putts/ronda</b>.` : ''}`;
+  } else {
+    tag = 'Cierra el hoyo';
+    title = 'anota tu score';
+    body = 'Registra el resultado y a por el siguiente hoyo.';
   }
-  const overall = par <= 3
-    ? `Par 3${yds ? ` · ${yds} yds` : ''}. Tiro directo a green: elige el palo que llegue al <b>centro</b> y comprométete con el swing.`
-    : par >= 5
-      ? `Par 5${yds ? ` · ${yds} yds` : ''}. Drive al centro; si quedas bien, ataca en dos. Si no, deja un <b>wedge cómodo</b> a tu distancia favorita.`
-      : `Par 4${yds ? ` · ${yds} yds` : ''}. Prioriza la <b>calle</b> y ataca al lado abierto del green.`;
-  const shots = [
-    ['Salida', par <= 3 ? 'Tee a la altura justa, swing suave y completo hacia el centro del green.' : 'Driver o híbrido al centro de la calle. Menos club, más fairway.'],
-    ['Approach', 'Saca tu distancia exacta y apunta al centro del green, sin dudar.'],
-    ['Juego corto', 'Si fallas el green, deja el chip cuesta arriba para subir el siguiente.'],
-    ['Putt', 'Lee la caída; el primer putt, a dejarla a un palo.'],
-  ];
   const open = V.holeCoachOpen;
   if (!open) {
     return `<button class="hc-fab" data-act="hole-coach-toggle">
       <span class="hc-ava">IA</span>
-      <span class="hc-fab-tx"><b>Coach IA</b><span>¿Qué tiro me conviene? Pídele consejo</span></span>
+      <span class="hc-fab-tx"><b>Coach IA · ${esc(tag)}</b><span>Toca para tu recomendación</span></span>
       <span class="hc-fab-ar">▾</span>
     </button>`;
   }
   return `<div class="hc hc-open">
-    <div class="hc-head"><span class="hc-ava">IA</span><div class="hc-htx"><span class="hc-tag">Coach · hoyo ${holeNo}</span><p class="hc-over">${overall}</p></div>
+    <div class="hc-head"><span class="hc-ava">IA</span><div class="hc-htx"><span class="hc-tag">${esc(tag)} · hoyo ${holeNo}</span><p class="hc-over"><b>${esc(title.charAt(0).toUpperCase() + title.slice(1))}.</b> ${body}</p></div>
       <button class="hc-close" data-act="hole-coach-toggle" aria-label="Cerrar">✕</button></div>
-    ${weak ? `<p class="hc-weak">Tu prioridad hoy: ${weak}.</p>` : ''}
-    <div class="hc-shots">${shots.map(([t, d]) => `<div class="hc-shot"><b>${t}</b><span>${d}</span></div>`).join('')}</div>
   </div>`;
 }
 
@@ -787,7 +794,7 @@ function vPlay() {
       const steps = playSteps(h);
       const ci = (V.fastStep != null && V.fastStep < steps.length) ? V.fastStep : fastDerivedIndex(h, steps);
       const cur = steps[ci];
-      const tabLab = { tee: 'Calle', app: 'Green', ud: 'Up&D', putts: 'Putts', score: 'Score' };
+      const tabLab = { tee: 'Fairway', app: 'Green', ud: 'Up&D', putts: 'Putts', score: 'Score' };
       const ansOf = k => {
         if (k === 'tee') return h.teeLie === 'calle' ? 'Sí' : h.teeLie === 'ob' ? 'OB' : h.teeLie ? 'No' : null;
         if (k === 'app') return h.app === 'gir' ? 'Sí' : h.app ? 'No' : null;
@@ -806,7 +813,7 @@ function vPlay() {
         </div>${extra || ''}`;
       const penPill = `<div class="wz-extra"><button class="wz-pen ${h.pen ? 'on' : ''}" data-act="fast-pen">${h.pen ? '✓ ' : ''}Penalti / OB en este hoyo</button></div>`;
       let body;
-      if (cur === 'tee') body = yn('fw', h.teeLie === 'calle', !!h.teeLie && h.teeLie !== 'calle' && h.teeLie !== 'ob', 'data-k="tee" data-lie="calle" data-dir="c"', 'data-k="tee" data-lie="rough" data-dir="c"', '¿Pegaste a la calle?', penPill);
+      if (cur === 'tee') body = yn('fw', h.teeLie === 'calle', !!h.teeLie && h.teeLie !== 'calle' && h.teeLie !== 'ob', 'data-k="tee" data-lie="calle" data-dir="c"', 'data-k="tee" data-lie="rough" data-dir="c"', '¿Pegaste al fairway?', penPill);
       else if (cur === 'app') body = yn('gir', h.app === 'gir', !!h.app && h.app !== 'gir', 'data-k="app" data-v="gir"', 'data-k="app" data-v="miss"', '¿Llegaste al green en regulación?', h.par === 3 ? penPill : '');
       else if (cur === 'ud') body = yn('ud', h.upDown === true, h.upDown === false, 'data-k="ud" data-v="si"', 'data-k="ud" data-v="no"', '¿Salvaste el par? (up &amp; down)');
       else if (cur === 'putts') {
@@ -940,7 +947,7 @@ function vDetailCard(r, parOf, ydsOf) {
         <span class="dc-rl dc-corner">${lab || 'Hoyo'}</span>${cells(i => i + 1, 'dc-num')}<span class="dc-rl dc-tt">TOT</span>
         <span class="dc-rl">Par</span>${cells(i => parOf(i), 'dc-par')}<span class="dcell dc-tt">${sumIf(parOf, arr)}</span>
         <span class="dc-rl">Score</span>${cells(i => scoreMarker(scoreOf(i), parOf(i)), 'dc-score')}<span class="dcell dc-tt dc-tot">${sumIf(scoreOf, arr)}</span>
-        <span class="dc-rl">Calle</span>${cells(i => dot(fwOf(i)))}<span class="dc-rl dc-tt"></span>
+        <span class="dc-rl">Fairway</span>${cells(i => dot(fwOf(i)))}<span class="dc-rl dc-tt"></span>
         <span class="dc-rl">Green</span>${cells(i => dot(girOf(i)))}<span class="dc-rl dc-tt"></span>
         <span class="dc-rl">Up&down</span>${cells(i => dot(udOf(i)))}<span class="dc-rl dc-tt"></span>
       </div>

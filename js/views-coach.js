@@ -106,7 +106,7 @@ function vCoachStudent(st) {
     </div>
     <div class="sec-h" style="margin-top:16px"><h2 style="font-size:15px">Sus stats vs su nivel</h2></div>
     <div class="cz-stats">
-      ${stat('Calles', s.fw, Math.round(b.fwPct), false)}
+      ${stat('Fairways', s.fw, Math.round(b.fwPct), false)}
       ${stat('GIR', s.gir, Math.round(b.girPct), false)}
       ${stat('Up&D', s.ud, Math.round(b.scrPct), false)}
       ${stat('Putts', s.putts, Math.round(b.putts18), true)}

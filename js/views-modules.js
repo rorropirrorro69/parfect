@@ -142,7 +142,7 @@ function vCoachLive(ctx, h) {
     return `<div class="coach-live"><span class="cl-ava">IA</span><div class="cl-body"><span class="cl-tag">Coach en vivo</span><b>Aún te estoy conociendo</b><p>Registra tu primera ronda y empiezo a leerte en tiempo real.</p></div></div>`;
   }
   const issues = [
-    { lab: 'Salidas', sev: 55 - (agg.fwPct || 0), tip: 'Tus salidas son tu mayor fuga. Hoy: 20 tiros buscando centrar la calle, no distancia.', ctip: 'Menos club y apunta al centro — la calle vale más que 15 yardas.' },
+    { lab: 'Salidas', sev: 55 - (agg.fwPct || 0), tip: 'Tus salidas son tu mayor fuga. Hoy: 20 tiros buscando centrar la fairway, no distancia.', ctip: 'Menos club y apunta al centro — la fairway vale más que 15 yardas.' },
     { lab: 'Approach', sev: 52 - (agg.girPct || 0), tip: 'Pierdes greens. Practica wedges a 50 / 75 / 100 m hasta dejarla a 3 m.', ctip: 'Apunta al centro del green, no a la bandera.' },
     { lab: 'Juego corto', sev: 48 - (agg.scrPct || 0), tip: 'Tu up&down está bajo. 15 min de chips a un solo objetivo.', ctip: 'Si fallas el green, deja el chip cuesta arriba para subir el siguiente.' },
     { lab: 'Putt', sev: ((agg.putts18 || 30) - 31) * 4, tip: 'Putts de más. Trabaja lag-putt: 10 bolas a 8, 10 y 12 m.', ctip: 'En putts largos prioriza dejarla cerca, no meterla.' },
@@ -559,7 +559,7 @@ function vSessionRunner() {
   </div>`;
 }
 
-/* dibujo de calle (fairway) más claro y nítido para la biblioteca */
+/* dibujo de fairway (fairway) más claro y nítido para la biblioteca */
 function lbFwScene() {
   return `<svg viewBox="0 0 100 56" class="hs-svg" aria-hidden="true">
     <ellipse cx="50" cy="52" rx="36" ry="4" fill="#cfe3b6"/>

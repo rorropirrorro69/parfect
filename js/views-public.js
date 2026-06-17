@@ -30,7 +30,7 @@ function lpDrillCards() {
     ['Gate drill', 'putting', 'Putt', 'Centra la cara de tu putter'],
     ['Escalera de distancias', 'approach', 'Approach', 'Domina tus carries'],
     ['Up & down', 'short', 'Juego corto', 'Salva el par desde cualquier lie'],
-    ['14 calles a presión', 'driving', 'Salida', 'Encuentra la calle bajo presión'],
+    ['14 fairways a presión', 'driving', 'Salida', 'Encuentra la calle bajo presión'],
     ['Splash de bunker', 'short', 'Bunker', 'Sal de la arena al primer intento'],
     ['Lag putting', 'putting', 'Putt largo', 'Acaba con los 3-putts'],
   ];
@@ -122,7 +122,7 @@ function lpScrRondas() {
 }
 function lpScrLogros() {
   const t = (name, sub, on) => `<div class="lps-troph ${on ? 'on' : ''}"><span class="lps-tr-ic">🏆</span><b>${name}</b><span>${sub}</span></div>`;
-  return lpReal(`<div class="lps-rhd"><b>Logros</b><span>🏆 6 / 8</span></div><div class="lps-trophs">${t('Maestro de Calles', '✓ Desbloqueado', 1)}${t('Guardián del Green', 'vas 57% · meta 58%', 0)}${t('Mago del Up & Down', '✓ Desbloqueado', 1)}${t('Hechicero del Putt', '✓ Desbloqueado', 1)}</div>`);
+  return lpReal(`<div class="lps-rhd"><b>Logros</b><span>🏆 6 / 8</span></div><div class="lps-trophs">${t('Maestro de Fairways', '✓ Desbloqueado', 1)}${t('Guardián del Green', 'vas 57% · meta 58%', 0)}${t('Mago del Up & Down', '✓ Desbloqueado', 1)}${t('Hechicero del Putt', '✓ Desbloqueado', 1)}</div>`);
 }
 function lpScrSocial() {
   const rows = [['1', 'Rodrigo Pérez', '−4'], ['2', 'Diego Salinas', '−1'], ['3', 'Demo (tú)', '+2', 1], ['4', 'Andrés Gil', '+4'], ['5', 'Mariana Ortiz', '+6']];
@@ -255,7 +255,7 @@ function vLanding() {
       <span class="lp-eyebrow reveal">La app por dentro</span>
       <h2 class="lp-h2 reveal">Funciones reales,<br/><span class="lime">no promesas.</span></h2>
       <div class="lp-shots">
-        <div class="lp-shot reveal">${lpPhoneShot('shot-rondas.png', lpScrRondas())}<div class="lp-shot-tx"><h3>Registra y revisa tus rondas</h3><p>Cada hoyo en segundos. Calles, greens, up & down y tu tarjeta completa, lista al instante.</p></div></div>
+        <div class="lp-shot reveal">${lpPhoneShot('shot-rondas.png', lpScrRondas())}<div class="lp-shot-tx"><h3>Registra y revisa tus rondas</h3><p>Cada hoyo en segundos. Fairways, greens, up & down y tu tarjeta completa, lista al instante.</p></div></div>
         <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-analisis.png', lpScrCoach())}<div class="lp-shot-tx"><h3>Tu coach IA</h3><p>Cruza tus rondas, encuentra dónde pierdes golpes y te dice exactamente qué entrenar.</p></div></div>
         <div class="lp-shot reveal">${lpPhoneShot('shot-logros.png', lpScrLogros())}<div class="lp-shot-tx"><h3>Sube de rango con logros</h3><p>Trofeos míticos por cada meta que alcanzas. Tu progreso, gamificado y claro.</p></div></div>
         <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-social.png', lpScrSocial())}<div class="lp-shot-tx"><h3>Juega con amigos</h3><p>Torneos en vivo, leaderboard y partidas por código. El golf es mejor en bola.</p></div></div>

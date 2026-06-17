@@ -2,7 +2,7 @@
    cat: fw (fairways/driving) · gir (approach/hierros) · ud (up&down/juego corto) · putt */
 
 const DRILL_CATS = [
-  { id: 'fw', label: 'Calles', art: 'driving' },
+  { id: 'fw', label: 'Fairways', art: 'driving' },
   { id: 'gir', label: 'Greens', art: 'approach' },
   { id: 'ud', label: 'Corto', art: 'short' },
   { id: 'putt', label: 'Putts', art: 'putting' },
@@ -19,7 +19,7 @@ const DRILL_LIBRARY = [
   { cat: 'fw', name: 'Tempo 3:1', desc: 'Cuenta "uno-dos-tres" al subir y "uno" al bajar. Ritmo constante.', dose: '15 bolas', metric: 'Mismo tempo', steps: ["Cuenta \"uno-dos-tres\" al subir el palo.", "Cuenta \"uno\" en la bajada (3 veces más rápida).", "Repite el mismo conteo en cada bola."] },
   { cat: 'fw', name: 'Pausa arriba', desc: 'Haz una pausa de 1 seg en el tope del backswing para frenar el overswing.', dose: '12 bolas', metric: 'Backswing controlado', steps: ["Sube a tu tope de backswing.", "Haz una pausa de 1 segundo arriba.", "Inicia la bajada sin prisa; elimina el sobre-giro."] },
   { cat: 'fw', name: 'Driver vs Madera 3', desc: 'Alterna y compara tu dispersión real. Aprende cuándo el driver no paga.', dose: '5 + 5', metric: 'M3 < 60% de la dispersión del driver', steps: ["Pega 5 drives a una calle imaginaria y marca dónde caen.", "Pega 5 maderas 3 a la misma calle.", "Compara la dispersión y decide cuál te conviene."] },
-  { cat: 'fw', name: '14 calles', desc: 'Simula las 14 salidas de una ronda a calles imaginarias, cambiando objetivo cada bola.', dose: '14 bolas', metric: '≥ 9/14', steps: ["Imagina las 14 salidas de una ronda.", "Cambia de objetivo en cada bola (izq/centro/der).", "Cuenta cuántas \"calles\" hubieras pegado."] },
+  { cat: 'fw', name: '14 fairways', desc: 'Simula las 14 salidas de una ronda a fairways imaginarias, cambiando objetivo cada bola.', dose: '14 bolas', metric: '≥ 9/14', steps: ["Imagina las 14 salidas de una ronda.", "Cambia de objetivo en cada bola (izq/centro/der).", "Cuenta cuántas \"fairways\" hubieras pegado."] },
   { cat: 'fw', name: 'Varilla de start line', desc: 'Una varilla 2 m delante marca tu línea de salida. Valida tu dirección inicial.', dose: '10 bolas', metric: '8/10 sobre la línea', steps: ["Pon una varilla en el piso 2 m delante, en tu línea.", "Pega buscando que la bola pase sobre la varilla.", "Valida tu dirección inicial, no el resultado final."] },
   { cat: 'fw', name: 'Velocidad (overspeed)', desc: 'Swings máximos sin bola con palos de distinto peso para ganar velocidad.', dose: '3 × 5 · 2/semana', metric: '+2 mph en el mes', steps: ["Sin bola, haz swings máximos con un palo ligero y otro pesado.", "3 series de 5 swings, 2 veces por semana.", "Sube tu velocidad sin perder equilibrio."] },
   { cat: 'fw', name: 'Tee alto / tee bajo', desc: 'Cambia la altura del tee para controlar tu ángulo de ataque y el spin.', dose: '10 bolas', metric: 'Sientes la diferencia', steps: ["Pega 5 bolas con tee alto (ataque ascendente).", "Pega 5 con tee bajo (ataque más plano).", "Siente cómo cambian el vuelo y el spin."] },

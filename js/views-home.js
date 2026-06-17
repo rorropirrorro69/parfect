@@ -357,7 +357,7 @@ function vDrillsHome() {
     ['Gate drill', 'putting', 'tag_putt', 'dr_gate', 'drd_gate', 10],
     ['Escalera de distancias', 'approach', 'tag_approach', 'dr_ladder', 'drd_ladder', 7],
     ['Up & down', 'short', 'tag_short', 'dr_ud', 'drd_ud', 7],
-    ['14 calles a presión', 'driving', 'tag_drive', 'dr_14', 'drd_14', 7],
+    ['14 fairways a presión', 'driving', 'tag_drive', 'dr_14', 'drd_14', 7],
     ['Splash de bunker', 'short', 'tag_bunker', 'dr_splash', 'drd_splash', 7],
     ['Lag putting', 'putting', 'tag_lagputt', 'dr_lag', 'drd_lag', 10],
   ];
@@ -784,7 +784,7 @@ function vSocialFeed() {
         <div class="fd-score ${scoreCls}"><b>${p.score}</b><span>${fmtToPar(p.toPar)}</span></div>
       </div>
       <div class="fd-stats">
-        <span><b>${p.fw}%</b> calles</span><span><b>${p.gir}%</b> GIR</span><span><b>${p.putts}</b> putts</span>
+        <span><b>${p.fw}%</b> fairways</span><span><b>${p.gir}%</b> GIR</span><span><b>${p.putts}</b> putts</span>
       </div>
       <div class="fd-actions">
         <button class="fd-like ${liked ? 'on' : ''}" data-act="feed-like" data-id="${p.id}">${heartIcon()}<span>${ln}</span></button>

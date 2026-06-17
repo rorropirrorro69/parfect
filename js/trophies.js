@@ -50,7 +50,7 @@ const Trophies = (() => {
     { id: 'b90', ic: 'ball', t: 'Rompe 90', d: 'Termina 18 hoyos bajo 90', test: c => flag(c.bestNorm != null && c.bestNorm < 90, c.bestNorm != null ? `mejor ${Math.round(c.bestNorm)}` : '—') },
     { id: 'b80', ic: 'ball', t: 'Rompe 80', d: 'Termina 18 hoyos bajo 80', test: c => flag(c.bestNorm != null && c.bestNorm < 80, c.bestNorm != null ? `mejor ${Math.round(c.bestNorm)}` : '—') },
     { id: 'par', ic: 'green', t: 'Bajo par', d: 'Termina una ronda en par o menos', test: c => flag(c.bajoPar) },
-    { id: 'fw', ic: 'tee', t: 'Pegador', d: '60%+ de calles en una ronda', test: c => flag(c.maxFw >= 60, `mejor ${Math.round(c.maxFw)}%`) },
+    { id: 'fw', ic: 'tee', t: 'Pegador', d: '60%+ de fairways en una ronda', test: c => flag(c.maxFw >= 60, `mejor ${Math.round(c.maxFw)}%`) },
     { id: 'gir', ic: 'green', t: 'Francotirador', d: '55%+ de greens en una ronda', test: c => flag(c.maxGir >= 55, `mejor ${Math.round(c.maxGir)}%`) },
     { id: 'putt', ic: 'putter', t: 'Putt frío', d: '30 o menos putts en una ronda', test: c => flag(c.minPutts != null && c.minPutts <= 30, c.minPutts != null ? `mejor ${Math.round(c.minPutts)}` : '—') },
     { id: 'ud', ic: 'hand', t: 'Manos mágicas', d: '60%+ de up/down en una ronda', test: c => flag(c.maxUd >= 60, `mejor ${Math.round(c.maxUd)}%`) },
@@ -79,7 +79,7 @@ const Trophies = (() => {
     };
     return [
       mk('Hándicap', u.hcp, u.goal, true, ''),
-      mk('Calles', agg ? agg.fwPct : null, b.fwPct, false, '%'),
+      mk('Fairways', agg ? agg.fwPct : null, b.fwPct, false, '%'),
       mk('Greens (GIR)', agg ? agg.girPct : null, b.girPct, false, '%'),
       mk('Up/Down', agg ? agg.scrPct : null, b.scrPct, false, '%'),
       mk('Putts/ronda', agg ? agg.putts18 : null, b.putts18, true, ''),

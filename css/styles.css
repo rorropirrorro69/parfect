@@ -65,7 +65,7 @@ input, select, textarea { font-size: 16px; }
 body.in-app .app-bg::after { content: ''; position: absolute; inset: 0; background: var(--bg); opacity: 0.3; }
 body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg .bg-gball { opacity: 0.72; }
 [data-theme="dark"] .app-bg { background: linear-gradient(180deg, #0a1230 0%, #111d40 46%, #0a1124 100%); }
-.app-bg .bg-orb { position: absolute; top: 5%; right: 9%; width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 40% 38%, #fff7cc, #ffd86b 70%); box-shadow: 0 0 60px 18px rgba(255,216,107,0.38); }
+.app-bg .bg-orb { position: absolute; top: 3%; right: 6%; width: 52px; height: 52px; border-radius: 50%; background: radial-gradient(circle at 40% 38%, #fff7cc, #ffdf8e 72%); box-shadow: 0 0 30px 6px rgba(255,216,107,0.22); opacity: .85; }
 [data-theme="dark"] .app-bg .bg-orb { background: radial-gradient(circle at 42% 36%, #ffffff, #cfd6ea 72%); box-shadow: 0 0 46px 12px rgba(200,210,240,0.16); }
 [data-theme="light"] .app-bg.dawn { background: linear-gradient(180deg, #ffd8a6 0%, #ffe7b4 28%, #d9efbf 60%, #b6dd86 100%); }
 [data-theme="light"] .app-bg.dusk { background: linear-gradient(180deg, #ffbe86 0%, #ff9f93 26%, #d8d49a 58%, #a9cf84 100%); }
