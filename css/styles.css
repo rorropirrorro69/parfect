@@ -1415,6 +1415,11 @@ button.row { cursor: pointer; }
 .lp { position: relative; width: 100%; overflow: hidden; color: var(--text); background: linear-gradient(180deg, #a9d877 0%, #c6e6a4 14%, #e3edd4 50%); }
 [data-theme="dark"] .lp { background: linear-gradient(180deg, #16341f 0%, #102a18 26%, var(--bg) 62%); }
 .lp > header, .lp > section, .lp > footer { position: relative; z-index: 2; }
+/* sábana limpia: todo el contenido tras el intro va sobre fondo sólido (sin nubes/pájaros detrás del texto) */
+.lp-sheet { position: relative; z-index: 2; margin-top: -28px; background: #f3f7e9; border-radius: 30px 30px 0 0; box-shadow: 0 -16px 44px rgba(20,40,15,.16); }
+[data-theme="dark"] .lp-sheet { background: #0e1d16; box-shadow: 0 -16px 44px rgba(0,0,0,.4); }
+.lp-sheet > section, .lp-sheet > footer { position: relative; z-index: 2; }
+.lp-sheet .lp-chapter1 { padding-top: 30px; }
 .lp-oldlife { display: none; }   /* escenario fijo viejo (oculto): la vida vuela en .lp-life */
 
 /* intro: PARFECT flotando en el cielo y bajas suave al campo con casa club */
@@ -3216,7 +3221,7 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lp-fixed { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 .lp > header, .lp > section, .lp > footer { position: relative; z-index: 2; }
 .lp-hero2 { position: relative; min-height: 100svh; background: transparent; display: flex; flex-direction: column; align-items: center; }
-.lp-hero2-clean { justify-content: center; min-height: 88svh; }
+.lp-hero2-clean { justify-content: center; min-height: 58svh; }
 .lp-sky2 { position: absolute; inset: 0; }
 .lp-sun { position: absolute; border-radius: 50%; }
 .lp-ph-day  .lp-sun { top: 6%; right: 12%; width: 104px; height: 104px; background: radial-gradient(circle at 42% 38%,#fffbe6,#ffe487 70%); box-shadow: 0 0 90px 30px rgba(255,228,135,.5); }
@@ -3225,10 +3230,10 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lp-fixed .lp-moon { top: 8%; right: 14%; }
 .lp-bsil { position: absolute; width: 30px; height: auto; will-change: transform; filter: drop-shadow(0 4px 5px rgba(20,40,15,.16)); }
 .lp-bwing { transform-origin: 60% 80%; animation: lpFlap .4s ease-in-out infinite alternate; }
-.lp-fixed .lp-icloud { position: absolute; height: 20px; background: #fff; border-radius: 99px; box-shadow: 26px 5px 0 -3px #fff, -24px 6px 0 -4px #fff; }
-.lp-fixed .lp-icloud.i1 { top: 18%; left: 12%; width: 64px; animation: lpDrift 70s linear infinite; }
-.lp-fixed .lp-icloud.i2 { top: 30%; left: 60%; width: 50px; animation: lpDrift 92s linear infinite; animation-delay: -30s; }
-.lp-fixed .lp-icloud.i3 { top: 12%; left: 40%; width: 44px; animation: lpDrift 80s linear infinite; animation-delay: -15s; }
+.lp-fixed .lp-icloud { position: absolute; height: 20px; background: #fff; border-radius: 99px; box-shadow: 26px 5px 0 -3px #fff, -24px 6px 0 -4px #fff; opacity: .8; }
+.lp-fixed .lp-icloud.i1 { top: 9%; left: 8%; width: 60px; animation: lpDrift 70s linear infinite; }
+.lp-fixed .lp-icloud.i2 { top: 15%; left: 70%; width: 46px; animation: lpDrift 92s linear infinite; animation-delay: -30s; }
+.lp-fixed .lp-icloud.i3 { top: 5%; left: 42%; width: 40px; animation: lpDrift 80s linear infinite; animation-delay: -15s; }
 .lp-fixed .lp-fly { position: absolute; bottom: 42vh; }
 .lp-fixed .lf1 { animation: lpBallArc 16s ease-in-out infinite; }
 .lp-fixed .lf2 { bottom: 50vh; animation: lpBallArcR 21s ease-in-out infinite; animation-delay: -7s; }

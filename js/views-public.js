@@ -113,12 +113,9 @@ function vLanding() {
   return `<div class="lp lp-ph-${phase}">
     <div class="lp-fixed" aria-hidden="true">
       <div class="lp-sky2">${celest}<span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span></div>
-      ${bsil('left:0;top:13%;animation:lpFlyR 38s linear infinite')}
-      ${bsil('left:0;top:21%;transform:scale(.7);animation:lpFlyR 50s linear infinite;animation-delay:-16s')}
-      ${bsil('left:0;top:8%;animation:lpFlyL 44s linear infinite;animation-delay:-8s')}
-      ${bsil('left:0;top:17%;transform:scale(.55);animation:lpFlyL 56s linear infinite;animation-delay:-30s')}
-      ${bsil('left:0;top:27%;transform:scale(.85);animation:lpFlyR 60s linear infinite;animation-delay:-42s')}
-      <span class="lp-fly lf1"></span><span class="lp-fly lf2"></span><span class="lp-fly lf3"></span>
+      ${bsil('left:0;top:12%;animation:lpFlyR 46s linear infinite')}
+      ${bsil('left:0;top:20%;transform:scale(.62);animation:lpFlyL 58s linear infinite;animation-delay:-24s')}
+      ${bsil('left:0;top:7%;transform:scale(.8);animation:lpFlyR 66s linear infinite;animation-delay:-42s')}
       <div class="lp-ground">
         <svg class="lp-bgc" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
           <path class="bgc-far" d="M0,108 Q100,74 200,96 T400,88 L400,240 L0,240 Z"/>
@@ -159,6 +156,7 @@ function vLanding() {
         <span class="lp-intro-tag">Golf Analytics · IA</span>
       </div>
     </section>
+    <div class="lp-sheet">
     <section class="lp-sec lp-chapter1">
       <span class="lp-eyebrow reveal">Lo que dicen</span>
       <h2 class="lp-h2 reveal">Miles de golfistas<br/><span class="lime">ya confían.</span></h2>
@@ -260,6 +258,7 @@ function vLanding() {
       <span class="lp-logo">${pLogo()}</span>
       <span>Tu app para mejorar en el golf y jugar con amigos. Tus datos viven en tu dispositivo.</span>
     </footer>
+    </div>
   </div>`;
 }
 
