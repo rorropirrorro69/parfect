@@ -154,18 +154,17 @@ function vLanding() {
       </div>
     </header>
     <section class="lp-intro">
-      <div class="lp-intro-top reveal">
+      <div class="lp-fcreds" aria-hidden="true">
+        <span class="lp-fcred f1"><span class="lp-stars">★★★★★</span> 4.9 · Trustpilot</span>
+        <span class="lp-fcred f2"><b class="lp-forbes">Forbes</b></span>
+        <span class="lp-fcred f3">${golfIcon('flag')} Federación Mexicana de Golf</span>
+        <span class="lp-fcred f4">${golfIcon('trophy')} Mejor app de golf 2025</span>
+        <span class="lp-fcred f5"><b class="lp-forbes">Golf Digest</b></span>
+      </div>
+      <div class="lp-intro-top">
         <span class="lp-intro-logo">PARFECT</span>
         <span class="lp-intro-tag">Golf Analytics · IA</span>
       </div>
-      <div class="lp-intro-creds">
-        <div class="lp-cred lpc1"><span class="lp-stars">★★★★★</span><b>4.9</b><span>Trustpilot</span></div>
-        <div class="lp-cred lpc2"><b class="lp-forbes">Forbes</b><span>"Baja tu hándicap"</span></div>
-        <div class="lp-cred lpc3"><span class="lp-tico">${golfIcon('trophy')}</span><b>Mejor app de golf 2025</b></div>
-        <div class="lp-cred lpc4"><span class="lp-tico">${golfIcon('flag')}</span><b>Federación Mexicana de Golf</b></div>
-        <div class="lp-cred lpc5"><b class="lp-forbes">Golf Digest</b><span>destacada</span></div>
-      </div>
-      <div class="lp-intro-scroll">Desliza para entrar<span class="lp-scrolldot"></span></div>
     </section>
     <section class="lp-hero2">
       <div class="lp-stage">

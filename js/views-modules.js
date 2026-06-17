@@ -453,7 +453,7 @@ function vSessionPlanner() {
   const T = V.sessionMin || 60;
 
   if (step === 'time') {
-    return `<div class="card sp-card">
+    return `<div class="card sp-card sp-card-time">
       <div class="sp-phase">Paso 1 de 2</div>
       <h2 class="sp-q">${golfIcon('flag')} ¿Cuánto tiempo tienes para entrenar?</h2>
       <div class="sp-timeopts">${[30, 60, 90, 120].map(m => `<button class="sp-timeb ${T === m ? 'on' : ''}" data-act="plan-time" data-m="${m}"><b>${spFmtMin(m)}</b><span>${m <= 30 ? 'rápida' : m <= 60 ? 'estándar' : m <= 90 ? 'completa' : 'intensa'}</span></button>`).join('')}</div>
@@ -585,28 +585,8 @@ function vBiblioteca() {
     }).join('');
     return card(a.c, a.t, a.ic, cat.label, drills.length, rows);
   }).join('');
-  // 2) Entrenamientos Parfect (por club/área) — mismas tarjetas de color
-  const plan = trackerPlan(cur());
-  const list = myPractices();
-  const bestOf = name => list.filter(p => p.drill === name).reduce((m, p) => Math.max(m, p.hits || 0), 0);
-  const PCOL = ['#3f9d44', '#2fa36b', '#e0873a', '#7cc24a', '#3a8fe0'];
-  const PTINT = ['rgba(63,157,68,.10)', 'rgba(47,163,107,.10)', 'rgba(224,135,58,.10)', 'rgba(124,194,74,.10)', 'rgba(58,143,224,.10)'];
-  const trackCards = plan.groups.map((g, i) => {
-    const rows = g.drills.map(d => {
-      const best = bestOf(d.name);
-      const hit = best >= d.target || done[d.name] === td;
-      return `<button class="dlc ${hit ? 'done' : ''}" data-act="drill-open" data-name="${esc(d.name)}" data-target="${d.target}" data-area="${esc(d.area || g.cat)}" data-goal="${esc(d.goal || '')}" data-timer="${d.timer}">
-        <span class="dlc-check">${hit ? '✓' : ''}</span>
-        <div class="dlc-info"><b>${esc(d.name)}</b><p class="dlc-desc">${esc(d.goal || ('Práctica de ' + g.cat.toLowerCase()))}</p>
-          <div class="dlc-meta"><span>${golfIcon('bucket')} meta ${d.target} seguidas</span><span>${golfIcon('green')} ${best ? 'mejor ' + best + '/' + d.target : esc(g.cat)}</span></div></div>
-        <span class="dlc-go">${hit ? 'Hecho' : 'Ver →'}</span></button>`;
-    }).join('');
-    return card(PCOL[i % PCOL.length], PTINT[i % PTINT.length], g.icon, g.cat, g.drills.length, rows);
-  }).join('');
   return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Biblioteca de drills</h2><span class="small muted">${DRILL_LIBRARY.length} ejercicios</span></div>
-    ${libCards}
-    <div class="sec-h" style="margin-top:24px"><h2 style="font-size:18px">${golfIcon('flag')} Entrenamientos Parfect</h2><span class="small muted">por área</span></div>
-    ${trackCards}`;
+    ${libCards}`;
 }
 /* pestaña Academia: tarjeta de lanzamiento a la ruta inmersiva */
 function vAcademyLaunch() {
