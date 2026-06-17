@@ -87,7 +87,7 @@ const AVATARS = [
   'assets/avatars/wg1.png', 'assets/avatars/wg2.png', 'assets/avatars/wg3.png', 'assets/avatars/wg4.png', 'assets/avatars/wg5.png', 'assets/avatars/wg6.png',
   'assets/avatars/mg1.png', 'assets/avatars/mg2.png', 'assets/avatars/mg3.png', 'assets/avatars/mg4.png', 'assets/avatars/mg5.png', 'assets/avatars/mg6.png',
 ];
-function avatarSrc(u) { const i = (u && u.avatar != null) ? u.avatar : 0; return AVATARS[i] || AVATARS[0]; }
+function avatarSrc(u) { let i = (u && u.avatar != null) ? u.avatar : 12; if (i < 6) i = 12 + i; return AVATARS[i] || AVATARS[12]; }
 
 /* ====== Golfista personalizable (SVG): piel, gorra, playera, pantalón, rasgos ====== */
 const GOLF_SKIN = ['#f6d0aa', '#eab07c', '#c98f5f', '#9c6b40', '#6f4a2c'];

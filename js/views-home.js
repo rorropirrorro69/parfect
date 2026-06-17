@@ -611,6 +611,8 @@ function vAvatarCreator(u) {
     const sw = o.sw === 'rank' ? `background:conic-gradient(${RANKS.map(r => r.c).join(',')})` : `background:${o.sw}`;
     return `<button class="cre-sw${curOutfit === o.k ? ' on' : ''}" data-act="set-outfit" data-k="${o.k}" title="${o.n}"><span style="${sw}"></span></button>`;
   }).join('');
+  const curHue = (u && u.avatarHue) || 0;
+  const hueRow = GOLF_HUES.map(g => `<button class="cre-gcolor${curHue === g.h ? ' on' : ''}" data-act="set-avhue" data-h="${g.h}" title="Color de outfit"><span style="display:block;width:100%;height:100%;border-radius:50%;background:${g.c}"></span></button>`).join('');
   const steps = RANKS.map((r, i) => `<div class="rank-step${i === idx ? ' on' : ''}${i < idx ? ' done' : ''}">
       <span class="rank-dot" style="background:${r.c}"></span>
       <div class="rank-meta"><b>${r.n}</b><span>HCP ${rankRange(i)}</span></div>
@@ -623,6 +625,7 @@ function vAvatarCreator(u) {
       <div class="cre-preview cre-preview-plain">${avatarImg(u, 'cre-hero', true)}<span class="cre-rank">${RANKS[idx].n}</span></div>
       <div class="cre-grp"><span class="cre-lab">Tu golfista</span><div class="cre-row cre-sexes">${sexRow}</div></div>
       <div class="cre-grp"><span class="cre-lab">Tono de piel</span><div class="cre-row cre-gcolors">${skinTones}</div></div>
+      <div class="cre-grp"><span class="cre-lab">Color de outfit</span><div class="cre-row cre-gcolors">${hueRow}</div></div>
       <div class="cre-grp"><span class="cre-lab">Aura</span><div class="cre-row cre-sws">${outfits}</div></div>
       <p class="note" style="margin:10px 2px 0">Tu golfista está apagado (gris) y <b>se enciende</b> con tus buenas jugadas; brilla más fuerte con cada rango que subes.</p>
     </div>

@@ -424,6 +424,7 @@ const actions = {
   'bag-close'() { V.bagEdit = false; render(); },
   'set-sex'(d) { const u = cur(); if (!u) return; u.avatarSex = d.s === 'w' ? 'w' : 'm'; u.avatarHue = 0; const b = u.avatarSex === 'w' ? 6 : 12; u.avatar = b + (u.avatarSkin || 0); u.golfer = null; commit(); },
   'set-avskin'(d) { const u = cur(); if (!u) return; if (!u.avatarSex || u.avatarSex === 'n') u.avatarSex = 'm'; u.avatarSkin = Math.max(0, Math.min(5, Number(d.i) || 0)); u.avatarHue = 0; const b = u.avatarSex === 'w' ? 6 : 12; u.avatar = b + u.avatarSkin; u.golfer = null; commit(); },
+  'set-avhue'(d) { const u = cur(); if (!u) return; u.avatarHue = Number(d.h) || 0; commit(); },
   'set-avatar'(d) { const u = cur(); if (u) { u.avatar = Number(d.i) || 0; u.golfer = null; commit(); } },
   'set-hue'(d) { const u = cur(); if (u) { u.avatarHue = Number(d.h) || 0; u.golfer = null; commit(); } },
   'golfer-custom'() { const u = cur(); if (u && !u.golfer) { u.golfer = Object.assign({}, GOLF_DEFAULT); commit(); } },
