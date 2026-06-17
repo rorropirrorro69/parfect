@@ -646,7 +646,7 @@ function vBiblioteca() {
 /* pestaña Academia: tarjeta de lanzamiento a la ruta inmersiva */
 function vAcademyLaunch() {
   if (typeof vAcademyBody !== 'function') return '';
-  return `<div class="acw-inline">${vAcademyBody(cur())}</div>${V.lesson ? vLessonSheet() : ''}`;
+  return `<div class="acw-inline">${vAcademyBody(cur())}</div>${V.quiz ? vQuizSheet() : ''}`;
 }
 
 function vTrackerPlan() {

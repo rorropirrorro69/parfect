@@ -709,6 +709,43 @@ const actions = {
     commit();
   },
   'lesson-close'() { V.lesson = null; V.lessonQ = false; V.lessonPick = null; render(); },
+  /* ---- Quiz tipo Preguntados de la Academia ---- */
+  'quiz-open'(d) {
+    const u = cur(); const i = Number(d.i);
+    if (!u || typeof quizUnlocked !== 'function' || !quizUnlocked(u, i)) return;
+    const n = ACADEMY_QUIZ[i].qs.length;
+    const order = Array.from({ length: n }, (_, k) => k);
+    for (let k = n - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
+    V.quiz = { i, qi: 0, score: 0, picked: null, order, done: false };
+    render();
+  },
+  'quiz-pick'(d) {
+    const q = V.quiz; if (!q || q.picked != null) return;
+    const item = ACADEMY_QUIZ[q.i].qs[q.order[q.qi]];
+    q.picked = Number(d.i);
+    if (q.picked === item.a) q.score++;
+    render();
+  },
+  'quiz-advance'() {
+    const q = V.quiz; if (!q || q.picked == null) return;
+    const total = ACADEMY_QUIZ[q.i].qs.length;
+    if (q.qi + 1 < total) { q.qi++; q.picked = null; render(); return; }
+    // terminado
+    q.done = true;
+    const u = cur();
+    if (u) {
+      u.acQuiz = u.acQuiz || {};
+      const prev = u.acQuiz[q.i] || 0;
+      const passedNow = q.score >= 7 && prev < 7;
+      if (q.score > prev) u.acQuiz[q.i] = q.score;
+      commit();
+      if (passedNow && typeof celebrate === 'function') celebrate(q.score >= 9, '¡Hoyo superado!');
+      else render();
+    } else render();
+  },
+  'quiz-retry'() { const q = V.quiz; if (q) actions['quiz-open']({ i: q.i }); },
+  'quiz-next-hole'() { const q = V.quiz; if (q) actions['quiz-open']({ i: q.i + 1 }); },
+  'quiz-close'() { V.quiz = null; render(); },
   'coach-mode'(d) { const u = cur(); if (u) u.isCoach = d.c === '1'; V.coachStudent = null; commit(); },
   'coach-pick'(d) { V.coachStudent = d.id; render(); window.scrollTo(0, 0); },
   'coach-back'() { V.coachStudent = null; render(); window.scrollTo(0, 0); },

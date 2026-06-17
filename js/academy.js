@@ -129,6 +129,85 @@ const ACADEMY = [
   },
 ];
 
+/* ====== Quiz tipo Preguntados: 10 preguntas por hoyo ====== */
+const ACADEMY_QUIZ = [
+  { unit: 'Fundamentos', color: '#3a8fe0', icon: 'flag', tag: 'Lo básico del golf', qs: [
+    { q: '¿Cómo ganas en golf?', opts: ['Con más golpes', 'Con menos golpes', 'Pegando más lejos', 'Con más hoyos'], a: 1 },
+    { q: 'Si el par es 4 y haces 3, eso es…', opts: ['Bogey', 'Birdie', 'Águila', 'Par'], a: 1 },
+    { q: 'Un "bogey" es…', opts: ['1 bajo par', '1 sobre par', '2 bajo par', 'El par'], a: 1 },
+    { q: '¿Qué palo usas dentro del green?', opts: ['Driver', 'Putter', 'Wedge', 'Híbrido'], a: 1 },
+    { q: 'Una vuelta normal de golf son…', opts: ['5 o 10 hoyos', '9 o 18 hoyos', '12 hoyos', '20 hoyos'], a: 1 },
+    { q: '¿Cuándo te quedas quieto y callado?', opts: ['Siempre', 'Cuando otro va a pegar', 'En el tee', 'Nunca'], a: 1 },
+    { q: '"Águila" (eagle) es…', opts: ['1 bajo par', '2 bajo par', '2 sobre par', 'Igual al par'], a: 1 },
+    { q: 'El "tee" es…', opts: ['El green', 'Donde empiezas el hoyo', 'El hoyo', 'Un bunker'], a: 1 },
+    { q: 'Reparar tu marca y rastrillar el bunker es…', opts: ['Opcional', 'Buena etiqueta', 'Solo en torneos', 'Trampa'], a: 1 },
+    { q: 'El hándicap mide…', opts: ['Tu fuerza', 'Tu nivel de juego', 'Tu edad', 'Tu equipo'], a: 1 },
+  ] },
+  { unit: 'El swing', color: '#57a83e', icon: 'green', tag: 'Tu mecánica', qs: [
+    { q: '¿Dónde debe ir el palo en tus manos?', opts: ['En la palma', 'En los dedos', 'En la muñeca', 'En el puño'], a: 1 },
+    { q: 'Tus pies deben apuntar…', opts: ['A la bandera directo', 'Paralelos a la línea al objetivo', 'Hacia atrás', 'A la derecha'], a: 1 },
+    { q: '¿Cómo debes terminar el swing?', opts: ['En equilibrio', 'Cayéndote atrás', 'Saltando', 'De puntas'], a: 0 },
+    { q: 'La presión del grip ideal es…', opts: ['Muy fuerte', 'Media', 'Muy suave', 'Solo una mano'], a: 1 },
+    { q: 'Los pies van separados…', opts: ['Muy juntos', 'Al ancho de hombros', 'Lo más abierto posible', 'No importa'], a: 1 },
+    { q: 'El swing es un movimiento…', opts: ['Brusco y fuerte', 'Fluido', 'A tirones', 'Solo de brazos'], a: 1 },
+    { q: 'La espalda se inclina desde…', opts: ['La cintura encorvada', 'La cadera', 'Las rodillas', 'El cuello'], a: 1 },
+    { q: 'Si te caes hacia atrás al terminar, fue…', opts: ['Perfecto', 'Demasiada fuerza', 'Poco grip', 'El viento'], a: 1 },
+    { q: 'Las dos manos en el grip trabajan…', opts: ['Por separado', 'Como una sola unidad', 'Solo la derecha', 'Solo la izquierda'], a: 1 },
+    { q: 'Para más consistencia, prioriza…', opts: ['Pegar al máximo', 'Buen contacto y tempo', 'Cambiar de palo', 'Cerrar los ojos'], a: 1 },
+  ] },
+  { unit: 'Juego corto', color: '#e0873a', icon: 'bucket', tag: 'Chip, pitch y bunker', qs: [
+    { q: 'En el chip controlas la bola por…', opts: ['Su vuelo', 'Su bote y rodado', 'El viento', 'El sonido'], a: 1 },
+    { q: '¿Cuándo usas un pitch?', opts: ['Para que vuele alto y frene', 'Para que ruede mucho', 'Solo en el tee', 'En el green'], a: 0 },
+    { q: 'En un bunker greenside golpeas…', opts: ['La bola directo', 'La arena detrás de la bola', 'Por arriba', 'El borde'], a: 1 },
+    { q: 'En el chip, las manos van…', opts: ['Detrás de la bola', 'Adelante de la bola', 'Muy altas', 'Sueltas'], a: 1 },
+    { q: 'El peso en el chip va…', opts: ['Al pie de atrás', 'Al pie delantero', 'Centrado y quieto', 'En los talones'], a: 1 },
+    { q: 'Para pasar un obstáculo cerca del green usas…', opts: ['Driver', 'Pitch', 'Putter', 'Hierro 4'], a: 1 },
+    { q: 'En el chip piensas en…', opts: ['La bandera', 'El punto de bote', 'El cielo', 'Tus pies'], a: 1 },
+    { q: 'El pitch vuela ___ y rueda ___', opts: ['poco / mucho', 'más / poco', 'nada / nada', 'igual / igual'], a: 1 },
+    { q: 'En bunker, el swing es…', opts: ['Corto y frenado', 'Largo y acelerando', 'Sin seguir', 'Solo muñeca'], a: 1 },
+    { q: 'El juego corto baja tu score porque…', opts: ['Suma distancia', 'Salva pares', 'Pega más lejos', 'No sirve'], a: 1 },
+  ] },
+  { unit: 'Putting', color: '#3a7fd4', icon: 'putter', tag: 'En el green', qs: [
+    { q: 'En bajada, la bola…', opts: ['Rueda menos', 'Rueda más', 'No cambia', 'Se detiene'], a: 1 },
+    { q: 'En putts largos tu prioridad es…', opts: ['Embocar siempre', 'La velocidad/distancia', 'Pegar fuerte', 'El grip'], a: 1 },
+    { q: 'Los putts cortos se fallan más por…', opts: ['Dudar y pegar suave', 'Mirar mucho', 'Usar putter', 'El clima'], a: 0 },
+    { q: '"Leer" el green es ver…', opts: ['La distancia al hoyo', 'La pendiente y el quiebre', 'El par', 'El viento'], a: 1 },
+    { q: 'Para que entren más cortos, hay que…', opts: ['Pegar firme y decidido', 'Pegar suavecito', 'Cerrar los ojos', 'Mirar el hoyo'], a: 0 },
+    { q: 'En cuesta arriba la bola rueda…', opts: ['Más', 'Menos', 'Igual', 'Para atrás'], a: 1 },
+    { q: 'Un buen objetivo en putt largo es dejarla…', opts: ['Lejísimos', 'A 1 m (distancia de dar)', 'Pasada 5 m', 'Corta 5 m'], a: 1 },
+    { q: 'La cara del putter al impacto debe ir…', opts: ['Abierta', 'Cuadrada a la línea', 'Cerrada', 'Hacia arriba'], a: 1 },
+    { q: 'El ritmo del putt ideal es…', opts: ['Atrás corto, adelante largo', 'Parejo como péndulo', 'Solo muñeca', 'A golpes'], a: 1 },
+    { q: 'Los 3-putts se evitan con…', opts: ['Mejor primera distancia', 'Pegar fuerte', 'Putter nuevo', 'Más práctica de driver'], a: 0 },
+  ] },
+  { unit: 'Estrategia', color: '#8a4fc0', icon: 'peak', tag: 'Jugar inteligente', qs: [
+    { q: '¿A dónde conviene apuntar el approach?', opts: ['A la bandera siempre', 'Al centro del green', 'Al borde', 'Al bunker'], a: 1 },
+    { q: 'Los amateurs suelen fallar el approach…', opts: ['Largo', 'Corto', 'A la derecha', 'Nunca'], a: 1 },
+    { q: 'Tras un mal tiro, lo mejor es…', opts: ['El golpe heroico', 'Volver a poner en juego', 'Pegar más fuerte', 'Rendirte'], a: 1 },
+    { q: 'Calculas la distancia con tu golpe…', opts: ['Máximo', 'Promedio', 'Más corto', 'De suerte'], a: 1 },
+    { q: 'Off the tee, prioriza…', opts: ['Máxima distancia', 'Dejar la bola en juego', 'Pegar al agua', 'Driver siempre'], a: 1 },
+    { q: 'Si hay agua a la derecha, apunta…', opts: ['Al agua', 'Al lado seguro (izq.)', 'Directo a bandera', 'No importa'], a: 1 },
+    { q: 'Lo que más sube el score son…', opts: ['Los pares', 'Los dobles bogeys o peor', 'Los birdies', 'Los bogeys'], a: 1 },
+    { q: 'En viento de frente conviene…', opts: ['Pegar más fuerte', 'Tomar más palo y swing suave', 'Bola más alta', 'Más loft'], a: 1 },
+    { q: 'Bandera pegada al bunker: apunta…', opts: ['A la bandera', 'Al centro/zona ancha', 'Al bunker', 'Corto'], a: 1 },
+    { q: 'Jugar inteligente significa…', opts: ['Arriesgar siempre', 'Elegir el % alto', 'Pegar al límite', 'Ir a bandera'], a: 1 },
+  ] },
+  { unit: 'Nivel élite', color: '#ef8b3c', icon: 'trophy', tag: 'Afinar para bajar HCP', qs: [
+    { q: 'Para pegar más bajo, la bola va…', opts: ['Más atrás en el stance', 'Más adelante', 'Igual', 'Sobre el tee'], a: 0 },
+    { q: 'La matriz de distancias de wedge sirve para…', opts: ['Pegar más lejos', 'Controlar distancias exactas', 'Putear', 'Driver'], a: 1 },
+    { q: 'Para bajar tu hándicap, lo primero es…', opts: ['Más birdies', 'Eliminar dobles bogeys', 'Pegar más lejos', 'Cambiar palos'], a: 1 },
+    { q: 'Defines backswings de wedge a las…', opts: ['8:00 / 9:00 / 10:00', '12:00 siempre', '6:00', 'Al azar'], a: 0 },
+    { q: 'El stat que más correlaciona con bajo score es…', opts: ['Distancia de drive', 'Greens en regulación', 'Putts con suerte', 'Marca de palos'], a: 1 },
+    { q: 'Practicar con propósito significa…', opts: ['Pegar bolas sin pensar', 'Drills con meta y medición', 'Solo driver', 'Solo en el campo'], a: 1 },
+    { q: 'Para más velocidad de cabeza de palo…', opts: ['Tensar los brazos', 'Entrenar overspeed y secuencia', 'Grip más fuerte', 'Bola nueva'], a: 1 },
+    { q: 'El "scoring" de verdad ocurre…', opts: ['Desde el tee', 'Dentro de 100 m', 'En el driving', 'En el carrito'], a: 1 },
+    { q: 'Registrar tus rondas te ayuda a…', opts: ['Presumir', 'Ver dónde pierdes golpes', 'Nada', 'Pegar más'], a: 1 },
+    { q: 'La mentalidad élite tras un error es…', opts: ['Enojarte', 'Siguiente golpe, plan claro', 'Rendirte', 'Arriesgar todo'], a: 1 },
+  ] },
+];
+function quizBest(u, i) { return ((u && u.acQuiz) || {})[i] || 0; }
+function quizUnlocked(u, i) { return i === 0 || quizBest(u, i - 1) >= 7; }
+function quizProgress(u) { let done = 0; for (let i = 0; i < ACADEMY_QUIZ.length; i++) if (quizBest(u, i) >= 7) done++; return { done, total: ACADEMY_QUIZ.length }; }
+
 /* lista plana en orden (para bloquear secuencialmente) */
 const ACADEMY_FLAT = ACADEMY.reduce((a, u) => a.concat(u.lessons.map(l => l.id)), []);
 function academyLesson(id) {
@@ -200,44 +279,33 @@ function acFlagSVG() {
 /* ---------- Vista: recorrido del campo, hoyo por hoyo ---------- */
 /* cuerpo de la academia (guía + progreso + ruta serpentina) — reutilizable en pantalla y en la sección de Trainer */
 function vAcademyBody(u) {
-  const d = academyDone(u);
-  const prog = academyProgress(u);
+  const prog = quizProgress(u);
   const pct = Math.round((prog.done / prog.total) * 100);
-  const currentId = ACADEMY_FLAT.find(id => !d[id]) || null;
-  const off = [0, 44, 66, 44, 0, -44, -66, -44];   // serpentina tipo Duolingo
-  let n = 0;
-  const units = ACADEMY.map((unit, ui) => {
-    const nodes = unit.lessons.map(l => {
-      const isDone = !!d[l.id];
-      const unlocked = academyUnlocked(u, l.id);
-      const isCur = l.id === currentId;
-      const state = isDone ? 'done' : isCur ? 'cur' : unlocked ? 'open' : 'lock';
-      const dx = off[n % off.length]; n++;
-      const ic = isDone ? '<span class="duo-ic chk">✓</span>' : !unlocked ? '<span class="duo-ic lk">🔒</span>' : `<span class="duo-ic">${golfIcon(unit.icon)}</span>`;
-      return `<div class="duo-row" style="transform:translateX(${dx}px)">
-        ${isCur ? `<span class="duo-start">EMPIEZA</span>` : ''}
-        <button class="duo-node ${state}" ${unlocked ? `data-act="lesson-open" data-id="${l.id}"` : 'disabled'} style="--uc:${unit.color}" aria-label="${esc(l.t)}">${ic}</button>
-        <span class="duo-cap">${esc(l.t)}</span>
-      </div>`;
-    }).join('');
-    const doneU = unit.lessons.filter(l => d[l.id]).length;
-    return `<div class="duo-sec" style="--uc:${unit.color}">
-        <div class="duo-sec-tx"><span class="duo-sec-k">Sección ${ui + 1}</span><b>${esc(unit.unit)}</b></div>
-        <span class="duo-sec-n">${doneU}/${unit.lessons.length}</span>
-      </div>
-      <div class="duo-path">${nodes}</div>`;
+  const curIdx = ACADEMY_QUIZ.findIndex((_, i) => quizBest(u, i) < 7);
+  const off = [0, 50, 72, 50, 0, -50];
+  const nodes = ACADEMY_QUIZ.map((h, i) => {
+    const best = quizBest(u, i);
+    const unlocked = quizUnlocked(u, i);
+    const passed = best >= 7;
+    const isCur = i === curIdx;
+    const state = passed ? 'done' : isCur ? 'cur' : unlocked ? 'open' : 'lock';
+    const dx = off[i % off.length];
+    const ic = passed ? '<span class="duo-ic chk">✓</span>' : !unlocked ? '<span class="duo-ic lk">🔒</span>' : `<span class="duo-ic">${golfIcon(h.icon)}</span>`;
+    return `<div class="duo-row" style="transform:translateX(${dx}px)">
+      ${isCur ? `<span class="duo-start">JUGAR</span>` : ''}
+      <button class="duo-node aq-pnode ${state}" ${unlocked ? `data-act="quiz-open" data-i="${i}"` : 'disabled'} style="--uc:${h.color}" aria-label="${esc(h.unit)}"><span class="aq-pno">${i + 1}</span>${ic}</button>
+      <span class="duo-cap">${esc(h.unit)}${best ? ` · ${best}/10` : ''}</span>
+    </div>`;
   }).join('');
-  const curLesson = currentId ? academyLesson(currentId) : null;
-  const curNo = prog.done + 1;
-  const bubble = curLesson
-    ? `¡Vamos al hoyo ${curNo}!<br><b>${esc(curLesson.t)}</b>`
-    : `🏆 ¡Terminaste el campo!<br><b>Eres leyenda de la Academia.</b>`;
+  const bubble = curIdx >= 0
+    ? `¡Hoyo ${curIdx + 1}!<br><b>${esc(ACADEMY_QUIZ[curIdx].unit)}</b> · 10 preguntas`
+    : `🏆 ¡Campo completo!<br><b>Eres leyenda de la Academia.</b>`;
   return `<div class="acw-guide">
       <div class="acw-bird">${senseiBird('')}</div>
       <div class="acw-bubble">${bubble}</div>
     </div>
-    <div class="ac-progwrap acw-prog"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>${prog.done}/${prog.total} lecciones</span></div>
-    ${units}`;
+    <div class="ac-progwrap acw-prog"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>${prog.done}/${prog.total} hoyos</span></div>
+    <div class="duo-path aq-path">${nodes}</div>`;
 }
 
 function vAcademy() {
@@ -255,42 +323,53 @@ function vAcademy() {
       <span class="small muted">${curNo}/${prog.total}</span>
     </div>
     ${vAcademyBody(u)}
-    ${V.lesson ? vLessonSheet() : ''}
+    ${V.quiz ? vQuizSheet() : ''}
   </div>`;
 }
 
-function vLessonSheet() {
+/* Quiz tipo Preguntados: 10 preguntas, opciones 2×2, feedback inmediato, score y resultado */
+function vQuizSheet() {
   const u = cur();
-  const l = academyLesson(V.lesson);
-  if (!l) return '';
-  const isDone = !!academyDone(u)[l.id];
-  const body = l.body.map(b => `<li>${esc(b)}</li>`).join('');
-  const showQ = V.lessonQ || isDone;
-  const opts = l.q.opts.map((o, i) => {
-    let cls = '';
-    if (V.lessonPick != null) { if (i === l.q.a) cls = 'right'; else if (i === V.lessonPick) cls = 'wrong'; }
-    return `<button class="lq-opt ${cls}" data-act="lesson-answer" data-i="${i}">${esc(o)}</button>`;
+  const q = V.quiz; if (!q) return '';
+  const hole = ACADEMY_QUIZ[q.i]; if (!hole) return '';
+  const total = hole.qs.length;
+  if (q.done) {
+    const passed = q.score >= 7;
+    const hasNext = q.i + 1 < ACADEMY_QUIZ.length;
+    return `<div class="overlay" data-act="quiz-close"><div class="sheet aq-sheet aq-result" data-act="noop" style="--uc:${hole.color}">
+      <div class="grab"></div>
+      <div class="aq-res-ic">${passed ? '🏆' : '🎯'}</div>
+      <h2 class="aq-res-h">${passed ? '¡Hoyo superado!' : '¡Casi lo logras!'}</h2>
+      <div class="aq-res-score">${q.score}<span>/${total}</span></div>
+      <div class="aq-res-stars">${[0, 1, 2].map(s => `<span class="${q.score >= [5, 7, 9][s] ? 'on' : ''}">★</span>`).join('')}</div>
+      <p class="aq-res-sub">${passed ? (hasNext ? '¡Desbloqueaste el siguiente hoyo! 🔓' : '¡Completaste el campo entero! 🏆') : 'Necesitas 7/10 para pasar. ¡Vuelve a intentarlo!'}</p>
+      <div class="aq-res-btns">
+        <button class="btn primary big" data-act="quiz-retry">↺ Jugar de nuevo</button>
+        ${passed && hasNext ? `<button class="btn big" data-act="quiz-next-hole">Siguiente hoyo →</button>` : `<button class="btn" data-act="quiz-close">Salir</button>`}
+      </div>
+    </div></div>`;
+  }
+  const item = hole.qs[q.order[q.qi]];
+  const tags = ['aq-a', 'aq-b', 'aq-c', 'aq-d'];
+  const opts = item.opts.map((o, i) => {
+    let cls = tags[i % 4];
+    if (q.picked != null) { if (i === item.a) cls += ' right'; else if (i === q.picked) cls += ' wrong'; else cls += ' dim'; }
+    return `<button class="aq-opt ${cls}" ${q.picked == null ? `data-act="quiz-pick" data-i="${i}"` : ''}>${esc(o)}</button>`;
   }).join('');
-  const answered = V.lessonPick != null;
-  const correct = answered && V.lessonPick === l.q.a;
-  const holeNo = ACADEMY_FLAT.indexOf(l.id) + 1;
-  let nivel = ''; for (const un of ACADEMY) if (un.lessons.some(x => x.id === l.id)) { nivel = un.unit; break; }
-  return `<div class="overlay" data-act="lesson-close"><div class="sheet lsheet" data-act="noop">
+  const answered = q.picked != null;
+  const correct = answered && q.picked === item.a;
+  return `<div class="overlay" data-act="quiz-close"><div class="sheet aq-sheet" data-act="noop" style="--uc:${hole.color}">
     <div class="grab"></div>
-    <button class="dd2-x" data-act="lesson-close" aria-label="Cerrar">✕</button>
-    <span class="ls-tag">${golfIcon('flag')} Hoyo ${holeNo} · ${esc(nivel)}</span>
-    <h2 class="ls-h">${esc(l.t)}</h2>
-    <div class="ls-art">${acLessonArt(l.id)}</div>
-    ${!showQ ? `<ul class="ls-body">${body}</ul>
-      <button class="btn primary" data-act="lesson-quiz">Entendido · hacer quiz →</button>` : `
-      <ul class="ls-body small-body">${body}</ul>
-      <div class="lq">
-        <h3 class="lq-q">${esc(l.q.q)}</h3>
-        <div class="lq-opts">${opts}</div>
-        ${answered ? (correct
-        ? `<p class="lq-fb ok">✓ ¡Correcto!</p><button class="btn primary" data-act="lesson-complete" data-id="${l.id}">${isDone ? 'Cerrar' : 'Completar lección ✓'}</button>`
-        : `<p class="lq-fb no">Casi. Inténtalo otra vez.</p><button class="btn" data-act="lesson-retry">Reintentar</button>`)
-      : ''}
-      </div>`}
+    <div class="aq-top">
+      <button class="dd2-x" data-act="quiz-close" aria-label="Cerrar">✕</button>
+      <span class="aq-tag">${golfIcon(hole.icon)} Hoyo ${q.i + 1} · ${esc(hole.unit)}</span>
+      <span class="aq-pts">${q.score} ✓</span>
+    </div>
+    <div class="aq-prog"><i style="width:${Math.round((q.qi / total) * 100)}%"></i></div>
+    <span class="aq-count">Pregunta ${q.qi + 1} de ${total}</span>
+    <h2 class="aq-q">${esc(item.q)}</h2>
+    <div class="aq-opts">${opts}</div>
+    ${answered ? `<div class="aq-fb ${correct ? 'ok' : 'no'}">${correct ? '✓ ¡Correcto!' : '✗ Respuesta: ' + esc(item.opts[item.a])}</div>
+      <button class="btn primary big" data-act="quiz-advance">${q.qi + 1 < total ? 'Siguiente →' : 'Ver resultado →'}</button>` : ''}
   </div></div>`;
 }
