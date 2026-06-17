@@ -152,6 +152,16 @@ function lpPhoneShot(imgFile, comp, cls) {
 }
 /* pantalla real: renderiza componentes reales de la app, escalados dentro del teléfono */
 function lpReal(inner) { return `<div class="lp-realscr"><div class="lp-realwrap">${inner}</div></div>`; }
+/* pantalla de carga de PARFECT (splash) dentro del teléfono */
+function lpScrLoading() {
+  return `<div class="lp-loadscr">
+    <div class="lp-load-flag">${golfFlagSvg()}</div>
+    <div class="lp-load-word">PARFECT</div>
+    <div class="lp-load-tag">Golf Analytics · IA</div>
+    <div class="lp-load-bar"><i></i></div>
+    <div class="lp-load-foot">Cargando tu juego…</div>
+  </div>`;
+}
 function lpScrStats() {
   const rings = [['fw', 61, 'Fairways'], ['gir', 53, 'GIR'], ['ud', 51, 'Up & down']]
     .map(([k, p, l]) => (typeof pstSceneStatic === 'function') ? pstSceneStatic(k, p, l) : '').join('');
@@ -377,6 +387,7 @@ function vLanding() {
     </section>
 
     <section class="lp-hero2 lp-appstage-sec">
+      <div class="lp-loadphone reveal">${lpPhone(lpScrLoading())}</div>
       <div class="lp-hero-copy reveal">
         <h1 class="lp-title lp-title-stage">Baja tu hándicap,<br/><span class="lp-title-grad">fácil.</span></h1>
         <p class="lp-sub">Sigue tu hándicap, tu progreso y tu juego completo en una sola app.</p>
@@ -389,6 +400,17 @@ function vLanding() {
     </section>
 
     <section class="lp-sec">
+      <span class="lp-eyebrow reveal">La app por dentro</span>
+      <h2 class="lp-h2 reveal">Funciones reales,<br/><span class="lime">no promesas.</span></h2>
+      <div class="lp-shots">
+        <div class="lp-shot reveal">${lpPhoneShot('shot-rondas.png', lpScrRondas())}<div class="lp-shot-tx"><h3>Registra y revisa tus rondas</h3><p>Fairways, greens, up & down y putts hoyo por hoyo. Tu tarjeta completa y tu historial de rondas, siempre a la mano.</p></div></div>
+        <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-analisis.png', lpScrCoach())}<div class="lp-shot-tx"><h3>Tu coach IA</h3><p>Cruza tus rondas, encuentra dónde pierdes golpes y te dice exactamente qué entrenar.</p></div></div>
+        <div class="lp-shot reveal">${lpPhoneShot('shot-logros.png', lpScrLogros())}<div class="lp-shot-tx"><h3>Sube de rango con logros</h3><p>Trofeos míticos por cada meta que alcanzas. Tu progreso, gamificado y claro.</p></div></div>
+        <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-social.png', lpScrSocial())}<div class="lp-shot-tx"><h3>Juega con amigos</h3><p>Torneos en vivo, leaderboard y partidas por código. El golf es mejor en bola.</p></div></div>
+      </div>
+    </section>
+
+    <section class="lp-sec">
       <span class="lp-eyebrow reveal">Cómo funciona</span>
       <h2 class="lp-h2 reveal">De tu tarjeta<br/><span class="lime">a tu mejor golf.</span></h2>
       <div class="lp-flow">
@@ -397,17 +419,6 @@ function vLanding() {
            ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', 'ud'],
            ['04', 'Compite y sube', 'Bajas tu hándicap, subes en el ranking y llegas más lejos.', 'putt']]
           .map(([n, t, d, kind]) => `<div class="lp-flowc reveal"><div class="lp-flowc-scene">${(typeof drillScene === 'function') ? drillScene(kind) : statScene(kind)}<span class="lp-flowc-n">${n}</span></div><h3>${t}</h3><p>${d}</p></div>`).join('')}
-      </div>
-    </section>
-
-    <section class="lp-sec">
-      <span class="lp-eyebrow reveal">La app por dentro</span>
-      <h2 class="lp-h2 reveal">Funciones reales,<br/><span class="lime">no promesas.</span></h2>
-      <div class="lp-shots">
-        <div class="lp-shot reveal">${lpPhoneShot('shot-rondas.png', lpScrRondas())}<div class="lp-shot-tx"><h3>Registra y revisa tus rondas</h3><p>Fairways, greens, up & down y putts hoyo por hoyo. Tu tarjeta completa y tu historial de rondas, siempre a la mano.</p></div></div>
-        <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-analisis.png', lpScrCoach())}<div class="lp-shot-tx"><h3>Tu coach IA</h3><p>Cruza tus rondas, encuentra dónde pierdes golpes y te dice exactamente qué entrenar.</p></div></div>
-        <div class="lp-shot reveal">${lpPhoneShot('shot-logros.png', lpScrLogros())}<div class="lp-shot-tx"><h3>Sube de rango con logros</h3><p>Trofeos míticos por cada meta que alcanzas. Tu progreso, gamificado y claro.</p></div></div>
-        <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-social.png', lpScrSocial())}<div class="lp-shot-tx"><h3>Juega con amigos</h3><p>Torneos en vivo, leaderboard y partidas por código. El golf es mejor en bola.</p></div></div>
       </div>
     </section>
 

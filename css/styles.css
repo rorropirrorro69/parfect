@@ -2433,7 +2433,12 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .fd-share { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin: 4px 0 14px; padding: 13px; border-radius: 16px; border: 1.5px dashed var(--line); background: var(--card2); color: var(--text); font-size: 14px; font-weight: 800; cursor: pointer; }
 .fd-share .gi { width: 16px; height: 16px; color: var(--lime-ink); }
 .fd-share:active { transform: scale(.99); }
-.fd-list { display: flex; flex-direction: column; gap: 13px; }
+/* feed de amigos en carrusel horizontal */
+.fd-list { display: flex; flex-direction: row; gap: 14px; overflow-x: auto; padding: 2px 2px 12px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.fd-list::-webkit-scrollbar { display: none; }
+.fd-list .fd-card { flex: 0 0 90%; max-width: 380px; scroll-snap-align: center; align-self: flex-start; }
+.fd-scard { overflow-x: auto; scrollbar-width: none; }
+.fd-scard::-webkit-scrollbar { display: none; }
 .fd-media { margin: 4px 0 10px; border-radius: 14px; overflow: hidden; background: var(--card2); }
 .fd-media img, .fd-media video { display: block; width: 100%; max-height: 340px; object-fit: cover; }
 .share-up { display: grid; place-items: center; width: 100%; min-height: 120px; border: 1.5px dashed var(--line); border-radius: 16px; background: var(--card2); cursor: pointer; overflow: hidden; margin-bottom: 8px; }
@@ -3608,7 +3613,19 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .lp-hero2 .lp-sub { max-width: 34ch; margin-left: auto; margin-right: auto; }
 .lp-hero2 .lp-cta-row { justify-content: center; }
 .lp-appstage-sec { min-height: auto; justify-content: center; padding: 2vh 0 4vh; }
-.lp-appstage-sec .lp-hero-copy { order: 0; }
+.lp-appstage-sec .lp-hero-copy { order: 1; }
+/* teléfono con pantalla de carga arriba del título */
+.lp-loadphone { order: 0; width: min(216px, 60vw); margin: 0 auto 6px; z-index: 3; }
+.lp-loadscr { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: linear-gradient(180deg, #aed6f1 0%, #cfe9f6 38%, #e7f5cf 100%); padding: 24px 18px; }
+.lp-load-flag { width: 86px; height: auto; animation: appiconFloat 5s ease-in-out infinite; }
+.lp-load-flag .gflag { width: 100%; height: auto; display: block; filter: drop-shadow(0 8px 12px rgba(20,40,15,.2)); }
+.lp-load-word { font-size: 30px; font-weight: 900; font-style: italic; letter-spacing: -.01em; color: #14401f; margin-top: 4px; }
+.lp-load-tag { font-size: 9.5px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #2f7d3a; }
+.lp-load-bar { width: 64%; height: 6px; border-radius: 99px; background: rgba(20,60,30,.14); overflow: hidden; margin-top: 14px; }
+.lp-load-bar > i { display: block; height: 100%; width: 40%; border-radius: 99px; background: linear-gradient(90deg, #7cc24a, #2fa84a); animation: lpLoadBar 1.6s ease-in-out infinite; }
+@keyframes lpLoadBar { 0% { margin-left: -40%; } 100% { margin-left: 100%; } }
+.lp-load-foot { font-size: 10.5px; font-weight: 700; color: #5e6c5a; margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) { .lp-load-flag, .lp-load-bar > i { animation: none; } }
 /* título corto con acento en degradado lima */
 .lp-title-stage { font-size: clamp(42px, 9vw, 72px); }
 .lp-title-grad { background: linear-gradient(100deg, #5fc23a 0%, #2fa84a 52%, #128a52 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
