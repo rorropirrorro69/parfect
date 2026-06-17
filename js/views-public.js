@@ -245,6 +245,25 @@ function lpAwards() {
   <div class="lp-cred-tp reveal">${lpTpStar()}<b>4.9/5</b> en Trustpilot · +2,300 reseñas</div>`;
 }
 
+// opiniones de Trustpilot en scroll infinito
+function lpReviews() {
+  const stars = `<span class="lp-rv-stars">${[0, 0, 0, 0, 0].map(() => `<span class="rvbox">${lpTpStar()}</span>`).join('')}</span>`;
+  const reviews = [
+    ['Bajé de 18 a 12 en una temporada. Saber mis números lo cambió todo.', 'Rodrigo M.'],
+    ['Por fin entiendo dónde pierdo golpes. El coach IA es buenísimo.', 'Andrea G.'],
+    ['La uso cada ronda. Registrar es rapidísimo y las stats son adictivas.', 'Diego S.'],
+    ['Mi juego corto mejoró con los drills que me sugiere. Recomendada.', 'Mariana R.'],
+    ['Mejor que apps que pagué, y se ve increíble. 10/10.', 'Luis F.'],
+    ['Los logros me mantienen entrenando. Subí de rango en un mes.', 'Pablo C.'],
+  ];
+  const card = (q, n) => `<div class="lp-rv">${stars}<p class="lp-rv-q">"${q}"</p><div class="lp-rv-by"><span class="lp-rv-n">${n}</span><span class="lp-rv-src">${lpTpStar()}Trustpilot</span></div></div>`;
+  const set = reviews.map(r => card(r[0], r[1])).join('');
+  return `<div class="lp-reviews reveal">
+    <div class="lp-reviews-hd">${stars}<b>4.9</b> · Excelente · +2,300 reseñas</div>
+    <div class="lp-marquee lp-reviews-mq"><div class="lp-mq-track">${set}${set}</div></div>
+  </div>`;
+}
+
 // florecita de 5 pétalos para adornar
 function lpFlowerSvg(petal, core) {
   const petals = [0, 72, 144, 216, 288].map(a => `<ellipse cx="12" cy="5.4" rx="3.3" ry="5" transform="rotate(${a} 12 12)"/>`).join('');
@@ -369,25 +388,7 @@ function vLanding() {
         </div>
         <p class="lp-trust">Gratis para empezar · Tus datos viven en tu dispositivo</p>
       </div>
-      <div class="lp-appstage reveal">
-        <svg class="lp-stage-bg" viewBox="0 0 360 230" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-          <path class="bgc-mid" d="M0,150 Q120,120 240,144 T360,136 L360,230 L0,230 Z"/>
-          ${bgcLake(72, 172, 44, 12)}
-          ${bgcGreen(288, 150, 40, 13)}${bgcFlag(288, 150, 30)}
-          ${tline([[22, 150, 1.05], [302, 150, 1.15], [44, 160, .82], [332, 160, 1.05]])}
-          <path class="bgc-front" d="M0,200 Q140,174 280,196 T360,192 L360,230 L0,230 Z"/>
-          ${bgcGreen(120, 206, 34, 11)}${bgcFlag(120, 206, 26)}
-          ${tline([[26, 206, 1.25], [206, 210, .92], [262, 212, 1.05], [338, 206, 1.25]])}
-        </svg>
-        <div class="lp-golfhero">
-          <img class="lp-golfer" src="assets/golfer.png" alt="" aria-hidden="true">
-          <span class="lp-gball" aria-hidden="true"></span>
-          <span class="lp-pop pp1"><b>63%</b><i>Fairways</i></span>
-          <span class="lp-pop pp2"><b>57%</b><i>GIR</i></span>
-          <span class="lp-pop pp3"><b>7.2</b><i>Hándicap</i></span>
-          <span class="lp-pop pp4"><b>30</b><i>Putts</i></span>
-        </div>
-      </div>
+      ${lpReviews()}
     </section>
 
     <section class="lp-sec">
@@ -449,10 +450,6 @@ function vLanding() {
         <div class="lp-stat"><b>+10</b><span>campos aliados</span></div>
         <div class="lp-stat"><b>+50</b><span>juveniles activos</span></div>
         <div class="lp-stat"><b>+1,200</b><span>hoyos registrados</span></div>
-      </div>
-      <div class="lp-allies reveal">
-        <span class="lp-allies-lab">Aliados oficiales</span>
-        <div class="lp-allies-row">${lpOrg('fmg.png', 'Federación Mexicana de Golf', 'lp-ally')}${lpOrg('campestre.png', 'Club Campestre Morelia', 'lp-ally')}${lpOrg('tresmarias.png', 'Tres Marías', 'lp-ally')}${lpOrg('altozano.png', 'Altozano', 'lp-ally')}</div>
       </div>
     </section>
 

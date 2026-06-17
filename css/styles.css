@@ -3423,6 +3423,23 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lpm-org img { max-height: 36px; max-width: 130px; object-fit: contain; }
 .lpm-org .lp-org-fb { font-size: 18px; font-weight: 800; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .lp-mq-track { animation: none; } }
+/* opiniones de Trustpilot en scroll infinito */
+.lp-reviews { width: 100%; margin-top: 26px; }
+.lp-reviews-hd { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 16px; }
+.lp-reviews-hd b { font-size: 15px; }
+.lp-reviews-mq { margin-top: 0; }
+.lp-reviews-mq .lp-mq-track { gap: 16px; animation-duration: 48s; }
+.lp-reviews-mq:hover .lp-mq-track { animation-play-state: paused; }
+.lp-rv { flex: 0 0 auto; width: 262px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; box-shadow: 0 12px 28px rgba(20,40,15,.09); text-align: left; white-space: normal; }
+.lp-rv-stars { display: inline-flex; gap: 3px; }
+.rvbox { width: 20px; height: 20px; background: #00b67a; border-radius: 4px; display: grid; place-items: center; }
+.rvbox .lp-tpstar { width: 12px; height: 12px; fill: #fff; }
+.lp-rv-q { font-size: 13.5px; line-height: 1.5; color: var(--text); font-weight: 600; margin: 11px 0 13px; }
+.lp-rv-by { display: flex; align-items: center; justify-content: space-between; }
+.lp-rv-n { font-size: 12.5px; font-weight: 800; color: var(--text); }
+.lp-rv-src { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; color: #00b67a; }
+.lp-rv-src .lp-tpstar { width: 13px; height: 13px; fill: #00b67a; }
+.lp-reviews-hd .lp-rv-stars .rvbox { width: 18px; height: 18px; }
 .lp-sky2 { position: absolute; inset: 0; }
 .lp-sun { position: absolute; border-radius: 50%; }
 .lp-ph-day  .lp-sun { top: 6%; right: 12%; width: 104px; height: 104px; background: radial-gradient(circle at 42% 38%,#fffbe6,#ffe487 70%); box-shadow: 0 0 90px 30px rgba(255,228,135,.5); }
@@ -3534,6 +3551,7 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .lp-hero2 .lp-sub { max-width: 34ch; margin-left: auto; margin-right: auto; }
 .lp-hero2 .lp-cta-row { justify-content: center; }
 .lp-appstage-sec { min-height: auto; justify-content: center; padding: 2vh 0 4vh; }
+.lp-appstage-sec .lp-hero-copy { order: 0; }
 /* título corto con acento en degradado lima */
 .lp-title-stage { font-size: clamp(42px, 9vw, 72px); }
 .lp-title-grad { background: linear-gradient(100deg, #5fc23a 0%, #2fa84a 52%, #128a52 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
