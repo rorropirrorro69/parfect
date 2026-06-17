@@ -78,7 +78,37 @@ function vLanding() {
   const stars = isNight ? Array.from({ length: 18 }, (_, i) => `<span class="lp-star" style="left:${(i * 37 % 96) + 2}%;top:${(i * 23 % 44) + 3}%;animation-delay:${(i % 5) * 0.5}s"></span>`).join('') : '';
   const celest = isNight ? `<div class="lp-moon"></div>${stars}` : `<div class="lp-sun"></div>`;
   const bsil = (st) => `<svg class="lp-bsil" style="${st}" viewBox="0 0 24 8" aria-hidden="true"><path d="M1 6 Q6 0 11 5 Q16 0 23 6" fill="none" stroke="rgba(35,50,35,.45)" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+  const cartSvg = `<svg viewBox="0 0 64 44" aria-hidden="true"><path d="M9 16 L14 6 L39 6 L45 16 Z" fill="#ffffff"/><rect x="12" y="7" width="24" height="9" rx="1" fill="#bfe6f7"/><rect x="6" y="16" width="42" height="13" rx="3" fill="#eef6df"/><rect x="44" y="19" width="15" height="9" rx="2" fill="#a7d36a"/><circle cx="16" cy="32" r="6" fill="#33382f"/><circle cx="38" cy="32" r="6" fill="#33382f"/><circle cx="16" cy="32" r="2.4" fill="#d6dccb"/><circle cx="38" cy="32" r="2.4" fill="#d6dccb"/></svg>`;
   return `<div class="lp lp-ph-${phase}">
+    <div class="lp-fixed" aria-hidden="true">
+      <div class="lp-sky2">${celest}<span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span></div>
+      ${bsil('left:0;top:13%;animation:lpFlyR 38s linear infinite')}
+      ${bsil('left:0;top:21%;transform:scale(.7);animation:lpFlyR 50s linear infinite;animation-delay:-16s')}
+      ${bsil('left:0;top:8%;animation:lpFlyL 44s linear infinite;animation-delay:-8s')}
+      <span class="lp-fly lf1"></span><span class="lp-fly lf2"></span><span class="lp-fly lf3"></span>
+      <div class="lp-ground">
+        <svg class="lp-hills" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice">
+          <path d="M0,62 Q90,32 190,52 T400,42 L400,180 L0,180Z" fill="#c9e89a"/>
+          <path d="M0,98 Q120,66 250,88 T400,80 L400,180 L0,180Z" fill="#aedd7c"/>
+          <path d="M0,138 Q140,110 280,128 T400,120 L400,180 L0,180Z" fill="#8fc857"/>
+          <path d="M150,180 Q180,134 250,118 Q330,100 396,60" fill="none" stroke="#d7eeb0" stroke-width="22" stroke-linecap="round" opacity=".7"/>
+          <path d="M0,156 Q90,144 170,154 Q250,164 340,152 L400,156" fill="none" stroke="#cfe8a4" stroke-width="15" stroke-linecap="round" opacity=".55"/>
+          <ellipse cx="306" cy="120" rx="25" ry="8.5" fill="#f1e3b6"/>
+        </svg>
+        <svg class="lp-lake" viewBox="0 0 140 70" aria-hidden="true"><defs><radialGradient id="lpLakeG2" cx="40%" cy="32%" r="80%"><stop offset="0" stop-color="#8fd6f0"/><stop offset="1" stop-color="#2f87b0"/></radialGradient></defs><ellipse cx="70" cy="46" rx="62" ry="18" fill="url(#lpLakeG2)"/><ellipse class="lp-lakeshine" cx="54" cy="40" rx="22" ry="4.5" fill="#fff" opacity=".4"/><g class="lp-fountain"><rect x="68" y="24" width="4" height="20" rx="2" fill="#9fb0b3"/><path class="lp-fjet" d="M70 26 q-9 -15 -17 -2 M70 26 q9 -15 17 -2 M70 24 v-13" fill="none" stroke="#bfeaf6" stroke-width="2.4" stroke-linecap="round"/><circle class="lp-fdrop d1" cx="55" cy="28" r="1.7" fill="#cdeefb"/><circle class="lp-fdrop d2" cx="85" cy="28" r="1.7" fill="#cdeefb"/><circle class="lp-fdrop d3" cx="70" cy="16" r="1.7" fill="#cdeefb"/></g></svg>
+        ${lpTree('left:3%;bottom:12%;width:82px')}
+        ${lpTree('left:17%;bottom:7%;width:52px')}
+        ${lpTree('right:27%;bottom:9%;width:48px')}
+        <div class="lp-cart c1">${cartSvg}</div>
+        <div class="lp-cart c2">${cartSvg}</div>
+        <div class="lp-hole"><span class="lp-green"></span><span class="lp-cup"></span><span class="lp-pin"></span></div>
+      </div>
+    </div>
+    <div class="lp-narr" aria-hidden="true">
+      <div class="lp-guide"><div class="lp-guide-b"><svg viewBox="0 0 48 36"><ellipse cx="21" cy="20" rx="13" ry="8.5" fill="#6b7a89"/><circle cx="32" cy="14" r="6.5" fill="#6b7a89"/><path d="M38 13 l8 -2 l-7 5 Z" fill="#f5a623"/><circle cx="34" cy="12.5" r="1.6" fill="#fff"/><circle cx="34.4" cy="12.7" r=".9" fill="#10131a"/><path class="lp-wing" d="M17 15 q-7 -11 -1 -16 q3 8 9 13 Z" fill="#54647a"/></svg></div></div>
+      <span class="lp-fball"></span>
+      <div class="lp-birdie-pop"><img class="lp-bp-monito" src="${AVATARS[0]}" alt="" /><span class="lp-bp-txt">¡Birdie!</span></div>
+    </div>
     <header class="lp-nav">
       <span class="lp-logo">${logoMark(16)} PARFECT</span>
       <div class="lp-links">
@@ -87,58 +117,6 @@ function vLanding() {
       </div>
     </header>
     <section class="lp-hero2">
-      <div class="lp-sky2" aria-hidden="true">
-        ${celest}
-        <span class="lp-icloud i1"></span><span class="lp-icloud i2"></span><span class="lp-icloud i3"></span>
-        ${bsil('left:0;top:15%;animation:lpFlyR 36s linear infinite')}
-        ${bsil('left:0;top:24%;transform:scale(.7);animation:lpFlyR 46s linear infinite;animation-delay:-14s')}
-        ${bsil('left:0;top:11%;animation:lpFlyL 40s linear infinite;animation-delay:-7s')}
-        <span class="lp-fly lf1"></span><span class="lp-fly lf2"></span>
-      </div>
-      <div class="lp-course" aria-hidden="true">
-        <svg class="lp-hills" viewBox="0 0 400 180" preserveAspectRatio="xMidYMax slice">
-          <path d="M0,62 Q90,32 190,52 T400,42 L400,180 L0,180Z" fill="#c9e89a"/>
-          <path d="M0,98 Q120,66 250,88 T400,80 L400,180 L0,180Z" fill="#aedd7c"/>
-          <path d="M0,138 Q140,110 280,128 T400,120 L400,180 L0,180Z" fill="#8fc857"/>
-          <path d="M150,180 Q180,134 250,118 Q330,100 396,60" fill="none" stroke="#d7eeb0" stroke-width="22" stroke-linecap="round" opacity=".75"/>
-          <path d="M0,156 Q90,144 170,154 Q250,164 340,152 L400,156" fill="none" stroke="#cfe8a4" stroke-width="15" stroke-linecap="round" opacity=".6"/>
-          <ellipse cx="306" cy="120" rx="25" ry="8.5" fill="#f1e3b6"/>
-          <ellipse cx="120" cy="150" rx="30" ry="10" fill="#7fbf52"/>
-          <rect x="118" y="122" width="2" height="28" fill="#cfd6d8"/><path d="M120 122 L133 126 L120 130 Z" fill="#ff5a4d"/>
-        </svg>
-        <svg class="lp-clubhouse" viewBox="0 0 150 120">
-          <ellipse cx="75" cy="112" rx="60" ry="7" fill="#1a3a14" opacity=".14"/>
-          <rect x="30" y="56" width="90" height="52" rx="3" fill="#f4ecd6"/><rect x="30" y="56" width="90" height="52" rx="3" fill="none" stroke="#ddcfa8" stroke-width="1.5"/>
-          <path d="M20 58 L75 24 L130 58 Z" fill="#7c4a2c"/><path d="M20 58 L75 24 L130 58 Z" fill="#000" opacity=".06"/>
-          <rect x="72" y="12" width="6" height="14" fill="#9a5a32"/><path d="M78 13 L92 17 L78 21 Z" fill="#ff5a4d"/>
-          <rect x="66" y="82" width="18" height="26" rx="1.5" fill="#6b4a2a"/><circle cx="80" cy="95" r="1.4" fill="#e0c060"/>
-          <rect x="40" y="68" width="15" height="14" rx="1.5" fill="#bfe6f7" stroke="#fff" stroke-width="1.5"/>
-          <rect x="95" y="68" width="15" height="14" rx="1.5" fill="#bfe6f7" stroke="#fff" stroke-width="1.5"/>
-        </svg>
-        <svg class="lp-lake" viewBox="0 0 140 70" aria-hidden="true">
-          <defs><radialGradient id="lpLakeG2" cx="40%" cy="32%" r="80%"><stop offset="0" stop-color="#8fd6f0"/><stop offset="1" stop-color="#2f87b0"/></radialGradient></defs>
-          <ellipse cx="70" cy="46" rx="62" ry="18" fill="url(#lpLakeG2)"/>
-          <ellipse class="lp-lakeshine" cx="54" cy="40" rx="22" ry="4.5" fill="#fff" opacity=".4"/>
-          <g class="lp-fountain"><rect x="68" y="24" width="4" height="20" rx="2" fill="#9fb0b3"/>
-            <path class="lp-fjet" d="M70 26 q-9 -15 -17 -2 M70 26 q9 -15 17 -2 M70 24 v-13" fill="none" stroke="#bfeaf6" stroke-width="2.4" stroke-linecap="round"/>
-            <circle class="lp-fdrop d1" cx="55" cy="28" r="1.7" fill="#cdeefb"/><circle class="lp-fdrop d2" cx="85" cy="28" r="1.7" fill="#cdeefb"/><circle class="lp-fdrop d3" cx="70" cy="16" r="1.7" fill="#cdeefb"/></g>
-        </svg>
-        <div class="lp-tree" aria-hidden="true">
-          <svg viewBox="0 0 90 96"><rect x="41" y="52" width="8" height="40" rx="3" fill="#6b4a2a"/><ellipse cx="45" cy="40" rx="34" ry="30" fill="#3a7d3a"/><ellipse cx="30" cy="46" rx="20" ry="18" fill="#479a44"/><ellipse cx="60" cy="44" rx="20" ry="18" fill="#479a44"/><ellipse cx="45" cy="30" rx="16" ry="14" fill="#57ad50"/></svg>
-        </div>
-        ${lpTree('left:2%;bottom:13%;width:90px')}
-        ${lpTree('left:19%;bottom:7%;width:56px')}
-        ${lpTree('right:5%;bottom:21%;width:76px')}
-        ${lpTree('right:20%;bottom:8%;width:50px')}
-        ${lpTree('left:40%;bottom:24%;width:44px')}
-        <svg class="lp-squirrel" viewBox="0 0 60 60" aria-hidden="true">
-          <path class="lp-sqtail" d="M44 50 q22 -2 14 -24 q-3 -12 -14 -8 q10 2 11 12 q1 12 -11 14 Z" fill="#b06a35"/>
-          <ellipse cx="30" cy="52" rx="13" ry="6" fill="#000" opacity=".12"/>
-          <path d="M22 50 q-6 -22 10 -26 q14 -3 14 12 q0 14 -12 16 Z" fill="#c87a40"/>
-          <circle cx="20" cy="24" r="9" fill="#c87a40"/><path d="M14 16 q-1 -6 4 -5 q1 4 -1 7 Z M22 15 q3 -5 6 -2 q-1 4 -4 5 Z" fill="#a85f2c"/>
-          <circle cx="18" cy="23" r="1.6" fill="#241308"/><ellipse cx="26" cy="40" rx="6" ry="8" fill="#e6c79a"/>
-        </svg>
-      </div>
       <div class="lp-stage">
         <div class="lp-glow"></div>
         <div class="lp-golfer-stack parallax" data-speed="0.16">${AVATARS.map((src, i) => `<img class="lp-golfer lpg${i}" src="${src}" alt="${i === 0 ? 'Golfista PARFECT' : ''}" />`).join('')}</div>
@@ -330,12 +308,37 @@ function initLanding(root) {
     }
   };
   const sched = () => { if (!raf) raf = requestAnimationFrame(apply); };
-  const onScroll = () => { sy = window.scrollY || 0; sched(); };
+
+  // ===== narrativa del pájaro: te guía de arriba a abajo y al final birdie =====
+  const guide = root.querySelector('.lp-guide');
+  const guideB = root.querySelector('.lp-guide-b');
+  let played = false;
+  const birdScroll = () => {
+    if (!guide || played) return;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = max > 0 ? Math.min(1, (window.scrollY || 0) / max) : 0;
+    const x = 9 + p * 50;             // vw: de la izquierda hacia la derecha
+    const y = 11 + p * 62;            // vh: baja contigo
+    const sway = Math.sin(p * 9) * 3;
+    guide.style.left = x.toFixed(1) + 'vw';
+    guide.style.top = (y + sway).toFixed(1) + 'vh';
+    if (p > 0.965) finale();
+  };
+  const finale = () => {
+    if (played) return;
+    played = true;
+    if (guide) { guide.style.transition = 'left .6s ease-in, top .6s ease-in'; guide.style.left = '52vw'; guide.style.top = '56vh'; }
+    root.classList.add('lp-finale-on');                       // dispara la bola
+    setTimeout(() => { if (guideB) guideB.classList.add('fall'); }, 760);  // la bola le pega
+    setTimeout(() => { const pop = root.querySelector('.lp-birdie-pop'); if (pop) pop.classList.add('show'); }, 1500);
+  };
+
+  const onScroll = () => { sy = window.scrollY || 0; sched(); birdScroll(); };
   const onMove = e => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; sched(); };
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('pointermove', onMove, { passive: true });
   window.__lpClean = () => { removeEventListener('scroll', onScroll); removeEventListener('pointermove', onMove); io.disconnect(); };
-  apply();
+  apply(); birdScroll();
 }
 
 /* ============ Auth ============ */

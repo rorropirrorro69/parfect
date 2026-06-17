@@ -2954,34 +2954,94 @@ svg.fd-av { object-fit: contain; }
 .app-bg.night .bg-stars { opacity: .85; }
 [data-theme="light"] .app-bg.night { background: linear-gradient(180deg, #14264a 0%, #1c3450 44%, #1b3a26 100%); }
 
-/* ===== Landing v2: campo de golf con cielo gigante que cambia con el reloj ===== */
-.lp-hero2 { position: relative; min-height: 100svh; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
-.lp-ph-dawn  .lp-hero2 { background: linear-gradient(180deg,#ffd9a8 0%,#ffc6b2 18%,#e0e2cd 44%,#bfe39a 72%,#a9d877 100%); }
-.lp-ph-day   .lp-hero2 { background: linear-gradient(180deg,#5fbdef 0%,#8fcef0 22%,#c6e6f2 42%,#d9edc8 60%,#a9d877 100%); }
-.lp-ph-dusk  .lp-hero2 { background: linear-gradient(180deg,#ff9e6b 0%,#ff8fa0 20%,#caa7c2 42%,#bfd79a 70%,#a9d877 100%); }
-.lp-ph-night .lp-hero2 { background: linear-gradient(180deg,#0a1430 0%,#14254a 30%,#1b2f3e 52%,#2b5536 80%,#a9d877 100%); }
-.lp-ph-night .lp-hero-copy .lp-title, .lp-ph-night .lp-hero-copy .lp-sub, .lp-ph-night .lp-nav .lp-logo { color: #fff; }
+/* ===== Landing v3: día completo continuo (cielo arriba → campo abajo) + escena viva + narrativa del pájaro ===== */
+/* el gradiente del día va en TODA la página (sin corte): se ve cómo "bajas" al campo al hacer scroll */
+.lp-ph-dawn  { background: linear-gradient(180deg,#ffd9a8 0%,#ffc6b2 16%,#ffd9b4 32%,#dfeccf 52%,#bfe39a 74%,#a9d877 100%) !important; }
+.lp-ph-day   { background: linear-gradient(180deg,#5fbdef 0%,#7cc7ef 18%,#a9dbf2 36%,#cfe9ee 54%,#d9edc8 72%,#a9d877 100%) !important; }
+.lp-ph-dusk  { background: linear-gradient(180deg,#ff9e6b 0%,#ff8fa0 18%,#e79bb0 36%,#caa7c2 52%,#bfd79a 76%,#a9d877 100%) !important; }
+.lp-ph-night { background: linear-gradient(180deg,#0a1430 0%,#102145 22%,#16294c 42%,#1b2f3e 60%,#244a30 82%,#a9d877 100%) !important; }
+.lp-ph-night .lp-hero-copy .lp-title, .lp-ph-night .lp-hero-copy .lp-sub, .lp-ph-night .lp-nav .lp-logo, .lp-ph-night .lp-nav .lp-links button:not(.lp-cta-sm) { color: #fff; }
 .lp-ph-night .lp-hero-copy .lp-sub { opacity: .9; }
 .lp-ph-night .lp-icloud { opacity: .16; }
-.lp-ph-dusk .lp-icloud, .lp-ph-dawn .lp-icloud { opacity: .85; }
-.lp-sky2 { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.lp-ph-dusk .lp-icloud, .lp-ph-dawn .lp-icloud { opacity: .9; }
+
+/* capa fija (cielo + escena del campo + vida en movimiento) — vive bajo el contenido */
+.lp-fixed { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.lp > header, .lp > section, .lp > footer { position: relative; z-index: 2; }
+.lp-hero2 { position: relative; min-height: 100svh; background: transparent; display: flex; flex-direction: column; align-items: center; }
+.lp-sky2 { position: absolute; inset: 0; }
 .lp-sun { position: absolute; border-radius: 50%; }
-.lp-ph-day  .lp-sun { top: 7%; right: 13%; width: 104px; height: 104px; background: radial-gradient(circle at 42% 38%,#fffbe6,#ffe487 70%); box-shadow: 0 0 90px 30px rgba(255,228,135,.5); }
-.lp-ph-dawn .lp-sun { top: 24%; left: 12%; width: 90px; height: 90px; background: radial-gradient(circle at 42% 38%,#fff3d6,#ffcf8a 72%); box-shadow: 0 0 80px 26px rgba(255,185,120,.5); }
-.lp-ph-dusk .lp-sun { top: 18%; right: 12%; width: 100px; height: 100px; background: radial-gradient(circle at 42% 38%,#fff0d0,#ff8a5b 72%); box-shadow: 0 0 90px 30px rgba(255,120,80,.5); }
-.lp-hero2 .lp-moon { top: 8%; right: 14%; }
+.lp-ph-day  .lp-sun { top: 6%; right: 12%; width: 104px; height: 104px; background: radial-gradient(circle at 42% 38%,#fffbe6,#ffe487 70%); box-shadow: 0 0 90px 30px rgba(255,228,135,.5); }
+.lp-ph-dawn .lp-sun { top: 16%; left: 12%; width: 90px; height: 90px; background: radial-gradient(circle at 42% 38%,#fff3d6,#ffcf8a 72%); box-shadow: 0 0 80px 26px rgba(255,185,120,.5); }
+.lp-ph-dusk .lp-sun { top: 13%; right: 12%; width: 100px; height: 100px; background: radial-gradient(circle at 42% 38%,#fff0d0,#ff8a5b 72%); box-shadow: 0 0 90px 30px rgba(255,120,80,.5); }
+.lp-fixed .lp-moon { top: 8%; right: 14%; }
 .lp-bsil { position: absolute; width: 26px; height: auto; will-change: transform; }
-.lp-hero2 .lp-icloud { position: absolute; height: 20px; background: #fff; border-radius: 99px; box-shadow: 26px 5px 0 -3px #fff, -24px 6px 0 -4px #fff; }
-.lp-hero2 .lp-course { height: 30svh; z-index: 1; }
+.lp-fixed .lp-icloud { position: absolute; height: 20px; background: #fff; border-radius: 99px; box-shadow: 26px 5px 0 -3px #fff, -24px 6px 0 -4px #fff; }
+.lp-fixed .lp-icloud.i1 { top: 18%; left: 12%; width: 64px; animation: lpDrift 70s linear infinite; }
+.lp-fixed .lp-icloud.i2 { top: 30%; left: 60%; width: 50px; animation: lpDrift 92s linear infinite; animation-delay: -30s; }
+.lp-fixed .lp-icloud.i3 { top: 12%; left: 40%; width: 44px; animation: lpDrift 80s linear infinite; animation-delay: -15s; }
+.lp-fixed .lp-fly { position: absolute; bottom: 42vh; }
+.lp-fixed .lf1 { animation: lpBallArc 16s ease-in-out infinite; }
+.lp-fixed .lf2 { bottom: 50vh; animation: lpBallArcR 21s ease-in-out infinite; animation-delay: -7s; }
+.lp-fixed .lf3 { bottom: 36vh; animation: lpBallArc 24s ease-in-out infinite; animation-delay: -13s; }
+
+/* campo (suelo) fijo abajo — estilo in-app, sin casa club */
+.lp-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 38vh; }
+.lp-ground .lp-hills { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lp-ground .lp-lake { position: absolute; right: 6%; bottom: 6%; width: 116px; height: auto; opacity: .92; }
+.lp-cart { position: absolute; width: 56px; height: auto; bottom: 9%; }
+.lp-cart.c1 { left: -12%; animation: lpCart 26s linear infinite; }
+.lp-cart.c2 { left: -12%; transform: scaleX(-1); animation: lpCartB 34s linear infinite; animation-delay: -16s; }
+@keyframes lpCart { from { left: -12%; } to { left: 112%; } }
+@keyframes lpCartB { from { left: 112%; } to { left: -12%; } }
+
+/* hoyo (objetivo del final) */
+.lp-hole { position: absolute; left: 60vw; bottom: 6vh; width: 60px; height: 30px; }
+.lp-green { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: 70px; height: 22px; border-radius: 50%; background: radial-gradient(ellipse at 45% 35%, #9fd06a, #6fb045); }
+.lp-cup { position: absolute; left: 50%; bottom: 9px; transform: translateX(-50%); width: 10px; height: 6px; border-radius: 50%; background: #2c3b1c; }
+.lp-pin { position: absolute; left: calc(50% + 1px); bottom: 9px; width: 2px; height: 30px; background: #cfd6d8; }
+.lp-pin::after { content: ''; position: absolute; left: 2px; top: 0; border-left: 12px solid #ff5a4d; border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+
+/* capa de la narrativa (pájaro + bola + birdie), por ENCIMA del contenido */
+.lp-narr { position: fixed; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
+/* pájaro guía (lo mueve el JS por scroll) */
+.lp-guide { position: absolute; left: 9vw; top: 11vh; width: 48px; }
+.lp-guide-b { width: 100%; transform-origin: 50% 50%; }
+.lp-guide-b svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 5px 7px rgba(20,40,15,.2)); }
+.lp-wing { transform-origin: 60% 80%; animation: lpFlap .42s ease-in-out infinite alternate; }
+@keyframes lpFlap { from { transform: rotate(-6deg); } to { transform: rotate(26deg); } }
+.lp-guide-b.fall { animation: lpBirdDrop 1s cubic-bezier(.4,0,.8,1) forwards; }
+@keyframes lpBirdDrop { from { transform: translateY(0) rotate(0); } to { transform: translateY(22vh) rotate(150deg); opacity: .85; } }
+.lp-guide-b.fall .lp-wing { animation: none; }
+
+/* la bola del final + birdie */
+.lp-fball { position: absolute; left: -10vw; top: 56vh; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #fff, #cdd5d7 70%, #9aa6a8); box-shadow: 0 2px 6px rgba(0,0,0,.25); opacity: 0; }
+.lp-finale-on .lp-fball { animation: lpBallShot 1.7s ease-in forwards; }
+@keyframes lpBallShot {
+  0% { left: -10vw; top: 56vh; opacity: 0; }
+  10% { opacity: 1; }
+  44% { left: 50vw; top: 57vh; }      /* alcanza al pájaro */
+  56% { left: 54vw; top: 64vh; }      /* rebota hacia abajo */
+  86% { left: 60vw; top: 84vh; }      /* rueda al hoyo */
+  100% { left: 61.5vw; top: 86vh; opacity: 1; }
+}
+.lp-birdie-pop { position: absolute; left: 56vw; bottom: 18vh; display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 8px 14px 8px 8px; box-shadow: 0 12px 28px rgba(20,40,15,.18); opacity: 0; transform: translateY(14px) scale(.7); }
+.lp-birdie-pop.show { animation: lpPop .5s cubic-bezier(.2,1.3,.4,1) forwards; }
+@keyframes lpPop { to { opacity: 1; transform: translateY(0) scale(1); } }
+.lp-bp-monito { width: 38px; height: 38px; object-fit: contain; }
+.lp-bp-txt { font-size: 17px; font-weight: 900; color: var(--lime-ink); }
+
 .lp-hero2 .lp-stage { width: min(76%, 320px); margin: 46px auto 0; z-index: 3; }
 .lp-hero2 .lp-hero-copy { z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; max-width: 540px; margin: 8px auto 0; padding: 0 22px clamp(40px,12vw,90px); }
 .lp-hero2 .lp-hero-copy .lp-title { margin-top: 14px; }
 .lp-hero2 .lp-sub { max-width: 34ch; margin-left: auto; margin-right: auto; }
 .lp-hero2 .lp-cta-row { justify-content: center; }
 .lp-fc2 .lp-fc-v { font-size: 18px; margin-right: 2px; }
+@media (prefers-reduced-motion: reduce) { .lp-guide, .lp-fball, .lp-cart, .lp-bsil { display: none; } }
 @media (min-width: 720px) {
   .lp-hero2 .lp-stage { width: min(46%, 380px); }
   .lp-hero2 .lp-hero-copy { max-width: 640px; }
+  .lp-ground { height: 34vh; }
 }
 
 /* ===== Resumen de ronda: escena con el cielo del momento del día ===== */
