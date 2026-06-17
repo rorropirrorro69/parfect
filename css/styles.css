@@ -134,6 +134,21 @@ body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg
 .bgc-flag:nth-of-type(2n) path { animation-duration: 2.3s; animation-delay: -.6s; }
 .bgc-flag:nth-of-type(3n) path { animation-duration: 1.6s; animation-delay: -1.1s; }
 @keyframes bgcFlagWave { from { transform: skewX(0) scaleX(1); } to { transform: skewX(-11deg) scaleX(.9); } }
+/* campo vivo: casa club, carritos que dan vueltas, ardillas que brincan */
+.lp-club { filter: drop-shadow(0 3px 5px rgba(20,40,15,.16)); }
+.lp-bcart { will-change: transform; }
+.lp-bcart.c1 { animation: lpCartA 15s linear infinite; }
+.lp-bcart.c2 { animation: lpCartB 21s linear infinite; animation-delay: -9s; }
+@keyframes lpCartA { from { transform: translate(-44px,150px) scale(1.3); } to { transform: translate(434px,150px) scale(1.3); } }
+@keyframes lpCartB { from { transform: translate(-44px,206px) scale(1.7); } to { transform: translate(434px,206px) scale(1.7); } }
+.lp-bcart-in { animation: lpCartBob .55s ease-in-out infinite alternate; }
+@keyframes lpCartBob { from { transform: translateY(0); } to { transform: translateY(-.7px); } }
+.lp-sq-in { animation: lpSqHop 1.5s ease-in-out infinite; }
+.lp-sq.s2 .lp-sq-in { animation-delay: -.7s; }
+@keyframes lpSqHop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.lp-sq-tail { transform-box: fill-box; transform-origin: 100% 100%; animation: lpSqTail 1.1s ease-in-out infinite alternate; }
+@keyframes lpSqTail { from { transform: rotate(-7deg); } to { transform: rotate(9deg); } }
+@media (prefers-reduced-motion: reduce) { .lp-bcart, .lp-bcart-in, .lp-sq-in, .lp-sq-tail { animation: none; } .lp-bcart.c1 { transform: translate(150px,150px) scale(1.3); } .lp-bcart.c2 { transform: translate(280px,206px) scale(1.7); } }
 @media (prefers-reduced-motion: reduce) { .bgc-fjet, .bgc-fdrop, .bgc-lake-sh, .bgc-gclub, .bgc-ball, .bgc-flag path { animation: none !important; } }
 body.is-scrolling .bg-cloud, body.is-scrolling .bg-bird, body.is-scrolling .bg-gball { animation-play-state: paused !important; }
 @media (prefers-reduced-motion: reduce) { .bg-cloud, .bg-bird, .bg-gball, .bg-stars { animation: none !important; } .bg-bird { display: none; } }
