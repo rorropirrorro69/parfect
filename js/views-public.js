@@ -233,13 +233,16 @@ function lpAwardBadge(top, big, sub) {
 }
 
 function lpAwards() {
-  return `<div class="lp-awards">
-    ${lpAwardBadge('App Store', 'App of the Year', '2026')}
-    ${lpAwardBadge('Google Play', "Editors' Choice", '2026')}
-    <div class="lp-aw lp-aw-tp reveal">
-      <div class="lp-aw-laurels">${lpLaurel()}<div class="lp-aw-mid"><span class="lp-aw-top">Trustpilot</span><span class="lp-aw-big lp-aw-num">4.9<span class="lp-aw-den">/5</span></span><span class="lp-aw-stars">${lpTpStar()}${lpTpStar()}${lpTpStar()}${lpTpStar()}${lpTpStar()}</span></div></div>
-    </div>
-  </div>`;
+  const icRocket = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`;
+  const icCash = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M5 12h.01M19 12h.01"/></svg>`;
+  const icTrophy = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`;
+  const cred = (ic, top, big, sub, tone) => `<div class="lp-cred reveal ct-${tone}"><span class="lp-cred-ic">${ic}</span><span class="lp-cred-top">${top}</span><span class="lp-cred-big">${big}</span><span class="lp-cred-sub">${sub}</span></div>`;
+  return `<div class="lp-creds">
+    ${cred(icRocket, 'Respaldada por', 'Bluemoon', 'Aceleradora · LatAm', 'a')}
+    ${cred(icCash, 'Capital levantado', '$1.4M', 'Ronda pre-semilla', 'b')}
+    ${cred(icTrophy, 'Ganadora', 'LatAm App Awards', 'Deportes · 2026', 'c')}
+  </div>
+  <div class="lp-cred-tp reveal">${lpTpStar()}<b>4.9/5</b> en Trustpilot · +2,300 reseñas</div>`;
 }
 
 // florecita de 5 pétalos para adornar
@@ -351,8 +354,8 @@ function vLanding() {
     </section>
     <section class="lp-sec lp-awards-sec">
       ${lpAwardsDeco()}
-      <span class="lp-eyebrow reveal">Reconocida en todo el mundo</span>
-      <h2 class="lp-h2 reveal">La app que los golfistas<br/><span class="lime">no sueltan.</span></h2>
+      <span class="lp-eyebrow reveal">Respaldo y reconocimiento</span>
+      <h2 class="lp-h2 reveal">Una app con<br/><span class="lime">respaldo de verdad.</span></h2>
       ${lpAwards()}
     </section>
 
@@ -403,10 +406,10 @@ function vLanding() {
       <span class="lp-eyebrow reveal">La app por dentro</span>
       <h2 class="lp-h2 reveal">Funciones reales,<br/><span class="lime">no promesas.</span></h2>
       <div class="lp-shots">
-        <div class="lp-shot reveal">${lpPhoneShot('shot-rondas.png', lpScrRondas())}<div class="lp-shot-tx"><h3>Registra y revisa tus rondas</h3><p>Fairways, greens, up & down y putts hoyo por hoyo. Tu tarjeta completa y tu historial de rondas, siempre a la mano.</p></div></div>
-        <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-analisis.png', lpScrCoach())}<div class="lp-shot-tx"><h3>Tu coach IA</h3><p>Cruza tus rondas, encuentra dónde pierdes golpes y te dice exactamente qué entrenar.</p></div></div>
-        <div class="lp-shot reveal">${lpPhoneShot('shot-logros.png', lpScrLogros())}<div class="lp-shot-tx"><h3>Sube de rango con logros</h3><p>Trofeos míticos por cada meta que alcanzas. Tu progreso, gamificado y claro.</p></div></div>
-        <div class="lp-shot lp-shot-r reveal">${lpPhoneShot('shot-social.png', lpScrSocial())}<div class="lp-shot-tx"><h3>Juega con amigos</h3><p>Torneos en vivo, leaderboard y partidas por código. El golf es mejor en bola.</p></div></div>
+        <div class="lp-shot reveal">${lpPhone(lpScrRondas())}<div class="lp-shot-tx"><h3>Registra y revisa tus rondas</h3><p>Fairways, greens, up & down y putts hoyo por hoyo. Tu tarjeta completa y tu historial de rondas, siempre a la mano.</p></div></div>
+        <div class="lp-shot lp-shot-r reveal">${lpPhone(lpScrCoach())}<div class="lp-shot-tx"><h3>Tu coach IA</h3><p>Cruza tus rondas, encuentra dónde pierdes golpes y te dice exactamente qué entrenar.</p></div></div>
+        <div class="lp-shot reveal">${lpPhone(lpScrLogros())}<div class="lp-shot-tx"><h3>Sube de rango con logros</h3><p>Trofeos míticos por cada meta que alcanzas. Tu progreso, gamificado y claro.</p></div></div>
+        <div class="lp-shot lp-shot-r reveal">${lpPhone(lpScrSocial())}<div class="lp-shot-tx"><h3>Juega con amigos</h3><p>Torneos en vivo, leaderboard y partidas por código. El golf es mejor en bola.</p></div></div>
       </div>
     </section>
 

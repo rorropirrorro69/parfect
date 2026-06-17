@@ -3374,9 +3374,11 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lps-cbar i { display: block; height: 4px; border-radius: 99px; background: linear-gradient(90deg,#7cc24a,#4ca055); margin-top: 4px; }
 .lp-shots { display: flex; flex-direction: column; gap: 42px; margin-top: 24px; }
 .lp-shot { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.lp-shot-tx { text-align: center; max-width: 30ch; }
+.lp-shot-tx { text-align: center; max-width: 34ch; background: rgba(255,255,255,.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.6); border-radius: 20px; padding: 18px 20px; box-shadow: 0 14px 34px rgba(20,40,15,.12); }
 .lp-shot-tx h3 { font-size: 21px; font-weight: 900; color: var(--text); margin: 0 0 6px; }
-.lp-shot-tx p { font-size: 14.5px; line-height: 1.5; color: var(--muted); margin: 0; }
+.lp-shot-tx p { font-size: 14px; line-height: 1.55; color: #3c4a3a; margin: 0; }
+[data-theme="dark"] .lp-shot-tx { background: rgba(22,31,58,.8); border-color: rgba(255,255,255,.12); }
+[data-theme="dark"] .lp-shot-tx p { color: var(--muted); }
 @media (min-width: 720px) {
   .lp-shot { flex-direction: row; justify-content: center; gap: 54px; }
   .lp-shot-r { flex-direction: row-reverse; }
@@ -3747,6 +3749,22 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .store-badge .sb-lg { font-size: 17px; font-weight: 700; letter-spacing: -.01em; margin-top: 1px; }
 /* sección de premios / reconocimientos (estilo laureles profesional) */
 .lp-awards-sec { text-align: center; position: relative; overflow: hidden; }
+/* credenciales creíbles (respaldo / capital / premio LatAm) */
+.lp-creds { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+.lp-cred { position: relative; flex: 1 1 150px; max-width: 210px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px 15px; box-shadow: 0 12px 30px rgba(20,40,15,.08); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 3px; transition: transform .32s cubic-bezier(.2,.7,.2,1), box-shadow .32s; }
+.lp-cred:hover { transform: translateY(-5px); box-shadow: 0 22px 44px rgba(20,40,15,.15); }
+.lp-cred-ic { width: 48px; height: 48px; border-radius: 15px; display: grid; place-items: center; margin-bottom: 9px; transition: transform .32s; }
+.lp-cred:hover .lp-cred-ic { transform: scale(1.08); }
+.lp-cred-ic svg { width: 24px; height: 24px; }
+.ct-a .lp-cred-ic { background: rgba(83,99,225,.14); color: #4a59d6; }
+.ct-b .lp-cred-ic { background: rgba(46,168,74,.16); color: #1d7a3a; }
+.ct-c .lp-cred-ic { background: rgba(232,168,30,.18); color: #c2860f; }
+.lp-cred-top { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.lp-cred-big { font-size: clamp(17px, 4.6vw, 21px); font-weight: 900; letter-spacing: -.02em; color: var(--text); line-height: 1.12; }
+.lp-cred-sub { font-size: 11.5px; font-weight: 700; color: var(--muted); }
+.lp-cred-tp { margin: 20px auto 0; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); font-weight: 700; }
+.lp-cred-tp .lp-tpstar { width: 15px; height: 15px; fill: #00b67a; }
+.lp-cred-tp b { color: var(--text); font-weight: 900; }
 /* adornos: pájaros + flores alrededor de los premios */
 .lp-aw-deco { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .lp-aw-deco .awd { position: absolute; }
