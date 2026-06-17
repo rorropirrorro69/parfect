@@ -460,10 +460,9 @@ function vSessionPlanner() {
     return `<div class="card sp-card">
       <div class="sp-phase">Paso 2 de 2 · ${spFmtMin(T)}</div>
       <h2 class="sp-q">¿Cómo armamos tu sesión?</h2>
-      <button class="sp-modecard" data-act="plan-mode" data-m="ai"><span class="sp-modeic">${golfIcon('flag')}</span><div><b>Que la IA la arme por mí</b><span>Reparte el tiempo priorizando tus puntos débiles.</span></div></button>
-      <button class="sp-modecard" data-act="plan-mode" data-m="me"><span class="sp-modeic">${golfIcon('bucket')}</span><div><b>Yo elijo qué entrenar</b><span>Escoge las áreas y nosotros repartimos el tiempo.</span></div></button>
-      <button class="sp-modecard" data-act="plan-mode" data-m="lib"><span class="sp-modeic">${golfIcon('card')}</span><div><b>Elegir de la biblioteca</b><span>Arma tu sesión con drills específicos según tu tiempo.</span></div></button>
+      <button class="sp-modecard" data-act="plan-mode" data-m="ai"><span class="sp-modeic">${golfIcon('flag')}</span><div><b>AI Coach</b><span>La IA reparte el tiempo priorizando tus puntos débiles.</span></div></button>
       <button class="sp-modecard" data-act="plan-mode" data-m="free"><span class="sp-modeic">${golfIcon('putter')}</span><div><b>Entrenamiento libre</b><span>Sin plan: cronometra el bastón que quieras a tu ritmo.</span></div></button>
+      <button class="sp-modecard" data-act="plan-mode" data-m="lib"><span class="sp-modeic">${golfIcon('card')}</span><div><b>Elegir de la biblioteca</b><span>Arma tu sesión con drills específicos según tu tiempo.</span></div></button>
       <button class="sp-back" data-act="plan-reset">← Cambiar tiempo</button>
     </div>`;
   }
