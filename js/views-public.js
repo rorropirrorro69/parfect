@@ -236,7 +236,7 @@ function vLanding() {
         </div>
         <p class="lp-trust">Gratis para empezar · Tus datos viven en tu dispositivo</p>
       </div>
-      <div class="lp-herophone reveal">${lpPhoneShot('shot-inicio.png', lpScrStats())}</div>
+      <div class="lp-heroicon reveal"><div class="lp-appicon3d"><span class="lp-appicon-glow"></span><img class="lp-appicon-img" src="assets/icon-512.png" alt="PARFECT" onerror="this.src='assets/apple-touch-icon.png'"></div></div>
     </section>
 
     <section class="lp-sec">
@@ -262,10 +262,6 @@ function vLanding() {
       </div>
     </section>
 
-    <section class="lp-sec lp-mqsec">
-      <span class="lp-eyebrow reveal" style="display:block;text-align:center">Campos y aliados</span>
-      <div class="lp-marquee reveal"><div class="lp-mq-track">${lpMarqueeItems()}${lpMarqueeItems()}</div></div>
-    </section>
 
     <section class="lp-sec lp-presence">
       <span class="lp-eyebrow reveal">Tu camino</span>
