@@ -2092,8 +2092,10 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .ls-body.small-body li::before { background: var(--line); top: 6px; }
 .lq { margin-top: 4px; }
 .lq-q { font-size: 16px; font-weight: 900; color: var(--text); margin: 0 0 12px; }
-.lq-opts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-.lq-opt { text-align: left; padding: 15px 16px; border-radius: 15px; border: 2px solid var(--line); background: var(--card2); font-size: 15px; font-weight: 700; color: var(--text); cursor: pointer; transition: border-color .15s, background .15s; }
+.lq-opts { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+.lq-opt { text-align: left; padding: 18px 18px; border-radius: 16px; border: 2px solid var(--line); background: var(--card2); font-size: 16.5px; font-weight: 800; color: var(--text); cursor: pointer; transition: border-color .15s, background .15s, transform .1s; }
+.acw-inline { position: relative; margin-top: 6px; }
+.acw-inline .duo-path { padding-bottom: 4px; }
 .lq-opt:active { transform: scale(.98); }
 .lq-opt.right { border-color: #3aa055; background: var(--lime-faint); color: #1f6b34; }
 [data-theme="dark"] .lq-opt.right { color: #b7f08a; }
@@ -2174,7 +2176,7 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .myt-emb { width: 60px; height: 60px; }
 .myt-svg { width: 100%; height: 100%; }
 .myt-star { fill: #fff; fill-opacity: .9; }
-.myt.on .myt-svg { color: var(--lime); filter: drop-shadow(0 4px 9px rgba(124,194,74,.5)); transform-box: fill-box; transform-origin: 50% 100%; animation: mytBob 3s ease-in-out infinite; }
+.myt.on .myt-svg { color: #f4c534; filter: drop-shadow(0 4px 9px rgba(232,181,58,.55)); transform-box: fill-box; transform-origin: 50% 100%; animation: mytBob 3s ease-in-out infinite; }
 .myt-emb:nth-of-type(1) { } .myt.on:nth-child(2n) .myt-svg { animation-delay: -1.2s; } .myt.on:nth-child(3n) .myt-svg { animation-delay: -2s; }
 @keyframes mytBob { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(-4deg); } }
 .myt.on .myt-star { fill: #0a0f06; fill-opacity: .9; transform-box: fill-box; transform-origin: center; animation: mytTwinkle 2.4s ease-in-out infinite; }
@@ -3349,9 +3351,11 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 
 /* prueba social: prensa + Trustpilot + premios */
 /* intro: PARFECT flotante + reconocimientos transparentes volando (antes del landing) */
-.lp-intro { position: relative; z-index: 2; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 18px; overflow: hidden; }
+.lp-intro { position: relative; z-index: 2; min-height: 0; background: transparent; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 17vh 18px 11vh; overflow: visible; }
 .lp-intro-top { position: relative; z-index: 2; }
 .lp-intro-logo { display: block; font-size: 48px; font-weight: 900; letter-spacing: .03em; font-style: italic; color: var(--text); text-shadow: 0 6px 20px rgba(20,40,15,.12); }
+/* la P de PARFECT hecha bandera */
+.logo-fp { height: .92em; width: auto; vertical-align: -.11em; margin-right: -.02em; }
 .lp-intro-tag { display: block; font-size: 13px; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
 /* reconocimientos limpios (logos reales, estáticos) debajo del título */
 .lp-press2 { margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 14px; }

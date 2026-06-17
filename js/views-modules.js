@@ -613,20 +613,8 @@ function vBiblioteca() {
 }
 /* pestaña Academia: tarjeta de lanzamiento a la ruta inmersiva */
 function vAcademyLaunch() {
-  const u = cur();
-  const prog = (typeof academyProgress === 'function') ? academyProgress(u) : { done: 0, total: 0 };
-  const pct = prog.total ? Math.round(prog.done / prog.total * 100) : 0;
-  return `<button class="ac-launch" data-act="academia-start">
-      <div class="ac-launch-bird">${senseiBird('')}</div>
-      <div class="ac-launch-tx">
-        <b>Academia de golf</b>
-        <span>Aprende de 0 a élite, hoyo por hoyo, con tu guía.</span>
-        <div class="ac-launch-bar"><i style="width:${pct}%"></i></div>
-        <small>${prog.done}/${prog.total} hoyos</small>
-      </div>
-      <span class="ac-launch-go">${prog.done ? 'Seguir' : 'Empezar'} →</span>
-    </button>
-    <p class="note" style="margin-top:12px">Abre una pantalla a pantalla completa con la ruta de lecciones (estilo Duolingo) y un quiz por hoyo.</p>`;
+  if (typeof vAcademyBody !== 'function') return '';
+  return `<div class="acw-inline">${vAcademyBody(cur())}</div>${V.lesson ? vLessonSheet() : ''}`;
 }
 
 function vTrackerPlan() {

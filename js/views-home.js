@@ -15,7 +15,7 @@ function vShell(content) {
   return `<div class="shell">
     <div class="hdr">
       <span style="width:40px"></span>
-      <span class="logo-word">PARFECT</span>
+      <span class="logo-word">${pLogo()}</span>
       <button class="avatar-btn" data-act="profile-edit" aria-label="Personaliza tu perfil">${avatarImg(u)}</button>
     </div>
     <div class="app-content">${content}</div>
@@ -943,7 +943,7 @@ function vOnboard() {
   const u = cur();
   return `<div class="onb">
     <div class="onb-top">
-      <span class="lp-logo">PARFECT</span>
+      <span class="lp-logo">${pLogo()}</span>
       <button class="onb-skip" data-act="finish-onboard">Saltar</button>
     </div>
     <div class="onb-body">

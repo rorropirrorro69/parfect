@@ -147,7 +147,7 @@ function vLanding() {
       </div>
     </div>
     <header class="lp-nav">
-      <span class="lp-logo">PARFECT</span>
+      <span class="lp-logo">${pLogo()}</span>
       <div class="lp-links">
         <button data-act="go" data-view="login">Entrar</button>
         <button class="lp-cta-sm" data-act="go" data-view="signup">Empezar</button>
@@ -155,7 +155,7 @@ function vLanding() {
     </header>
     <section class="lp-intro">
       <div class="lp-intro-top">
-        <span class="lp-intro-logo">PARFECT</span>
+        <span class="lp-intro-logo">${pLogo()}</span>
         <span class="lp-intro-tag">Golf Analytics · IA</span>
         <div class="lp-press2">
           <div class="lp-press2-row">
@@ -247,7 +247,7 @@ function vLanding() {
     </section>
 
     <footer class="lp-foot">
-      <span class="lp-logo">PARFECT</span>
+      <span class="lp-logo">${pLogo()}</span>
       <span>Tu app para mejorar en el golf y jugar con amigos. Tus datos viven en tu dispositivo.</span>
     </footer>
   </div>`;
@@ -354,6 +354,7 @@ function initLanding(root) {
 
   const layers = [...root.querySelectorAll('[data-speed]')];
   const introTop = root.querySelector('.lp-intro-top');
+  const introSec = root.querySelector('.lp-intro');
   let mx = 0, my = 0, sy = 0, raf = 0;
   const apply = () => {
     raf = 0;
@@ -362,9 +363,10 @@ function initLanding(root) {
       el.style.transform = `translate3d(${(mx * sp * 18).toFixed(1)}px, ${(my * sp * 18 - sy * sp * 0.12).toFixed(1)}px, 0)`;
     }
     if (introTop) {
-      const p = Math.min(1, Math.max(0, sy / (innerHeight * 0.8)));   // barrido suave: el texto se va al bajar
-      introTop.style.opacity = (1 - p * 1.08).toFixed(3);
-      introTop.style.transform = `translateY(${(-p * 90).toFixed(1)}px) scale(${(1 - p * 0.06).toFixed(3)})`;
+      const range = (introSec ? introSec.offsetHeight : innerHeight * 0.6) * 0.9;   // barrido suave: el texto se va al bajar
+      const p = Math.min(1, Math.max(0, sy / Math.max(160, range)));
+      introTop.style.opacity = (1 - p * 1.1).toFixed(3);
+      introTop.style.transform = `translateY(${(-p * 70).toFixed(1)}px) scale(${(1 - p * 0.05).toFixed(3)})`;
     }
   };
   const sched = () => { if (!raf) raf = requestAnimationFrame(apply); };

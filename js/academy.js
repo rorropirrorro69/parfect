@@ -198,8 +198,8 @@ function acFlagSVG() {
 }
 
 /* ---------- Vista: recorrido del campo, hoyo por hoyo ---------- */
-function vAcademy() {
-  const u = cur();
+/* cuerpo de la academia (guía + progreso + ruta serpentina) — reutilizable en pantalla y en la sección de Trainer */
+function vAcademyBody(u) {
   const d = academyDone(u);
   const prog = academyProgress(u);
   const pct = Math.round((prog.done / prog.total) * 100);
@@ -232,6 +232,18 @@ function vAcademy() {
   const bubble = curLesson
     ? `¡Vamos al hoyo ${curNo}!<br><b>${esc(curLesson.t)}</b>`
     : `🏆 ¡Terminaste el campo!<br><b>Eres leyenda de la Academia.</b>`;
+  return `<div class="acw-guide">
+      <div class="acw-bird">${senseiBird('')}</div>
+      <div class="acw-bubble">${bubble}</div>
+    </div>
+    <div class="ac-progwrap acw-prog"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>${prog.done}/${prog.total} lecciones</span></div>
+    ${units}`;
+}
+
+function vAcademy() {
+  const u = cur();
+  const prog = academyProgress(u);
+  const curNo = Math.min(prog.done + 1, prog.total);
   return `<div class="shell no-nav fade-in acw">
     <svg class="acw-hills" viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
       <path d="M0,120 Q110,80 210,104 T400,96 L400,200 L0,200 Z" fill="#cfe9a8"/>
@@ -240,14 +252,9 @@ function vAcademy() {
     <div class="play-top">
       <button class="x" data-act="academia-exit">✕ Salir</button>
       <span class="label">Academia</span>
-      <span class="small muted">${Math.min(curNo, prog.total)}/${prog.total}</span>
+      <span class="small muted">${curNo}/${prog.total}</span>
     </div>
-    <div class="acw-guide">
-      <div class="acw-bird">${senseiBird('')}</div>
-      <div class="acw-bubble">${bubble}</div>
-    </div>
-    <div class="ac-progwrap acw-prog"><div class="ac-progbar"><i style="width:${pct}%"></i></div><span>${prog.done}/${prog.total} lecciones</span></div>
-    ${units}
+    ${vAcademyBody(u)}
     ${V.lesson ? vLessonSheet() : ''}
   </div>`;
 }
