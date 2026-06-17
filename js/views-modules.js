@@ -222,9 +222,9 @@ function vDiag() {
     ].sort((a, b) => b.sev - a.sev);
     const cards = issues.map((it, i) => {
       const a = AREA[it.lab];
-      return `<div class="lib-card" style="--lib:${a.c};background:${a.t}">
+      return `<div class="lib-card">
         <div class="lib-head"><span class="lib-ic">${golfIcon(a.ic)}</span><b>${it.lab}</b><span class="lib-n">${i === 0 ? 'Prioridad 1' : 'Prioridad ' + (i + 1)}</span></div>
-        <div class="diag-body"><p class="diag-area-stat" style="color:${a.c}">${a.stat}</p><p class="diag-lead">${esc(it.tip)}</p>
+        <div class="diag-body"><p class="diag-area-stat">${a.stat}</p><p class="diag-lead">${esc(it.tip)}</p>
           <button class="btn sm ghost" data-act="trainer-tab" data-t="biblioteca">${golfIcon('green')} Practicar →</button></div>
       </div>`;
     }).join('');
@@ -590,7 +590,7 @@ function vBiblioteca() {
     ud: { c: '#e0873a', t: 'rgba(224,135,58,.10)', ic: 'bucket' },
     putt: { c: '#3a8fe0', t: 'rgba(58,143,224,.10)', ic: 'putter' },
   };
-  const card = (col, tint, icon, title, count, rows) => `<div class="lib-card" style="--lib:${col};background:${tint}">
+  const card = (col, tint, icon, title, count, rows) => `<div class="lib-card">
       <div class="lib-head"><span class="lib-ic">${golfIcon(icon)}</span><b>${esc(title)}</b><span class="lib-n">${count}</span></div>
       <div class="dlc-list">${rows}</div>
     </div>`;
