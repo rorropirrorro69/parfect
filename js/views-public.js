@@ -314,7 +314,7 @@ function vLanding() {
     <section class="lp-hero2 lp-appstage-sec">
       <div class="lp-hero-copy reveal">
         <h1 class="lp-title lp-title-stage">Baja tu hándicap,<br/><span class="lp-title-grad">fácil.</span></h1>
-        <p class="lp-sub">Registra cada ronda hoyo por hoyo: salida, fairways, greens, juego corto y putts. La IA analiza tus estadísticas, detecta dónde pierdes golpes y arma tu plan de entrenamiento. Sigue tu hándicap, tu progreso y tu juego completo en una sola app.</p>
+        <p class="lp-sub">Sigue tu hándicap, tu progreso y tu juego completo en una sola app.</p>
         <div class="lp-cta-row">
           <button class="lp-order" data-act="go" data-view="signup">Empezar gratis →</button>
           <button class="lp-ghostbtn" data-act="demo-account">Ver demo</button>

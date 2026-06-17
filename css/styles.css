@@ -24,15 +24,15 @@
   --panel: #f6f9ef;
   --card: #f3f7e9;
   --card2: #f3f7e9;   /* mismo blanco que las tarjetas de Inicio (unificado en toda la app) */
-  --line: rgba(50, 85, 15, 0.16);
-  --line-soft: rgba(20, 40, 10, 0.08);
+  --line: rgba(40, 80, 25, 0.14);
+  --line-soft: rgba(20, 40, 10, 0.07);
   --lime: #7cc24a;
-  --lime-ink: #283022;
+  --lime-ink: #1d7a3a;
   --lime-dim: rgba(94, 140, 18, 0.15);
-  --lime-faint: rgba(170, 220, 70, 0.28);
-  --text: #1B2A18;
-  --muted: #7C8A6E;
-  --muted2: #9aa886;
+  --lime-faint: rgba(150, 205, 70, 0.24);
+  --text: #16261b;
+  --muted: #5e6c5a;
+  --muted2: #889483;
   --danger: #c43d28;
 }
 [data-theme="light"] body { background: #E3EBD4; }
@@ -3510,8 +3510,8 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lp-appstage-sec { min-height: auto; justify-content: center; padding: 2vh 0 4vh; }
 /* título corto con acento en degradado lima */
 .lp-title-stage { font-size: clamp(42px, 9vw, 72px); }
-.lp-title-grad { background: linear-gradient(100deg, #b6f05f 0%, #5fbf3a 48%, #2f8a36 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-.lp-ph-night .lp-title-grad { background: linear-gradient(100deg, #d4ff7a 0%, #9ada4a 100%); -webkit-background-clip: text; background-clip: text; }
+.lp-title-grad { background: linear-gradient(100deg, #5fc23a 0%, #2fa84a 52%, #128a52 100%); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.lp-ph-night .lp-title-grad { background: linear-gradient(100deg, #9ee861 0%, #4fc06a 100%); -webkit-background-clip: text; background-clip: text; }
 /* escenario de la app: icono flotando sobre el campo (mismo estilo del fondo in-app) */
 .lp-appstage { position: relative; width: min(86%, 380px); margin: 8px auto 0; aspect-ratio: 360/300; border-radius: 30px; overflow: hidden; z-index: 3;
   background: linear-gradient(180deg, #bfe6ff 0%, #cfeaf2 46%, #e7f5cf 100%);
