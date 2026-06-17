@@ -84,56 +84,57 @@ function lpFeatArt(kind) {
 
 /* logo/icono de la app (nuevo) para el hero en 3D */
 function appIcon3D() {
-  // icono de bandera de golf (mismo motivo del wordmark/landing), en la marca dark+lima
+  // icono estilo emoji ⛳: bandera roja swallowtail, asta blanca, green con hoyo y bola, cielo
+  const flag = 'M88 46 Q126 39 166 58 L150 72 L166 86 Q126 91 88 82 Z';
   return `<svg viewBox="0 0 200 200" class="lp-appicon-svg" aria-hidden="true">
     <defs>
-      <linearGradient id="aiBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1d5a2a"/><stop offset="52%" stop-color="#123f1d"/><stop offset="100%" stop-color="#0a2913"/></linearGradient>
-      <linearGradient id="aiPen" x1="0" y1="0" x2="1" y2=".4"><stop offset="0" stop-color="#d2ff6e"/><stop offset="100%" stop-color="#4fae35"/></linearGradient>
-      <radialGradient id="aiGrn" cx="44%" cy="34%" r="64%"><stop offset="0" stop-color="#8ad75a"/><stop offset="100%" stop-color="#3f8f30"/></radialGradient>
+      <linearGradient id="aiBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a4d2f0"/><stop offset="100%" stop-color="#cde8f7"/></linearGradient>
+      <linearGradient id="aiFlag" x1="0" y1="0" x2="1" y2=".5"><stop offset="0" stop-color="#ff6159"/><stop offset="100%" stop-color="#df352f"/></linearGradient>
+      <radialGradient id="aiGrn" cx="42%" cy="32%" r="66%"><stop offset="0" stop-color="#93da60"/><stop offset="100%" stop-color="#53a23a"/></radialGradient>
+      <linearGradient id="aiPole" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="55%" stop-color="#eef2f3"/><stop offset="100%" stop-color="#c9d2d4"/></linearGradient>
       <radialGradient id="aiBall" cx="38%" cy="32%" r="72%"><stop offset="0" stop-color="#ffffff"/><stop offset="100%" stop-color="#dfe7df"/></radialGradient>
-      <radialGradient id="aiGloss" cx="30%" cy="12%" r="82%"><stop offset="0" stop-color="rgba(255,255,255,.32)"/><stop offset="46%" stop-color="rgba(255,255,255,.05)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient>
+      <radialGradient id="aiGloss" cx="30%" cy="10%" r="82%"><stop offset="0" stop-color="rgba(255,255,255,.5)"/><stop offset="46%" stop-color="rgba(255,255,255,.06)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient>
     </defs>
     <rect x="6" y="6" width="188" height="188" rx="46" fill="url(#aiBg)"/>
-    <ellipse cx="100" cy="150" rx="66" ry="34" fill="#caff63" opacity=".08"/>
-    <!-- putting green + hoyo -->
-    <ellipse cx="100" cy="156" rx="70" ry="20" fill="#10381a" opacity=".5"/>
-    <ellipse cx="100" cy="150" rx="68" ry="20" fill="url(#aiGrn)"/>
-    <ellipse cx="86" cy="146" rx="11" ry="3.6" fill="#0c2e15"/>
-    <!-- asta -->
-    <rect x="84" y="40" width="5.4" height="108" rx="2.7" fill="#eef2f2"/>
-    <rect x="84" y="40" width="2.4" height="108" fill="#ffffff" opacity=".8"/>
-    <circle cx="86.7" cy="38" r="6" fill="#d7dee0"/><circle cx="84.8" cy="36.2" r="2.1" fill="#fff" opacity=".7"/>
-    <!-- bandera (pennant) ondeante -->
+    <!-- green + sombra + hoyo -->
+    <ellipse cx="98" cy="170" rx="60" ry="10" fill="#2f6a26" opacity=".2"/>
+    <ellipse cx="98" cy="158" rx="66" ry="18" fill="url(#aiGrn)"/>
+    <ellipse cx="84" cy="153" rx="12" ry="4.2" fill="#0e2f16"/>
+    <!-- asta + finial -->
+    <rect x="81.4" y="42" width="5.6" height="113" rx="2.8" fill="url(#aiPole)"/>
+    <circle cx="84.2" cy="41" r="6" fill="#eef2f3"/><circle cx="82.3" cy="39.3" r="2.2" fill="#fff"/>
+    <!-- bandera roja swallowtail ondeante -->
     <g class="ai-pen">
-      <path d="M89 42 Q128 32 162 47 Q133 60 162 73 Q128 66 89 72 Z" fill="url(#aiPen)"/>
-      <path d="M89 42 Q128 32 162 47" fill="none" stroke="#eaffc2" stroke-width="1.6" opacity=".45"/>
+      <path d="${flag}" fill="url(#aiFlag)"/>
+      <path d="M88 46 Q126 39 166 58" fill="none" stroke="#ffb4af" stroke-width="1.7" opacity=".5"/>
     </g>
     <!-- bola de golf -->
-    <circle cx="120" cy="146" r="11" fill="url(#aiBall)" stroke="#b9c6bd" stroke-width="1.1"/>
-    <g fill="#aab8ad" opacity=".7"><circle cx="116" cy="143" r="1.1"/><circle cx="121" cy="142" r="1.1"/><circle cx="124" cy="146" r="1.1"/><circle cx="118" cy="148" r="1.1"/><circle cx="123" cy="149" r="1.1"/></g>
+    <circle cx="124" cy="151" r="11" fill="url(#aiBall)" stroke="#b9c6bd" stroke-width="1.1"/>
+    <g fill="#aab8ad" opacity=".7"><circle cx="120" cy="148" r="1.1"/><circle cx="125" cy="147" r="1.1"/><circle cx="128" cy="151" r="1.1"/><circle cx="122" cy="153" r="1.1"/><circle cx="127" cy="154" r="1.1"/></g>
     <rect x="6" y="6" width="188" height="188" rx="46" fill="url(#aiGloss)"/>
-    <rect x="7.5" y="7.5" width="185" height="185" rx="44.5" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+    <rect x="7.5" y="7.5" width="185" height="185" rx="44.5" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
   </svg>`;
 }
-/* bandera de golf genérica reutilizable (ondea) — para la landing */
+/* bandera de golf ⛳ (roja swallowtail, ondea) — para la landing */
 function golfFlagSvg(cls) {
-  return `<svg class="gflag ${cls || ''}" viewBox="0 0 150 180" aria-hidden="true">
+  const flag = 'M64 30 Q100 23 140 41 L124 54 L140 67 Q100 71 64 64 Z';
+  return `<svg class="gflag ${cls || ''}" viewBox="0 0 152 180" aria-hidden="true">
     <defs>
-      <linearGradient id="gfPen" x1="0" y1="0" x2="1" y2=".4"><stop offset="0" stop-color="#d2ff6e"/><stop offset="100%" stop-color="#3f9e2f"/></linearGradient>
-      <radialGradient id="gfGrn" cx="44%" cy="34%" r="64%"><stop offset="0" stop-color="#8ad75a"/><stop offset="100%" stop-color="#4c9a33"/></radialGradient>
+      <linearGradient id="gfFlag" x1="0" y1="0" x2="1" y2=".5"><stop offset="0" stop-color="#ff6159"/><stop offset="100%" stop-color="#df352f"/></linearGradient>
+      <radialGradient id="gfGrn" cx="42%" cy="32%" r="66%"><stop offset="0" stop-color="#93da60"/><stop offset="100%" stop-color="#53a23a"/></radialGradient>
+      <linearGradient id="gfPole" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset="58%" stop-color="#eef2f3"/><stop offset="100%" stop-color="#c9d2d4"/></linearGradient>
     </defs>
-    <ellipse cx="70" cy="164" rx="50" ry="11" fill="#1f5a26" opacity=".16"/>
-    <ellipse cx="70" cy="159" rx="48" ry="13" fill="url(#gfGrn)"/>
-    <ellipse cx="60" cy="154" rx="9.5" ry="3.2" fill="#0f351a"/>
-    <rect x="58" y="26" width="5.2" height="130" rx="2.6" fill="#e7eded"/>
-    <rect x="58" y="26" width="2.3" height="130" fill="#fff" opacity=".8"/>
-    <circle cx="60.6" cy="24" r="6" fill="#cfd7d9"/><circle cx="58.8" cy="22.2" r="2.1" fill="#fff" opacity=".7"/>
+    <ellipse cx="70" cy="166" rx="52" ry="10" fill="#1f5a26" opacity=".16"/>
+    <ellipse cx="70" cy="159" rx="50" ry="13" fill="url(#gfGrn)"/>
+    <ellipse cx="60" cy="154" rx="10.5" ry="3.4" fill="#0f351a"/>
+    <rect x="57.4" y="26" width="5.6" height="130" rx="2.8" fill="url(#gfPole)"/>
+    <circle cx="60.2" cy="24.4" r="6" fill="#eef2f3"/><circle cx="58.3" cy="22.8" r="2.1" fill="#fff"/>
     <g class="gflag-pen">
-      <path d="M63 28 Q100 18 134 33 Q106 46 134 60 Q100 52 63 58 Z" fill="url(#gfPen)"/>
-      <path d="M63 28 Q100 18 134 33" fill="none" stroke="#eaffc2" stroke-width="1.6" opacity=".45"/>
+      <path d="${flag}" fill="url(#gfFlag)"/>
+      <path d="M64 30 Q100 23 140 41" fill="none" stroke="#ffb4af" stroke-width="1.7" opacity=".5"/>
     </g>
-    <circle cx="96" cy="153" r="8" fill="#fff" stroke="#bfc8c0" stroke-width="1"/>
-    <g fill="#cfd6cf"><circle cx="93" cy="150" r="1"/><circle cx="98" cy="150" r="1"/><circle cx="96" cy="155" r="1"/></g>
+    <circle cx="98" cy="153" r="8" fill="#fff" stroke="#bfc8c0" stroke-width="1"/>
+    <g fill="#cfd6cf"><circle cx="95" cy="150" r="1"/><circle cx="100" cy="150" r="1"/><circle cx="98" cy="155" r="1"/></g>
   </svg>`;
 }
 /* maqueta de teléfono con una pantalla REAL de la app (usa los mismos componentes) */
@@ -275,6 +276,8 @@ function vLanding() {
   const fball = (st) => `<span class="lp-flyb" style="${st}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="#c7d0cd" stroke-width="1"/><g fill="#d8dedc"><circle cx="9" cy="9" r="1"/><circle cx="14.5" cy="8.5" r="1"/><circle cx="16" cy="13.5" r="1"/><circle cx="10" cy="14.5" r="1"/><circle cx="14" cy="15" r="1"/></g></svg></span>`;
   // mariposa que aletea (detalle en movimiento)
   const flybug = (st) => `<span class="lp-bug" style="${st}"><svg viewBox="0 0 28 24" aria-hidden="true"><g class="lp-bugw"><path d="M14 12 C6 2 0 6 3 12 C0 18 8 20 14 12 Z" fill="#ffcf5a"/><path d="M14 12 C5 8 2 12 5 16 C3 21 11 20 14 12 Z" fill="#ff9a3b"/></g><g class="lp-bugw r"><path d="M14 12 C22 2 28 6 25 12 C28 18 20 20 14 12 Z" fill="#ffcf5a"/><path d="M14 12 C23 8 26 12 23 16 C25 21 17 20 14 12 Z" fill="#ff9a3b"/></g><rect x="13.1" y="5" width="1.8" height="15" rx="0.9" fill="#3a2a12"/></svg></span>`;
+  // abeja que zumba (detalle en movimiento)
+  const bee = (st) => `<span class="lp-bee" style="${st}"><svg viewBox="0 0 32 24" aria-hidden="true"><g class="lp-beew"><ellipse cx="12" cy="6" rx="8" ry="4.6" fill="#eaf6ff" opacity=".82"/><ellipse cx="21" cy="6" rx="6.5" ry="3.8" fill="#eaf6ff" opacity=".82"/></g><ellipse cx="17" cy="14" rx="9.5" ry="6.2" fill="#f6c63c"/><path d="M14 9.2 a9 6 0 0 0 0 9.6" stroke="#2b2113" stroke-width="2.4" fill="none"/><path d="M19 8.8 a9 6 0 0 0 0 10.4" stroke="#2b2113" stroke-width="2.4" fill="none"/><circle cx="25.5" cy="13" r="3.6" fill="#2b2113"/><circle cx="26.6" cy="11.8" r="1" fill="#fff"/></svg></span>`;
   const cartSvg = `<svg viewBox="0 0 64 44" aria-hidden="true"><path d="M9 16 L14 6 L39 6 L45 16 Z" fill="#ffffff"/><rect x="12" y="7" width="24" height="9" rx="1" fill="#bfe6f7"/><rect x="6" y="16" width="42" height="13" rx="3" fill="#eef6df"/><rect x="44" y="19" width="15" height="9" rx="2" fill="#a7d36a"/><circle cx="16" cy="32" r="6" fill="#33382f"/><circle cx="38" cy="32" r="6" fill="#33382f"/><circle cx="16" cy="32" r="2.4" fill="#d6dccb"/><circle cx="38" cy="32" r="2.4" fill="#d6dccb"/></svg>`;
   const lpPine = (st) => `<div class="lp-pine" style="${st}"><svg viewBox="0 0 40 64" aria-hidden="true"><rect x="17" y="48" width="6" height="15" rx="2" fill="#6b4a2a"/><polygon points="20,3 33,27 7,27" fill="#3f8f46"/><polygon points="20,15 36,42 4,42" fill="#357d3d"/><polygon points="20,27 38,56 2,56" fill="#2e7036"/></svg></div>`;
   // (carritos, casa club y ardillas retirados — ahora es un paraíso de palmeras)
@@ -299,11 +302,16 @@ function vLanding() {
       ${bsil('left:0;top:20%;transform:scale(.62);animation:lpFlyL 58s linear infinite;animation-delay:-24s')}
       ${bsil('left:0;top:7%;transform:scale(.8);animation:lpFlyR 66s linear infinite;animation-delay:-42s')}
       ${bsil('left:0;top:15%;transform:scale(.5);animation:lpFlyL 74s linear infinite;animation-delay:-10s')}
-      ${fball('left:0;top:30%;animation:lpBallArc 15s ease-in-out infinite')}
-      ${fball('left:0;top:46%;transform:scale(.7);animation:lpBallArcR 21s ease-in-out infinite;animation-delay:-7s')}
-      ${fball('left:0;top:22%;transform:scale(.85);animation:lpBallArc 26s ease-in-out infinite;animation-delay:-14s')}
-      ${flybug('left:0;top:38%;animation:lpFlyR 40s linear infinite;animation-delay:-6s')}
-      ${flybug('left:0;top:55%;transform:scale(.8);animation:lpFlyL 52s linear infinite;animation-delay:-30s')}
+      ${bsil('left:0;top:24%;transform:scale(.7);animation:lpFlyR 54s linear infinite;animation-delay:-30s')}
+      ${fball('left:0;top:30%;animation:lpBallArc 13s ease-in-out infinite')}
+      ${fball('left:0;top:46%;transform:scale(.7);animation:lpBallArcR 18s ease-in-out infinite;animation-delay:-7s')}
+      ${fball('left:0;top:22%;transform:scale(.85);animation:lpBallArc 22s ease-in-out infinite;animation-delay:-14s')}
+      ${fball('left:0;top:60%;transform:scale(.6);animation:lpBallArcR 26s ease-in-out infinite;animation-delay:-3s')}
+      ${flybug('left:0;top:38%;animation:lpFlyR 34s linear infinite;animation-delay:-6s')}
+      ${flybug('left:0;top:55%;transform:scale(.8);animation:lpFlyL 44s linear infinite;animation-delay:-30s')}
+      ${bee('left:0;top:34%;animation:lpFlyR 28s linear infinite;animation-delay:-4s')}
+      ${bee('left:0;top:50%;transform:scale(.8);animation:lpFlyL 38s linear infinite;animation-delay:-18s')}
+      ${bee('left:0;top:18%;transform:scale(.7);animation:lpFlyR 46s linear infinite;animation-delay:-26s')}
       <div class="lp-ground">
         <svg class="lp-bgc" viewBox="0 0 400 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
           <path class="bgc-far" d="M0,108 Q100,74 200,96 T400,88 L400,240 L0,240 Z"/>
@@ -595,6 +603,9 @@ function initLanding(root) {
   const layers = [...root.querySelectorAll('[data-speed]')];
   const introTop = root.querySelector('.lp-intro-top');
   const introSec = root.querySelector('.lp-intro');
+  const ground = root.querySelector('.lp-ground');
+  const sky = root.querySelector('.lp-sky2');
+  if (ground) ground.style.transformOrigin = '50% 100%';
   let mx = 0, my = 0, sy = 0, raf = 0;
   const apply = () => {
     raf = 0;
@@ -608,6 +619,10 @@ function initLanding(root) {
       introTop.style.opacity = (1 - p * 1.1).toFixed(3);
       introTop.style.transform = `translateY(${(-p * 70).toFixed(1)}px) scale(${(1 - p * 0.05).toFixed(3)})`;
     }
+    // al bajar, el campo se va acercando (se agranda desde el piso) y el cielo sube
+    const gp = Math.min(1, sy / (innerHeight * 1.5));
+    if (ground) ground.style.transform = `translateY(${(gp * 5).toFixed(1)}vh) scale(${(1 + gp * 0.65).toFixed(3)})`;
+    if (sky) sky.style.transform = `translateY(${(-gp * 8).toFixed(1)}vh)`;
   };
   const sched = () => { if (!raf) raf = requestAnimationFrame(apply); };
   const onScroll = () => { sy = window.scrollY || 0; sched(); };
