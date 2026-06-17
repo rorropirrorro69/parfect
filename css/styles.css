@@ -3181,6 +3181,10 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .dd2-cat { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; opacity: .88; }
 .dd2-hero-txt h2 { font-size: 18px; font-weight: 900; color: #fff; line-height: 1.1; margin-top: 2px; }
 .dd2-x { position: absolute; top: 9px; right: 9px; width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,.25); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; }
+/* cabecera limpia del drill (formato sesión guiada, sin hero tosco) */
+.dd2-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.dd2-top .dd2-cat { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--lime-ink); opacity: 1; }
+.dd2-top .dd2-x { position: static; background: var(--lime-faint); color: var(--text); }
 .dd2-goals { display: flex; gap: 10px; margin-bottom: 16px; }
 .dd2-goal { flex: 1; background: var(--card2); border: 1px solid var(--line); border-radius: 14px; padding: 10px 13px; }
 .dd2-goal span { font-size: 10.5px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .03em; }
@@ -3807,8 +3811,13 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 [data-theme="dark"] .lp-aw-deco .awd-bird { opacity: .8; }
 .lp-awards { display: flex; justify-content: center; align-items: flex-end; flex-wrap: wrap; gap: clamp(26px, 8vw, 72px); margin-top: 36px; }
 .lp-aw { display: inline-flex; flex-direction: column; align-items: center; }
-.lp-aw-laurels { position: relative; width: clamp(150px, 38vw, 188px); aspect-ratio: 130/120; display: grid; place-items: center; color: var(--lime); }
-.lp-laurel { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 4px 10px rgba(120,170,40,.22)); }
+.lp-aw-laurels { position: relative; width: clamp(156px, 40vw, 196px); aspect-ratio: 130/120; display: grid; place-items: center; color: #e6b53e; }
+/* halo dorado detrás del laurel para que luzca como premio */
+.lp-aw-laurels::before { content: ''; position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(circle, rgba(244,200,70,.34) 0%, rgba(244,200,70,.10) 45%, transparent 70%); z-index: 0; animation: awGlow 4.5s ease-in-out infinite; }
+.lp-aw:hover .lp-aw-laurels { transform: translateY(-3px); }
+.lp-aw-laurels { transition: transform .3s; }
+@keyframes awGlow { 0%,100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.08); opacity: 1; } }
+.lp-laurel { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 3px 8px rgba(200,150,20,.4)); }
 .lp-aw-mid { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; line-height: 1; gap: 5px; padding: 0; width: 54%; }
 .lp-aw-top { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .lp-aw-big { font-size: clamp(26px, 7vw, 34px); font-weight: 900; letter-spacing: -.02em; color: var(--text); font-family: Georgia, 'Times New Roman', serif; }

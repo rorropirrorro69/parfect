@@ -319,19 +319,17 @@ function vDrillDetail() {
   return `<div class="overlay" data-act="drill-close-detail">
     <div class="sheet dd2" data-act="noop">
       <div class="grab"></div>
-      <div class="dd2-hero" style="--dc:${cm.c}">
+      <div class="dd2-top">
+        <span class="dd2-cat">${esc(catLab)}</span>
         <button class="dd2-x" data-act="drill-close-detail" aria-label="Cerrar">✕</button>
-        <div class="dd2-hero-art">${drillScene(cm.s)}</div>
-        <div class="dd2-hero-txt"><span class="dd2-cat">${esc(catLab)}</span><h2>${esc(d.name)}</h2></div>
       </div>
+      ${timerHtml}
       <div class="dd2-goals">
         <div class="dd2-goal"><span>Dosis</span><b>${esc(d.dose)}</b></div>
         <div class="dd2-goal"><span>Meta</span><b>${esc(d.metric)}</b></div>
       </div>
       <h3 class="dd2-h3">Cómo hacerlo</h3>
       <ol class="dd2-steps">${steps}</ol>
-      <h3 class="dd2-h3">Ponte el reto</h3>
-      ${timerHtml}
       <button class="btn primary big" data-act="drill-done">${doneToday ? 'Entrenado hoy ✓ · marcar otra vez' : 'Listo, lo entrené ✓'}</button>
     </div>
   </div>`;

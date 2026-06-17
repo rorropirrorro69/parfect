@@ -306,7 +306,7 @@ function pstScene(kind, pct, label, goalPct) {
 /* misma escena pero sin botón (para usar dentro de las tarjetas de ronda) */
 function pstSceneStatic(kind, pct, label) {
   const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
-  const art = chkScene(kind, true);   // escenas 3D estáticas (sin gif)
+  const art = (kind === 'ud') ? udGifScene() : chkScene(kind, true);   // up&down con gif; fw/gir estáticos
   return `<div class="pst-scene pst-static" style="--p:${p}">
     <div class="psc-art">${art}</div>
     <b class="psc-num">${p}<i>%</i></b>
