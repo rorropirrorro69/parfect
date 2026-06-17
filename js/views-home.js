@@ -45,21 +45,10 @@ function vSenseiCompanion() {
 /* clima discreto (demo, por hora del día) en Inicio */
 function weatherChip() {
   const h = new Date().getHours();
-  const phase = h < 7 ? 'dawn' : h < 17 ? 'day' : h < 19.5 ? 'dusk' : 'night';
-  const label = phase === 'dawn' ? 'Amaneciendo' : phase === 'dusk' ? 'Atardecer' : phase === 'night' ? 'Despejado' : 'Soleado';
-  const tC = Math.round(20 + 5 * Math.sin(Math.max(0, Math.min(1, (h - 6) / 12)) * Math.PI));
-  const stars = phase === 'night' ? Array.from({ length: 7 }, (_, i) => `<span class="wx-star" style="left:${(i * 17 % 80) + 8}%;top:${(i * 11 % 30) + 8}%"></span>`).join('') : '';
-  const cloud = (phase === 'day' || phase === 'dusk') ? `<span class="wx-cloud"></span>` : '';
-  return `<div class="wx wx-${phase}" title="Clima estimado · Morelia">
-    <div class="wx-sc">
-      ${stars}<span class="wx-orb"></span>${cloud}
-      <svg class="wx-mtn" viewBox="0 0 96 40" preserveAspectRatio="none" aria-hidden="true">
-        <path class="wx-mtnB" d="M0,18 L18,6 L32,16 L50,2 L68,16 L84,6 L96,14 L96,40 L0,40Z"/>
-        <path class="wx-mtnF" d="M0,26 L22,12 L40,24 L60,8 L82,24 L96,16 L96,40 L0,40Z"/>
-      </svg>
-    </div>
-    <div class="wx-info"><b>${tC}°</b><span>${label}</span></div>
-  </div>`;
+  const tC = Math.round(21 + 4 * Math.sin(Math.max(0, Math.min(1, (h - 6) / 12)) * Math.PI));
+  const cond = h < 12 ? 'Soleado' : h < 17 ? 'Despejado' : 'Soleado';
+  const ic = `<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="4.4" fill="#ffce3a"/><g stroke="#ffce3a" stroke-width="1.6" stroke-linecap="round"><line x1="10" y1="1.5" x2="10" y2="3.4"/><line x1="10" y1="16.6" x2="10" y2="18.5"/><line x1="1.5" y1="10" x2="3.4" y2="10"/><line x1="16.6" y1="10" x2="18.5" y2="10"/><line x1="4" y1="4" x2="5.4" y2="5.4"/><line x1="14.6" y1="14.6" x2="16" y2="16"/><line x1="16" y1="4" x2="14.6" y2="5.4"/><line x1="5.4" y1="14.6" x2="4" y2="16"/></g></svg>`;
+  return `<div class="wx" title="Clima estimado"><span class="wx-ic">${ic}</span><div class="wx-tx"><b>${tC}°</b><span>${cond} · Morelia</span></div></div>`;
 }
 
 function greeting() {

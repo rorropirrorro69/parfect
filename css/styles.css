@@ -3176,28 +3176,14 @@ svg.fd-av { object-fit: contain; }
 .rs-card.rs-par { border-top-color: var(--lime); }
 .rs-card.rs-over { border-top-color: #e0873a; }
 
-/* clima flotante en Inicio: mini escena (cielo + sol/luna + montañas) por hora */
-.greet-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-.wx { flex: none; width: 112px; border-radius: 15px; overflow: hidden; background: rgba(255,255,255,.42); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); border: 1px solid rgba(255,255,255,.6); box-shadow: 0 8px 20px rgba(20,40,15,.12); }
-.wx-sc { position: relative; height: 48px; overflow: hidden; }
-.wx-day .wx-sc { background: linear-gradient(180deg,#6cc0ee,#bfe6f7); }
-.wx-dawn .wx-sc { background: linear-gradient(180deg,#ffb073,#ffd6ab 55%,#dce9e0); }
-.wx-dusk .wx-sc { background: linear-gradient(180deg,#ff8e6b,#ffb38f 55%,#e6c3b2); }
-.wx-night .wx-sc { background: linear-gradient(180deg,#0d1a38,#1d3052); }
-.wx-orb { position: absolute; border-radius: 50%; }
-.wx-day .wx-orb { width: 18px; height: 18px; top: 6px; right: 16px; background: radial-gradient(circle at 40% 38%,#fff7cc,#ffd23f); box-shadow: 0 0 12px 3px rgba(255,210,80,.6); }
-.wx-dawn .wx-orb { width: 19px; height: 19px; left: 40px; top: 20px; background: radial-gradient(circle at 40% 38%,#fff0c0,#ff9e5a); box-shadow: 0 0 16px 6px rgba(255,150,80,.6); }
-.wx-dusk .wx-orb { width: 18px; height: 18px; right: 18px; top: 18px; background: radial-gradient(circle at 40% 38%,#fff0cf,#ff7a4d); box-shadow: 0 0 16px 6px rgba(255,120,70,.55); }
-.wx-night .wx-orb { width: 15px; height: 15px; right: 18px; top: 7px; background: radial-gradient(circle at 38% 36%,#fdfdf2,#cdd6ea); box-shadow: 0 0 10px 3px rgba(205,216,250,.5); }
-.wx-cloud { position: absolute; top: 12px; left: 14px; width: 26px; height: 8px; background: #fff; border-radius: 99px; opacity: .92; box-shadow: 10px 3px 0 -2px #fff, -8px 3px 0 -3px #fff; }
-.wx-star { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; opacity: .9; }
-.wx-mtn { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 62%; }
-.wx-mtnB { fill: rgba(70,100,78,.55); } .wx-mtnF { fill: #3f7048; }
-.wx-night .wx-mtnB { fill: #18243f; } .wx-night .wx-mtnF { fill: #0f1a32; }
-.wx-dawn .wx-mtnB, .wx-dusk .wx-mtnB { fill: rgba(120,92,84,.5); } .wx-dawn .wx-mtnF, .wx-dusk .wx-mtnF { fill: #6a5450; }
-.wx-info { display: flex; align-items: baseline; gap: 5px; padding: 5px 10px 6px; }
-.wx-info b { font-size: 14px; font-weight: 900; color: var(--text); }
-.wx-info span { font-size: 9px; font-weight: 800; color: var(--muted); white-space: nowrap; }
+/* clima discreto en Inicio (pastilla: sol + temp + condición) */
+.greet-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.wx { display: inline-flex; align-items: center; gap: 7px; background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 6px 13px 6px 8px; box-shadow: 0 4px 12px rgba(20,40,15,.07); flex: none; }
+.wx-ic { width: 20px; height: 20px; display: grid; place-items: center; }
+.wx-ic svg { width: 20px; height: 20px; }
+.wx-tx { display: flex; flex-direction: column; line-height: 1; }
+.wx-tx b { font-size: 14px; font-weight: 900; color: var(--text); }
+.wx-tx span { font-size: 9.5px; font-weight: 700; color: var(--muted); margin-top: 1px; white-space: nowrap; }
 
 /* aura/glow en las figuras de Inicio (el PNG es transparente, el halo se ve detrás) */
 .pl-hero-av { background: radial-gradient(circle at 50% 44%, rgba(199,238,84,.5) 0%, rgba(255,255,255,.3) 36%, transparent 64%); border-radius: 50%; }
