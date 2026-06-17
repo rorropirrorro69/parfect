@@ -563,6 +563,18 @@ function vSessionRunner() {
   </div>`;
 }
 
+/* dibujo de putt (mismo estilo que las escenas de Inicio) */
+function lbPuttScene() {
+  return `<svg viewBox="0 0 100 56" class="hs-svg" aria-hidden="true">
+    <ellipse cx="50" cy="46" rx="42" ry="8" fill="var(--sc-dim,#cfe3b6)"/>
+    <ellipse cx="50" cy="33" rx="34" ry="15" fill="var(--sc-grass2,#7cbf52)"/>
+    <ellipse cx="58" cy="28" rx="3.4" ry="1.6" fill="#0c1c11"/>
+    <line x1="58" y1="28" x2="58" y2="9" stroke="var(--sc-cup,#cfd6d8)" stroke-width="1.4"/><path d="M58 9 L68 12 L58 15 Z" fill="var(--sc-flag,#ff5a4d)"/>
+    <path d="M40 40 Q49 33 56 28" fill="none" stroke="#fff" stroke-width="1.3" stroke-dasharray="2.5 3" opacity=".75"/>
+    <circle cx="40" cy="40" r="3.2" fill="var(--sc-ball,#fff)" stroke="#5a6668" stroke-width=".5"/>
+  </svg>`;
+}
+
 function vBiblioteca() {
   const done = (cur() || {}).drillsDone || {};
   const td = today();
@@ -576,7 +588,10 @@ function vBiblioteca() {
   const drills = DRILL_LIBRARY.filter(d => d.cat === cat);
   const LV = ['Básico', 'Intermedio', 'Avanzado'];
   const band = Math.max(1, Math.ceil(drills.length / 3));
-  const scene = (typeof statScene === 'function') ? statScene(cat) : '';
+  // mismos dibujos que Inicio: fairway, green, up&down (+ putt)
+  const scene = (cat === 'ud' && typeof udGifScene === 'function') ? udGifScene()
+    : (cat === 'putt') ? lbPuttScene()
+      : (typeof chkScene === 'function') ? chkScene(cat, true) : '';
   const items = drills.map((d, i) => {
     const isDone = done[d.name] === td;
     const lvl = LV[Math.min(2, Math.floor(i / band))];
