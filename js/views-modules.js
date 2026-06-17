@@ -447,7 +447,7 @@ function spSceneFor(lab) { return ({ 'Salida': 'fw', 'Driving': 'fw', 'Hierros':
 function vSessionPlanner() {
   const u = cur();
   const agg = Stats.aggregate(myRounds());
-  const step = ['mode', 'areas', 'plan', 'free', 'lib'].includes(V.planStep) ? V.planStep : 'time';
+  const step = ['mode', 'areas', 'plan', 'free', 'lib', 'aisum'].includes(V.planStep) ? V.planStep : 'time';
   const T = V.sessionMin || 60;
 
   if (step === 'time') {
@@ -464,6 +464,27 @@ function vSessionPlanner() {
       <button class="sp-modecard" data-act="plan-mode" data-m="ai"><span class="sp-modeic">${golfIcon('flag')}</span><div><b>AI Coach</b><span>La IA reparte el tiempo priorizando tus puntos débiles.</span></div></button>
       <button class="sp-modecard" data-act="plan-mode" data-m="free"><span class="sp-modeic">${golfIcon('putter')}</span><div><b>Entrenamiento libre</b><span>Sin plan: cronometra el bastón que quieras a tu ritmo.</span></div></button>
       <button class="sp-modecard" data-act="plan-mode" data-m="lib"><span class="sp-modeic">${golfIcon('card')}</span><div><b>Elegir de la biblioteca</b><span>Arma tu sesión con drills específicos según tu tiempo.</span></div></button>
+      <button class="sp-back" data-act="plan-reset">← Cambiar tiempo</button>
+    </div>`;
+  }
+  if (step === 'aisum') {
+    const dg = V.diag || (agg && typeof Trainer !== 'undefined' ? Trainer.analyze(agg, u) : null);
+    const focus = (dg && dg.focus) || [];
+    const PC = { driving: '#3a8fe0', approach: '#57a83e', short: '#e0873a', putting: '#3a7fd4' };
+    const items = focus.slice(0, 4).map((f, i) => {
+      const parts = String(f.diag || '').split('. ').map(s => s.trim()).filter(Boolean);
+      const lead = parts[0] ? parts[0].replace(/\.$/, '') + '.' : '';
+      return `<div class="aisum-row" style="--pc:${PC[f.key] || '#57a83e'}">
+        <span class="aisum-n">${i + 1}</span>
+        <div class="aisum-tx"><b>${esc(f.titulo)}</b>${lead ? `<span>${esc(lead)}</span>` : ''}</div>
+      </div>`;
+    }).join('');
+    return `<div class="card sp-card">
+      <div class="sp-phase">AI Coach · ${spFmtMin(T)}</div>
+      <h2 class="sp-q">${golfIcon('flag')} Tu diagnóstico</h2>
+      <p class="sp-libhint">${agg ? `Esto encontró la IA en tus ${agg.rounds} ronda${agg.rounds === 1 ? '' : 's'}. Repartirá tu tiempo según estas prioridades.` : 'Aún sin datos: la IA usará un plan balanceado.'}</p>
+      <div class="aisum-list">${items || '<p class="note" style="margin:0">Registra una ronda para un diagnóstico personalizado.</p>'}</div>
+      <button class="btn primary big" data-act="plan-aisum-go" style="margin-top:14px">Armar mi sesión (${spFmtMin(T)}) →</button>
       <button class="sp-back" data-act="plan-reset">← Cambiar tiempo</button>
     </div>`;
   }

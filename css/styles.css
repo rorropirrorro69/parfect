@@ -2299,6 +2299,12 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .dg-list { max-height: none; overflow: visible; margin: 0; }
 .splib-item.dg-static { cursor: default; }
 .splib-item.dg-static:active { transform: none; }
+/* AI Coach · resumen del diagnóstico antes de armar la sesión */
+.aisum-list { display: flex; flex-direction: column; gap: 11px; margin: 8px 0 2px; }
+.aisum-row { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; }
+.aisum-n { width: 28px; height: 28px; border-radius: 50%; background: var(--pc); color: #fff; font-weight: 900; font-size: 14px; display: grid; place-items: center; }
+.aisum-tx b { display: block; font-size: 14.5px; font-weight: 800; color: var(--text); }
+.aisum-tx span { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.4; margin-top: 2px; }
 .dg-chk { background: color-mix(in srgb, var(--pc) 14%, var(--card)); border-color: color-mix(in srgb, var(--pc) 35%, var(--line)); color: var(--pc); }
 .dg-chk .gi { width: 17px; height: 17px; }
 .splib-item.done .dg-chk { background: var(--lime); border-color: var(--lime); color: #0c2913; }

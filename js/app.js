@@ -658,8 +658,9 @@ const actions = {
   'timer-set'(d) { if (!V.timer) V.timer = {}; stopDrillTimer(); const s = Number(d.s) || 300; V.timer = { left: s, total: s, running: false }; render(); },
   'timer-adjust'(d) { stopDrillTimer(); const cur = (V.timer && V.timer.total) || 300; const total = Math.max(60, Math.min(3600, cur + Number(d.d) * 60)); V.timer = { left: total, total, running: false }; render(); },
   'session-min'(d) { V.sessionMin = Number(d.m) || 60; render(); },
-  'plan-time'(d) { V.sessionMin = Number(d.m) || 60; if (V.planSkipMode && V.planMode === 'ai') { V.planStep = 'plan'; V.planSkipMode = false; } else { V.planStep = 'mode'; } render(); window.scrollTo(0, 0); },
-  'plan-mode'(d) { V.planMode = d.m; if (d.m === 'me') V.planStep = 'areas'; else if (d.m === 'lib') { V.planStep = 'lib'; V.libPick = V.libPick || []; } else if (d.m === 'free') { V.planStep = 'free'; V.freeTimer = { secs: 0, running: false }; } else V.planStep = 'plan'; render(); window.scrollTo(0, 0); },
+  'plan-time'(d) { V.sessionMin = Number(d.m) || 60; if (V.planSkipMode && V.planMode === 'ai') { V.planStep = 'aisum'; V.planSkipMode = false; } else { V.planStep = 'mode'; } render(); window.scrollTo(0, 0); },
+  'plan-aisum-go'() { V.planStep = 'plan'; render(); window.scrollTo(0, 0); },
+  'plan-mode'(d) { V.planMode = d.m; if (d.m === 'me') V.planStep = 'areas'; else if (d.m === 'lib') { V.planStep = 'lib'; V.libPick = V.libPick || []; } else if (d.m === 'free') { V.planStep = 'free'; V.freeTimer = { secs: 0, running: false }; } else V.planStep = 'aisum'; render(); window.scrollTo(0, 0); },
   'plan-lib-cat'(d) { V.libCat = d.c; render(); },
   'plan-lib-toggle'(d) { V.libPick = V.libPick || []; const i = V.libPick.indexOf(d.name); if (i >= 0) V.libPick.splice(i, 1); else V.libPick.push(d.name); render(); },
   'session-run-start'(d) {
