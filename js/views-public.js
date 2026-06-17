@@ -180,17 +180,17 @@ function lpMarqueeItems() {
     ${lpOrg('altozano.png', 'Altozano', 'lpm-org')}`;
 }
 
-// rama de laurel reutilizable para los premios (estilo wreath profesional)
+// rama de laurel reutilizable para los premios (wreath ancho, centro despejado)
 function lpLaurel() {
   // puntos a lo largo de la rama izquierda, de abajo hacia arriba: [x, y, rotación, escala]
-  const pts = [[34, 104, -60, .78], [27, 90, -48, .98], [23, 74, -34, 1.16], [23, 57, -20, 1.22], [28, 41, -6, 1.14], [37, 27, 10, .96], [49, 17, 26, .8]];
-  const leaf = (x, y, r, s) => `<ellipse cx="${x}" cy="${y}" rx="${7.6 * s}" ry="${3 * s}" transform="rotate(${r} ${x} ${y})"/>`;
+  const pts = [[28, 106, -60, .78], [20, 91, -48, .98], [15, 73, -34, 1.16], [15, 55, -20, 1.22], [20, 39, -6, 1.12], [29, 25, 10, .95], [41, 15, 26, .78]];
+  const leaf = (x, y, r, s) => `<ellipse cx="${x}" cy="${y}" rx="${7.4 * s}" ry="${3 * s}" transform="rotate(${r} ${x} ${y})"/>`;
   const left = pts.map(p => leaf(p[0], p[1], p[2], p[3])).join('');
-  const right = pts.map(p => leaf(120 - p[0], p[1], -p[2], p[3])).join('');
-  return `<svg class="lp-laurel" viewBox="0 0 120 120" aria-hidden="true">
-    <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".92">
-      <path d="M38 112 C19 92 16 58 31 21"/>
-      <path d="M82 112 C101 92 104 58 89 21"/>
+  const right = pts.map(p => leaf(130 - p[0], p[1], -p[2], p[3])).join('');
+  return `<svg class="lp-laurel" viewBox="0 0 130 120" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" opacity=".9">
+      <path d="M33 113 C13 93 11 57 25 18"/>
+      <path d="M97 113 C117 93 119 57 105 18"/>
     </g>
     <g fill="currentColor">${left}${right}</g>
   </svg>`;
@@ -209,8 +209,7 @@ function lpAwards() {
     <div class="lp-aw lp-aw-tp reveal">
       <div class="lp-aw-laurels">${lpLaurel()}<div class="lp-aw-mid"><span class="lp-aw-top">Trustpilot</span><span class="lp-aw-big lp-aw-num">4.9<span class="lp-aw-den">/5</span></span><span class="lp-aw-stars">${lpTpStar()}${lpTpStar()}${lpTpStar()}${lpTpStar()}${lpTpStar()}</span></div></div>
     </div>
-  </div>
-  <div class="lp-aw-press reveal"><span>Destacada en</span><b>Forbes</b><i>·</i><b>Golf Digest</b><i>·</i><b>SwingU</b></div>`;
+  </div>`;
 }
 
 // florecita de 5 pétalos para adornar
@@ -302,9 +301,16 @@ function vLanding() {
         </div>
       </div>
     </section>
-    <section class="lp-hero2 lp-hero2-clean">
+    <section class="lp-sec lp-awards-sec">
+      ${lpAwardsDeco()}
+      <span class="lp-eyebrow reveal">Reconocida en todo el mundo</span>
+      <h2 class="lp-h2 reveal">La app que los golfistas<br/><span class="lime">no sueltan.</span></h2>
+      ${lpAwards()}
+    </section>
+
+    <section class="lp-hero2 lp-appstage-sec">
       <div class="lp-hero-copy reveal">
-        <h1 class="lp-title">La forma más fácil<br/><span class="lime">de bajar tu hándicap.</span></h1>
+        <h1 class="lp-title lp-title-stage">Baja tu hándicap,<br/><span class="lp-title-grad">fácil.</span></h1>
         <p class="lp-sub">Registra cada ronda hoyo por hoyo: salida, fairways, greens, juego corto y putts. La IA analiza tus estadísticas, detecta dónde pierdes golpes y arma tu plan de entrenamiento. Sigue tu hándicap, tu progreso y tu juego completo en una sola app.</p>
         <div class="lp-cta-row">
           <button class="lp-order" data-act="go" data-view="signup">Empezar gratis →</button>
@@ -312,14 +318,18 @@ function vLanding() {
         </div>
         <p class="lp-trust">Gratis para empezar · Tus datos viven en tu dispositivo</p>
       </div>
-      <div class="lp-heroicon reveal"><div class="lp-appicon3d"><span class="lp-appicon-glow"></span>${appIcon3D()}</div></div>
-    </section>
-
-    <section class="lp-sec lp-awards-sec">
-      ${lpAwardsDeco()}
-      <span class="lp-eyebrow reveal">Reconocida en todo el mundo</span>
-      <h2 class="lp-h2 reveal">La app que los golfistas<br/><span class="lime">no sueltan.</span></h2>
-      ${lpAwards()}
+      <div class="lp-appstage reveal">
+        <svg class="lp-stage-bg" viewBox="0 0 360 230" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <path class="bgc-mid" d="M0,150 Q120,120 240,144 T360,136 L360,230 L0,230 Z"/>
+          ${bgcLake(72, 172, 44, 12)}
+          ${bgcGreen(288, 150, 40, 13)}${bgcFlag(288, 150, 30)}
+          ${tline([[22, 150, 1.05], [302, 150, 1.15], [44, 160, .82], [332, 160, 1.05]])}
+          <path class="bgc-front" d="M0,200 Q140,174 280,196 T360,192 L360,230 L0,230 Z"/>
+          ${bgcGreen(120, 206, 34, 11)}${bgcFlag(120, 206, 26)}
+          ${tline([[26, 206, 1.25], [206, 210, .92], [262, 212, 1.05], [338, 206, 1.25]])}
+        </svg>
+        <div class="lp-appicon3d"><span class="lp-appicon-glow"></span>${appIcon3D()}</div>
+      </div>
     </section>
 
     <section class="lp-sec">
