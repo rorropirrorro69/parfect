@@ -351,7 +351,7 @@ function vLanding() {
   // mismo estilo del fondo de la app (clases bgc-*), exagerado: muchísimos árboles + greens + lagos
   const bgcTree = (x, y, s) => `<g class="bgc-tree" transform="translate(${x} ${y}) scale(${s})"><rect class="bgc-trunk" x="-2" y="-2" width="4" height="14"/><circle class="bgc-leaf" cx="0" cy="-11" r="11"/><circle class="bgc-leaf2" cx="-7" cy="-5" r="8"/><circle class="bgc-leaf2" cx="7" cy="-6" r="8"/></g>`;
   const bgcGreen = (x, y, rx, ry) => `<ellipse class="bgc-green-sh" cx="${x}" cy="${y + 4}" rx="${rx}" ry="${ry}"/><ellipse class="bgc-green" cx="${x}" cy="${y}" rx="${rx}" ry="${ry - 1}"/>`;
-  const bgcFlag = (x, y, h) => `<g class="bgc-flag" transform="translate(${x} ${y})"><line x1="0" y1="0" x2="0" y2="-${h || 26}" stroke="#fff" stroke-width="2.2"/><path d="M0,-${h || 26} l13,4 -13,4z" fill="#7cc24a"/><circle cx="0" cy="0" r="2.2" fill="#0a2e16"/></g>`;
+  const bgcFlag = (x, y, h) => `<g class="bgc-flag" transform="translate(${x} ${y})"><line x1="0" y1="0" x2="0" y2="-${h || 26}" stroke="#fff" stroke-width="2.2"/><path d="M0,-${h || 26} l13,4 -13,4z" fill="#e8392b"/><circle cx="0" cy="0" r="2.2" fill="#0a2e16"/></g>`;
   const bgcLake = (x, y, rx, ry) => `<ellipse class="bgc-lake" cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"/><ellipse class="bgc-lake-sh" cx="${x - 12}" cy="${y - 3}" rx="${Math.round(rx * 0.36)}" ry="3.5"/><g class="bgc-fountain" transform="translate(${x} ${y - 5})"><rect x="-1.4" y="-12" width="2.8" height="14" fill="#9fb0b3"/><path class="bgc-fjet" d="M0,-12 q-9,-12 -16,-3 M0,-12 q9,-12 16,-3 M0,-13 v-9" fill="none" stroke="#cdeefb" stroke-width="2"/><circle class="bgc-fdrop d1" cx="-12" cy="-9" r="1.6" fill="#cdeefb"/><circle class="bgc-fdrop d2" cx="12" cy="-9" r="1.6" fill="#cdeefb"/></g>`;
   const tline = (arr) => arr.map(t => bgcTree(t[0], t[1], t[2])).join('');
   return `<div class="lp lp-ph-${phase}">
@@ -500,6 +500,7 @@ function vLanding() {
       <span class="lp-logo">${pLogo()}</span>
       <span>Tu app para mejorar en el golf y jugar con amigos. Tus datos viven en tu dispositivo.</span>
     </footer>
+    ${chatWidget('lp')}
   </div>`;
 }
 

@@ -540,6 +540,48 @@ function golfIcon(name, cls = '') {
   return `<span class="gi ${cls}"><svg viewBox="0 0 32 32" aria-hidden="true">${body}</svg></span>`;
 }
 
+/* ============ Birdie · chatbot de ayuda (app + landing) ============ */
+const BOT_HELLO = '¡Hola! Soy Birdie, tu asistente de PARFECT. Pregúntame lo que quieras de la app o tu juego.';
+const BOT_QUICKS = ['¿Cómo registro una ronda?', '¿Qué es el Análisis IA?', '¿Cómo entreno?', '¿Es gratis?'];
+function chatBotIcon() {
+  return `<svg viewBox="0 0 24 24" class="chatico" aria-hidden="true"><path d="M4 4h16a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 16H10l-4.5 4v-4H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 4z" fill="currentColor"/><circle cx="9.2" cy="10" r="1.5" fill="#0d2414"/><circle cx="14.8" cy="10" r="1.5" fill="#0d2414"/></svg>`;
+}
+function botReply(text) {
+  const t = String(text || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const has = (...ks) => ks.some(k => t.includes(k));
+  if (has('hola', 'buenas', 'hey', 'que tal', 'saludos')) return '¡Hola! ¿Te ayudo con tus rondas, tu entrenamiento o cómo funciona PARFECT?';
+  if (has('gracias', 'grac')) return '¡De nada! Aquí estoy para lo que necesites. 🏌️';
+  if (has('ronda', 'registr', 'tarjeta', 'score', 'anotar', 'apunt')) return 'Para registrar una ronda: toca el botón verde "P" abajo al centro, elige tu campo y anota hoyo por hoyo tus fairways, greens, up & down y putts. Al terminar verás tu resumen y se guarda en tu historial.';
+  if (has('analisis', 'ia ', ' ia', 'coach', 'diagnost')) return 'El Análisis IA cruza tus rondas y te dice exactamente dónde pierdes golpes, en orden de prioridad. Con el botón "Entrenar con AI Coach" arma una sesión según tu tiempo y tus puntos débiles.';
+  if (has('entren', 'practic', 'sesion', 'drill', 'ejercicio')) return 'En la pestaña Trainer eliges tu tiempo y luego: AI Coach (la IA arma tu sesión) o Entrenamiento libre (cronometra un bastón o un ejercicio de la biblioteca). Al terminar se guarda tu práctica.';
+  if (has('academia', 'aprend', 'leccion', 'nivel', 'quiz', 'pregunt')) return 'La Academia tiene 18 niveles tipo trivia para aprender golf paso a paso. Pasa cada nivel para desbloquear el siguiente. La encuentras en la pestaña Trainer → Academia.';
+  if (has('amigo', 'social', 'torneo', 'party', 'leaderboard', 'reta')) return 'En Social juegas con amigos: partidas por código, leaderboard en vivo y compartes tu tarjeta. ¡El golf es mejor en bola!';
+  if (has('gratis', 'precio', 'cuesta', 'costo', 'pago', 'pagar', 'plan')) return 'PARFECT es gratis para empezar y tus datos viven en tu dispositivo. Solo crea tu cuenta y a jugar.';
+  if (has('handicap', 'hcp', 'indice')) return 'PARFECT sigue tu hándicap automáticamente con cada ronda que registras y te muestra tu progreso hacia tu meta.';
+  if (has('perfil', 'cuenta', 'avatar', 'foto', 'nombre')) return 'Toca tu avatar arriba a la derecha para personalizar tu perfil: tu golfista, hándicap, meta y campo de casa.';
+  if (has('logro', 'trofeo', 'rango', 'meta')) return 'Cada meta que cumples desbloquea logros y trofeos míticos. Los ves en Trainer → Logros.';
+  return 'Buena pregunta. Puedo ayudarte con: registrar rondas, el Análisis IA, cómo entrenar, la Academia, jugar con amigos o tu perfil. ¿Cuál te interesa?';
+}
+function chatScrollBottom() { const b = document.getElementById('chat-body'); if (b) b.scrollTop = b.scrollHeight; }
+function chatWidget(where) {
+  const c = V.chat || { open: false, msgs: [] };
+  const mount = `chat-mount${where === 'app' ? ' in-app' : ''}`;
+  if (!c.open) {
+    return `<div class="${mount}"><button class="chat-fab" data-act="chat-open" aria-label="Abrir asistente">${chatBotIcon()}</button></div>`;
+  }
+  const list = (c.msgs && c.msgs.length ? c.msgs : [{ from: 'bot', text: BOT_HELLO }]);
+  const msgs = list.map(m => `<div class="chatmsg ${m.from}">${m.from === 'bot' ? `<span class="chatav">${chatBotIcon()}</span>` : ''}<div class="chatbub">${esc(m.text).replace(/\n/g, '<br>')}</div></div>`).join('');
+  const quicks = BOT_QUICKS.map(q => `<button class="chatq" data-act="chat-quick" data-q="${esc(q)}">${esc(q)}</button>`).join('');
+  return `<div class="${mount} open">
+    <div class="chat-panel">
+      <div class="chat-head"><span class="chat-head-ava">${chatBotIcon()}</span><div class="chat-head-tx"><b>Birdie</b><span>Asistente PARFECT</span></div><button class="chat-x" data-act="chat-close" aria-label="Cerrar">✕</button></div>
+      <div class="chat-body" id="chat-body">${msgs}</div>
+      <div class="chat-quicks">${quicks}</div>
+      <div class="chat-input"><input id="chat-text" type="text" placeholder="Escribe tu pregunta…" autocomplete="off"><button class="chat-send-btn" data-act="chat-send" aria-label="Enviar">➤</button></div>
+    </div>
+  </div>`;
+}
+
 function fmtDate(iso) {
   const d = new Date(iso + 'T12:00:00');
   return d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });

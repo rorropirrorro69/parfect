@@ -192,7 +192,7 @@ function srStartInterval() {
     r.left--;
     if (r.left <= 0) {
       srBeep(1); r.idx++;
-      if (r.idx >= r.blocks.length) { clearInterval(V._srtid); srBeep(2); V.sessionRun = null; if (typeof celebrate === 'function') celebrate(true, '¡Sesión completa!'); render(); return; }
+      if (r.idx >= r.blocks.length) { srFinish(true); return; }
       r.left = r.blocks[r.idx].min * 60; render(); return;
     }
     const el = document.getElementById('sr-clock'); if (!el) { clearInterval(V._srtid); return; }
@@ -200,11 +200,36 @@ function srStartInterval() {
     const bar = document.getElementById('sr-bar'); if (bar) { const tot = r.blocks[r.idx].min * 60; bar.style.width = (100 * (1 - r.left / tot)).toFixed(1) + '%'; }
   }, 1000);
 }
+/* termina la sesión guiada: guarda, marca drills, muestra resumen */
+function srFinish(completed) {
+  const r = V.sessionRun; if (!r) return;
+  clearInterval(V._srtid);
+  let mins = 0;
+  if (completed) mins = r.blocks.reduce((a, b) => a + b.min, 0);
+  else { for (let i = 0; i < r.idx && i < r.blocks.length; i++) mins += r.blocks[i].min; if (r.idx < r.blocks.length) mins += Math.max(0, Math.round((r.blocks[r.idx].min * 60 - r.left) / 60)); }
+  mins = Math.max(1, mins);
+  const u = cur();
+  const areas = [...new Set(r.blocks.filter(b => !b.warm).map(b => b.label))];
+  S.practices = S.practices || [];
+  S.practices.push({ id: Store.uid(), userId: S.session, date: today(), drill: 'Sesión guiada · ' + (areas.join(', ') || 'entrenamiento'), area: areas[0] || 'Sesión', minutes: mins, notes: 'sesion' });
+  if (u) { u.drillsDone = u.drillsDone || {}; r.blocks.forEach((b, i) => { if (b.drill && (completed || i < r.idx)) u.drillsDone[b.drill] = today(); }); }
+  V.sessionSummary = { mins, areas, count: areas.length, completed };
+  V.sessionRun = null;
+  try { srBeep(2); } catch (e) {}
+  if (typeof celebrate === 'function') celebrate(completed, completed ? '¡Sesión completa!' : 'Sesión guardada ✓');
+  Store.save(S); render(); window.scrollTo(0, 0);
+}
 const actions = {
   noop() {},
 
   go(d) { go(d.view); },
-  nav(d) { V.delArm = null; V.wipeArm = false; V.profileOpen = false; go(d.view); },
+  nav(d) { V.delArm = null; V.wipeArm = false; V.profileOpen = false; V.sessionSummary = null; go(d.view); },
+
+  /* ---- Birdie chatbot ---- */
+  'chat-open'() { V.chat = V.chat || { open: false, msgs: [] }; V.chat.open = true; if (!V.chat.msgs.length) V.chat.msgs.push({ from: 'bot', text: BOT_HELLO }); render(); setTimeout(() => { const i = document.getElementById('chat-text'); if (i) i.focus(); chatScrollBottom(); }, 40); },
+  'chat-close'() { if (V.chat) V.chat.open = false; render(); },
+  'chat-send'() { const el = document.getElementById('chat-text'); const txt = el ? el.value.trim() : ''; if (!txt) return; V.chat = V.chat || { open: true, msgs: [] }; V.chat.msgs.push({ from: 'me', text: txt }); V.chat.msgs.push({ from: 'bot', text: botReply(txt) }); render(); setTimeout(() => { const i = document.getElementById('chat-text'); if (i) i.focus(); chatScrollBottom(); }, 40); },
+  'chat-quick'(d) { const txt = d.q || ''; if (!txt) return; V.chat = V.chat || { open: true, msgs: [] }; V.chat.msgs.push({ from: 'me', text: txt }); V.chat.msgs.push({ from: 'bot', text: botReply(txt) }); render(); setTimeout(chatScrollBottom, 40); },
 
   /* ---- auth ---- */
   async login() {
@@ -677,10 +702,11 @@ const actions = {
   'session-run-skip'() {
     const r = V.sessionRun; if (!r) return;
     srBeep(1); r.idx++;
-    if (r.idx >= r.blocks.length) { clearInterval(V._srtid); srBeep(2); V.sessionRun = null; if (typeof celebrate === 'function') celebrate(true, '¡Sesión completa!'); render(); return; }
+    if (r.idx >= r.blocks.length) { srFinish(true); return; }
     r.left = r.blocks[r.idx].min * 60; render();
   },
-  'session-run-stop'() { clearInterval(V._srtid); V.sessionRun = null; render(); },
+  'session-run-stop'() { srFinish(false); },
+  'sess-sum-home'() { V.sessionSummary = null; V.planStep = undefined; go('inicio'); },
   'free-club'(d) { V.freeClub = d.c; V.freeDrill = null; render(); },
   'free-lib-open'() { V.libCat = V.libCat || DRILL_CATS[0].id; V.planStep = 'freelib'; render(); window.scrollTo(0, 0); },
   'free-lib-cat'(d) { V.libCat = d.c; render(); },
@@ -951,7 +977,9 @@ document.addEventListener('click', e => {
 });
 
 document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter' || cur()) return;
+  if (e.key !== 'Enter') return;
+  if (e.target && e.target.id === 'chat-text') { e.preventDefault(); actions['chat-send'](); return; }
+  if (cur()) return;
   if (V.view === 'login') { e.preventDefault(); actions.login(); }
   else if (V.view === 'signup' && e.target.tagName === 'INPUT' && e.target.type !== 'checkbox') { e.preventDefault(); actions.signup(); }
 });

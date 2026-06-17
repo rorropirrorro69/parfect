@@ -30,6 +30,7 @@ function vShell(content) {
     ${V.cardPicker ? vCardPicker() : ''}
     ${V.drillDetail ? vDrillDetail() : ''}
     ${V.bagEdit ? vBagSheet() : ''}
+    ${chatWidget('app')}
   </div>`;
 }
 
@@ -1036,6 +1037,15 @@ function vOnboard() {
         <div class="field"><label>Campo de casa</label>
           <div class="chips">${COURSE_ORDER.map(id => `<button class="chip sm ${(u.homeCourse || 'campestre') === id ? 'on' : ''}" data-act="prof-campo" data-c="${id}">${esc(COURSES[id].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', ''))}</button>`).join('')}</div>
         </div>
+      </div>
+      <div class="sec-h" style="margin-top:22px"><h2 style="font-size:16px">Cómo usar PARFECT</h2></div>
+      <div class="onb-steps">
+        ${[
+          ['flag', 'Registra tu ronda', 'Anota fairways, greens, up & down y putts hoyo por hoyo con el botón P.'],
+          ['green', 'La IA te analiza', 'En Análisis IA verás exactamente dónde pierdes golpes y qué priorizar.'],
+          ['bucket', 'Entrena lo que toca', 'El AI Coach arma tu sesión según tu tiempo; o entrena libre con la biblioteca.'],
+          ['trophy', 'Sube de rango', 'Cada meta cumplida desbloquea logros y baja tu hándicap.'],
+        ].map((s, i) => `<div class="onb-step"><span class="onb-stepn">${i + 1}</span><span class="onb-stepic">${golfIcon(s[0])}</span><div class="onb-steptx"><b>${s[1]}</b><span>${s[2]}</span></div></div>`).join('')}
       </div>
       <button class="btn primary big" data-act="finish-onboard" style="margin-top:18px">Empezar a jugar →</button>
     </div>

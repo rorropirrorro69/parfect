@@ -220,41 +220,40 @@ function vDiag() {
     ? `<p class="note">Con menos de 3 rondas el diagnóstico es preliminar. Cada ronda nueva lo afina.</p>` : '';
   const FOCUS_IC = { driving: 'flag', approach: 'green', short: 'bucket', putting: 'putter' };
   const FOCUS_PC = { driving: '#3a8fe0', approach: '#57a83e', short: '#e0873a', putting: '#3a7fd4' };
-  const sections = d.focus.map((f, i) => {
+  const top = d.focus[0] || {};
+  const cards = d.focus.map((f, i) => {
     const parts = String(f.diag).split('. ').map(s => s.trim()).filter(Boolean);
     const lead = parts[0] ? parts[0].replace(/\.$/, '') + '.' : '';
     const ic = FOCUS_IC[f.key] || 'green';
     const pc = FOCUS_PC[f.key] || '#57a83e';
     const drills = (f.drills || []).slice(0, i === 0 ? 3 : 2);
-    const total = drills.length;
     const doneN = drills.filter(dr => done[dr.name] === td).length;
     const rows = drills.map(dr => {
       const isDone = done[dr.name] === td;
-      return `<div class="splib-item dg-static ${isDone ? 'done' : ''}">
-        <span class="splib-chk dg-chk">${isDone ? '✓' : golfIcon(ic)}</span>
-        <span class="splib-tx"><b>${esc(dr.name)}</b><span>${esc(dr.dose)} · ${esc(dr.metric)}</span></span>
-        ${isDone ? '<span class="splib-go">Hecho ✓</span>' : ''}
+      return `<div class="aiq-drow ${isDone ? 'done' : ''}">
+        <span class="aiq-dchk">${isDone ? '✓' : ''}</span>
+        <div class="aiq-dtx"><b>${esc(dr.name)}</b><span>${esc(dr.dose)} · ${esc(dr.metric)}</span></div>
       </div>`;
     }).join('');
-    return `<div class="dg-sec" style="--pc:${pc}">
-      <div class="dg-sech">
-        <span class="dg-prio">Prioridad ${i + 1}${i === 0 ? ' · enfoque' : ''}</span>
-        ${total ? `<span class="dg-count">${doneN}/${total} hoy</span>` : ''}
+    return `<div class="aiq-card" style="--pc:${pc}">
+      <div class="aiq-head">
+        <span class="aiq-rank">${i + 1}</span>
+        <div class="aiq-htx"><span class="aiq-plab">${i === 0 ? 'Tu enfoque #1' : 'Prioridad ' + (i + 1)}</span><b>${esc(f.titulo)}</b></div>
+        <span class="aiq-ic">${golfIcon(ic)}</span>
       </div>
-      <h3 class="dg-t">${esc(f.titulo)}</h3>
-      <p class="diag-lead">${esc(lead)}</p>
-      <div class="splib-list dg-list">${rows}</div>
+      <p class="aiq-diag">${esc(lead)}</p>
+      <div class="aiq-drills"><span class="aiq-drilllab">Qué entrenar ${drills.length ? `<i>${doneN}/${drills.length} hoy</i>` : ''}</span>${rows}</div>
     </div>`;
   }).join('');
   return warn +
-    `<div class="sec-h" style="margin-top:6px"><h2 style="font-size:18px">Análisis IA</h2><span class="small muted">${agg.rounds} ronda${agg.rounds === 1 ? '' : 's'}</span></div>
-     <div class="card sp-card dg-card">
-       <div class="dg-head"><span class="dg-htag">${golfIcon('flag')} Tu plan según la IA</span><span class="dg-hsub">${d.focus.length} prioridades</span></div>
-       ${sections}
-       <button class="btn primary big" data-act="diag-aicoach" style="margin-top:14px">${golfIcon('flag')} Entrenar este plan con AI Coach →</button>
-       <p class="note" style="text-align:center;margin-top:8px">El AI Coach arma tu sesión según tu tiempo y estas prioridades.</p>
+    `<div class="aiq-hero">
+       <span class="aiq-hero-ava">${golfIcon('flag')}</span>
+       <div class="aiq-hero-tx"><span class="aiq-hero-lab">Análisis IA · ${agg.rounds} ronda${agg.rounds === 1 ? '' : 's'}</span><b class="aiq-hero-h">Tu enfoque ahora: ${esc((top.titulo || 'tu juego').split('·')[0].trim())}</b><p class="aiq-hero-p">${d.focus.length} prioridades para bajar golpes, ordenadas por impacto.</p></div>
      </div>
-     <button class="btn ghost" data-act="diagnose" style="margin-top:4px">↺ Recalcular diagnóstico</button>`;
+     <div class="aiq-list">${cards}</div>
+     <button class="btn primary big" data-act="diag-aicoach" style="margin-top:14px">${golfIcon('flag')} Entrenar este plan con AI Coach →</button>
+     <p class="note" style="text-align:center;margin-top:8px">El AI Coach arma tu sesión según tu tiempo y estas prioridades.</p>
+     <button class="btn ghost" data-act="diagnose" style="margin-top:6px">↺ Recalcular diagnóstico</button>`;
 }
 
 /* ---------- Sesión recomendada (por tu punto débil) ---------- */
@@ -444,8 +443,24 @@ function spDrill(k) { const d = (typeof Trainer !== 'undefined' && Trainer.DRILL
 
 function spSceneFor(lab) { return ({ 'Salida': 'fw', 'Driving': 'fw', 'Hierros': 'gir', 'Juego corto': 'ud', 'Putting': 'putt' })[lab] || 'fw'; }
 
+function vSessionSummary() {
+  const s = V.sessionSummary || { mins: 0, areas: [], count: 0, completed: true };
+  return `<div class="card sp-card sr-card sess-sum">
+    <div class="sumcheck">✓</div>
+    <h2 class="sumtitle">${s.completed ? '¡Sesión completa!' : 'Sesión guardada'}</h2>
+    <p class="sumsub">Buen trabajo. Tu práctica quedó registrada en tu progreso.</p>
+    <div class="sumstats">
+      <div class="sumstat"><b>${s.mins}</b><span>min entrenados</span></div>
+      <div class="sumstat"><b>${s.count || (s.areas || []).length}</b><span>áreas</span></div>
+    </div>
+    ${(s.areas && s.areas.length) ? `<div class="sumareas">${s.areas.map(a => `<span class="sumchip">${esc(a)}</span>`).join('')}</div>` : ''}
+    <button class="btn primary big" data-act="sess-sum-home" style="margin-top:16px">${golfIcon('flag')} Volver al inicio →</button>
+  </div>`;
+}
+
 function vSessionPlanner() {
   const u = cur();
+  if (V.sessionSummary) return vSessionSummary();
   const agg = Stats.aggregate(myRounds());
   const step = ['mode', 'areas', 'plan', 'free', 'freelib', 'lib', 'aisum'].includes(V.planStep) ? V.planStep : 'time';
   const T = V.sessionMin || 60;
