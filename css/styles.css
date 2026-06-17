@@ -23,7 +23,7 @@
   --bg: #E6EDD8;
   --panel: #f6f9ef;
   --card: #f3f7e9;
-  --card2: #e8efd9;
+  --card2: #f3f7e9;   /* mismo blanco que las tarjetas de Inicio (unificado en toda la app) */
   --line: rgba(50, 85, 15, 0.16);
   --line-soft: rgba(20, 40, 10, 0.08);
   --lime: #7cc24a;
