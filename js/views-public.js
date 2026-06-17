@@ -353,12 +353,18 @@ function initLanding(root) {
   root.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
   const layers = [...root.querySelectorAll('[data-speed]')];
+  const introTop = root.querySelector('.lp-intro-top');
   let mx = 0, my = 0, sy = 0, raf = 0;
   const apply = () => {
     raf = 0;
     for (const el of layers) {
       const sp = parseFloat(el.dataset.speed) || 0;
       el.style.transform = `translate3d(${(mx * sp * 18).toFixed(1)}px, ${(my * sp * 18 - sy * sp * 0.12).toFixed(1)}px, 0)`;
+    }
+    if (introTop) {
+      const p = Math.min(1, Math.max(0, sy / (innerHeight * 0.8)));   // barrido suave: el texto se va al bajar
+      introTop.style.opacity = (1 - p * 1.08).toFixed(3);
+      introTop.style.transform = `translateY(${(-p * 90).toFixed(1)}px) scale(${(1 - p * 0.06).toFixed(3)})`;
     }
   };
   const sched = () => { if (!raf) raf = requestAnimationFrame(apply); };

@@ -411,7 +411,9 @@ function outfitGlow(u) {
 }
 function avatarImg(u, cls, lit) {
   if (u && u.avatarEmoji) {
-    return `<span class="golfer av-emoji ${cls || ''}" aria-hidden="true">${u.avatarEmoji}</span>`;
+    const col = outfitGlow(u);
+    const glow = `drop-shadow(0 0 7px ${col}) drop-shadow(0 0 16px ${col}) drop-shadow(0 4px 5px rgba(20,40,10,.25))`;
+    return `<span class="golfer av-emoji ${cls || ''}" aria-hidden="true" style="filter:${glow}">${u.avatarEmoji}</span>`;
   }
   const r = RANKS[rankIdx(u && u.hcp)] || RANKS[0];
   const spark = lit ? 1 : golferSpark(u);

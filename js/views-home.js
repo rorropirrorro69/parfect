@@ -613,7 +613,7 @@ function vAvatarCreator(u) {
   const curHue = (u && u.avatarHue) || 0;
   const hueRow = GOLF_HUES.map(g => `<button class="cre-gcolor${curHue === g.h ? ' on' : ''}" data-act="set-avhue" data-h="${g.h}" title="Color de outfit"><span style="display:block;width:100%;height:100%;border-radius:50%;background:${g.c}"></span></button>`).join('');
   const curEmoji = (u && u.avatarEmoji) || '';
-  const AV_EMOJIS = ['⛳', '🏌️', '🦅', '🐯', '🦊', '🐼', '🦁', '🐧', '🐲', '🦄', '🤖', '👽', '🔥', '⭐', '🏆', '🦖', '🐵', '🐶'];
+  const AV_EMOJIS = ['⛳', '🏌️', '🦈', '🐊', '🐍', '🦅', '🐯', '🦁', '🐺', '🦊', '🐼', '🦏', '🦌', '🐗', '🦂', '🐉', '🦖', '🐢', '🐧', '🦄', '🐵', '🐶', '🐲', '🦫', '🦬', '🤖', '👽', '🔥', '⭐', '🏆'];
   const emojiRow = `<button class="cre-emoji cre-emoji-def ${!curEmoji ? 'on' : ''}" data-act="set-avemoji" data-e="" title="Golfista"><img src="${avatarSrc(u)}" alt=""></button>`
     + AV_EMOJIS.map(e => `<button class="cre-emoji ${curEmoji === e ? 'on' : ''}" data-act="set-avemoji" data-e="${e}">${e}</button>`).join('');
   const steps = RANKS.map((r, i) => `<div class="rank-step${i === idx ? ' on' : ''}${i < idx ? ' done' : ''}">
@@ -626,9 +626,7 @@ function vAvatarCreator(u) {
   return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Crea tu golfista</h2><span class="small muted">hazlo tuyo</span></div>
     <div class="card cre-card">
       <div class="cre-preview cre-preview-plain">${avatarImg(u, 'cre-hero', true)}<span class="cre-rank">${RANKS[idx].n}</span></div>
-      <div class="cre-grp"><span class="cre-lab">Tu golfista</span><div class="cre-row cre-sexes">${sexRow}</div></div>
-      <div class="cre-grp"><span class="cre-lab">O escoge un personaje</span><div class="cre-row cre-emojis">${emojiRow}</div></div>
-      <div class="cre-grp"><span class="cre-lab">Color de outfit</span><div class="cre-row cre-gcolors">${hueRow}</div></div>
+      <div class="cre-grp"><span class="cre-lab">Escoge tu personaje</span><div class="cre-row cre-emojis">${emojiRow}</div></div>
       <div class="cre-grp"><span class="cre-lab">Aura</span><div class="cre-row cre-sws">${outfits}</div></div>
       <p class="note" style="margin:10px 2px 0">Tu golfista está apagado (gris) y <b>se enciende</b> con tus buenas jugadas; brilla más fuerte con cada rango que subes.</p>
     </div>
