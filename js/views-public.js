@@ -377,7 +377,7 @@ function vLanding() {
           ${tline([[26, 206, 1.25], [206, 210, .92], [262, 212, 1.05], [338, 206, 1.25]])}
         </svg>
         <div class="lp-golfhero">
-          <span class="lp-golfer" aria-hidden="true">🏌️</span>
+          <img class="lp-golfer" src="assets/golfer.png" alt="" aria-hidden="true">
           <span class="lp-gball" aria-hidden="true"></span>
           <span class="lp-pop pp1"><b>63%</b><i>Fairways</i></span>
           <span class="lp-pop pp2"><b>57%</b><i>GIR</i></span>
@@ -391,11 +391,11 @@ function vLanding() {
       <span class="lp-eyebrow reveal">Cómo funciona</span>
       <h2 class="lp-h2 reveal">De tu tarjeta<br/><span class="lime">a tu mejor golf.</span></h2>
       <div class="lp-flow">
-        ${[['01', 'Guarda tu tarjeta', 'Apuntas cada hoyo: salida, fairway, green, juego corto y putts. Tu ronda queda completa y ordenada.', 'round'],
-           ['02', 'Analízala con IA', 'La inteligencia lee tus rondas y encuentra exactamente dónde se te van los golpes.', 'ai'],
-           ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', 'stats'],
+        ${[['01', 'Guarda tu tarjeta', 'Apuntas cada hoyo: salida, fairway, green, juego corto y putts. Tu ronda queda completa y ordenada.', 'card'],
+           ['02', 'Analízala con IA', 'La inteligencia lee tus rondas y encuentra exactamente dónde se te van los golpes.', 'peak'],
+           ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', 'bucket'],
            ['04', 'Compite y sube', 'Bajas tu hándicap, subes en el ranking y llegas más lejos.', 'trophy']]
-          .map(([n, t, d]) => `<div class="lp-flowc reveal"><div class="lp-flowc-top"><span class="lp-flown">${n}</span></div><h3>${t}</h3><p>${d}</p></div>`).join('')}
+          .map(([n, t, d, ic]) => `<div class="lp-flowc reveal"><div class="lp-flowc-ic">${golfIcon(ic)}<span class="lp-flowc-n">${n}</span></div><h3>${t}</h3><p>${d}</p></div>`).join('')}
       </div>
     </section>
 

@@ -1525,18 +1525,18 @@ body.is-scrolling .lp-bird, body.is-scrolling .lp-fly { animation-play-state: pa
 
 /* spine: tarjeta → IA → entrena → mejor */
 .lp-flow { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 36px; }
-.lp-flowc { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 20px; box-shadow: 0 10px 30px rgba(20,40,15,.07); transition: transform .3s, box-shadow .3s; }
-.lp-flowc:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(20,40,15,.12); }
-.lp-flowc-top { display: flex; align-items: center; justify-content: space-between; }
-.lp-flown { font-size: 13px; font-weight: 900; color: #16241A; background: #7cc24a; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(199,247,84,.45); }
-.lp-flowc-ic { width: 34px; height: 34px; color: var(--lime-ink); }
-.lp-flowc-ic svg, .lp-flowc-ic .gi { width: 34px; height: 34px; }
-.lp-flowc-art { width: 58px; height: 46px; }
-.lp-flowc-art .lpa { width: 100%; height: 100%; display: block; }
-.lp-presic.lpa-round, .lp-presic.lpa-stats, .lp-presic.lpa-ai, .lp-presic.lpa-trophy { width: 46px; height: 40px; padding: 0; background: transparent; }
-.lp-presic .lpa { width: 100%; height: 100%; display: block; }
-.lp-flowc h3 { font-size: 17px; font-weight: 900; margin: 16px 0 7px; letter-spacing: -.01em; }
-.lp-flowc p { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+.lp-flowc { position: relative; overflow: hidden; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 22px 18px; box-shadow: 0 10px 30px rgba(20,40,15,.07); transition: transform .34s cubic-bezier(.2,.7,.2,1), box-shadow .34s, border-color .34s; }
+.lp-flowc::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--lime), #2fa84a); transform: scaleX(0); transform-origin: left; transition: transform .42s cubic-bezier(.2,.7,.2,1); }
+.lp-flowc::after { content: ''; position: absolute; top: -40%; right: -30%; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, var(--lime-faint), transparent 70%); opacity: 0; transition: opacity .4s; pointer-events: none; }
+.lp-flowc:hover, .lp-flowc:active { transform: translateY(-6px); box-shadow: 0 22px 48px rgba(20,40,15,.16); border-color: rgba(124,194,74,.5); }
+.lp-flowc:hover::before, .lp-flowc:active::before { transform: scaleX(1); }
+.lp-flowc:hover::after { opacity: 1; }
+.lp-flowc-ic { position: relative; width: 56px; height: 56px; border-radius: 17px; background: var(--lime-faint); display: grid; place-items: center; transition: transform .34s cubic-bezier(.2,.9,.3,1.3); }
+.lp-flowc:hover .lp-flowc-ic { transform: scale(1.1) rotate(-5deg); }
+.lp-flowc-ic .gi, .lp-flowc-ic .gi svg { width: 34px; height: 34px; }
+.lp-flowc-n { position: absolute; top: -9px; right: -9px; min-width: 23px; height: 23px; padding: 0 6px; border-radius: 12px; background: #11331b; color: #d2ff6e; font-size: 11px; font-weight: 900; display: grid; place-items: center; border: 3px solid var(--card); letter-spacing: .02em; }
+.lp-flowc h3 { font-size: 16.5px; font-weight: 900; margin: 16px 0 7px; letter-spacing: -.01em; }
+.lp-flowc p { color: var(--muted); font-size: 13px; line-height: 1.5; }
 
 .lp-feats { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 34px; }
 .lp-feat { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 22px; box-shadow: 0 10px 30px rgba(20,40,15,.07); transition: transform .3s, box-shadow .3s; }
@@ -3544,8 +3544,8 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .lp-appstage .lp-appicon3d { position: relative; z-index: 2; width: clamp(120px, 40vw, 168px); margin-top: -6%; }
 /* golfista pegándole a la bola + stats en pop-ups */
 .lp-golfhero { position: absolute; inset: 0; z-index: 2; }
-.lp-golfer { position: absolute; left: 47%; bottom: 16%; transform: translateX(-50%); font-size: clamp(86px, 30vw, 142px); line-height: 1; transform-origin: 52% 86%; animation: golferSwing 2.8s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(20,40,15,.25)); }
-@keyframes golferSwing { 0%,100% { transform: translateX(-50%) rotate(-4deg); } 50% { transform: translateX(-50%) rotate(4deg); } }
+.lp-golfer { position: absolute; left: 47%; bottom: 14%; transform: translateX(-50%); width: clamp(116px, 38vw, 176px); height: auto; transform-origin: 50% 90%; animation: golferSwing 3.2s ease-in-out infinite; filter: drop-shadow(0 12px 16px rgba(20,40,15,.28)); }
+@keyframes golferSwing { 0%,100% { transform: translateX(-50%) rotate(-3deg); } 50% { transform: translateX(-50%) rotate(3deg); } }
 .lp-gball { position: absolute; left: 62%; bottom: 26%; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #fff, #d2dad3 72%); box-shadow: 0 2px 5px rgba(0,0,0,.25); animation: golfBallHit 2.8s ease-in-out infinite; }
 @keyframes golfBallHit { 0%,46% { transform: translate(0,0) scale(1); opacity: 1; } 60% { transform: translate(46px,-60px) scale(.85); opacity: 1; } 78% { transform: translate(96px,-30px) scale(.7); opacity: .7; } 90%,100% { transform: translate(120px,18px) scale(.6); opacity: 0; } }
 .lp-pop { position: absolute; z-index: 3; display: inline-flex; align-items: baseline; gap: 5px; background: rgba(255,255,255,.96); border: 1px solid var(--line); border-radius: 13px; padding: 6px 11px; box-shadow: 0 10px 22px rgba(20,40,15,.18); white-space: nowrap; transform-origin: center bottom; animation: popLoop 5.6s ease-in-out infinite; }
