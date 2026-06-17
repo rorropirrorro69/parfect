@@ -60,7 +60,7 @@ input, select, textarea { font-size: 16px; }
 #root { display: contents; }
 
 /* ============ Fondo inmersivo de toda la app (día/noche) ============ */
-.app-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: linear-gradient(180deg,#5fbdef 0%,#7cc7ef 20%,#9fd6f1 38%,#c6e6ed 54%,#e8dced 64%,#ffe3ca 74%,#ffd2bf 82%,#d6ebc0 92%,#a9d877 100%); }
+.app-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: linear-gradient(180deg,#4faee0 0%,#69bfe6 28%,#93d2ed 52%,#bce4f2 74%,#e6f4f8 100%); }
 /* dentro de la app, el fondo es un ambiente sutil para que la app sea lo principal */
 body.in-app .app-bg::after { content: ''; position: absolute; inset: 0; background: var(--bg); opacity: 0.3; }
 body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg .bg-gball { opacity: 0.72; }
@@ -123,6 +123,9 @@ body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg
 .bgc-fl { transform-box: fill-box; transform-origin: center; animation: bgcBloom 3.2s ease-in-out infinite; }
 .bgcf-h { transform-box: fill-box; transform-origin: 50% 100%; animation: bgcfSway 2.8s ease-in-out infinite; }
 @keyframes bgcfSway { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+.bwave { transform-box: fill-box; animation: beachWaveIn 5s ease-in-out infinite; }
+.bwave2 { animation-delay: 1.7s; } .bwave3 { animation-delay: 3.3s; }
+@keyframes beachWaveIn { 0% { transform: translateY(15px); opacity: 0; } 22% { opacity: .92; } 55% { transform: translateY(-5px); opacity: .85; } 82% { opacity: 0; } 100% { transform: translateY(15px); opacity: 0; } }
 .bgc-fl.a { fill: #ff7eb0; } .bgc-fl.b { fill: #ffd24a; animation-delay: -1s; } .bgc-fl.c { fill: #ff8a5a; animation-delay: -2s; }
 [data-theme="dark"] .bgc-fl { opacity: .55; }
 @keyframes bgcBloom { 0%,100% { transform: scale(.82); } 50% { transform: scale(1.16); } }
@@ -167,7 +170,7 @@ body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg
 .bgc-flag circle { r: 3.2px; fill: #0f2d08; }
 @media (prefers-reduced-motion: reduce) { .ud2-ball { animation: none; offset-distance: 100%; } }
 @media (prefers-reduced-motion: reduce) { .lp-bcart, .lp-bcart-in, .lp-sq-in, .lp-sq-tail { animation: none; } .lp-bcart.c1 { transform: translate(150px,150px) scale(1.3); } .lp-bcart.c2 { transform: translate(280px,206px) scale(1.7); } }
-@media (prefers-reduced-motion: reduce) { .bgc-fjet, .bgc-fdrop, .bgc-lake-sh, .bgc-gclub, .bgc-ball, .bgc-flag path, .bgc-pcrown, .bgc-fl, .bgcf-h { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .bgc-fjet, .bgc-fdrop, .bgc-lake-sh, .bgc-gclub, .bgc-ball, .bgc-flag path, .bgc-pcrown, .bgc-fl, .bgcf-h, .bwave { animation: none !important; } }
 body.is-scrolling .bg-cloud, body.is-scrolling .bg-bird, body.is-scrolling .bg-gball { animation-play-state: paused !important; }
 @media (prefers-reduced-motion: reduce) { .bg-cloud, .bg-bird, .bg-gball, .bg-stars { animation: none !important; } .bg-bird { display: none; } }
 

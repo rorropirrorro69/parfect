@@ -410,11 +410,11 @@ function lpGallery() {
     <h2 class="lp-h2 reveal">Torneos que se<br/><span class="lime">viven en grande.</span></h2>
     <p class="lp-lead reveal" style="text-align:center;max-width:34ch;margin:0 auto 16px">Golf de verdad, con tu equipo y los mejores aliados, dentro y fuera del campo.</p>
     <div class="lp-gallery reveal">
-      ${lpClubShot('club-1.png', 'El gran torneo Montrer', lpClubTee(), true)}
-      ${lpClubShot('club-2.png', 'Categoría damas', lpClubFriends())}
-      ${lpClubShot('club-3.png', 'Foursome en el campo', lpClubGreen())}
-      ${lpClubShot('club-4.png', 'Futuras promesas', lpClubFriends())}
-      ${lpClubShot('club-5.png', 'Premiación', lpClubSunset())}
+      ${lpClubShot('club-1.jpg', 'El gran torneo Montrer', lpClubTee(), true)}
+      ${lpClubShot('club-2.jpg', 'Categoría damas', lpClubFriends())}
+      ${lpClubShot('club-3.jpg', 'Foursome en el campo', lpClubGreen())}
+      ${lpClubShot('club-4.jpg', 'Futuras promesas', lpClubFriends())}
+      ${lpClubShot('club-5.jpg', 'Premiación', lpClubSunset())}
     </div>
   </section>`;
 }
