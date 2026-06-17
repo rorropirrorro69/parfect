@@ -84,29 +84,23 @@ function lpFeatArt(kind) {
 
 /* logo/icono de la app (nuevo) para el hero en 3D */
 function appIcon3D() {
+  // swoosh estilo Nike: talón grueso abajo-izq, punta delgada arriba-der (trayectoria de golf)
+  const swoosh = 'M34 150 C86 150 150 74 176 40 C150 74 96 104 60 118 C50 128 40 140 34 150 Z';
   return `<svg viewBox="0 0 200 200" class="lp-appicon-svg" aria-hidden="true">
     <defs>
-      <linearGradient id="aiBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#aef062"/><stop offset="52%" stop-color="#5fb83f"/><stop offset="100%" stop-color="#28702f"/></linearGradient>
-      <linearGradient id="aiP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="100%" stop-color="#e7efe6"/></linearGradient>
-      <radialGradient id="aiBall" cx="38%" cy="32%" r="72%"><stop offset="0" stop-color="#ffffff"/><stop offset="100%" stop-color="#cfdad2"/></radialGradient>
-      <radialGradient id="aiGloss" cx="32%" cy="16%" r="78%"><stop offset="0" stop-color="rgba(255,255,255,.62)"/><stop offset="46%" stop-color="rgba(255,255,255,.08)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient>
+      <linearGradient id="aiBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c2f56a"/><stop offset="50%" stop-color="#7ccb3f"/><stop offset="100%" stop-color="#2f8a36"/></linearGradient>
+      <radialGradient id="aiBall" cx="38%" cy="32%" r="72%"><stop offset="0" stop-color="#ffffff"/><stop offset="100%" stop-color="#dfe7df"/></radialGradient>
+      <radialGradient id="aiGloss" cx="30%" cy="12%" r="82%"><stop offset="0" stop-color="rgba(255,255,255,.5)"/><stop offset="46%" stop-color="rgba(255,255,255,.06)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient>
     </defs>
     <rect x="6" y="6" width="188" height="188" rx="46" fill="url(#aiBg)"/>
-    <!-- destello superior y sombra base -->
-    <ellipse cx="100" cy="186" rx="88" ry="34" fill="#1f5a26" opacity=".3"/>
-    <!-- P de PARFECT -->
-    <g transform="translate(8,-3)">
-      <g transform="translate(3,5)" opacity=".22">
-        <rect x="60" y="48" width="29" height="110" rx="13" fill="#0a2e16"/>
-        <path d="M74 48 A37 37 0 0 1 74 122" fill="none" stroke="#0a2e16" stroke-width="29" stroke-linecap="round"/>
-      </g>
-      <rect x="60" y="48" width="29" height="110" rx="13" fill="url(#aiP)"/>
-      <path d="M74 48 A37 37 0 0 1 74 122" fill="none" stroke="url(#aiP)" stroke-width="29" stroke-linecap="round"/>
-      <!-- bola de golf con hoyuelos en el contador de la P -->
-      <circle cx="90" cy="85" r="13.5" fill="url(#aiBall)" stroke="#bcc8bf" stroke-width="1.2"/>
-      <g fill="#c2cdc4" opacity=".8">
-        <circle cx="86" cy="81" r="1.3"/><circle cx="91" cy="80" r="1.3"/><circle cx="95" cy="84" r="1.3"/>
-        <circle cx="88" cy="86" r="1.3"/><circle cx="93" cy="88" r="1.3"/><circle cx="84" cy="86" r="1.1"/>
+    <g transform="translate(0,6)">
+      <path d="${swoosh}" fill="#0a2e16" opacity=".2" transform="translate(4,6)"/>
+      <path d="${swoosh}" fill="#0d3a1c"/>
+      <!-- bola de golf disparada desde la punta del swoosh -->
+      <circle cx="176" cy="40" r="14" fill="url(#aiBall)" stroke="#b9c6bd" stroke-width="1.2"/>
+      <g fill="#a9b7ac" opacity=".75">
+        <circle cx="171" cy="36" r="1.4"/><circle cx="177" cy="35" r="1.4"/><circle cx="181" cy="40" r="1.4"/>
+        <circle cx="173" cy="42" r="1.4"/><circle cx="179" cy="44" r="1.4"/><circle cx="169" cy="41" r="1.2"/>
       </g>
     </g>
     <rect x="6" y="6" width="188" height="188" rx="46" fill="url(#aiGloss)"/>
