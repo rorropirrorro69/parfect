@@ -322,13 +322,15 @@ function vSetup() {
   const act = (typeof activeParty === 'function') ? activeParty() : null;
   const myActive = act && (act.hostUserId === u.id || act.players.some(x => x.userId === u.id));
   const lobbyCard = `<div class="su-block su-lobby">
-      <span class="su-lab">${pMark(15)} Entrar a lobby</span>
+      <span class="su-lab">${pMark(15)} Jugar con amigos</span>
       <div class="card lobby-card">
-        <p class="small muted" style="margin-top:0">Pon el código que te compartió un amigo. Cada quien anota desde su celular.</p>
-        ${myActive ? `<button class="btn primary" data-act="party-resume" style="margin-bottom:10px">${golfIcon('flag')} Volver a tu lobby ${esc(act.code)}${act.status === 'live' ? ` · hoyo ${act.idx + 1}` : ''}</button>` : ''}
-        <div class="join-row">
+        <p class="small muted" style="margin-top:0">Crea una lobby y comparte el código, o entra con el de un amigo. Cada quien anota desde su celular.</p>
+        ${myActive ? `<button class="btn primary" data-act="party-resume">${golfIcon('flag')} Volver a tu lobby ${esc(act.code)}${act.status === 'live' ? ` · hoyo ${act.idx + 1}` : ''}</button>`
+          : `<button class="btn primary" data-act="party-new">${pMark(15)} Crear una lobby</button>`}
+        <div class="lobby-or"><span>o entra con un código</span></div>
+        <div class="lobby-join">
           <input id="join-code" class="join-code-input" placeholder="Código (ej. K7M2)" maxlength="4" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" inputmode="text">
-          <button class="btn primary" data-act="party-join" ${V.joining ? 'disabled' : ''}>${V.joining ? 'Entrando…' : 'Entrar'}</button>
+          <button class="btn ghost" data-act="party-join" ${V.joining ? 'disabled' : ''}>${V.joining ? 'Entrando…' : 'Entrar a la lobby'}</button>
         </div>
         ${V.err ? `<p class="form-err">${esc(V.err)}</p>` : ''}
       </div>

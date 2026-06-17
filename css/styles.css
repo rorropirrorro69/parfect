@@ -1401,7 +1401,14 @@ button.row { cursor: pointer; }
   color: var(--text); font-size: 15px; outline: none;
 }
 .join-row input:focus { border-color: var(--lime); }
-.join-row .btn { flex: none; }
+.join-row .btn { flex: none; width: auto; }
+/* lobby: código en su propia línea (full width) + botón debajo, a prueba de aplastones */
+.lobby-join { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+.lobby-join input { width: 100%; box-sizing: border-box; padding: 14px 16px; background: #fff; border: 1.5px solid var(--line); border-radius: 13px; color: var(--text); font-size: 16px; outline: none; }
+.lobby-join input:focus { border-color: var(--lime); }
+.lobby-join .btn { width: 100%; }
+.lobby-or { display: flex; align-items: center; gap: 10px; margin: 14px 0 6px; color: var(--muted); font-size: 11.5px; font-weight: 800; }
+.lobby-or::before, .lobby-or::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 .sync-badge {
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
