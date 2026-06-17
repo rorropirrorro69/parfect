@@ -473,7 +473,8 @@ function vSessionPlanner() {
     const PC = { driving: '#3a8fe0', approach: '#57a83e', short: '#e0873a', putting: '#3a7fd4' };
     const items = focus.slice(0, 4).map((f, i) => {
       const parts = String(f.diag || '').split('. ').map(s => s.trim()).filter(Boolean);
-      const lead = parts[0] ? parts[0].replace(/\.$/, '') + '.' : '';
+      let lead = parts[0] ? parts[0].replace(/\.$/, '') + '.' : '';
+      lead = lead.replace(/referencia para meta/gi, 'meta objetivo').replace(/referencia/gi, 'meta objetivo');
       return `<div class="aisum-row" style="--pc:${PC[f.key] || '#57a83e'}">
         <span class="aisum-n">${i + 1}</span>
         <div class="aisum-tx"><b>${esc(f.titulo)}</b>${lead ? `<span>${esc(lead)}</span>` : ''}</div>

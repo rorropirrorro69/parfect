@@ -165,13 +165,7 @@ function lpScrLoading() {
 /* primer iPhone: cuenta regresiva 3·2·1 → PARFECT, luego revela la pantalla de inicio */
 function lpIntroPhone() {
   const scr = `<img class="lp-shotimg" src="assets/shot-inicio.png" alt="" onload="if(this.naturalWidth){var c=this.parentElement.querySelector('.lp-shotcomp');if(c)c.style.display='none'}else{this.remove()}" onerror="this.remove()">
-    <div class="lp-shotcomp">${lpScrStats()}</div>
-    <div class="lp-countdown" aria-hidden="true">
-      <span class="cd-ring"></span>
-      <span class="cd-flag">${golfFlagSvg()}</span>
-      <span class="cd-n cd3">3</span><span class="cd-n cd2">2</span><span class="cd-n cd1">1</span>
-      <span class="cd-go"><b>PARFECT</b></span>
-    </div>`;
+    <div class="lp-shotcomp">${lpScrStats()}</div>`;
   return lpPhone(scr);
 }
 function lpScrStats() {
