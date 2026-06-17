@@ -1487,8 +1487,8 @@ body.is-scrolling .lp-bird, body.is-scrolling .lp-fly { animation-play-state: pa
 .lp-title .lime { color: var(--lime-ink); }
 .lp-sub { color: var(--text); opacity: .84; font-size: clamp(15px,2.1vw,18px); line-height: 1.5; margin-top: 16px; max-width: 32ch; font-weight: 600; }
 .lp-cta-row { display: flex; gap: 12px; align-items: center; margin-top: 24px; flex-wrap: wrap; }
-.lp-order { background: #7cc24a; color: #16241A; border: none; font-weight: 900; font-size: 16px; padding: 15px 26px; border-radius: 16px; box-shadow: 0 10px 28px rgba(199,247,84,.45); transition: .2s; }
-.lp-order:hover { transform: translateY(-2px); box-shadow: 0 16px 38px rgba(199,247,84,.6); }
+.lp-order { background: linear-gradient(160deg, #1e5128, #0c2e15); color: #d2ff6e; border: none; font-weight: 900; font-size: 16px; padding: 15px 26px; border-radius: 16px; box-shadow: 0 12px 30px rgba(12,46,21,.42); transition: .2s; }
+.lp-order:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(12,46,21,.55); }
 .lp-ghostbtn { background: var(--card); border: 1px solid var(--line); color: var(--text); font-weight: 800; font-size: 15px; padding: 15px 24px; border-radius: 16px; box-shadow: 0 6px 18px rgba(20,40,15,.06); }
 .lp-trust { margin-top: 16px; font-size: 12.5px; color: var(--text); opacity: .62; font-weight: 700; }
 
@@ -1534,6 +1534,7 @@ body.is-scrolling .lp-bird, body.is-scrolling .lp-fly { animation-play-state: pa
 .lp-flowc-ic { position: relative; width: 56px; height: 56px; border-radius: 17px; background: var(--lime-faint); display: grid; place-items: center; transition: transform .34s cubic-bezier(.2,.9,.3,1.3); }
 .lp-flowc:hover .lp-flowc-ic { transform: scale(1.1) rotate(-5deg); }
 .lp-flowc-ic .gi, .lp-flowc-ic .gi svg { width: 34px; height: 34px; }
+.lp-flowc-emoji { font-size: 30px; line-height: 1; }
 .lp-flowc-n { position: absolute; top: -9px; right: -9px; min-width: 23px; height: 23px; padding: 0 6px; border-radius: 12px; background: #11331b; color: #d2ff6e; font-size: 11px; font-weight: 900; display: grid; place-items: center; border: 3px solid var(--card); letter-spacing: .02em; }
 .lp-flowc h3 { font-size: 16.5px; font-weight: 900; margin: 16px 0 7px; letter-spacing: -.01em; }
 .lp-flowc p { color: var(--muted); font-size: 13px; line-height: 1.5; }
@@ -3424,6 +3425,8 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lpm-org .lp-org-fb { font-size: 18px; font-weight: 800; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .lp-mq-track { animation: none; } }
 /* opiniones de Trustpilot en scroll infinito */
+.lp-reviews-sec { position: relative; z-index: 2; padding: 18px 0 6px; text-align: center; }
+.lp-reviews-sec .lp-reviews { margin-top: 0; }
 .lp-reviews { width: 100%; margin-top: 26px; }
 .lp-reviews-hd { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 16px; }
 .lp-reviews-hd b { font-size: 15px; }

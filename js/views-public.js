@@ -368,6 +368,7 @@ function vLanding() {
         </div>
       </div>
     </section>
+    <section class="lp-reviews-sec">${lpReviews()}</section>
     <section class="lp-sec lp-awards-sec">
       ${lpAwardsDeco()}
       <span class="lp-eyebrow reveal">Reconocida en todo el mundo</span>
@@ -385,18 +386,17 @@ function vLanding() {
         </div>
         <p class="lp-trust">Gratis para empezar · Tus datos viven en tu dispositivo</p>
       </div>
-      ${lpReviews()}
     </section>
 
     <section class="lp-sec">
       <span class="lp-eyebrow reveal">Cómo funciona</span>
       <h2 class="lp-h2 reveal">De tu tarjeta<br/><span class="lime">a tu mejor golf.</span></h2>
       <div class="lp-flow">
-        ${[['01', 'Guarda tu tarjeta', 'Apuntas cada hoyo: salida, fairway, green, juego corto y putts. Tu ronda queda completa y ordenada.', 'card'],
-           ['02', 'Analízala con IA', 'La inteligencia lee tus rondas y encuentra exactamente dónde se te van los golpes.', 'peak'],
-           ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', 'bucket'],
-           ['04', 'Compite y sube', 'Bajas tu hándicap, subes en el ranking y llegas más lejos.', 'trophy']]
-          .map(([n, t, d, ic]) => `<div class="lp-flowc reveal"><div class="lp-flowc-ic">${golfIcon(ic)}<span class="lp-flowc-n">${n}</span></div><h3>${t}</h3><p>${d}</p></div>`).join('')}
+        ${[['01', 'Guarda tu tarjeta', 'Apuntas cada hoyo: salida, fairway, green, juego corto y putts. Tu ronda queda completa y ordenada.', '📝'],
+           ['02', 'Analízala con IA', 'La inteligencia lee tus rondas y encuentra exactamente dónde se te van los golpes.', '🤖'],
+           ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', '🎯'],
+           ['04', 'Compite y sube', 'Bajas tu hándicap, subes en el ranking y llegas más lejos.', '🏆']]
+          .map(([n, t, d, ic]) => `<div class="lp-flowc reveal"><div class="lp-flowc-ic"><span class="lp-flowc-emoji">${ic}</span><span class="lp-flowc-n">${n}</span></div><h3>${t}</h3><p>${d}</p></div>`).join('')}
       </div>
     </section>
 
