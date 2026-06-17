@@ -294,7 +294,7 @@ function holeScene(par) {
 function pstScene(kind, pct, label, goalPct) {
   const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
   const open = V.statOpen === kind;
-  const art = kind === 'fw' ? fwScene(p) : kind === 'gir' ? girScene(p) : udScene(p);
+  const art = chkScene(kind, true);   // mismas escenas que el registro de ronda
   const delta = (goalPct != null) ? (p - Math.round(goalPct)) : null;
   const goalHtml = (goalPct != null)
     ? `<span class="psc-goal">meta ${Math.round(goalPct)}% · <em class="${delta >= 0 ? 'up' : 'dn'}">${delta >= 0 ? '+' : ''}${delta}</em></span>`
@@ -309,7 +309,7 @@ function pstScene(kind, pct, label, goalPct) {
 /* misma escena pero sin botón (para usar dentro de las tarjetas de ronda) */
 function pstSceneStatic(kind, pct, label) {
   const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
-  const art = kind === 'fw' ? fwScene(p) : kind === 'gir' ? girScene(p) : udScene(p);
+  const art = chkScene(kind, true);   // mismas escenas que el registro de ronda
   return `<div class="pst-scene pst-static" style="--p:${p}">
     <div class="psc-art">${art}</div>
     <b class="psc-num">${p}<i>%</i></b>
