@@ -148,6 +148,12 @@ body.in-app .app-bg .bg-cloud, body.in-app .app-bg .bg-bird, body.in-app .app-bg
 @keyframes lpSqHop { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 .lp-sq-tail { transform-box: fill-box; transform-origin: 100% 100%; animation: lpSqTail 1.1s ease-in-out infinite alternate; }
 @keyframes lpSqTail { from { transform: rotate(-7deg); } to { transform: rotate(9deg); } }
+/* up & down (gif claro): chip en arco que cae al hoyo */
+.ud2-ball { offset-distance: 0%; will-change: offset-distance, transform; animation: udChip 2.7s cubic-bezier(.4,0,.5,1) infinite; }
+@keyframes udChip { 0% { offset-distance: 0%; opacity: 0; } 8% { opacity: 1; } 58% { offset-distance: 100%; opacity: 1; transform: scale(1); } 70% { offset-distance: 100%; transform: scale(.55); opacity: 1; } 84%,100% { offset-distance: 100%; transform: scale(.4); opacity: 0; } }
+/* marca bien los hoyos: cup más visible en cada green del campo */
+.bgc-flag circle { r: 3.2px; fill: #0f2d08; }
+@media (prefers-reduced-motion: reduce) { .ud2-ball { animation: none; offset-distance: 100%; } }
 @media (prefers-reduced-motion: reduce) { .lp-bcart, .lp-bcart-in, .lp-sq-in, .lp-sq-tail { animation: none; } .lp-bcart.c1 { transform: translate(150px,150px) scale(1.3); } .lp-bcart.c2 { transform: translate(280px,206px) scale(1.7); } }
 @media (prefers-reduced-motion: reduce) { .bgc-fjet, .bgc-fdrop, .bgc-lake-sh, .bgc-gclub, .bgc-ball, .bgc-flag path { animation: none !important; } }
 body.is-scrolling .bg-cloud, body.is-scrolling .bg-bird, body.is-scrolling .bg-gball { animation-play-state: paused !important; }

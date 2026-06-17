@@ -294,7 +294,7 @@ function holeScene(par) {
 function pstScene(kind, pct, label, goalPct) {
   const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
   const open = V.statOpen === kind;
-  const art = chkScene(kind, true);   // mismas escenas que el registro de ronda
+  const art = (kind === 'ud') ? udGifScene() : chkScene(kind, true);   // up&down con gif claro; resto = escenas del registro
   const delta = (goalPct != null) ? (p - Math.round(goalPct)) : null;
   const goalHtml = (goalPct != null)
     ? `<span class="psc-goal">meta ${Math.round(goalPct)}% · <em class="${delta >= 0 ? 'up' : 'dn'}">${delta >= 0 ? '+' : ''}${delta}</em></span>`
@@ -309,12 +309,24 @@ function pstScene(kind, pct, label, goalPct) {
 /* misma escena pero sin botón (para usar dentro de las tarjetas de ronda) */
 function pstSceneStatic(kind, pct, label) {
   const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
-  const art = chkScene(kind, true);   // mismas escenas que el registro de ronda
+  const art = (kind === 'ud') ? udGifScene() : chkScene(kind, true);   // up&down con gif claro; resto = escenas del registro
   return `<div class="pst-scene pst-static" style="--p:${p}">
     <div class="psc-art">${art}</div>
     <b class="psc-num">${p}<i>%</i></b>
     <span class="psc-lab">${esc(label)}</span>
   </div>`;
+}
+/* Up & down claro (gif): la bola sale del rough, hace un chip en arco y cae al hoyo */
+function udGifScene() {
+  const d = 'M16 46 Q40 2 63 37';
+  return `<svg viewBox="0 0 100 56" class="hs-svg" aria-hidden="true">
+    <ellipse cx="52" cy="49" rx="44" ry="7" fill="var(--sc-dim)"/>
+    <ellipse cx="64" cy="38" rx="28" ry="10" fill="var(--sc-lit)"/>
+    <ellipse cx="64" cy="38" rx="3.4" ry="1.5" fill="var(--sc-cup)"/>
+    <line x1="64" y1="37" x2="64" y2="11" stroke="var(--sc-cup)" stroke-width="1.5"/><path d="M64 11 L76 14.5 L64 18 Z" fill="var(--sc-flag)"/>
+    <path class="ud2-arc" d="${d}" fill="none" stroke="var(--sc-line)" stroke-width="1.5" stroke-dasharray="3 3.5" stroke-linecap="round" opacity=".6"/>
+    <circle class="ud2-ball" r="3.2" fill="var(--sc-ball)" stroke="var(--sc-line)" stroke-width=".5" style="offset-path:path('${d}')"/>
+  </svg>`;
 }
 /* Fairway que se ilumina: trapezoide en perspectiva que se rellena de luz según % */
 function fwScene(p) {

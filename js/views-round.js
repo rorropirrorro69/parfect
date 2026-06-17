@@ -1012,7 +1012,7 @@ function vRoundDetail() {
     </div>
     <div class="card">
       <span class="label">${golfIcon('card')} Tu tarjeta · ${esc(courseName)}</span>
-      ${vDetailCard(r, parOf, ydsOf)}
+      ${scorecardTable(s.holes, parOf, [{ name: 'Tú', scoreOf: i => (r.holes[i] ? r.holes[i].score : null) }], -1, null)}
     </div>
     ${roundAnalysis(r, s)}
     <button class="btn danger" data-act="round-delete" data-id="${r.id}">${V.delArm === r.id ? '¿Seguro? Toca otra vez para eliminar' : 'Eliminar esta ronda'}</button>`;
