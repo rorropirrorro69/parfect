@@ -309,7 +309,7 @@ function vDrillDetail() {
   const pct = Math.round(100 * (1 - (tm.left / (tm.total || 1))));
   const timerHtml = `
     <div class="sr-card tmr-card">
-      <div class="sr-now"><span class="sr-scene">${(typeof statScene === 'function') ? statScene(cm.s) : chkScene(cm.s, true)}</span><div class="sr-nowtx"><b>${esc(d.name)}</b><span>${esc(d.dose || catLab)}</span></div></div>
+      <div class="sr-now"><span class="sr-scene">${drillScene(cm.s)}</span><div class="sr-nowtx"><b>${esc(d.name)}</b><span>${esc(d.dose || catLab)}</span></div></div>
       <div class="sr-clock" id="dd-timer">${fmtClock(tm.left)}</div>
       <div class="sr-bar"><i id="dd-bar" style="width:${pct}%"></i></div>
       <div class="tmr-presets ${tm.running ? 'tmr-locked' : ''}">${presets.map(s => `<button class="chip sm ${tm.total === s ? 'on' : ''}" data-act="timer-set" data-s="${s}">${s / 60} min</button>`).join('')}</div>
@@ -323,7 +323,7 @@ function vDrillDetail() {
       <div class="grab"></div>
       <div class="dd2-hero" style="--dc:${cm.c}">
         <button class="dd2-x" data-act="drill-close-detail" aria-label="Cerrar">✕</button>
-        <div class="dd2-hero-art">${chkScene(cm.s, true)}</div>
+        <div class="dd2-hero-art">${drillScene(cm.s)}</div>
         <div class="dd2-hero-txt"><span class="dd2-cat">${esc(catLab)}</span><h2>${esc(d.name)}</h2></div>
       </div>
       <div class="dd2-goals">
@@ -475,7 +475,7 @@ function vSessionPlanner() {
       <div class="sp-phase">Entrenamiento libre</div>
       <h2 class="sp-q">${golfIcon('putter')} ¿Qué bastón entrenas?</h2>
       <div class="chips" style="flex-wrap:wrap;margin-bottom:16px">${chips}</div>
-      <div class="sr-now"><span class="sr-scene">${(typeof statScene === 'function') ? statScene(({ 'Driver': 'fw', 'Maderas': 'fw', 'Híbridos': 'fw', 'Hierros': 'gir', 'Wedges': 'ud', 'Juego corto': 'ud', 'Putter': 'putt' })[V.freeClub] || 'fw') : ''}</span><div class="sr-nowtx"><b>${V.freeClub ? esc(V.freeClub) : 'Entrenamiento libre'}</b><span>${V.freeClub ? 'cronometrando' : 'elige un bastón'}</span></div></div>
+      <div class="sr-now"><span class="sr-scene">${drillScene(({ 'Driver': 'fw', 'Maderas': 'fw', 'Híbridos': 'fw', 'Hierros': 'gir', 'Wedges': 'ud', 'Juego corto': 'ud', 'Putter': 'putt' })[V.freeClub] || 'fw')}</span><div class="sr-nowtx"><b>${V.freeClub ? esc(V.freeClub) : 'Entrenamiento libre'}</b><span>${V.freeClub ? 'cronometrando' : 'elige un bastón'}</span></div></div>
       <div class="sr-clock" id="free-clock">${fmtClock(t.secs)}</div>
       <div class="ddt2-ctrls" style="margin-top:14px">
         ${t.running ? `<button class="btn" data-act="free-pause">⏸ Pausar</button>` : `<button class="btn primary" data-act="free-start" ${V.freeClub ? '' : 'disabled'}>${t.secs > 0 ? 'Reanudar' : 'Iniciar'} ▶</button>`}
@@ -505,7 +505,7 @@ function vSessionPlanner() {
   const segs = blocks.map(b => {
     const from = clock; clock += b.min;
     return `<div class="spt-node ${b.warm ? 'warm' : ''}">
-      <span class="spt-scene">${(typeof statScene === 'function') ? statScene(sceneFor(b.label)) : golfIcon(b.icon)}</span>
+      <span class="spt-scene">${drillScene(sceneFor(b.label))}</span>
       <div class="spt-card">
         <div class="spt-top"><b>${esc(b.label)}</b><span class="spt-time">${from}–${clock}'</span></div>
         ${b.drill ? `<button class="spt-drill" data-act="drill-open" data-name="${esc(b.drill)}">${golfIcon('green')} ${esc(b.drill)} →</button>` : `<span class="spt-note">Calienta progresivo: wedge → hierros → driver</span>`}
@@ -547,7 +547,7 @@ function vSessionRunner() {
   const tot = b.min * 60; const pct = Math.round(100 * (1 - r.left / tot));
   return `<div class="card sp-card sr-card">
     <div class="sp-phase">Sesión en curso · bloque ${r.idx + 1} de ${r.blocks.length}</div>
-    <div class="sr-now"><span class="sr-scene">${(typeof statScene === 'function') ? statScene(spSceneFor(b.label)) : golfIcon(b.icon)}</span><div class="sr-nowtx"><b>${esc(b.label)}</b>${b.drill ? `<button class="sr-drill" data-act="drill-open" data-name="${esc(b.drill)}">${esc(b.drill)} →</button>` : `<span>Calienta progresivo</span>`}</div></div>
+    <div class="sr-now"><span class="sr-scene">${drillScene(spSceneFor(b.label))}</span><div class="sr-nowtx"><b>${esc(b.label)}</b>${b.drill ? `<button class="sr-drill" data-act="drill-open" data-name="${esc(b.drill)}">${esc(b.drill)} →</button>` : `<span>Calienta progresivo</span>`}</div></div>
     <div class="sr-clock" id="sr-clock">${fmtClock(r.left)}</div>
     <div class="sr-bar"><i id="sr-bar" style="width:${pct}%"></i></div>
     <p class="sr-next">${next ? 'Sigue: ' + esc(next.label) + ' · ' + next.min + ' min' : '¡Último bloque!'}</p>
@@ -592,6 +592,25 @@ function lbPuttScene() {
     <circle cx="40" cy="40" r="3.2" fill="var(--sc-ball,#fff)" stroke="#5a6668" stroke-width=".5"/>
   </svg>`;
 }
+/* dibujo de up & down claro y estático (sin gif) */
+function lbUdScene() {
+  return `<svg viewBox="0 0 100 56" class="hs-svg" aria-hidden="true">
+    <ellipse cx="54" cy="46" rx="42" ry="7" fill="#cfe3b6"/>
+    <ellipse cx="64" cy="36" rx="27" ry="11" fill="#7cbf52"/>
+    <ellipse cx="62" cy="33" rx="17" ry="6" fill="#8fd06a"/>
+    <ellipse cx="65" cy="34" rx="3" ry="1.4" fill="#0c1c11"/>
+    <line x1="65" y1="34" x2="65" y2="12" stroke="#cfd6d8" stroke-width="1.4"/><path d="M65 12 L75 15 L65 18 Z" fill="#ff5a4d"/>
+    <path d="M22 44 Q44 4 61 33" fill="none" stroke="#9fc77f" stroke-width="1.3" stroke-dasharray="2.5 3" opacity=".85"/>
+    <circle cx="22" cy="44" r="3.2" fill="#fff" stroke="#5a6668" stroke-width=".5"/>
+  </svg>`;
+}
+/* escena 3D estática clara para timers/drills (no gif, no fondo negro) */
+function drillScene(kind) {
+  if (kind === 'gir') return lbGirScene();
+  if (kind === 'ud') return lbUdScene();
+  if (kind === 'putt') return lbPuttScene();
+  return lbFwScene();
+}
 
 function vBiblioteca() {
   const done = (cur() || {}).drillsDone || {};
@@ -609,7 +628,7 @@ function vBiblioteca() {
   // mismos dibujos que Inicio: fairway, green, up&down (+ putt)
   const scene = (cat === 'fw') ? lbFwScene()
     : (cat === 'gir') ? lbGirScene()
-      : (cat === 'ud' && typeof udGifScene === 'function') ? udGifScene()
+      : (cat === 'ud') ? lbUdScene()
         : (cat === 'putt') ? lbPuttScene()
           : (typeof chkScene === 'function') ? chkScene(cat, true) : '';
   const items = drills.map((d, i) => {
