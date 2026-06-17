@@ -3250,19 +3250,15 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lp-herophone { margin-top: 28px; z-index: 3; }
 
 /* ===== Maqueta de teléfono con pantallas reales de la app ===== */
-.lp-phone { width: min(240px, 66vw); margin: 0 auto; background: linear-gradient(155deg, #25332a, #0d1610); border-radius: 42px; padding: 26px 10px 32px; position: relative; box-shadow: 0 32px 60px rgba(20,40,15,.45), inset 0 0 0 2px rgba(255,255,255,.10), 0 1px 0 rgba(255,255,255,.12); }
+/* marco iPhone nuevo: bezel fino uniforme + Dynamic Island + botones */
+.lp-phone { width: min(238px, 66vw); margin: 0 auto; position: relative; background: linear-gradient(150deg, #4a5750 0%, #1a241d 38%, #0c130e 100%); border-radius: 46px; padding: 8px; box-shadow: 0 34px 66px rgba(20,40,15,.46), inset 0 0 0 1.5px rgba(255,255,255,.18), inset 0 0 0 5px #0a120c; }
 .lp-phone-notch { display: none; }
-.lp-phone-scr { width: 100%; aspect-ratio: 459 / 793; border-radius: 10px; overflow: hidden; position: relative; background: linear-gradient(180deg, #cfe8f8 0%, #f3f7e9 32%); box-shadow: inset 0 0 0 1px rgba(0,0,0,.25); }
+.lp-phone-scr { width: 100%; aspect-ratio: 459 / 793; border-radius: 39px; overflow: hidden; position: relative; background: linear-gradient(180deg, #cfe8f8 0%, #f3f7e9 32%); }
 .lp-phone .lp-shotimg { object-fit: cover; object-position: top center; }
-/* bocina + cámara (frente) */
-.lp-phone-spk { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 46px; height: 5px; border-radius: 3px; background: #313f35; }
-.lp-phone-cam { position: absolute; top: 9px; left: calc(50% - 40px); width: 8px; height: 8px; border-radius: 50%; background: #0a120c; box-shadow: inset 0 0 0 1.5px #3a4a3e, 0 0 3px rgba(120,180,255,.5); }
-/* barra de inicio (mentón) */
-.lp-phone-home { position: absolute; bottom: 13px; left: 50%; transform: translateX(-50%); width: 44px; height: 5px; border-radius: 3px; background: #313f35; }
-/* botones laterales */
-.lp-phone-btn { position: absolute; width: 3px; border-radius: 0 3px 3px 0; background: #0c1610; }
-.lp-btn-vol { left: -3px; top: 92px; height: 46px; box-shadow: 0 60px 0 #0c1610; }
-.lp-btn-pow { right: -3px; left: auto; border-radius: 3px 0 0 3px; top: 104px; height: 60px; }
+.lp-phone-island { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); width: 32%; max-width: 82px; height: 17px; background: #05080a; border-radius: 99px; z-index: 3; box-shadow: 0 0 0 1px rgba(255,255,255,.05); }
+.lp-phone-btn { position: absolute; width: 3px; background: linear-gradient(90deg,#0c1610,#26312a); }
+.lp-btn-vol { left: -3px; top: 24%; height: 5%; border-radius: 2px 0 0 2px; box-shadow: 0 9px 0 #15201a, 0 22px 0 #15201a; }
+.lp-btn-pow { right: -3px; top: 30%; height: 9%; border-radius: 0 2px 2px 0; }
 /* pantalla real de la app escalada dentro del teléfono */
 .lp-realscr { width: 100%; height: 100%; overflow: hidden; background: linear-gradient(180deg, #cfe8f8 0%, #f3f7e9 26%); }
 .lp-realwrap { width: 372px; padding: 16px 13px; transform: scale(.564); transform-origin: top left; pointer-events: none; }
@@ -3380,8 +3376,11 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lp-mqsec { padding-top: 6px; }
 .lp-marquee { overflow: hidden; margin-top: 16px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 .lp-mq-track { display: flex; align-items: center; gap: 40px; width: max-content; animation: lpMq 26s linear infinite; }
-body.is-scrolling .lp-mq-track { animation-play-state: paused; }
 @keyframes lpMq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* ticker de prensa en el intro (más pequeño y más rápido) */
+.lp-press-mq { max-width: 300px; margin: 0 auto; }
+.lp-press-mq .lp-mq-track { gap: 28px; animation-duration: 16s; }
+.lp-press-mq .lpm { font-size: 17px; opacity: .9; }
 .lpm { flex: 0 0 auto; font-size: 22px; font-weight: 800; color: var(--muted); opacity: .72; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
 .lpm-forbes { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 900; }
 .lpm-gd { font-family: Georgia, 'Times New Roman', serif; font-weight: 800; }
@@ -3469,7 +3468,11 @@ body.is-scrolling .lp-mq-track { animation-play-state: paused; }
 .lp-bp-txt { font-size: 17px; font-weight: 900; color: var(--lime-ink); }
 
 .lp-hero2 .lp-stage { width: min(76%, 320px); margin: 46px auto 0; z-index: 3; }
-.lp-hero2 .lp-hero-copy { z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; max-width: 540px; margin: 8px auto 0; padding: 0 22px clamp(40px,12vw,90px); }
+.lp-hero2 .lp-hero-copy { position: relative; z-index: 3; text-align: center; display: flex; flex-direction: column; align-items: center; max-width: 540px; margin: 8px auto 0; padding: 28px 22px clamp(40px,12vw,90px); }
+.lp-hero2 .lp-hero-copy::before { content: ''; position: absolute; inset: -6% -8% 18%; z-index: -1; background: radial-gradient(ellipse 70% 60% at 50% 42%, rgba(243,247,233,.92) 0%, rgba(243,247,233,.7) 45%, rgba(243,247,233,0) 75%); pointer-events: none; }
+.lp-hero2 .lp-title { text-shadow: 0 2px 16px rgba(243,247,233,.7); }
+.lp-hero2 .lp-sub { opacity: 1; color: var(--text); text-shadow: 0 1px 10px rgba(243,247,233,.85); }
+.lp-hero2 .lp-trust { text-shadow: 0 1px 8px rgba(243,247,233,.9); }
 .lp-hero2 .lp-hero-copy .lp-title { margin-top: 14px; }
 .lp-hero2 .lp-sub { max-width: 34ch; margin-left: auto; margin-right: auto; }
 .lp-hero2 .lp-cta-row { justify-content: center; }

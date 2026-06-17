@@ -83,8 +83,8 @@ function lpFeatArt(kind) {
 }
 
 /* maqueta de teléfono con una pantalla REAL de la app (usa los mismos componentes) */
-/* chrome de iPhone: bocina + cámara + botones + barra de inicio */
-const lpPhoneChrome = `<span class="lp-phone-btn lp-btn-vol"></span><span class="lp-phone-btn lp-btn-pow"></span><span class="lp-phone-cam"></span><span class="lp-phone-spk"></span><span class="lp-phone-home"></span>`;
+/* chrome de iPhone nuevo: Dynamic Island + botones laterales */
+const lpPhoneChrome = `<span class="lp-phone-btn lp-btn-vol"></span><span class="lp-phone-btn lp-btn-pow"></span><span class="lp-phone-island"></span>`;
 function lpPhone(scr, cls) {
   return `<div class="lp-phone ${cls || ''}">${lpPhoneChrome}<div class="lp-phone-scr">${scr}</div></div>`;
 }
@@ -140,6 +140,11 @@ function lpStoreBadge() { return `<button class="store-badge" data-act="go" data
 function lpGooglePlay() { return `<button class="store-badge" data-act="go" data-view="signup" aria-label="Disponible en Google Play"><svg class="sb-ico gp-ico" viewBox="0 0 24 24" aria-hidden="true"><polygon fill="#00C3FF" points="3,2 13,12 3,12"/><polygon fill="#00E676" points="3,12 13,12 3,22"/><polygon fill="#FF3B30" points="3,2 21,12 13,12"/><polygon fill="#FFCD00" points="3,22 21,12 13,12"/></svg><span class="sb-tx"><span class="sb-sm">Disponible en</span><span class="sb-lg">Google Play</span></span></button>`; }
 /* logo oficial: imagen en assets/ con respaldo de texto si falta el archivo */
 function lpOrg(file, label, cls) { return `<span class="lp-org ${cls || ''}"><img src="assets/${file}" alt="${esc(label)}" onload="if(!this.naturalWidth){this.style.display='none';this.nextElementSibling.style.display='inline-flex'}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"><span class="lp-org-fb">${esc(label)}</span></span>`; }
+function lpPressItems() {
+  return `<span class="lpm lpm-forbes">Forbes</span>
+    <span class="lpm lpm-tp">${lpTpStar()}Trustpilot</span>
+    <span class="lpm lpm-gd">Golf Digest</span>`;
+}
 function lpMarqueeItems() {
   return `<span class="lpm lpm-forbes">Forbes</span>
     <span class="lpm lpm-tp">${lpTpStar()}Trustpilot</span>
@@ -216,11 +221,7 @@ function vLanding() {
         <span class="lp-intro-logo">${pLogo()}</span>
         <span class="lp-intro-tag">Golf Analytics · IA</span>
         <div class="lp-press2">
-          <div class="lp-press2-row">
-            <span class="lp-brand lp-forbes">Forbes</span>
-            <span class="lp-brand lp-tp">${lpTpStar()}Trustpilot</span>
-            <span class="lp-brand lp-gd">Golf Digest</span>
-          </div>
+          <div class="lp-marquee lp-press-mq"><div class="lp-mq-track">${lpPressItems()}${lpPressItems()}</div></div>
           <div class="lp-stores">${lpStoreBadge()}${lpGooglePlay()}</div>
         </div>
       </div>
