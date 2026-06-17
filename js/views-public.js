@@ -410,17 +410,6 @@ function vLanding() {
       </div>
     </section>
 
-    <section class="lp-sec">
-      <span class="lp-eyebrow reveal">Cómo funciona</span>
-      <h2 class="lp-h2 reveal">De tu tarjeta<br/><span class="lime">a tu mejor golf.</span></h2>
-      <div class="lp-flow">
-        ${[['01', 'Guarda tu tarjeta', 'Apuntas cada hoyo: salida, fairway, green, juego corto y putts. Tu ronda queda completa y ordenada.', 'fw'],
-           ['02', 'Analízala con IA', 'La inteligencia lee tus rondas y encuentra exactamente dónde se te van los golpes.', 'gir'],
-           ['03', 'Entrena inteligente', 'Recibes la sesión que toca: el drill exacto, las reps y el tiempo. Practicas lo justo.', 'ud'],
-           ['04', 'Compite y sube', 'Bajas tu hándicap, subes en el ranking y llegas más lejos.', 'putt']]
-          .map(([n, t, d, kind]) => `<div class="lp-flowc reveal"><div class="lp-flowc-scene">${(typeof drillScene === 'function') ? drillScene(kind) : statScene(kind)}<span class="lp-flowc-n">${n}</span></div><h3>${t}</h3><p>${d}</p></div>`).join('')}
-      </div>
-    </section>
 
 
     <section class="lp-sec lp-presence">
