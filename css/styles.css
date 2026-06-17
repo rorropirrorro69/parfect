@@ -167,7 +167,8 @@ body.is-scrolling .bg-cloud, body.is-scrolling .bg-bird, body.is-scrolling .bg-g
   display: flex; align-items: center; justify-content: space-between;
   padding: calc(14px + env(safe-area-inset-top)) 0 8px;
   position: sticky; top: 0; z-index: 20;
-  background: linear-gradient(var(--bg) 72%, transparent);
+  background: transparent; -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+  -webkit-mask-image: linear-gradient(#000 72%, transparent); mask-image: linear-gradient(#000 72%, transparent);
 }
 .hdr .logo-word {
   font-weight: 900; font-style: italic; letter-spacing: 0.18em;
