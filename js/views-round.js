@@ -142,7 +142,47 @@ function rcRing(label, pct, color) {
     <span class="rc4-rl">${label}</span>
   </div>`;
 }
-/* Tarjeta de ronda limpia estilo Duolingo: acento por rango + stats simples + cuadrícula de hoyos */
+/* mini-hoyo con el recorrido animado de la bola (tee → green) tipo gif */
+function holeTrackCard(r, i) {
+  const h = r.holes[i]; if (!h) return '';
+  const off = r.holeOffset || 0;
+  const ch = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId].holes : null;
+  const src = ch ? ch[(off + i) % ch.length] : null;
+  const par = (h.par != null) ? h.par : (src ? src.par : 4);
+  const yds = src && src.yds ? src.yds : null;
+  const score = h.score;
+  const holeNo = off + i + 1;
+  const rel = (score != null) ? score - par : null;
+  const cls = rel == null ? 'na' : rel <= -1 ? 'u' : rel === 0 ? 'p' : rel === 1 ? 'o' : 'b';
+  const n = Math.max(1, Math.min(9, score || par));        // nº de tiros = recorrido de la bola
+  const pts = [];
+  for (let k = 0; k <= n; k++) {
+    const ty = +(110 - (110 - 22) * (k / n)).toFixed(1);
+    let tx = 32;
+    if (k > 0 && k < n) { const sd = (holeNo * 9 + k * 17) % 100; tx = 21 + (sd % 22); }
+    pts.push([+tx.toFixed(1), ty]);
+  }
+  const d = 'M' + pts.map(p => p.join(' ')).join(' L');
+  const dots = pts.slice(1, -1).map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="1.7" fill="#fff" opacity=".92"/>`).join('');
+  return `<div class="ht-card">
+    <svg class="ht-svg" viewBox="0 0 64 122" aria-hidden="true">
+      <rect x="0" y="0" width="64" height="122" rx="12" fill="#4f9a3f"/>
+      <path d="M30,118 Q15,82 26,52 Q34,30 32,18" fill="none" stroke="#8fd05f" stroke-width="20" stroke-linecap="round"/>
+      <ellipse cx="14" cy="92" rx="8" ry="11" fill="#3f8a36" opacity=".7"/><ellipse cx="52" cy="64" rx="7" ry="10" fill="#3f8a36" opacity=".7"/>
+      <ellipse cx="48" cy="98" rx="7" ry="4" fill="#ecd99f"/>
+      <rect x="27" y="111" width="10" height="5" rx="2" fill="#d8c486"/>
+      <ellipse cx="32" cy="20" rx="15" ry="9" fill="#73c24a"/>
+      <g class="ht-flag"><rect x="31.2" y="2" width="1.6" height="18" fill="#e9eef0"/><path d="M32.8 2 L42 5 L32.8 8 Z" fill="#ff5a4d"/></g>
+      <circle cx="32" cy="20" r="2" fill="#1f3b14"/>
+      <path class="ht-trace" pathLength="100" d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      ${dots}
+      <circle class="ht-ball" r="3" fill="url(#g3dBall)" stroke="#cdd5d7" stroke-width=".5" style="offset-path:path('${d}')"/>
+    </svg>
+    <div class="ht-meta"><b>H${holeNo}</b><span class="ht-pd">Par ${par}${yds ? ` · ${yds}y` : ''}</span><span class="ht-sc ht-${cls}">${score != null ? score : '–'}</span></div>
+  </div>`;
+}
+
+/* Tarjeta de ronda: encabezado + 3 hoyos con su recorrido (las stats salen al entrar) */
 function vRoundStatCard(r, hcp) {
   const s = Stats.roundStats(r);
   const course = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : r.course;
@@ -156,18 +196,14 @@ function vRoundStatCard(r, hcp) {
   const parOf = i => (r.holes[i] && r.holes[i].par != null) ? r.holes[i].par : (ch && ch[off + i] ? ch[off + i].par : 4);
   const ydsOf = (ch && ch.some(h => h.yds)) ? (i => (ch[off + i] ? ch[off + i].yds : null)) : null;
   const rows = [{ name: 'Tú', scoreOf: i => (r.holes[i] ? r.holes[i].score : null) }];
-  const pctS = (x, t) => (t ? Math.round((x / t) * 100) + '%' : '—');
+  const nh = r.holes.length;
+  const idxs = [...new Set([0, Math.floor((nh - 1) / 2), nh - 1])];
   return `<button class="rc6" data-act="round-detail" data-id="${r.id}">
     <div class="rc6-head">
       <div class="rc6-id"><b>${esc(course)}${r.partyId ? ` <span class="rc5-party">${golfIcon('flag')}</span>` : ''}</b><span class="rc5-date">${fmtDate(r.date)} · ${s.holes} hoyos · Par ${s.par}</span></div>
       <div class="rc5-score ${scoreCls}">${vibe ? `<i>${vibe.ic}</i>` : ''}<b>${s.score}</b><span>${fmtToPar(s.toPar)}</span></div>
     </div>
-    <div class="pst-rings rc6-scenes">
-      ${pstSceneStatic('fw', s.fwTot ? (s.fw / s.fwTot) * 100 : 0, 'Fairways')}
-      ${pstSceneStatic('gir', s.girTot ? (s.gir / s.girTot) * 100 : 0, 'GIR')}
-      ${pstSceneStatic('ud', s.scrTot ? (s.scr / s.scrTot) * 100 : 0, 'Up & down')}
-    </div>
-    <div class="rc6-card">${scorecardTable(s.holes, parOf, rows, -1, ydsOf)}</div>
+    <div class="ht-row">${idxs.map(i => holeTrackCard(r, i)).join('')}</div>
   </button>`;
 }
 
