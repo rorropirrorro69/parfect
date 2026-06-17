@@ -184,7 +184,7 @@ function vTrainer() {
   const u = cur();
   const tab = ['diag', 'biblioteca', 'logros', 'academia'].includes(V.trainerTab) ? V.trainerTab : 'entreno';
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
-  const body = tab === 'entreno' ? (vWeekStrip() + vSessionPlanner())
+  const body = tab === 'entreno' ? (vWeekStrip() + vSessionPlanner() + vTrackerPlan())
     : tab === 'biblioteca' ? vBiblioteca()
       : tab === 'logros' ? (vKeyTargets(u) + `<div style="margin-top:22px"></div>` + vLogros())
         : tab === 'academia' ? vAcademyLaunch()
@@ -559,7 +559,7 @@ function vSessionRunner() {
 }
 
 function vBiblioteca() {
-  return vTrackerPlan() + vDrillsLibrary();
+  return vDrillsLibrary() + vTrackerPlan();
 }
 /* pestaña Academia: tarjeta de lanzamiento a la ruta inmersiva */
 function vAcademyLaunch() {
@@ -602,7 +602,8 @@ function vTrackerPlan() {
     }).join('');
     return `<div class="sec-h" style="margin-top:18px"><h2 style="font-size:15px">${golfIcon(c.icon)} ${esc(c.cat)}</h2></div><div class="dlc-list">${tiles}</div>`;
   }).join('');
-  return `<p class="note">Elige el bastón o área que quieras entrenar y dale para empezar.</p>${cats}`;
+  return `<div class="sec-h" style="margin-top:24px"><h2 style="font-size:18px">${golfIcon('flag')} Entrenamientos Parfect</h2><span class="small muted">por área</span></div>
+    <p class="note" style="margin-top:2px">Elige el bastón o área que quieras entrenar y dale para empezar.</p>${cats}`;
 }
 
 function vDrillSheet() {
