@@ -1548,6 +1548,38 @@ body.is-scrolling .lp-bird, body.is-scrolling .lp-fly { animation-play-state: pa
 .lp-how-n { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; background: var(--lime); color: #0c2913; font-weight: 900; font-size: 17px; display: grid; place-items: center; }
 .lp-how-tx h3 { margin: 2px 0 4px; font-size: 16.5px; font-weight: 900; color: var(--text); }
 .lp-how-tx p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+/* PARFECT para clubes (B2B) en la landing */
+.lp-club { text-align: center; }
+.lpc-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 760px; margin: 26px auto 0; text-align: left; }
+.lpc-pillar { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 20px; box-shadow: 0 10px 26px rgba(20,40,15,.07); }
+.lpc-pic { width: 48px; height: 48px; border-radius: 14px; background: #eef7e6; display: grid; place-items: center; margin-bottom: 12px; }
+.lpc-pic .gi { width: 26px; height: 26px; }
+.lpc-pillar h3 { font-size: 19px; font-weight: 900; color: var(--text); margin: 0; }
+.lpc-pillar > p { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+.lpc-ul { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.lpc-ul li { font-size: 14px; padding-left: 22px; position: relative; color: var(--text); }
+.lpc-ul li::before { content: '✓'; position: absolute; left: 0; color: var(--lime-ink); font-weight: 900; }
+.lpc-ai { display: flex; gap: 13px; align-items: center; text-align: left; max-width: 760px; margin: 14px auto 0; background: linear-gradient(135deg,#14321c,#0d2414); color: #fff; border-radius: 20px; padding: 18px 20px; }
+.lpc-ai-ava { flex: none; width: 46px; height: 46px; border-radius: 14px; background: rgba(196,255,93,.16); color: var(--lime); display: grid; place-items: center; }
+.lpc-ai-ava .chatico { width: 26px; height: 26px; }
+.lpc-ai-lab { font-size: 10.5px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: var(--lime); }
+.lpc-ai-tx b { display: block; font-size: 17px; font-weight: 900; margin: 2px 0; }
+.lpc-ai-tx p { font-size: 13px; color: rgba(255,255,255,.78); margin: 0; line-height: 1.4; }
+.lpc-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; max-width: 760px; margin: 14px auto 0; }
+.lpc-stat { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 8px; }
+.lpc-stat b { display: block; font-size: 24px; font-weight: 900; color: var(--lime-ink); }
+.lpc-stat span { font-size: 11px; color: var(--muted); line-height: 1.2; display: block; margin-top: 2px; }
+.lpc-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 760px; margin: 22px auto 0; text-align: left; }
+.lpc-plan { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 22px; position: relative; }
+.lpc-plan.hot { border: 2px solid var(--lime-ink); box-shadow: 0 16px 40px rgba(124,194,74,.18); }
+.lpc-pl-tag { position: absolute; top: -11px; right: 16px; background: var(--lime); color: #0c2913; font-weight: 900; font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; padding: 4px 11px; border-radius: 99px; }
+.lpc-pl-nm { font-size: 16px; font-weight: 900; color: var(--text); }
+.lpc-pl-amt { display: block; font-size: 34px; font-weight: 900; color: var(--text); margin: 2px 0 8px; }
+.lpc-pl-amt i { font-size: 13px; font-weight: 700; color: var(--muted); font-style: normal; }
+.lpc-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px; }
+.lpc-cta a { text-decoration: none; }
+.lpc-deck { color: var(--lime-ink); font-weight: 800; font-size: 14px; }
+@media (max-width: 560px) { .lpc-pillars, .lpc-plans { grid-template-columns: 1fr; } .lpc-stats { grid-template-columns: 1fr 1fr; } }
 
 /* spine: tarjeta → IA → entrena → mejor */
 .lp-flow { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 36px; }
