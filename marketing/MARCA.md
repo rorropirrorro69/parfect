@@ -63,7 +63,7 @@ Todo lo que publiques debe caer en uno de estos tres. Si no cae en ninguno, no e
 **1 línea (WhatsApp/bio):** PARFECT registra tu ronda en segundos y te dice exactamente qué practicar para bajar tu hándicap.
 
 **1 párrafo (DM / pie de post):**
-> PARFECT es una app de golf mexicana: anotas tu ronda hoyo a hoyo en segundos y te devuelve tus números reales (calles, greens, putts, salvadas) más un diagnóstico que te dice **cuál es tu fuga de golpes y qué drill hacer** para taparla. Y si juegas con amigos, arma una Party con código de 4 letras y lleva las cuentas en vivo. Gratis, en tu celular: rorropirrorro69.github.io/parfect
+> PARFECT es una app de golf mexicana: anotas tu ronda hoyo a hoyo en segundos y te devuelve tus números reales (calles, greens, putts, salvadas) más un diagnóstico que te dice **cuál es tu fuga de golpes y qué drill hacer** para taparla. Y si juegas con amigos, arma una Party con código de 4 letras y lleva las cuentas en vivo. Gratis, en tu celular: parfectgolf.github.io
 
 **Elevator (en el campo, hablado):**
 > "¿Sabes qué parte de tu juego te cuesta más golpes? Hice una app que te lo dice. Anotas la ronda en el cel y te suelta tus stats y qué practicar. Y para el grupo arma las apuestas solitas. Te paso el link y la pruebas hoy."
@@ -120,7 +120,7 @@ Reglas de imagen:
 **PAR + PERFECT = PARFECT.** El par perfecto. Pronunciado "parfect" (no "perfect").
 - Usuario social sugerido: `@parfect.golf`
 - Nombre público: **PARFECT · Golf**
-- Link oficial (por ahora): https://rorropirrorro69.github.io/parfect/
+- Link oficial (por ahora): https://parfectgolf.github.io/
   - *Pendiente día 0:* crear link corto memorable (bit.ly/parfect-golf o dominio `parfect.golf`) para decirlo de viva voz en el campo.
 
 ---

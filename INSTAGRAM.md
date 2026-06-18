@@ -15,7 +15,7 @@
 🎉 Juega y compite con amigos
 👇 Empieza gratis
 ```
-**Link in bio:** https://rorropirrorro69.github.io/parfect/
+**Link in bio:** https://parfectgolf.github.io/
 
 ## Paleta y estilo (para que todo se vea consistente)
 - Fondo negro `#070b06`, acento verde lima `#c9f73e`, texto claro `#eef3e6`.

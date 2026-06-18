@@ -155,7 +155,7 @@ def scene_cta():
     d.text((W//2,2440),'EN MORELIA',font=BLACK(200),fill=INK,anchor='mm')
     pill(d,W//2,2680,'ESTRENA PARFECT · GRATIS · HOY',BLACK(64),padh=128)
     d.text((W//2,3060),'@parfect.golf',font=BOLD(104),fill=INK,anchor='mm')
-    d.text((W//2,3200),'rorropirrorro69.github.io/parfect',font=BOLD(54),fill=MUT,anchor='mm')
+    d.text((W//2,3200),'parfectgolf.github.io',font=BOLD(54),fill=MUT,anchor='mm')
     return b.convert('RGB')
 
 SCENES=[('intro',scene_intro),('hook',scene_hook),('stats',scene_stats),

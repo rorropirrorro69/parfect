@@ -1,6 +1,6 @@
 # MENSAJES — Todo el copy listo para copiar/pegar
 
-> Reemplaza `[Nombre]`, `[campo]`, `[link]` antes de enviar. Link oficial: https://rorropirrorro69.github.io/parfect/
+> Reemplaza `[Nombre]`, `[campo]`, `[link]` antes de enviar. Link oficial: https://parfectgolf.github.io/
 > Personaliza SIEMPRE el 1:1. El copy genérico convierte la mitad.
 
 ---
@@ -72,7 +72,7 @@
 🧠 Sabe qué te falla → te dice qué practicar
 👇 Gratis. Para Morelia primero.
 ```
-- **Link in bio:** https://rorropirrorro69.github.io/parfect/ (o tu link corto)
+- **Link in bio:** https://parfectgolf.github.io/ (o tu link corto)
 
 ## Primeros 9 posts (la cuadrícula de arranque) — orden DATOS primero
 > Ya están creadas como imágenes en `posts/` (ver `posts/README.md`). Publica en orden 1 → 9.
