@@ -4403,7 +4403,7 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .lp-inst-lab { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
 .lp-inst-reel { overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 .lp-inst-track { display: flex; width: max-content; animation: lpInst 36s linear infinite; }
-.lp-emblem { flex: none; margin-right: 14px; width: 64px; height: 64px; border-radius: 50%; background: var(--c, #1c4a23); color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 900; letter-spacing: .01em; box-shadow: 0 8px 18px rgba(20,40,15,.2); border: 2.5px solid rgba(255,255,255,.85); }
+.lp-instbadge { flex: none; margin-right: 10px; font-size: 13px; font-weight: 800; color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 16px; box-shadow: 0 6px 16px rgba(20,40,15,.06); white-space: nowrap; }
 @keyframes lpInst { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .lp-inst-track { animation: none; flex-wrap: wrap; justify-content: center; gap: 8px; } }
 /* Convocatoria: Torneo PARFECT Juvenil */

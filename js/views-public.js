@@ -590,11 +590,7 @@ function vLanding() {
       </div>
       <div class="lp-inst reveal">
         <span class="lp-inst-lab">Torneos juveniles y universidades del camino · ejemplos</span>
-        <div class="lp-inst-reel"><div class="lp-inst-track">${(() => {
-          const inst = [['GMJ', '#1c4a23'], ['FMG', '#2f7d3a'], ['AGEM', '#3f8f46'], ['UA', '#0C234B'], ['A&M', '#500000'], ['OSU', '#FF7300'], ['TCU', '#4D1979'], ['STA', '#8C1515'], ['PEP', '#00205B'], ['TEC', '#003DA5'], ['ANÁ', '#C8102E']];
-          const b = inst.map(([m, c]) => `<span class="lp-emblem" style="--c:${c}">${m}</span>`).join('');
-          return b + b;
-        })()}</div></div>
+        <div class="lp-inst-reel"><div class="lp-inst-track">${(() => { const b = ['Gira Mexicana Juvenil', 'FMG', 'AGEM', 'U. of Arizona', 'Texas A&M', 'Oklahoma State', 'TCU', 'Stanford', 'Pepperdine', 'Tec de Monterrey', 'Anáhuac'].map(n => `<span class="lp-instbadge">${n}</span>`).join(''); return b + b; })()}</div></div>
       </div>
       <div class="lp-statrow reveal" style="margin-top:18px">
         <div class="lp-stat"><b>+10</b><span>campos aliados</span></div>
