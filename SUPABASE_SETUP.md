@@ -40,3 +40,24 @@ Esto da: cuentas reales, datos que no se pierden (entras desde cualquier teléfo
 
 > Las **parties** siguen sincronizándose por su canal en tiempo real (no por Supabase) — eso no cambió.
 > Si las dos llaves quedan vacías en `js/config.js`, la app corre 100% local, como antes.
+
+---
+
+## Clubes (B2B) — multijugador por club  ·  migración `05_clubs.sql`
+
+Para activar los **clubes** (torneos con leaderboard en vivo y academia juvenil)
+en modo multi-dispositivo:
+
+1. En Supabase → **SQL Editor**, ejecuta `supabase/migrations/05_clubs.sql`
+   (crea las tablas `clubs`, `club_members`, `tournaments`, `tournament_players`,
+   `academy_plans` y sus políticas RLS por club).
+2. Asegúrate de que los usuarios entren con **cuenta de nube** (email/contraseña),
+   no como demo local — el `auth.uid()` es lo que usan las políticas RLS.
+3. Listo. La capa `js/clubs.js` ya está integrada:
+   - **Sube** (espejo) el club, miembros, torneos y planes cuando hay cambios.
+   - **Baja y mezcla** (no destructivo) los clubes donde eres miembro al abrir la sección Club.
+   - Si las tablas **aún no existen** o no hay nube, se **auto-desactiva en silencio**
+     y la app sigue 100% local (no se rompe nada).
+
+> Mientras no corras `05_clubs.sql`, los clubes funcionan **local-first** (en tu
+> dispositivo). Al correr la migración, pasan a ser **en vivo entre dispositivos**.

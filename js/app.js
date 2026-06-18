@@ -24,7 +24,7 @@ const myPractices = () => S.practices.filter(p => p.userId === S.session).sort((
 const today = () => new Date().toISOString().slice(0, 10);
 const val = id => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
 
-function commit() { Store.save(S); render(); if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.pushSoon(); }
+function commit() { Store.save(S); render(); if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.pushSoon(); if (typeof Clubs !== 'undefined' && Clubs.on() && typeof myClub === 'function') { const _c = myClub(); if (_c) Clubs.pushSoon(_c); } }
 function go(view) { V.view = view; V.err = null; render(); window.scrollTo(0, 0); }
 
 async function hashPass(pass) {
@@ -244,7 +244,7 @@ const actions = {
   noop() {},
 
   go(d) { go(d.view); },
-  nav(d) { V.delArm = null; V.wipeArm = false; V.profileOpen = false; V.sessionSummary = null; go(d.view); },
+  nav(d) { V.delArm = null; V.wipeArm = false; V.profileOpen = false; V.sessionSummary = null; if (typeof Clubs !== 'undefined' && /^club/.test(d.view || '')) Clubs.pull(); go(d.view); },
 
   /* ---- Birdie chatbot ---- */
   'chat-open'() { V.chat = V.chat || { open: false, msgs: [] }; V.chat.open = true; if (!V.chat.msgs.length) V.chat.msgs.push({ from: 'bot', text: BOT_HELLO }); render(); setTimeout(() => { const i = document.getElementById('chat-text'); if (i) i.focus(); chatScrollBottom(); }, 40); },
