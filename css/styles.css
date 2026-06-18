@@ -1621,7 +1621,7 @@ body.is-scrolling .lp-bird, body.is-scrolling .lp-fly { animation-play-state: pa
 .lpc-feat { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
 .lpc-feat li { font-size: 14px; line-height: 1.4; padding-left: 24px; position: relative; color: var(--text); }
 .lpc-feat li::before { content: ''; position: absolute; left: 2px; top: 5px; width: 11px; height: 6px; border-left: 2.5px solid var(--lime-ink); border-bottom: 2.5px solid var(--lime-ink); transform: rotate(-45deg); }
-.lpc-ai { width: 100%; max-width: 720px; margin: 16px auto 0; background: linear-gradient(135deg,#14321c,#0d2414); color: #fff; border-radius: 20px; padding: 22px; text-align: left; }
+.lpc-ai { width: 100%; max-width: 720px; margin: 16px auto 0; background: linear-gradient(135deg, #25b765 0%, #119552 52%, #0a7a44 100%); color: #fff; border-radius: 20px; padding: 22px; text-align: left; box-shadow: 0 16px 32px rgba(20,120,60,.24); }
 .lpc-ai-kick { font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--lime); }
 .lpc-ai-h { display: block; font-size: 21px; font-weight: 900; margin: 6px 0 8px; }
 .lpc-ai p { font-size: 14px; color: rgba(255,255,255,.8); margin: 0; line-height: 1.5; }
@@ -2406,8 +2406,8 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .splib-item.dg-static { cursor: default; }
 .splib-item.dg-static:active { transform: none; }
 /* Análisis IA · rediseño en tarjetas de prioridad */
-.aiq-hero { display: flex; align-items: center; gap: 13px; padding: 15px 16px; border-radius: 20px; margin-bottom: 12px; background: linear-gradient(135deg, #14321c, #0d2414); color: #fff; box-shadow: 0 14px 30px rgba(20,40,15,.18); }
-.aiq-hero-ava { flex: none; width: 46px; height: 46px; border-radius: 14px; background: rgba(196,255,93,.16); display: grid; place-items: center; }
+.aiq-hero { display: flex; align-items: center; gap: 13px; padding: 15px 16px; border-radius: 20px; margin-bottom: 12px; background: linear-gradient(135deg, #25b765 0%, #119552 52%, #0a7a44 100%); color: #fff; box-shadow: 0 16px 32px rgba(20,120,60,.28); }
+.aiq-hero-ava { flex: none; width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,.32), rgba(210,255,110,.28)); display: grid; place-items: center; box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
 .aiq-hero-ava .gi { width: 26px; height: 26px; }
 .aiq-hero-lab { font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--lime); }
 .aiq-hero-h { display: block; font-size: 17px; font-weight: 900; margin: 2px 0 2px; line-height: 1.15; }
@@ -2456,8 +2456,8 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 @keyframes chatPulse { 0% { box-shadow: 0 0 0 0 rgba(124,252,106,.55); } 70% { box-shadow: 0 0 0 6px rgba(124,252,106,0); } 100% { box-shadow: 0 0 0 0 rgba(124,252,106,0); } }
 .chat-panel { position: fixed; z-index: 81; right: 12px; left: 12px; bottom: 12px; max-width: 420px; margin: 0 auto; height: min(72vh, 560px); display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 24px 60px rgba(10,30,10,.36); overflow: hidden; animation: chatUp .26s cubic-bezier(.2,.9,.3,1.1); }
 @keyframes chatUp { 0% { transform: translateY(24px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-.chat-head { display: flex; align-items: center; gap: 12px; padding: 14px 14px; background: linear-gradient(135deg, #20562f, #0c2414); color: #fff; box-shadow: inset 0 -2px 0 rgba(210,255,110,.22); }
-.chat-head-ava { width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 50% 36%, #ffffff, #e4f4c8); display: grid; place-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.22); }
+.chat-head { display: flex; align-items: center; gap: 12px; padding: 14px 14px; background: linear-gradient(135deg, #25b765 0%, #119552 52%, #0a7a44 100%); color: #fff; box-shadow: inset 0 -2px 0 rgba(210,255,110,.28); }
+.chat-head-ava { width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 50% 32%, #eaf6ff, #bfe0f5); display: grid; place-items: center; box-shadow: 0 3px 10px rgba(0,0,0,.22); }
 .chat-head-ava .chatico { width: 34px; height: 34px; }
 .chat-head-tx b { display: block; font-size: 16px; font-weight: 900; letter-spacing: .2px; }
 .chat-head-tx span { font-size: 11px; color: rgba(255,255,255,.72); }
@@ -2469,7 +2469,7 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .chatmsg { display: flex; gap: 8px; align-items: flex-end; max-width: 88%; animation: chatMsgIn .24s cubic-bezier(.2,.9,.3,1.1); }
 .chatmsg.me { align-self: flex-end; }
 .chatmsg.bot { align-self: flex-start; }
-.chatav { flex: none; width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 50% 36%, #ffffff, #e4f4c8); display: grid; place-items: center; box-shadow: 0 2px 6px rgba(20,50,20,.18); }
+.chatav { flex: none; width: 32px; height: 32px; border-radius: 50%; background: radial-gradient(circle at 50% 32%, #eaf6ff, #bfe0f5); display: grid; place-items: center; box-shadow: 0 2px 6px rgba(20,50,20,.18); }
 .chatav .chatico { width: 26px; height: 26px; }
 .chatbub { font-size: 13px; line-height: 1.45; padding: 10px 13px; border-radius: 16px; }
 .chatmsg.bot .chatbub { background: var(--card2); border: 1px solid var(--line); color: var(--text); border-bottom-left-radius: 5px; box-shadow: 0 2px 8px rgba(20,50,20,.06); }

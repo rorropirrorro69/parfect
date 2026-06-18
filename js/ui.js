@@ -547,17 +547,22 @@ const BOT_HELLO = '¡Hola! Soy Birdie, tu asistente de PARFECT. Pregúntame lo q
 const BOT_QUICKS = ['¿Cómo registro una ronda?', '¿Qué es el Análisis IA?', '¿Cómo entreno?', '¿Es gratis?'];
 function chatBotIcon() {
   return `<svg viewBox="0 0 24 24" class="chatico" aria-hidden="true">
-    <path class="bf-tuft" d="M12 3.4 q1.7 -2.2 3.4 -1.1 q-.3 2.1 -2.2 2.7 Z" fill="#6fb53f"/>
-    <circle cx="12" cy="12.6" r="8.4" fill="url(#g3dLime)"/>
-    <ellipse cx="6.8" cy="14.6" rx="1.3" ry="1" fill="#ffce7a" opacity=".55"/>
-    <ellipse cx="17.2" cy="14.6" rx="1.3" ry="1" fill="#ffce7a" opacity=".55"/>
-    <circle cx="9.4" cy="11.4" r="2.6" fill="#fff"/>
-    <circle cx="14.6" cy="11.4" r="2.6" fill="#fff"/>
-    <circle class="bf-eye" cx="9.8" cy="11.7" r="1.15" fill="#0d2414"/>
-    <circle class="bf-eye" cx="15" cy="11.7" r="1.15" fill="#0d2414"/>
-    <circle cx="9.45" cy="11.25" r=".38" fill="#fff"/>
-    <circle cx="14.65" cy="11.25" r=".38" fill="#fff"/>
-    <path d="M10.7 14.4 h2.6 l-1.3 2.1 Z" fill="#f3a637"/>
+    <path d="M12 2.7 C7 2.7 3.8 6.2 3.8 10.7 c0 2 .6 3.6 1.6 5 1.6 2.2 4 3.5 6.6 4.6 2.6 -1.1 5 -2.4 6.6 -4.6 1 -1.4 1.6 -3 1.6 -5 C20.2 6.2 17 2.7 12 2.7 Z" fill="#f7fafc"/>
+    <path d="M9 3.1 c.4 .9 .3 1.8 -.2 2.6 -.7 -.6 -1.1 -1.5 -1 -2.4 Z" fill="#e4ebef"/>
+    <path d="M15 3.1 c-.4 .9 -.3 1.8 .2 2.6 .7 -.6 1.1 -1.5 1 -2.4 Z" fill="#e4ebef"/>
+    <path d="M4.4 11 c-.1 1.4 .3 2.6 1 3.7 .6 -1.1 .8 -2.4 .6 -3.7 Z" fill="#e9eff2"/>
+    <path d="M19.6 11 c.1 1.4 -.3 2.6 -1 3.7 -.6 -1.1 -.8 -2.4 -.6 -3.7 Z" fill="#e9eff2"/>
+    <path d="M6.5 9.4 C8 8.6 9.8 8.6 11.2 9.5 l-.5 1.6 C9.6 10.3 8.2 10.3 6.9 11 Z" fill="#39404a"/>
+    <path d="M17.5 9.4 C16 8.6 14.2 8.6 12.8 9.5 l.5 1.6 C14.4 10.3 15.8 10.3 17.1 11 Z" fill="#39404a"/>
+    <circle cx="8.9" cy="11.6" r="1.7" fill="#ffce3a"/>
+    <circle cx="15.1" cy="11.6" r="1.7" fill="#ffce3a"/>
+    <circle class="bf-eye" cx="9.1" cy="11.8" r=".8" fill="#16100a"/>
+    <circle class="bf-eye" cx="14.9" cy="11.8" r=".8" fill="#16100a"/>
+    <circle cx="8.6" cy="11.2" r=".32" fill="#fff"/>
+    <circle cx="14.6" cy="11.2" r=".32" fill="#fff"/>
+    <path d="M10.2 13.2 h3.6 c0 1.5 -.4 2.9 -1.2 4.1 l-.6 .9 -.6 -.9 c-.8 -1.2 -1.2 -2.6 -1.2 -4.1 Z" fill="url(#g3dGold)"/>
+    <path d="M12 17.4 c-.5 .6 -.8 1.3 -.8 2.1 .7 -.3 1.3 -.8 1.7 -1.5 Z" fill="#cf8418"/>
+    <ellipse cx="11.3" cy="14.2" rx=".28" ry=".5" fill="#cf8418"/>
   </svg>`;
 }
 function botReply(text) {

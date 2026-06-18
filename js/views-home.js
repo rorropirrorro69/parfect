@@ -794,7 +794,7 @@ function feedScorecard(p) {
     else if (scores[idx] > pars[idx] - 1) { scores[idx] -= 1; rem += 1; }
     k++;
   }
-  return (typeof scorecardTable === 'function') ? scorecardTable(n, i => pars[i], [{ name: (p.name || 'Tú').split(' ')[0], scoreOf: i => scores[i] }], -1, null) : scoreStrip(n, i => pars[i], i => scores[i]);
+  return (typeof scorecardTable === 'function') ? scorecardTable(n, i => pars[i], [{ name: '', scoreOf: i => scores[i] }], -1, null) : scoreStrip(n, i => pars[i], i => scores[i]);
 }
 /* tiempo relativo en español a partir de un timestamp ISO (created_at) */
 function fmtWhen(iso) {
@@ -915,7 +915,7 @@ function vSocialFeed() {
     const course = (r.courseId && COURSES[r.courseId]) ? COURSES[r.courseId] : null;
     const ch = course ? course.holes : null;
     const parOf = i => (r.holes[i] && r.holes[i].par != null) ? r.holes[i].par : (ch && ch[off + i] ? ch[off + i].par : 4);
-    const card = (typeof scorecardTable === 'function') ? scorecardTable(s.holes, parOf, [{ name: u.name.split(' ')[0], scoreOf: i => (r.holes[i] ? r.holes[i].score : null) }], -1, null) : scoreStrip(s.holes, parOf, i => (r.holes[i] ? r.holes[i].score : null));
+    const card = (typeof scorecardTable === 'function') ? scorecardTable(s.holes, parOf, [{ name: '', scoreOf: i => (r.holes[i] ? r.holes[i].score : null) }], -1, null) : scoreStrip(s.holes, parOf, i => (r.holes[i] ? r.holes[i].score : null));
     return { id: 'me-' + r.id, mine: true, name: u.name, course: r.courseId ? sname(r.courseId) : r.course, holes: s.holes, score: s.score, toPar: s.toPar, fw: pct(s.fw, s.fwTot), gir: pct(s.gir, s.girTot), putts: s.putts, when: fmtDate(r.date), cmt: 0, likes: 0, cap: r.caption || '', media: r.media || null, card };
   });
   const feed = [...myPosts, ...FRIENDS_FEED];
