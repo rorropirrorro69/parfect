@@ -1178,11 +1178,11 @@ function vEventComposer(u) {
 
 function vPerfil() {
   const u = cur();
-  return `${vClubEntry(u)}
-    ${vStories(u)}
+  return `${vStories(u)}
     ${vTorneo(u)}
     ${vRanking(u)}
-    ${vSocialFeed()}`;
+    ${vSocialFeed()}
+    ${vClubEntry(u)}`;
 }
 
 /* ============ Club (B2B): multi-tenant local-first, listo para Supabase ============ */
