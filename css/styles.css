@@ -1213,6 +1213,22 @@ button.row { cursor: pointer; }
 @keyframes pstFly { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-5px) rotate(5deg); } }
 .pst-th { animation: pstBob 3.4s ease-in-out infinite; }
 @keyframes pstBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+/* íconos de stats animados (gif-like): cada uno con su movimiento propio */
+.pst-th svg [class^="si-"] { transform-box: fill-box; }
+.si-ball { transform-origin: center; animation: siRoll 2.4s cubic-bezier(.5,0,.5,1) infinite; }
+@keyframes siRoll { 0% { transform: translate(0,0); } 50% { transform: translate(11px,-1.5px); } 100% { transform: translate(0,0); } }
+.si-tb1, .si-tb2, .si-tb3 { transform-origin: center; animation: siBounce 1.5s ease-in-out infinite; }
+.si-tb2 { animation-delay: .18s; } .si-tb3 { animation-delay: .36s; }
+@keyframes siBounce { 0%, 100% { transform: translateY(0); } 42% { transform: translateY(-2.6px); } }
+.si-wings { transform-origin: center 62%; animation: siFlap .85s ease-in-out infinite; }
+@keyframes siFlap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.6) translateY(-.5px); } }
+.si-arrow { transform-origin: center; animation: siUp 1.5s ease-in-out infinite; }
+@keyframes siUp { 0%, 100% { transform: translateY(.6px); } 50% { transform: translateY(-1.8px); } }
+.si-flagw { transform-origin: left center; animation: siWave 1.7s ease-in-out infinite; }
+@keyframes siWave { 0%, 100% { transform: skewY(0) scaleX(1); } 50% { transform: skewY(-7deg) scaleX(.9); } }
+.si-star { transform-origin: center; animation: siTwinkle 2.6s ease-in-out infinite; }
+@keyframes siTwinkle { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.14) rotate(9deg); } }
+@media (prefers-reduced-motion: reduce) { .si-ball, .si-tb1, .si-tb2, .si-tb3, .si-wings, .si-arrow, .si-flagw, .si-star { animation: none !important; } }
 .app-content.view-in .pst-tile { animation: tileIn .5s cubic-bezier(.2,.85,.25,1) both; animation-delay: calc(0.06s * var(--i, 0) + 0.12s); }
 @keyframes tileIn { from { opacity: 0; transform: translateY(16px) scale(.95); } to { opacity: 1; transform: none; } }
 .app-content.view-in .pst-ring { animation: tileIn .5s cubic-bezier(.2,.85,.25,1) both; }
