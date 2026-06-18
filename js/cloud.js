@@ -27,7 +27,7 @@ const Cloud = (() => {
   const safeRender = () => { try { render(); } catch (e) {} };
 
   /* ---- mapeos nube <-> local ---- */
-  const CORE = ['id', 'name', 'email', 'hcp', 'goal', 'pass', 'cloud'];
+  const CORE = ['id', 'name', 'email', 'hcp', 'goal', 'avatar', 'isCoach', 'pass', 'cloud'];
 
   function extraOf(u) {
     const extra = {};
@@ -39,38 +39,50 @@ const Cloud = (() => {
     const extra = (prof && prof.extra) || {};
     return {
       id: authUser.id,
-      email: authUser.email || (prof && prof.email) || '',
+      email: authUser.email || '',
       name: (prof && prof.name) || extra.name || 'Jugador',
       hcp: prof ? prof.hcp : 18,
       goal: prof ? prof.goal : 13,
       ...extra,
+      avatar: prof && prof.avatar != null ? prof.avatar : (extra.avatar || 0),
+      isCoach: !!(prof && prof.is_coach),
       onboarded: extra.onboarded != null ? extra.onboarded : true,
       cloud: true,
     };
   }
 
-  const roundToRow = (r, uid) => ({
-    id: r.id, user_id: uid,
-    course_id: r.courseId || null, course: r.course || null,
-    date: r.date || null, holes: r.holes || [],
-    caption: r.caption || null, party_id: r.partyId || null,
-  });
+  const roundToRow = (r, uid) => {
+    const row = {
+      id: r.id, user_id: uid,
+      course_id: r.courseId || null, course: r.course || null,
+      date: r.date || null, time: r.time || null, hole_offset: r.holeOffset || 0,
+      holes: r.holes || [],
+      caption: r.caption || null, party_id: r.partyId || null,
+    };
+    // media solo si YA es URL de Storage; los data-URL (sin subir) no van a la DB.
+    // La subida real a Storage se conecta en el paso 5.
+    if (r.media && r.media.src && !String(r.media.src).startsWith('data:')) row.media = r.media;
+    return row;
+  };
   const rowToRound = (row) => ({
     id: row.id, userId: row.user_id,
     courseId: row.course_id || undefined, course: row.course || '',
-    date: row.date, holes: row.holes || [],
-    caption: row.caption || '',
+    date: row.date, time: row.time || undefined, holeOffset: row.hole_offset || 0,
+    holes: row.holes || [], caption: row.caption || '',
+    media: row.media || undefined,
   });
 
   const practiceToRow = (p, uid) => ({
     id: p.id, user_id: uid, date: p.date || null,
     area: p.area || null, drill: p.drill || null,
-    attempts: p.attempts || 0, hits: p.hits || 0, notes: p.notes || null,
+    attempts: p.attempts || 0, hits: p.hits || 0,
+    minutes: p.minutes || null, notes: p.notes || null,
   });
   const rowToPractice = (row) => ({
     id: row.id, userId: row.user_id, date: row.date,
     area: row.area || '', drill: row.drill || '',
-    attempts: row.attempts || 0, hits: row.hits || 0, notes: row.notes || '',
+    attempts: row.attempts || 0, hits: row.hits || 0,
+    minutes: row.minutes != null ? row.minutes : undefined, notes: row.notes || '',
   });
 
   /* ---- local helpers ---- */
@@ -114,7 +126,7 @@ const Cloud = (() => {
       await sb.from('profiles').upsert({
         id: uid, name: u.name || 'Jugador',
         hcp: u.hcp != null ? u.hcp : 18, goal: u.goal != null ? u.goal : 13,
-        email: u.email || null, extra: extraOf(u),
+        avatar: u.avatar != null ? u.avatar : 0, is_coach: !!u.isCoach, extra: extraOf(u),
       });
       const rs = S.rounds.filter(r => r.userId === uid).map(r => roundToRow(r, uid));
       if (rs.length) await sb.from('rounds').upsert(rs);
@@ -142,6 +154,24 @@ const Cloud = (() => {
     } catch (e) {}
   }
 
+  /* ---- importar datos de cuentas LOCALES (sin nube) de ESTE dispositivo a la
+         cuenta de nube. Una sola vez por dispositivo (flag en localStorage), y
+         solo lo que pertenece a una cuenta local previa (no toca datos de nube). ---- */
+  async function claimLocalData(uid) {
+    if (!ON || !uid) return;
+    if (localStorage.getItem('parfect_claimed')) return;
+    const cloudIds = new Set(S.users.filter(u => u.cloud).map(u => u.id));
+    const isLocal = r => !cloudIds.has(r.userId) && r.userId !== uid;
+    const lr = S.rounds.filter(isLocal);
+    const lp = S.practices.filter(isLocal);
+    localStorage.setItem('parfect_claimed', '1'); // marca: no reclamar de nuevo en este dispositivo
+    if (!lr.length && !lp.length) return;
+    lr.forEach(r => { r.userId = uid; });
+    lp.forEach(p => { p.userId = uid; });
+    Store.save(S);
+    await push(); // sube lo reclamado bajo la cuenta de nube
+  }
+
   /* ---- errores de auth en español ---- */
   function mapErr(error) {
     const m = (error && error.message || '').toLowerCase();
@@ -158,7 +188,8 @@ const Cloud = (() => {
     if (!ON) return { ok: false, msg: 'Nube no configurada.' };
     const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
     if (error) return { ok: false, msg: mapErr(error) };
-    try { await hydrate(data.user); } catch (e) { ensureLocalUser(data.user); S.session = data.user.id; currentUid = data.user.id; hydrated = true; }
+    try { await hydrate(data.user); await claimLocalData(data.user.id); }
+    catch (e) { ensureLocalUser(data.user); S.session = data.user.id; currentUid = data.user.id; hydrated = true; }
     return { ok: true };
   }
 
@@ -176,6 +207,7 @@ const Cloud = (() => {
     }
     Store.save(S);
     await push(); // crea profile (hcp/goal/extra) + sube demo
+    await claimLocalData(uid); // trae datos de cuentas locales previas de este dispositivo
     return { ok: true };
   }
 
@@ -203,5 +235,5 @@ const Cloud = (() => {
     } catch (e) {}
   }
 
-  return { enabled, restore, signIn, signUp, signOut, pushSoon, push, remove, wipeMine };
+  return { enabled, restore, signIn, signUp, signOut, pushSoon, push, remove, wipeMine, client: () => sb, uid: () => currentUid };
 })();

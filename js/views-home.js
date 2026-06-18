@@ -788,8 +788,115 @@ function feedScorecard(p) {
   }
   return (typeof scorecardTable === 'function') ? scorecardTable(n, i => pars[i], [{ name: (p.name || 'Tú').split(' ')[0], scoreOf: i => scores[i] }], -1, null) : scoreStrip(n, i => pars[i], i => scores[i]);
 }
+/* tiempo relativo en español a partir de un timestamp ISO (created_at) */
+function fmtWhen(iso) {
+  if (!iso) return '';
+  const t = new Date(iso).getTime(); if (isNaN(t)) return '';
+  const min = Math.floor((Date.now() - t) / 60000);
+  if (min < 1) return 'ahora';
+  if (min < 60) return 'hace ' + min + ' min';
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return 'hace ' + hr + ' h';
+  const d = Math.floor(hr / 24);
+  if (d === 1) return 'ayer';
+  if (d < 7) return 'hace ' + d + ' días';
+  return new Date(iso).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+}
+
+/* tarjeta del feed REAL (post de Supabase con su snapshot) */
+function feedCardReal(p, u) {
+  const holesN = p.holes_count || (p.holes ? p.holes.length : 18);
+  const scoreCls = p.to_par <= 0 ? 'good' : p.to_par <= Math.round(holesN * 0.33) ? 'par' : 'over';
+  const name = p.mine ? u.name : ((p.author && p.author.name) || 'Jugador');
+  const avIdx = (p.author && p.author.avatar) || 0;
+  const av = p.mine ? avatarImg(u, 'fd-av') : `<img class="fd-av golfer" src="${AVATARS[avIdx] || AVATARS[0]}" alt="" loading="lazy">`;
+  const when = fmtWhen(p.created_at);
+  const sub = p.mine ? 'Tú · ' + when
+    : ((p.author && p.author.hcp != null ? 'HCP ' + fmtHcp(p.author.hcp) + ' · ' : '') + when);
+  const parOf = i => (p.holes && p.holes[i] && p.holes[i].par != null) ? p.holes[i].par : 4;
+  const card = (typeof scorecardTable === 'function')
+    ? scorecardTable(holesN, parOf, [{ name: name.split(' ')[0], scoreOf: i => (p.holes && p.holes[i] ? p.holes[i].score : null) }], -1, null)
+    : '';
+  return `<div class="fd-card">
+      <div class="fd-head"><span class="fd-avwrap">${av}</span>
+        <div class="fd-who"><b>${esc(name)}${p.mine ? ' <span class="fd-you">tú</span>' : ''}</b><span>${esc(sub)}</span></div></div>
+      ${p.caption ? `<p class="fd-cap">${esc(p.caption)}</p>` : ''}
+      ${p.media ? `<div class="fd-media">${p.media.type === 'video' ? `<video src="${p.media.src}" controls playsinline preload="metadata"></video>` : `<img src="${p.media.src}" alt="" loading="lazy">`}</div>` : ''}
+      <div class="fd-round">
+        <div class="fd-course"><b>${esc(p.course || '')}</b><span>${holesN} hoyos</span></div>
+        <div class="fd-score ${scoreCls}"><b>${p.score}</b><span>${fmtToPar(p.to_par)}</span></div>
+      </div>
+      <div class="fd-stats">
+        <span><b>${p.fw}%</b> fairways</span><span><b>${p.gir}%</b> GIR</span><span><b>${p.putts}</b> putts</span>
+      </div>
+      <div class="fd-scard"><span class="fd-scard-lab">${golfIcon('card')} Tarjeta</span>${card}</div>
+      <div class="fd-actions">
+        <button class="fd-like ${p.liked ? 'on' : ''}" data-act="feed-like" data-id="${esc(p.id)}">${heartIcon()}<span>${p.likeCount || 0}</span></button>
+        <button class="fd-cmt" data-act="feed-comments" data-id="${esc(p.id)}">${commentIcon()}<span>${p.commentCount || 0}</span></button>
+      </div>
+    </div>`;
+}
+
+/* Perfil de un jugador real: su nombre/avatar/hcp + sus rondas compartidas (posts) */
+function vFriendReal(uid) {
+  const u = cur();
+  const all = (typeof Feed !== 'undefined') ? Feed.state().posts : [];
+  const theirs = all.filter(p => p.user_id === uid);
+  const me = uid === S.session;
+  const prof = me ? { name: u.name, avatar: u.avatar || 0, hcp: u.hcp } : (theirs[0] && theirs[0].author) || { name: 'Jugador', avatar: 0, hcp: null };
+  const head = `<button class="auth-back" data-act="nav" data-view="social">← Social</button>
+    <div class="greet" style="padding-top:6px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="flex:0 0 auto;width:56px;height:56px"><img class="golfer" src="${AVATARS[prof.avatar || 0] || AVATARS[0]}" alt="" loading="lazy" style="width:56px;height:56px;border-radius:50%;object-fit:contain"></span>
+        <div><h1 style="font-size:26px">${esc(prof.name)}${me ? ' (tú)' : ''}</h1>
+        ${prof.hcp != null ? `<p class="hcp">HCP ${fmtHcp(prof.hcp)}</p>` : ''}</div>
+      </div>
+    </div>`;
+  if (!theirs.length) return head + `<div class="card empty"><div class="e-ico">${golfIcon('flag')}</div><h3>Sin rondas compartidas</h3><p>${me ? 'Aún no compartes rondas en el feed.' : 'Este jugador aún no comparte rondas.'}</p></div>`;
+  return head + `<div class="sec-h" style="margin-top:14px"><h2 style="font-size:18px">Rondas compartidas</h2></div>
+    <div class="fd-list">${theirs.map(p => feedCardReal(p, u)).join('')}</div>`;
+}
+
+/* hoja de comentarios reales de un post */
+function vCommentsSheet(postId) {
+  const u = cur();
+  const list = (typeof Feed !== 'undefined') ? Feed.comments(postId) : null;
+  const avEl = cm => `<img class="golfer" src="${AVATARS[(cm.mine ? (u.avatar || 0) : ((cm.author && cm.author.avatar) || 0))] || AVATARS[0]}" alt="" loading="lazy" style="width:34px;height:34px;border-radius:50%;object-fit:contain">`;
+  const rows = list == null
+    ? `<p class="note" style="margin:6px 2px">Cargando comentarios…</p>`
+    : (list.length
+      ? list.map(cm => `<div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="flex:0 0 auto;width:34px;height:34px">${avEl(cm)}</span>
+          <div style="flex:1;min-width:0"><b>${esc(cm.mine ? u.name : (cm.author && cm.author.name) || 'Jugador')}</b> <span class="note" style="font-size:12px">${esc(fmtWhen(cm.created_at))}</span><p style="margin:2px 0 0;word-wrap:break-word">${esc(cm.text)}</p></div>
+          ${cm.mine ? `<button class="ev-del" data-act="comment-del" data-p="${esc(postId)}" data-id="${esc(cm.id)}" aria-label="Borrar">✕</button>` : ''}
+        </div>`).join('')
+      : `<p class="note" style="margin:6px 2px">Sé el primero en comentar.</p>`);
+  return `<div class="overlay" data-act="comments-close"><div class="sheet" data-act="noop">
+    <div class="grab"></div>
+    <h2>Comentarios</h2>
+    <div style="max-height:46vh;overflow:auto;display:flex;flex-direction:column;gap:14px;margin:8px 0 4px">${rows}</div>
+    <div class="field"><textarea id="cm-text" rows="2" placeholder="Escribe un comentario…"></textarea></div>
+    <button class="btn primary" data-act="comment-post" data-p="${esc(postId)}" ${V.commentBusy ? 'disabled' : ''}>${V.commentBusy ? 'Publicando…' : 'Comentar'}</button>
+    <button class="btn" data-act="comments-close">Cerrar</button>
+  </div></div>`;
+}
+
 function vSocialFeed() {
   const u = cur();
+  // ---- modo nube: feed real desde Supabase ----
+  if (typeof Feed !== 'undefined' && Feed.on()) {
+    Feed.ensure();
+    const st = Feed.state();
+    const body = st.posts.length
+      ? st.posts.map(p => feedCardReal(p, u)).join('')
+      : (st.loaded ? `<p class="note" style="margin:10px 2px">Aún no hay rondas compartidas. ¡Sé el primero en publicar la tuya!</p>`
+                   : `<p class="note" style="margin:10px 2px">Cargando el feed…</p>`);
+    return `<div class="sec-h" style="margin-top:6px"><h2>Feed de amigos</h2></div>
+      <div class="fd-list">${body}</div>
+      ${V.shareDraft ? vShareComposer(u) : ''}
+      ${V.commentsFor ? vCommentsSheet(V.commentsFor) : ''}`;
+  }
+  // ---- modo local (sin nube): feed demo, como antes ----
   const likes = u.likes || {};
   const shared = u.shared || [];
   const sname = c => (c && COURSES[c]) ? COURSES[c].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : c;
@@ -834,7 +941,6 @@ function vSocialFeed() {
     </div>`;
   }).join('');
   return `<div class="sec-h" style="margin-top:6px"><h2>Feed de amigos</h2></div>
-    <button class="fd-share" data-act="share-open">${golfIcon('flag')} Comparte tu ronda con foto o video</button>
     <div class="fd-list">${cards}</div>
     ${V.shareDraft ? vShareComposer(u) : ''}`;
 }
@@ -862,13 +968,35 @@ function vShareComposer(u) {
     </label>
     ${m ? `<button class="btn ghost sm" data-act="share-clearmedia">Quitar ${m.type === 'video' ? 'video' : 'foto'}</button>` : ''}
     ${V.shareErr ? `<p class="form-err">${esc(V.shareErr)}</p>` : ''}
-    <button class="btn primary" data-act="share-post">Publicar en el feed</button>
+    <button class="btn primary" data-act="share-post" ${V.shareBusy ? 'disabled' : ''}>${V.shareBusy ? 'Publicando…' : 'Publicar en el feed'}</button>
     <button class="btn" data-act="share-close">Cancelar</button>
   </div></div>`;
 }
 
 /* tabla de tu liga de amigos (mejor ronda de la semana, normalizada a 18) */
 function socialLeaders(u) {
+  // ---- modo nube: mejor ronda de la semana de cada usuario que publicó ----
+  if (typeof Feed !== 'undefined' && Feed.on()) {
+    const now = Date.now(), week = 7 * 864e5;
+    const best = {};
+    for (const p of Feed.state().posts) {
+      const ts = p.created_at ? new Date(p.created_at).getTime() : now;
+      if (now - ts > week) continue;
+      const holes = p.holes_count || 18;
+      const toPar18 = Math.round((p.to_par || 0) / holes * 18);
+      const me = p.user_id === S.session;
+      const entry = {
+        id: p.user_id, me,
+        name: me ? u.name : (p.author && p.author.name) || 'Jugador',
+        av: me ? (u.avatar || 0) : (p.author && p.author.avatar) || 0,
+        hcp: me ? u.hcp : (p.author && p.author.hcp),
+        toPar18, score: p.score,
+      };
+      if (!best[p.user_id] || toPar18 < best[p.user_id].toPar18) best[p.user_id] = entry;
+    }
+    return Object.values(best).sort((a, b) => a.toPar18 - b.toPar18);
+  }
+  // ---- modo local: demo ----
   const mine = myRounds();
   const e = FRIENDS_FEED.map(f => ({ id: f.id, name: f.name, av: f.av, hcp: f.hcp, toPar18: Math.round(f.toPar / f.holes * 18), score: f.score }));
   if (mine.length) {
@@ -880,18 +1008,33 @@ function socialLeaders(u) {
 
 /* fila de historias: quién está jugando */
 function vStories(u) {
-  const cells = [`<div class="story me">
-      <span class="story-ring">${avatarImg(u, 'story-img')}</span><span class="story-nm">Tú</span></div>`]
-    .concat(FRIENDS_FEED.map(f => `<button class="story story-link" data-act="friend" data-id="${esc(f.id)}">
+  const me = `<div class="story me"><span class="story-ring">${avatarImg(u, 'story-img')}</span><span class="story-nm">Tú</span></div>`;
+  // ---- modo nube: historias de quienes han publicado en el feed ----
+  if (typeof Feed !== 'undefined' && Feed.on()) {
+    Feed.ensure();
+    const seen = new Set([S.session]);
+    const others = [];
+    for (const p of Feed.state().posts) { if (!seen.has(p.user_id)) { seen.add(p.user_id); others.push(p); } }
+    const oCells = others.map(p => `<button class="story story-link" data-act="friend" data-id="${esc(p.user_id)}">
+      <span class="story-ring"><img class="story-img golfer" src="${AVATARS[(p.author && p.author.avatar) || 0] || AVATARS[0]}" alt="" loading="lazy"></span>
+      <span class="story-nm">${esc(((p.author && p.author.name) || 'Jugador').split(' ')[0])}</span></button>`).join('');
+    const cells = me + oCells;
+    return `<div class="story-row"><div class="story-track">${cells}${others.length ? cells : ''}</div></div>`;
+  }
+  // ---- modo local: demo ----
+  const cells = me + FRIENDS_FEED.map(f => `<button class="story story-link" data-act="friend" data-id="${esc(f.id)}">
       <span class="story-ring"><img class="story-img golfer" src="${AVATARS[f.av] || AVATARS[0]}" alt="" loading="lazy"></span>
-      <span class="story-nm">${esc(f.name.split(' ')[0])}</span></button>`)).join('');
-  // duplicado para scroll infinito (marquee continuo)
+      <span class="story-nm">${esc(f.name.split(' ')[0])}</span></button>`).join('');
   return `<div class="story-row"><div class="story-track">${cells}${cells}</div></div>`;
 }
 
 /* liga de amigos: ranking */
 function vRanking(u) {
   const lead = socialLeaders(u);
+  if (typeof Feed !== 'undefined' && Feed.on() && !lead.length) {
+    return `<div class="sec-h"><h2>Liga de amigos</h2></div>
+      <div class="rk-card"><p class="note" style="margin:8px 2px">Aún no hay rondas compartidas esta semana. Comparte la tuya para entrar al ranking.</p></div>`;
+  }
   const myPos = lead.findIndex(e => e.me) + 1;
   const rows = lead.map((e, i) => {
     const pos = i + 1;
@@ -929,6 +1072,13 @@ const TOURNAMENT = {
   ],
 };
 function vTorneo(u) {
+  // ---- modo nube: SOLO eventos reales (sin torneos/feeds demo) ----
+  if (typeof Events !== 'undefined' && Events.on()) {
+    return `<div class="sec-h" style="margin-top:4px"><h2>Próximos eventos ${golfIcon('flag')}</h2><button class="sec-link" data-act="event-new">+ Crear evento</button></div>
+      ${vEventsList(u)}
+      ${V.eventDraft ? vEventComposer(u) : ''}`;
+  }
+  // ---- modo local (sin nube): tablero demo ----
   const t = TOURNAMENT.active;
   const rows = t.leaders.slice().sort((a, b) => a.score - b.score).map((p, i) => {
     const pos = i + 1;
@@ -965,6 +1115,26 @@ function vTorneo(u) {
 const EV_MODE = { casual: 'Casual', medal: 'Medal', match: 'Match play', corta: 'La corta' };
 function evCourseName(c) { return (c && COURSES[c]) ? COURSES[c].name.split(' · ')[0].replace('Club ', '').replace(' Morelia', '') : (c || ''); }
 function vEventsList(u) {
+  // ---- modo nube: tablón de eventos reales (self-RSVP) ----
+  if (typeof Events !== 'undefined' && Events.on()) {
+    Events.ensure();
+    const st = Events.state();
+    if (!st.events.length) return st.loaded ? `<p class="note" style="margin:6px 2px">No hay eventos próximos. Crea uno y aparecerá aquí para todos.</p>` : `<p class="note" style="margin:6px 2px">Cargando eventos…</p>`;
+    return st.events.map(e => {
+      const avs = e.goingPeople.slice(0, 8).map(p => `<span class="ev-inv st-yes" title="${esc(p.name)}">${esc(initials(p.name))}</span>`).join('');
+      const going = e.goingCount;
+      const goBtn = `<button class="tr-up-btn ${e.myStatus === 'going' ? 'on' : ''}" data-act="event-rsvp" data-id="${esc(e.id)}" data-s="going">${e.myStatus === 'going' ? '✓ Voy' : 'Voy'}</button>`;
+      return `<div class="ev-card">
+        <div class="ev-top"><span class="ev-mode">${EV_MODE[e.mode] || e.mode}</span>${e.mine ? `<button class="ev-del" data-act="event-del" data-id="${esc(e.id)}" aria-label="Borrar">✕</button>` : ''}</div>
+        <b class="ev-name">${esc(e.name)}</b>
+        <span class="ev-meta">${golfIcon('flag')} ${esc(evCourseName(e.course_id))} · ${esc(e.date)}${e.time ? ' · ' + esc(e.time) : ''}</span>
+        <span class="ev-meta" style="opacity:.7">Organiza ${esc(e.mine ? 'tú' : (e.host && e.host.name) || 'Jugador')}</span>
+        ${avs ? `<div class="ev-invs">${avs}</div>` : ''}
+        <div class="ev-rsvp-row">${goBtn}<span class="ev-conf">${going} ${going === 1 ? 'va' : 'van'}</span></div>
+      </div>`;
+    }).join('');
+  }
+  // ---- modo local (demo) ----
   const evs = S.events || [];
   if (!evs.length) return '';
   return evs.map(e => {
@@ -982,11 +1152,12 @@ function vEventComposer(u) {
   const d = V.eventDraft;
   const courseChips = COURSE_ORDER.map(id => `<button class="chip sm ${d.courseId === id ? 'on' : ''}" data-act="event-course" data-c="${id}">${esc(evCourseName(id))}</button>`).join('');
   const modeChips = Object.entries(EV_MODE).map(([k, l]) => `<button class="chip sm ${d.mode === k ? 'on' : ''}" data-act="event-mode" data-m="${k}">${l}</button>`).join('');
+  const cloud = (typeof Events !== 'undefined' && Events.on());
   const friends = FRIENDS_FEED.map(f => `<button class="chip sm ${d.invitees.includes(f.name) ? 'on' : ''}" data-act="event-invite" data-n="${esc(f.name)}">${d.invitees.includes(f.name) ? '✓ ' : ''}${esc(f.name.split(' ')[0])}</button>`).join('');
   return `<div class="overlay" data-act="event-close"><div class="sheet" data-act="noop">
     <div class="grab"></div>
     <h2>Crear evento</h2>
-    <p class="auth-sub">Organiza una jugada e invita a tus amigos. Cada quien confirma su lugar para cuadrar el tee time.</p>
+    <p class="auth-sub">${cloud ? 'Organiza una jugada. Aparece en el tablón y cada quien confirma su lugar para cuadrar el tee time.' : 'Organiza una jugada e invita a tus amigos. Cada quien confirma su lugar para cuadrar el tee time.'}</p>
     <div class="field"><label>Nombre</label><input id="ev-name" placeholder="Ej. Domingo en Campestre" value="${esc(d.name || '')}"></div>
     <div class="field"><label>Campo</label><div class="chips">${courseChips}</div></div>
     <div class="cz-form2">
@@ -994,9 +1165,9 @@ function vEventComposer(u) {
       <div class="field"><label>Tee time</label><input id="ev-time" type="time" value="${esc(d.time)}"></div>
     </div>
     <div class="field"><label>Modalidad</label><div class="chips">${modeChips}</div></div>
-    <div class="field"><label>Invitar amigos</label><div class="chips" style="flex-wrap:wrap">${friends}</div></div>
+    ${cloud ? '' : `<div class="field"><label>Invitar amigos</label><div class="chips" style="flex-wrap:wrap">${friends}</div></div>`}
     ${V.err ? `<p class="form-err">${esc(V.err)}</p>` : ''}
-    <button class="btn primary" data-act="event-create">Crear e invitar</button>
+    <button class="btn primary" data-act="event-create" ${V.eventBusy ? 'disabled' : ''}>${V.eventBusy ? 'Creando…' : (cloud ? 'Crear evento' : 'Crear e invitar')}</button>
     <button class="btn" data-act="event-close">Cancelar</button>
   </div></div>`;
 }

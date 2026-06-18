@@ -921,5 +921,5 @@ function savePartyRounds(party) {
     S.rounds.push(round);
     added = true;
   }
-  if (added) Store.save(S);
+  if (added) { Store.save(S); if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.pushSoon(); }
 }

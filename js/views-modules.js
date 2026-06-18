@@ -182,15 +182,16 @@ function vWeekStrip() {
 
 function vTrainer() {
   const u = cur();
-  const tab = ['entreno', 'logros', 'academia'].includes(V.trainerTab) ? V.trainerTab : 'diag';
+  const tab = ['entreno', 'logros', 'academia', 'coach'].includes(V.trainerTab) ? V.trainerTab : 'diag';
   const showHist = (!V.planStep || V.planStep === 'time') && !V.sessionRun && !V.sessionSummary;
   const body = tab === 'entreno' ? (vSessionPlanner() + (showHist ? vTrainHistory() : ''))
     : tab === 'logros' ? (vKeyTargets(u) + `<div style="margin-top:22px"></div>` + vLogros())
       : tab === 'academia' ? vAcademyLaunch()
-        : vDiag();
+        : tab === 'coach' ? vCoach()
+          : vDiag();
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
-    <div class="tabs scroll">${T('diag', 'Análisis IA')}${T('entreno', 'Entrenamiento')}${T('logros', 'Logros')}${T('academia', 'Academia')}</div>
+    <div class="tabs scroll">${T('diag', 'Análisis IA')}${T('entreno', 'Entrenamiento')}${T('logros', 'Logros')}${T('academia', 'Academia')}${T('coach', 'Coach')}</div>
     ${body}`;
 }
 
@@ -1035,6 +1036,10 @@ function vSocial() { return (typeof vPerfil === 'function') ? vPerfil() : ''; }
 
 /* ---------- Perfil de un jugador (amigo) ---------- */
 function vFriend() {
+  // ---- modo nube: perfil de un usuario real (uid uuid con guiones) ----
+  if (typeof Feed !== 'undefined' && Feed.on() && V.friendId && V.friendId.indexOf('-') >= 0 && typeof vFriendReal === 'function') {
+    return vFriendReal(V.friendId);
+  }
   const ff = (typeof FRIENDS_FEED !== 'undefined' ? FRIENDS_FEED : []).find(x => x.id === V.friendId);
   if (ff) return vFriendFeed(ff);
   const p = S.users.find(x => x.id === V.friendId);

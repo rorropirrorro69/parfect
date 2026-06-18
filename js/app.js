@@ -24,7 +24,7 @@ const myPractices = () => S.practices.filter(p => p.userId === S.session).sort((
 const today = () => new Date().toISOString().slice(0, 10);
 const val = id => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
 
-function commit() { Store.save(S); render(); }
+function commit() { Store.save(S); render(); if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.pushSoon(); }
 function go(view) { V.view = view; V.err = null; render(); window.scrollTo(0, 0); }
 
 async function hashPass(pass) {
@@ -96,15 +96,23 @@ function parfectImport(input) {
   reader.readAsText(file);
 }
 
-/* sube foto/video para compartir una ronda (comprime imágenes, limita video) */
+/* sube foto/video para compartir una ronda (comprime imágenes, limita video).
+   Con nube activa guarda además el blob a subir a Storage en V.shareDraft.upload. */
 function parfectShareMedia(input) {
   const file = input && input.files && input.files[0];
   input.value = '';
   if (!file || !V.shareDraft) return;
   V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption;
   V.shareErr = null;
+  V.shareDraft.upload = null;
+  const cloud = (typeof Cloud !== 'undefined' && Cloud.enabled());
   if (/^video\//.test(file.type)) {
-    if (file.size > 2.6 * 1024 * 1024) { V.shareErr = 'El video pesa mucho para guardarlo aquí (máx ~2.5 MB). Sube un clip más corto o una foto.'; render(); return; }
+    const maxV = cloud ? 50 * 1024 * 1024 : 2.6 * 1024 * 1024;
+    if (file.size > maxV) { V.shareErr = cloud ? 'El video pesa demasiado (máx 50 MB). Sube un clip más corto.' : 'El video pesa mucho para guardarlo aquí (máx ~2.5 MB). Sube un clip más corto o una foto.'; render(); return; }
+    if (cloud) {
+      const ext = (file.name.split('.').pop() || 'mp4').toLowerCase();
+      V.shareDraft.upload = { blob: file, type: 'video', ext: /^(mp4|mov|m4v|webm)$/.test(ext) ? ext : 'mp4', mime: file.type || 'video/mp4' };
+    }
     const fr = new FileReader();
     fr.onload = () => { V.shareDraft.media = { type: 'video', src: fr.result }; render(); };
     fr.readAsDataURL(file);
@@ -117,12 +125,22 @@ function parfectShareMedia(input) {
       const max = 1000; let w = img.width, h = img.height;
       if (w > h && w > max) { h = Math.round(h * max / w); w = max; }
       else if (h >= w && h > max) { w = Math.round(w * max / h); h = max; }
-      let src;
-      try { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; cv.getContext('2d').drawImage(img, 0, 0, w, h); src = cv.toDataURL('image/jpeg', 0.72); }
-      catch (e) { src = fr.result; }
-      V.shareDraft.media = { type: 'image', src }; render();
+      try {
+        const cv = document.createElement('canvas'); cv.width = w; cv.height = h; cv.getContext('2d').drawImage(img, 0, 0, w, h);
+        V.shareDraft.media = { type: 'image', src: cv.toDataURL('image/jpeg', 0.72) };
+        if (cloud && cv.toBlob) cv.toBlob(b => { if (b) V.shareDraft.upload = { blob: b, type: 'image', ext: 'jpg', mime: 'image/jpeg' }; }, 'image/jpeg', 0.72);
+        render();
+      } catch (e) {
+        V.shareDraft.media = { type: 'image', src: fr.result };
+        if (cloud) V.shareDraft.upload = { blob: file, type: 'image', ext: 'jpg', mime: file.type || 'image/jpeg' };
+        render();
+      }
     };
-    img.onerror = () => { V.shareDraft.media = { type: 'image', src: fr.result }; render(); };
+    img.onerror = () => {
+      V.shareDraft.media = { type: 'image', src: fr.result };
+      if (cloud) V.shareDraft.upload = { blob: file, type: 'image', ext: 'jpg', mime: file.type || 'image/jpeg' };
+      render();
+    };
     img.src = fr.result;
   };
   fr.readAsDataURL(file);
@@ -217,7 +235,7 @@ function srFinish(completed) {
   V.sessionRun = null;
   try { srBeep(2); } catch (e) {}
   if (typeof celebrate === 'function') celebrate(completed, completed ? '¡Sesión completa!' : 'Sesión guardada ✓');
-  Store.save(S); render(); window.scrollTo(0, 0);
+  commit(); window.scrollTo(0, 0);
 }
 const actions = {
   noop() {},
@@ -236,6 +254,14 @@ const actions = {
     const email = val('f-email').toLowerCase();
     const pass = document.getElementById('f-pass').value;
     V.authVals = { email };
+    // ---- nube activa: autentica contra Supabase ----
+    if (typeof Cloud !== 'undefined' && Cloud.enabled()) {
+      const res = await Cloud.signIn(email, pass);
+      if (!res.ok) { V.err = res.msg; render(); return; }
+      V.authVals = null; V.err = null; V.view = 'inicio'; V.diag = null;
+      commit(); window.scrollTo(0, 0); return;
+    }
+    // ---- modo local (sin nube configurada) ----
     const u = S.users.find(x => x.email === email);
     const h = await hashPass(pass);
     let ok = !!u && u.pass === h;
@@ -261,9 +287,18 @@ const actions = {
     if (!name) { V.err = 'Dinos tu nombre.'; render(); return; }
     if (!/^\S+@\S+\.\S+$/.test(email)) { V.err = 'Ese email no parece válido.'; render(); return; }
     if (pass.length < 4) { V.err = 'La contraseña necesita al menos 4 caracteres.'; render(); return; }
-    if (S.users.some(x => x.email === email)) { V.err = 'Ya existe una cuenta con ese email en este dispositivo.'; render(); return; }
     const hcp = hcpRaw === '' ? 18 : Math.round(Number(hcpRaw));
     const goal = goalRaw === '' ? Math.max(hcp - 5, 0) : Math.round(Number(goalRaw));
+    // ---- nube activa: crea la cuenta en Supabase ----
+    if (typeof Cloud !== 'undefined' && Cloud.enabled()) {
+      const res = await Cloud.signUp({ name, email, pass, hcp, goal, demo });
+      if (!res.ok) { V.err = res.msg; render(); return; }
+      if (res.needsConfirm) { V.authVals = null; V.err = 'Te enviamos un correo para confirmar tu cuenta. Confírmalo y luego inicia sesión.'; V.view = 'login'; render(); window.scrollTo(0, 0); return; }
+      V.authVals = null; V.err = null; V.view = 'inicio'; V.diag = null;
+      commit(); window.scrollTo(0, 0); return;
+    }
+    // ---- modo local (sin nube configurada) ----
+    if (S.users.some(x => x.email === email)) { V.err = 'Ya existe una cuenta con ese email en este dispositivo.'; render(); return; }
     const u = { id: Store.uid(), name, email, pass: await hashPass(pass), hcp, goal, createdAt: Date.now(), onboarded: demo ? true : false };
     S.users.push(u);
     S.session = u.id;
@@ -276,6 +311,7 @@ const actions = {
   },
 
   logout() {
+    if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.signOut();
     S.session = null;
     V.profileOpen = false; V.view = 'landing'; V.diag = null;
     commit(); window.scrollTo(0, 0);
@@ -284,7 +320,25 @@ const actions = {
   /* ---- perfil ---- */
   'profile-open'() { V.wipeArm = false; go('perfil'); },
   'profile-edit'() { V.profileOpen = true; render(); },
-  'feed-like'(d) { const u = cur(); if (!u) return; u.likes = u.likes || {}; if (u.likes[d.id]) delete u.likes[d.id]; else u.likes[d.id] = true; commit(); },
+  'feed-like'(d) {
+    if (typeof Feed !== 'undefined' && Feed.on()) { Feed.toggleLike(d.id); return; }
+    const u = cur(); if (!u) return; u.likes = u.likes || {}; if (u.likes[d.id]) delete u.likes[d.id]; else u.likes[d.id] = true; commit();
+  },
+  'feed-comments'(d) {
+    if (!(typeof Feed !== 'undefined' && Feed.on())) return;
+    V.commentsFor = d.id; V.commentBusy = false;
+    Feed.loadComments(d.id);
+    render();
+  },
+  'comments-close'() { V.commentsFor = null; V.commentBusy = false; render(); },
+  async 'comment-post'(d) {
+    const t = ((document.getElementById('cm-text') || {}).value || '').trim();
+    if (!t || V.commentBusy) return;
+    V.commentBusy = true; render();
+    await Feed.addComment(d.p, t);
+    V.commentBusy = false; render();
+  },
+  'comment-del'(d) { if (typeof Feed !== 'undefined' && Feed.on()) Feed.deleteComment(d.p, d.id); },
   'share-round'() {
     const u = cur(); if (!u) return;
     const rs = myRounds();
@@ -299,22 +353,39 @@ const actions = {
     const rs = myRounds();
     if (!rs.length) { alert('Primero registra una ronda para compartirla.'); return; }
     const r0 = (d && d.id && rs.find(x => x.id === d.id)) || rs[0];
-    V.shareDraft = { roundId: r0.id, caption: r0.caption || '', media: r0.media || null }; V.shareErr = null; render();
+    V.shareDraft = { roundId: r0.id, caption: r0.caption || '', media: r0.media || null, upload: null }; V.shareErr = null; render();
   },
   'share-pick'(d) { if (V.shareDraft) { V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption; V.shareDraft.roundId = d.id; } render(); },
-  'share-clearmedia'() { if (V.shareDraft) { V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption; V.shareDraft.media = null; } render(); },
+  'share-clearmedia'() { if (V.shareDraft) { V.shareDraft.caption = (document.getElementById('share-cap') || {}).value || V.shareDraft.caption; V.shareDraft.media = null; V.shareDraft.upload = null; } render(); },
   'share-close'() { V.shareDraft = null; V.shareErr = null; render(); },
-  'share-post'() {
+  async 'share-post'() {
     const u = cur(); const d = V.shareDraft; if (!u || !d) return;
     d.caption = (document.getElementById('share-cap') || {}).value || d.caption;
     const r = myRounds().find(x => x.id === d.roundId);
-    if (r) {
-      const pc = r.caption, pm = r.media;
-      r.caption = (d.caption || '').trim(); r.media = d.media || null;
-      try { Store.save(S); }
-      catch (e) { r.caption = pc; r.media = pm; V.shareErr = 'No se pudo guardar (espacio lleno). Prueba con una foto más ligera o sin video.'; render(); return; }
+    if (!r) { V.shareDraft = null; render(); return; }
+
+    // ---- modo nube: sube media a Storage + crea el post real ----
+    if (typeof Feed !== 'undefined' && Feed.on()) {
+      V.shareBusy = true; V.shareErr = null; render();
+      try { if (Cloud.push) await Cloud.push(); } catch (e) {}   // asegura que la ronda exista en la nube (FK del post)
+      const res = await Feed.createPost(r, d.caption, d.upload);
+      V.shareBusy = false;
+      if (!res.ok) { V.shareErr = res.msg; render(); return; }
+      if (res.media) r.media = res.media;                         // guarda la URL en la ronda (se sincroniza)
+      r.caption = (d.caption || '').trim();
       u.shared = u.shared || []; if (!u.shared.includes(r.id)) u.shared.unshift(r.id);
+      V.shareDraft = null; V.shareErr = null;
+      if (typeof celebrate === 'function') celebrate(false, '¡Ronda compartida!');
+      commit();
+      return;
     }
+
+    // ---- modo local (sin nube) ----
+    const pc = r.caption, pm = r.media;
+    r.caption = (d.caption || '').trim(); r.media = d.media || null;
+    try { Store.save(S); }
+    catch (e) { r.caption = pc; r.media = pm; V.shareErr = 'No se pudo guardar (espacio lleno). Prueba con una foto más ligera o sin video.'; render(); return; }
+    u.shared = u.shared || []; if (!u.shared.includes(r.id)) u.shared.unshift(r.id);
     V.shareDraft = null; V.shareErr = null;
     if (typeof celebrate === 'function') celebrate(false, '¡Ronda compartida!');
     commit();
@@ -329,12 +400,24 @@ const actions = {
   'event-course'(d) { actions['event-capName'](); if (V.eventDraft && COURSES[d.c]) V.eventDraft.courseId = d.c; render(); },
   'event-mode'(d) { actions['event-capName'](); if (V.eventDraft) V.eventDraft.mode = d.m; render(); },
   'event-invite'(d) { actions['event-capName'](); if (!V.eventDraft) return; const a = V.eventDraft.invitees; const i = a.indexOf(d.n); if (i >= 0) a.splice(i, 1); else a.push(d.n); render(); },
-  'event-create'() {
+  async 'event-create'() {
     const d = V.eventDraft; if (!d) return;
     const name = ((document.getElementById('ev-name') || {}).value || d.name || '').trim();
     const date = (document.getElementById('ev-date') || {}).value || d.date;
     const time = (document.getElementById('ev-time') || {}).value || d.time;
     if (!name) { V.err = 'Ponle un nombre al evento.'; render(); return; }
+    // ---- modo nube: evento real en el tablón ----
+    if (typeof Events !== 'undefined' && Events.on()) {
+      V.eventBusy = true; V.err = null; render();
+      const res = await Events.createEvent({ name, courseId: d.courseId, date, time, mode: d.mode });
+      V.eventBusy = false;
+      if (!res.ok) { V.err = res.msg; render(); return; }
+      V.eventDraft = null;
+      if (typeof celebrate === 'function') celebrate(false, '¡Evento creado!');
+      render();
+      return;
+    }
+    // ---- modo local (demo) ----
     const avOf = n => { const f = (typeof FRIENDS_FEED !== 'undefined') ? FRIENDS_FEED.find(x => x.name === n) : null; return f ? f.av : 0; };
     S.events = S.events || [];
     S.events.unshift({ id: Store.uid(), name, courseId: d.courseId, date, time, mode: d.mode, host: (cur() || {}).name, invitees: d.invitees.map(n => ({ name: n, av: avOf(n), status: 'pending' })) });
@@ -344,12 +427,16 @@ const actions = {
   },
   'event-close'() { V.eventDraft = null; V.err = null; render(); },
   'event-rsvp'(d) {
+    if (typeof Events !== 'undefined' && Events.on()) { Events.setRsvp(d.id, d.s || 'going'); return; }
     const e = (S.events || []).find(x => x.id === d.id); if (!e) return;
     const inv = e.invitees.find(x => x.name === d.n); if (!inv) return;
     inv.status = inv.status === 'pending' ? 'yes' : inv.status === 'yes' ? 'no' : 'pending';
     commit();
   },
-  'event-del'(d) { S.events = (S.events || []).filter(x => x.id !== d.id); commit(); },
+  'event-del'(d) {
+    if (typeof Events !== 'undefined' && Events.on()) { Events.deleteEvent(d.id); return; }
+    S.events = (S.events || []).filter(x => x.id !== d.id); commit();
+  },
   'ev-join-up'(d) {
     const u = cur(); if (!u) return;
     u.joinedEvents = u.joinedEvents || {}; u.events = u.events || [];
@@ -421,6 +508,7 @@ const actions = {
     S.rounds = S.rounds.filter(r => r.userId !== S.session);
     S.practices = S.practices.filter(p => p.userId !== S.session);
     if (S.active && S.active.userId === S.session) S.active = null;
+    if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.wipeMine();
     V.wipeArm = false; V.profileOpen = false; V.diag = null;
     commit();
   },
@@ -620,6 +708,7 @@ const actions = {
   'round-delete'(d) {
     if (V.delArm !== d.id) { V.delArm = d.id; render(); return; }
     S.rounds = S.rounds.filter(r => r.id !== d.id);
+    if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.remove('rounds', d.id);
     V.delArm = null; V.diag = null; V.view = 'ronda';
     commit();
   },
@@ -800,7 +889,11 @@ const actions = {
   'quiz-next-hole'() { const q = V.quiz; if (q) actions['quiz-open']({ i: q.i + 1 }); },
   'quiz-close'() { V.quiz = null; render(); },
   'coach-mode'(d) { const u = cur(); if (u) u.isCoach = d.c === '1'; V.coachStudent = null; commit(); },
-  'coach-pick'(d) { V.coachStudent = d.id; render(); window.scrollTo(0, 0); },
+  'coach-pick'(d) {
+    V.coachStudent = d.id;
+    if (typeof Coach !== 'undefined' && Coach.on()) { Coach.loadStudentRounds(d.id); Coach.loadNotes(S.session, d.id); }
+    render(); window.scrollTo(0, 0);
+  },
   'coach-back'() { V.coachStudent = null; render(); window.scrollTo(0, 0); },
   'coach-add-class'(d) {
     clubInit(); const title = val('cz-ctitle'); const date = val('cz-cdate'); const time = val('cz-ctime');
@@ -808,12 +901,31 @@ const actions = {
     S.club.classes.push({ id: Store.uid(), studentId: d.id, coach: cur().name, date, time: time || '09:00', title });
     commit();
   },
-  'coach-add-note'(d) {
-    clubInit(); const text = val('cz-note');
+  async 'coach-add-note'(d) {
+    const text = val('cz-note');
     if (!text) { alert('Escribe el comentario.'); return; }
+    if (typeof Coach !== 'undefined' && Coach.on()) {
+      V.coachBusy = true; render();
+      const res = await Coach.addNote(d.id, text);
+      V.coachBusy = false;
+      if (!res.ok) { alert(res.msg || 'No se pudo enviar.'); render(); return; }
+      const ta = document.getElementById('cz-note'); if (ta) ta.value = '';
+      render(); return;
+    }
+    clubInit();
     S.club.notes.push({ id: Store.uid(), studentId: d.id, coach: cur().name, date: today(), text });
     commit();
   },
+  'coach-del-note'(d) { if (typeof Coach !== 'undefined' && Coach.on()) Coach.deleteNote(S.session, d.s, d.n); },
+  async 'coach-request'(d) {
+    if (!(typeof Coach !== 'undefined' && Coach.on())) return;
+    const res = await Coach.request(d.c, S.session);
+    if (!res.ok) { alert(res.msg || 'No se pudo enviar.'); return; }
+    if (typeof celebrate === 'function') celebrate(false, 'Solicitud enviada');
+  },
+  'coach-accept'(d) { if (typeof Coach !== 'undefined' && Coach.on()) Coach.accept(d.c, d.s); },
+  'coach-decline'(d) { if (typeof Coach !== 'undefined' && Coach.on()) Coach.remove(d.c, d.s); },
+  'coach-remove'(d) { if (typeof Coach !== 'undefined' && Coach.on()) { V.coachStudent = null; Coach.remove(d.c, d.s); } },
   'timer-start'() {
     if (!V.timer || V.timer.running || V.timer.left <= 0) return;
     V.timer.running = true; render();
@@ -989,6 +1101,7 @@ render();
 
 /* ---- arranque: sync de party activa + service worker (solo producción) ---- */
 (() => {
+  if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.restore();
   const p = S.parties.find(x => x.id === S.activeParty);
   if (p && p.status !== 'done' && p.status !== 'cancelled') Sync.watch(p.code);
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
