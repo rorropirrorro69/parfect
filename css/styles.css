@@ -1203,8 +1203,8 @@ button.row { cursor: pointer; }
 .pst-ringlab { font-size: 12px; font-weight: 800; color: var(--text); }
 .pst-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
 .pst-tile { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 14px 16px; box-shadow: 0 8px 22px rgba(20,40,15,0.06); }
-.pst-th { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; color: var(--lime-ink); opacity: .85; }
-.pst-th .gi, .pst-th svg { width: 28px; height: 28px; }
+.pst-th { position: absolute; top: 50%; right: 14px; width: 44px; height: 44px; margin-top: -22px; color: var(--lime-ink); opacity: 1; }
+.pst-th .gi, .pst-th svg { width: 44px; height: 44px; display: block; }
 .pst-img { position: absolute; top: 10px; right: 12px; width: 30px; height: 30px; }
 .pst-val { display: block; font-size: 30px; font-weight: 900; color: var(--text); letter-spacing: -0.02em; line-height: 1; }
 .pst-lab { display: block; font-size: 12.5px; font-weight: 700; color: var(--muted); margin-top: 5px; }
@@ -1216,7 +1216,7 @@ button.row { cursor: pointer; }
 /* íconos de stats animados (gif-like): cada uno con su movimiento propio */
 .pst-th svg [class^="si-"] { transform-box: fill-box; }
 .si-ball { transform-origin: center; animation: siRoll 2.4s cubic-bezier(.5,0,.5,1) infinite; }
-@keyframes siRoll { 0% { transform: translate(0,0); } 50% { transform: translate(11px,-1.5px); } 100% { transform: translate(0,0); } }
+@keyframes siRoll { 0% { transform: translate(0,0); } 50% { transform: translate(8px,1px); } 100% { transform: translate(0,0); } }
 .si-tb1, .si-tb2, .si-tb3 { transform-origin: center; animation: siBounce 1.5s ease-in-out infinite; }
 .si-tb2 { animation-delay: .18s; } .si-tb3 { animation-delay: .36s; }
 @keyframes siBounce { 0%, 100% { transform: translateY(0); } 42% { transform: translateY(-2.6px); } }
