@@ -1030,7 +1030,7 @@ function rdBirdie(r) {
     return `<div class="aiq-birdie rd-birdie"><span class="aiq-birdie-ava">${chatBotIcon()}</span><div class="aiq-birdie-tx"><span class="aiq-birdie-lab">Birdie · tu coach IA</span>${body}</div></div>`;
   }
   if (!aiOn) return '';
-  return `<button class="btn ghost sm rd-birdie-btn" data-act="round-ai" data-id="${esc(r.id)}">✨ Pídele a Birdie su comentario de esta ronda</button>`;
+  return `<button class="btn ghost sm rd-birdie-btn" data-act="round-ai" data-id="${esc(r.id)}">✨ Analizar esta ronda con IA</button>`;
 }
 
 function vRoundDetail() {
@@ -1062,12 +1062,12 @@ function vRoundDetail() {
       ${pstSceneStatic('gir', s.girTot ? (s.gir / s.girTot) * 100 : 0, 'GIR')}
       ${pstSceneStatic('ud', s.scrTot ? (s.scr / s.scrTot) * 100 : 0, 'Up & down')}
     </div>
-    ${rdBirdie(r)}
     <div class="card">
       <span class="label">${golfIcon('card')} Tu tarjeta · ${esc(courseName)}</span>
       ${scorecardTable(s.holes, parOf, [{ name: 'Tú', scoreOf: i => (r.holes[i] ? r.holes[i].score : null) }], -1, null)}
     </div>
     ${roundAnalysis(r, s)}
+    ${rdBirdie(r)}
     <div class="card">
       <span class="label">${golfIcon('card')} Foto / video de la ronda</span>
       ${r.caption ? `<p class="note" style="margin:4px 0 0">${esc(r.caption)}</p>` : ''}
