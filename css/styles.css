@@ -1221,6 +1221,33 @@ button.row { cursor: pointer; }
 .app-content.view-in .pst-ring:nth-child(3) { animation-delay: .16s; }
 @media (prefers-reduced-motion: reduce) { .pst-img, .pst-th, .app-content.view-in .pst-tile, .app-content.view-in .pst-ring { animation: none !important; } }
 
+/* ============ Capa de inmersión: micro-interacciones ============ */
+@media (prefers-reduced-motion: no-preference) {
+  /* press táctil en botones */
+  .btn { transition: transform .16s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, filter .15s ease; }
+  .btn:active { transform: scale(.94); filter: brightness(.98); }
+  .btn.primary:hover, .lp-order:hover, .btn.big:hover { box-shadow: 0 16px 34px rgba(124,194,74,.42); transform: translateY(-1px); }
+  /* tarjetas/tiles "tocables": rebote al presionar */
+  .pst-tile, .aiq-card, .trn-card, .cl-tile, .club-tile, .lps-rd, .lp-prescard, .lph-prof, .th-card, .cre-card, .lib-card, .drill-card {
+    transition: transform .16s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;
+  }
+  .pst-tile:active, .aiq-card:active, .trn-card:active, .cl-tile:active, .club-tile:active, .th-card:active, .lib-card:active, .drill-card:active { transform: scale(.975); }
+  /* botón P de navegación: latido vivo + press */
+  .nav-p { animation: navPulse 2.8s ease-in-out infinite; will-change: transform; }
+  @keyframes navPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); box-shadow: 0 9px 28px rgba(60,120,40,.5), 0 0 0 7px rgba(124,194,74,.16); } }
+  .nav-p:active { transform: scale(.9); animation: none; }
+  .nav-item { transition: background .2s ease, color .2s ease, border-color .2s ease, transform .14s ease; }
+  .nav-item:active { transform: scale(.9); }
+  /* las tarjetas se "ensamblan" al entrar a una vista (una sola vez) */
+  .app-content.view-in .card { animation: cardRise .5s cubic-bezier(.2,.85,.25,1) both; }
+  .app-content.view-in .card:nth-of-type(2) { animation-delay: .05s; }
+  .app-content.view-in .card:nth-of-type(3) { animation-delay: .1s; }
+  .app-content.view-in .card:nth-of-type(4) { animation-delay: .15s; }
+  .app-content.view-in .card:nth-of-type(5) { animation-delay: .2s; }
+  .app-content.view-in .card:nth-of-type(n+6) { animation-delay: .24s; }
+  @keyframes cardRise { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: none; } }
+}
+
 /* estado vacío de la tarjeta de jugador */
 .pl-empty { margin-top: 12px; text-align: center; padding: 24px 18px; }
 .pl-empty-ic { display: inline-block; width: 40px; height: 40px; color: var(--lime-ink); }
