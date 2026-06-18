@@ -2434,6 +2434,24 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .cl-mem-tx span { display: block; font-size: 11.5px; color: var(--muted); }
 .cl-badge.jr { display: inline-block; vertical-align: middle; flex: none; font-size: 10px; font-weight: 900; color: #1d7a3a; background: var(--lime-faint); border: 1px solid var(--lime); border-radius: 6px; padding: 1px 6px; margin-left: 4px; }
 .cl-mem-tx b .cl-you { display: inline-block; font-size: 10px; font-weight: 800; color: #1d7a3a; background: var(--lime-faint); border-radius: 6px; padding: 1px 6px; margin-left: 5px; vertical-align: middle; }
+/* ===== Club · roster botón, plan, patrocinios ===== */
+.cl-mem-btn { width: 100%; text-align: left; background: none; border: none; cursor: pointer; }
+.cl-mem-btn .cl-mem-go { margin-left: auto; font-size: 20px; color: var(--muted); }
+.cl-invite-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 11px; border-radius: 12px; border: 1px solid var(--line); background: var(--card2); color: var(--text); font-weight: 800; font-size: 13px; cursor: pointer; }
+.cl-invite-btn .gi { width: 18px; height: 18px; }
+.cl-invite-btn:active { transform: scale(.99); }
+.plan-list { display: flex; flex-direction: column; gap: 12px; }
+.plan-card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 16px; box-shadow: 0 8px 22px rgba(20,40,15,.06); }
+.plan-card.hot { border-color: var(--lime); box-shadow: 0 12px 30px rgba(124,194,74,.18); }
+.plan-tag { position: absolute; top: -10px; right: 14px; font-size: 10px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: #0c2913; background: var(--lime); padding: 3px 10px; border-radius: 99px; }
+.plan-name { font-size: 17px; font-weight: 900; color: var(--text); }
+.plan-price { font-size: 30px; font-weight: 900; color: var(--text); margin: 2px 0 10px; }
+.plan-price span { font-size: 13px; font-weight: 700; color: var(--muted); }
+.plan-f { list-style: none; padding: 0; margin: 0 0 14px; display: flex; flex-direction: column; gap: 7px; }
+.plan-f li { font-size: 13px; color: var(--text); }
+.trn-sponsors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.trn-sponsors > span { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.trn-spon { font-size: 11.5px; font-weight: 800; color: var(--text); background: var(--card2); border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; }
 /* ===== Torneos del club + leaderboard ===== */
 .trn-list { display: flex; flex-direction: column; gap: 10px; }
 .trn-card { display: block; width: 100%; text-align: left; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 13px 14px; cursor: pointer; box-shadow: 0 8px 20px rgba(20,40,15,.06); }

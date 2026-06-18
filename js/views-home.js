@@ -1230,11 +1230,20 @@ function vClub() {
   const isStaff = role === 'admin' || role === 'coach';
   const members = c.members || [];
   const juniors = members.filter(m => m.role === 'junior').length;
-  const roster = members.map(m => `<div class="cl-mem">
-      <span class="cl-mem-av" style="--ci:${(m.name || '').length % 6}">${clubInitials(m.name)}</span>
-      <div class="cl-mem-tx"><b>${esc(m.name)}${m.userId === u.id ? ' <span class="cl-you">tú</span>' : ''}</b><span>${CLUB_ROLE_LABEL[m.role] || m.role}${m.category ? ' · ' + esc(m.category) : (m.hcp != null ? ' · HCP ' + fmtHcp(m.hcp) : '')}</span></div>
-      ${m.role === 'junior' ? `<span class="cl-badge jr">JR</span>` : ''}
-    </div>`).join('');
+  const nameOf = id => { const x = members.find(m => m.userId === id); return x ? (x.name || '').split(' ')[0] : ''; };
+  const subOf = m => {
+    if (m.role === 'parent' && m.parentOf) return 'Padre/Madre · de ' + esc(nameOf(m.parentOf));
+    if (m.role === 'junior') return 'Juvenil' + (m.category ? ' · ' + esc(m.category) : '');
+    return (CLUB_ROLE_LABEL[m.role] || m.role) + (m.hcp != null ? ' · HCP ' + fmtHcp(m.hcp) : '');
+  };
+  const roster = members.map(m => {
+    const inner = `<span class="cl-mem-av" style="--ci:${(m.name || '').length % 6}">${clubInitials(m.name)}</span>
+      <div class="cl-mem-tx"><b>${esc(m.name)}${m.userId === u.id ? ' <span class="cl-you">tú</span>' : ''}</b><span>${subOf(m)}</span></div>
+      ${m.role === 'junior' ? `<span class="cl-badge jr">JR</span>` : ''}`;
+    return (isStaff && m.role !== 'admin')
+      ? `<button class="cl-mem cl-mem-btn" data-act="member-edit" data-id="${esc(m.userId)}">${inner}<span class="cl-mem-go">›</span></button>`
+      : `<div class="cl-mem">${inner}</div>`;
+  }).join('');
   return `<div class="sec-h"><h2>${esc(c.name)}</h2><span class="small muted">${members.length} miembros</span></div>
     <div class="card cl-hub">
       <div class="cl-hubtop"><span class="cl-role">${CLUB_ROLE_LABEL[role] || role}</span>${isStaff ? `<span class="cl-code">Código <b>${esc(c.code)}</b></span>` : ''}</div>
@@ -1242,11 +1251,47 @@ function vClub() {
         <button class="cl-tile" data-act="club-tourns-open">${golfIcon('trophy')}<span>Torneos</span><i>${(c.tournaments || []).length || 'crear'} ${(c.tournaments || []).length === 1 ? 'torneo' : 'torneos'}</i></button>
         <button class="cl-tile" data-act="club-academy-open">${golfIcon('flag')}<span>Academia juvenil</span><i>${juniors} juveniles</i></button>
       </div>
+      ${isStaff ? `<button class="cl-invite-btn" data-act="club-invite">${golfIcon('card')} Invitar por código / QR</button><button class="cl-invite-btn" data-act="club-plans">${golfIcon('trophy')} Plan del club</button>` : ''}
     </div>
-    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Miembros</h2>${isStaff ? `<button class="sec-link" data-act="club-invite">+ Invitar</button>` : ''}</div>
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:18px">Miembros</h2>${isStaff ? `<button class="sec-link" data-act="member-new">+ Agregar</button>` : ''}</div>
     <div class="card cl-roster">${roster}</div>
     <button class="btn ghost" data-act="club-leave" style="margin-top:12px">Salir del club</button>
-    ${V.inviteOpen ? vInviteSheet(c) : ''}`;
+    ${V.inviteOpen ? vInviteSheet(c) : ''}
+    ${V.memberEdit ? vMemberSheet(c) : ''}`;
+}
+function vMemberSheet(c) {
+  const d = V.memberEdit; const isNew = !d.userId || d.isNew;
+  const juniors = (c.members || []).filter(m => m.role === 'junior' && m.userId !== d.userId);
+  const roles = [['member', 'Miembro'], ['coach', 'Coach'], ['junior', 'Juvenil'], ['parent', 'Padre/Madre']];
+  return `<div class="overlay" data-act="member-close"><div class="sheet" data-act="noop">
+    <div class="grab"></div>
+    <h2>${isNew ? 'Agregar miembro' : 'Editar miembro'}</h2>
+    <div class="field"><label>Nombre</label><input id="mem-name" placeholder="Nombre completo" value="${esc(d.name || '')}"></div>
+    <div class="field"><label>Rol</label><div class="chips">${roles.map(r => `<button class="chip sm ${d.role === r[0] ? 'on' : ''}" data-act="member-role" data-r="${r[0]}">${r[1]}</button>`).join('')}</div></div>
+    ${d.role === 'junior' ? `<div class="field"><label>Categoría</label><input id="mem-cat" placeholder="Ej. Sub-14" value="${esc(d.category || '')}"></div>` : ''}
+    ${d.role !== 'junior' ? `<div class="field"><label>Hándicap</label><input id="mem-hcp" type="number" step="1" value="${d.hcp != null ? esc(d.hcp) : ''}"></div>` : ''}
+    ${d.role === 'parent' ? `<div class="field"><label>Hijo/a en el club</label><div class="chips">${juniors.length ? juniors.map(j => `<button class="chip sm ${d.parentOf === j.userId ? 'on' : ''}" data-act="member-parent" data-id="${esc(j.userId)}">${esc((j.name || '').split(' ')[0])}</button>`).join('') : '<span class="note">Agrega primero juveniles</span>'}</div></div>` : ''}
+    <button class="btn primary big" data-act="member-save" style="margin-top:6px">${isNew ? 'Agregar al club' : 'Guardar'}</button>
+    ${!isNew ? `<button class="btn ghost" data-act="member-remove" style="margin-top:8px">Quitar del club</button>` : ''}
+    ${V.memberErr ? `<p class="note err">${esc(V.memberErr)}</p>` : ''}
+  </div></div>`;
+}
+function vClubPlans() {
+  const c = myClub();
+  const tiers = [
+    { n: 'Club', p: '$1,490', per: '/mes', f: ['Hasta 150 miembros', 'Torneos con leaderboard en vivo', 'Academia juvenil + reportes', 'Soporte por correo'], hot: false },
+    { n: 'Club Pro', p: '$2,990', per: '/mes', f: ['Miembros ilimitados', 'Todo lo de Club', 'Patrocinios por torneo (ingreso compartido)', 'Panel de talento y becas', 'Onboarding dedicado'], hot: true },
+  ];
+  return `<div class="sec-h"><button class="sec-link" data-act="club-back">← ${esc(c ? c.name : 'Club')}</button></div>
+    <div class="sec-h" style="margin-top:2px"><h2>Plan del club</h2></div>
+    <p class="note" style="margin:0 2px 12px">Lleva tu club a PARFECT. Cancela cuando quieras.</p>
+    <div class="plan-list">${tiers.map(t => `<div class="plan-card ${t.hot ? 'hot' : ''}">
+      ${t.hot ? '<span class="plan-tag">Recomendado</span>' : ''}
+      <b class="plan-name">${t.n}</b><div class="plan-price">${t.p}<span>${t.per}</span></div>
+      <ul class="plan-f">${t.f.map(x => `<li>✓ ${esc(x)}</li>`).join('')}</ul>
+      <button class="btn ${t.hot ? 'primary' : ''} big" data-act="club-plan-pick" data-n="${esc(t.n)}">Activar ${esc(t.n)}</button>
+    </div>`).join('')}</div>
+    <p class="note" style="text-align:center;margin-top:10px">El cobro se conecta con la cuenta de pagos del club. Te contactamos para activarlo.</p>`;
 }
 function vInviteSheet(c) {
   const url = location.origin + location.pathname + '?club=' + c.code;
@@ -1298,6 +1343,7 @@ function vTournCreate(c) {
       <div class="field"><label>Nombre</label><input id="trn-name" placeholder="Ej. Copa Campestre · Junio" value="${esc(d.name || '')}"></div>
       <div class="field"><label>Fecha</label><input id="trn-date" type="date" value="${esc(d.date || '')}"></div>
       <div class="field"><label>Hoyos</label><div class="chips">${[9, 18].map(h => `<button class="chip sm ${(d.holes || 18) === h ? 'on' : ''}" data-act="tourn-holes" data-h="${h}">${h} hoyos</button>`).join('')}</div></div>
+      <div class="field"><label>Patrocinadores <span class="muted">(opcional, separa con comas)</span></label><input id="trn-sponsors" placeholder="Ej. Mercedes-Benz, Titleist" value="${esc(d.sponsors || '')}"></div>
       <p class="note">Formato: <b>Stroke play</b> (gross y neto). Se inscriben los miembros del club; tú capturas sus scores y el leaderboard se ordena solo.</p>
       <button class="btn primary big" data-act="tourn-create">Crear torneo ${golfIcon('trophy')}</button>
       ${V.tournErr ? `<p class="note err">${esc(V.tournErr)}</p>` : ''}
@@ -1323,6 +1369,7 @@ function vTournDetail(c, t, u) {
       <div class="trn-h2top"><b>${esc(t.name)}</b><span class="trn-status ${t.status}">${TRN_STATUS[t.status]}</span></div>
       <span class="trn-meta">${t.holes} hoyos · Par ${t.par} · ${esc(t.date || 's/f')}</span>
       <div class="trn-toggle"><button class="chip sm ${net ? 'on' : ''}" data-act="tourn-metric" data-m="net">Neto</button><button class="chip sm ${!net ? 'on' : ''}" data-act="tourn-metric" data-m="gross">Gross</button></div>
+      ${(t.sponsors && t.sponsors.length) ? `<div class="trn-sponsors"><span>Patrocinan</span>${t.sponsors.map(s => `<span class="trn-spon">${esc(s)}</span>`).join('')}</div>` : ''}
     </div>
     <div class="card trn-board">${rows || '<p class="note">Sin jugadores inscritos.</p>'}</div>
     ${staff ? `<button class="btn primary" data-act="tourn-capture" style="margin-top:12px">${golfIcon('card')} Capturar scores</button>` : ''}

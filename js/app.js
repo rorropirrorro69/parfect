@@ -177,6 +177,7 @@ function App() {
     club: vClub,
     'club-tourn': vClubTourn,
     'club-academy': vClubAcademy,
+    'club-plans': vClubPlans,
   }[V.view] || vDashboard;
   return vShell(content());
 }
@@ -285,6 +286,36 @@ const actions = {
     if (c) { c.members = (c.members || []).filter(m => m.userId !== u.id); if (!c.members.length) S.clubs = (S.clubs || []).filter(x => x.id !== c.id); }
     commit();
   },
+  'club-plans'() { V.view = 'club-plans'; render(); window.scrollTo(0, 0); },
+  'club-plan-pick'(d) { if (typeof celebrate === 'function') celebrate(true, 'Plan ' + (d.n || '') + ' · te contactamos para activarlo'); },
+  /* ---- gestión de roster ---- */
+  'member-new'() { V.memberEdit = { isNew: true, name: '', role: 'member', hcp: null, category: '', parentOf: null }; V.memberErr = null; render(); },
+  'member-edit'(d) { const c = myClub(); const m = c && (c.members || []).find(x => x.userId === d.id); if (!m) return; V.memberEdit = { userId: m.userId, name: m.name, role: m.role, hcp: m.hcp, category: m.category || '', parentOf: m.parentOf || null }; V.memberErr = null; render(); },
+  'member-close'() { V.memberEdit = null; V.memberErr = null; render(); },
+  'member-role'(d) { const e = V.memberEdit; if (!e) return; const nm = document.getElementById('mem-name'); if (nm) e.name = nm.value; const hc = document.getElementById('mem-hcp'); if (hc && hc.value !== '') e.hcp = Number(hc.value); const ca = document.getElementById('mem-cat'); if (ca) e.category = ca.value; e.role = d.r; render(); },
+  'member-parent'(d) { const e = V.memberEdit; if (!e) return; const nm = document.getElementById('mem-name'); if (nm) e.name = nm.value; e.parentOf = (e.parentOf === d.id) ? null : d.id; render(); },
+  'member-save'() {
+    const c = myClub(); const d = V.memberEdit; if (!c || !d) return;
+    const name = ((document.getElementById('mem-name') || {}).value || '').trim();
+    if (!name) { V.memberErr = 'Escribe el nombre.'; render(); return; }
+    const catEl = document.getElementById('mem-cat'); const hcpEl = document.getElementById('mem-hcp');
+    const category = d.role === 'junior' ? ((catEl && catEl.value || '').trim() || null) : null;
+    const hcp = d.role !== 'junior' && hcpEl && hcpEl.value !== '' ? Number(hcpEl.value) : (d.role === 'junior' ? (d.hcp != null ? d.hcp : 20) : d.hcp);
+    const parentOf = d.role === 'parent' ? (d.parentOf || null) : null;
+    c.members = c.members || [];
+    if (d.isNew || !d.userId) {
+      c.members.push({ userId: Store.uid(), name, role: d.role, hcp: hcp != null ? hcp : null, category, parentOf });
+    } else {
+      const m = c.members.find(x => x.userId === d.userId);
+      if (m) { m.name = name; m.role = d.role; m.hcp = hcp != null ? hcp : m.hcp; m.category = category; m.parentOf = parentOf; }
+    }
+    V.memberEdit = null; V.memberErr = null; commit();
+  },
+  'member-remove'() {
+    const c = myClub(); const d = V.memberEdit; if (!c || !d || !d.userId) return;
+    c.members = (c.members || []).filter(m => m.userId !== d.userId);
+    V.memberEdit = null; commit();
+  },
   'club-invite'() { V.inviteOpen = true; render(); },
   'club-invite-close'() { V.inviteOpen = false; render(); },
   'club-invite-share'() {
@@ -311,6 +342,7 @@ const actions = {
     const holes = (V.tournDraft && V.tournDraft.holes) || 18;
     if (!name) { V.tournErr = 'Ponle nombre al torneo.'; render(); return; }
     const par = holes === 9 ? 36 : 72;
+    const sponsors = ((document.getElementById('trn-sponsors') || {}).value || '').split(',').map(s => s.trim()).filter(Boolean);
     const players = (c.members || []).map(m => {
       const ph = Math.round((m.hcp != null ? m.hcp : 12) * holes / 18);
       const gross = par + ph + Math.round(Math.random() * 6 - 2);
@@ -318,7 +350,7 @@ const actions = {
     });
     c.tournaments = c.tournaments || [];
     const id = Store.uid();
-    c.tournaments.push({ id, name, date, holes, par, format: 'stroke', status: 'live', players, createdAt: Date.now() });
+    c.tournaments.push({ id, name, date, holes, par, format: 'stroke', status: 'live', sponsors, players, createdAt: Date.now() });
     V.tournCreating = false; V.tournErr = null; V.tournId = id; commit();
   },
   'tourn-open'(d) { V.tournId = d.id; V.tournCapture = false; render(); window.scrollTo(0, 0); },

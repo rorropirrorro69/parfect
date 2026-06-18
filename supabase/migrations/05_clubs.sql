@@ -35,6 +35,7 @@ create table if not exists public.tournaments (
   par         int  not null default 72,
   format      text not null default 'stroke',
   status      text not null default 'live',     -- open | live | done
+  sponsors    jsonb not null default '[]'::jsonb,
   created_at  timestamptz not null default now()
 );
 
