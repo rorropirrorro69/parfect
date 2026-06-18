@@ -164,8 +164,12 @@ function lpScrLoading() {
 }
 /* primer iPhone: pantalla de inicio (screenshot estático, ya sin el saludo) */
 function lpIntroPhone() {
+  // monitos que aparecen y desaparecen SOLO sobre el avatar del hero (tapa al ninja del screenshot)
+  const monos = ['🏌️‍♂️', '🏌️‍♀️', '👦', '👧', '👴', '👵'];
+  const cyc = monos.map((e, i) => `<span class="lp-em" style="animation-delay:${(i * 1.5).toFixed(1)}s">${e}</span>`).join('');
   const scr = `<img class="lp-shotimg" src="assets/shot-inicio.png?v=388" alt="" onload="if(this.naturalWidth){var c=this.parentElement.querySelector('.lp-shotcomp');if(c)c.style.display='none'}else{this.remove()}" onerror="this.remove()">
-    <div class="lp-shotcomp">${lpScrStats()}</div>`;
+    <div class="lp-shotcomp">${lpScrStats()}</div>
+    <div class="lp-ninja" aria-hidden="true">${cyc}</div>`;
   return lpPhone(scr);
 }
 function lpScrStats() {

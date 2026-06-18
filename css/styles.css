@@ -3854,6 +3854,17 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 /* slot de screenshot real (assets/) sobre el componente */
 .lp-shotimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
 .lp-shotcomp { width: 100%; height: 100%; }
+/* monitos que rotan SOBRE el avatar del hero del primer iPhone (tapa el ninja del screenshot) */
+.lp-ninja { position: absolute; left: 66%; top: 18%; width: 23%; height: 16.5%; z-index: 3; background: linear-gradient(180deg, #a6d073, #90bd67); border-radius: 11px; overflow: hidden; }
+.lp-ninja .lp-em { position: absolute; inset: 0; display: grid; place-items: center; font-size: clamp(24px, 7vw, 40px); line-height: 1; opacity: 0; animation: lpEmCycle 9s infinite both; }
+@keyframes lpEmCycle {
+  0% { opacity: 0; transform: scale(.55); }
+  3% { opacity: 1; transform: scale(1); }
+  13% { opacity: 1; transform: scale(1); }
+  17% { opacity: 0; transform: scale(.6); }
+  100% { opacity: 0; transform: scale(.6); }
+}
+@media (prefers-reduced-motion: reduce) { .lp-ninja .lp-em { animation: none; } .lp-ninja .lp-em:first-child { opacity: 1; } }
 /* encabezado de pantalla (Tus rondas / Análisis IA / Logros) */
 .lps-rhd { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
 .lps-rhd b { font-size: 21px; font-weight: 900; color: var(--text); }
