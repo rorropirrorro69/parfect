@@ -2903,7 +2903,12 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 /* feed de amigos en carrusel horizontal */
 .fd-list { display: flex; flex-direction: row; gap: 14px; overflow-x: auto; padding: 2px 2px 12px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .fd-list::-webkit-scrollbar { display: none; }
-.fd-list .fd-card { flex: 0 0 90%; max-width: 380px; scroll-snap-align: center; align-self: flex-start; }
+.fd-list > .fd-post { flex: 0 0 90%; max-width: 380px; scroll-snap-align: center; align-self: flex-start; display: flex; flex-direction: column; gap: 8px; }
+.fd-list > .fd-post .fd-card { width: 100%; }
+.fd-social { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 8px 14px 11px; box-shadow: 0 6px 16px rgba(20,40,15,.05); }
+.fd-social .fd-actions { margin-top: 4px; }
+.fd-social-full { margin-top: 10px; }
+.fd-tap { cursor: pointer; }
 .fd-scard { overflow-x: auto; scrollbar-width: none; }
 .fd-scard::-webkit-scrollbar { display: none; }
 .fd-media { margin: 4px 0 10px; border-radius: 14px; overflow: hidden; background: var(--card2); }
@@ -2915,10 +2920,10 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 .fd-card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 15px 16px 14px; box-shadow: 0 8px 22px rgba(20,40,15,.06); overflow: hidden; transition: transform .14s, box-shadow .2s; }
 .fd-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #7cc24a, #46b0e0, #9a5cd0); opacity: .9; }
 .fd-card:active { transform: scale(.995); }
-.app-content.view-in .fd-list .fd-card { animation: rowIn .5s cubic-bezier(.2,.8,.2,1) both; }
-.app-content.view-in .fd-list .fd-card:nth-child(2) { animation-delay: .05s; }
-.app-content.view-in .fd-list .fd-card:nth-child(3) { animation-delay: .1s; }
-.app-content.view-in .fd-list .fd-card:nth-child(n+4) { animation-delay: .15s; }
+.app-content.view-in .fd-list .fd-post { animation: rowIn .5s cubic-bezier(.2,.8,.2,1) both; }
+.app-content.view-in .fd-list .fd-post:nth-child(2) { animation-delay: .05s; }
+.app-content.view-in .fd-list .fd-post:nth-child(3) { animation-delay: .1s; }
+.app-content.view-in .fd-list .fd-post:nth-child(n+4) { animation-delay: .15s; }
 .fd-head { display: flex; align-items: center; gap: 11px; }
 .fd-avwrap { width: 46px; height: 46px; flex: none; border-radius: 50%; padding: 2.5px; background: conic-gradient(from 210deg, #7cc24a, #6ec24f, #46b0e0, #7cc24a); display: grid; place-items: center; }
 .fd-av { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--card); border: 2px solid var(--card); }

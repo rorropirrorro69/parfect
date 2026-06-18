@@ -3,7 +3,7 @@
 function navKeyOf(view) {
   if (['ronda', 'nueva', 'detalle'].includes(view)) return 'ronda';
   if (['trainer', 'clubs'].includes(view)) return 'trainer';
-  if (['perfil', 'clubs', 'friend', 'social', 'club', 'club-tourn', 'club-academy'].includes(view)) return 'perfil';
+  if (['perfil', 'clubs', 'friend', 'feedcard', 'social', 'club', 'club-tourn', 'club-academy'].includes(view)) return 'perfil';
   return 'inicio';
 }
 
@@ -796,6 +796,38 @@ function feedScorecard(p) {
   }
   return (typeof scorecardTable === 'function') ? scorecardTable(n, i => pars[i], [{ name: '', scoreOf: i => scores[i] }], -1, null) : scoreStrip(n, i => pars[i], i => scores[i]);
 }
+/* Detalle de una publicación del feed (la "tarjeta" del amigo): ronda + scorecard + comentarios */
+function vFeedCard() {
+  const p = (FRIENDS_FEED || []).find(x => x.id === V.feedCard);
+  if (!p) { V.view = 'social'; return vSocial(); }
+  const u = cur();
+  const likes = u.likes || {};
+  const liked = !!likes[p.id];
+  const ln = (p.likes || 0) + (liked ? 1 : 0);
+  const scoreCls = p.toPar <= 0 ? 'good' : p.toPar <= Math.round(p.holes * 0.33) ? 'par' : 'over';
+  return `<button class="auth-back" data-act="nav" data-view="social">← Feed de amigos</button>
+    <div class="fd-card fd-card-full">
+      <div class="fd-head"><span class="fd-avwrap"><img class="fd-av golfer" src="${AVATARS[p.av] || AVATARS[0]}" alt="" loading="lazy"></span>
+        <div class="fd-who"><b>${esc(p.name)}</b><span>HCP ${fmtHcp(p.hcp)} · ${esc(p.when)}</span></div></div>
+      ${p.cap ? `<p class="fd-cap">${esc(p.cap)}</p>` : ''}
+      <div class="fd-round">
+        <div class="fd-course"><b>${esc(p.course)}</b><span>${p.holes} hoyos</span></div>
+        <div class="fd-score ${scoreCls}"><b>${p.score}</b><span>${fmtToPar(p.toPar)}</span></div>
+      </div>
+      <div class="fd-stats">
+        <span><b>${p.fw}%</b> fairways</span><span><b>${p.gir}%</b> GIR</span><span><b>${p.putts}</b> putts</span>
+      </div>
+      <div class="fd-scard"><span class="fd-scard-lab">${golfIcon('card')} Tarjeta</span>${feedScorecard(p)}</div>
+    </div>
+    <div class="fd-social fd-social-full">
+      <div class="fd-actions">
+        <button class="fd-like ${liked ? 'on' : ''}" data-act="feed-like" data-id="${p.id}">${heartIcon()}<span>${ln}</span></button>
+        <span class="fd-cmt">${commentIcon()}<span>${p.cmt || 0}</span></span>
+      </div>
+      <div class="sec-h" style="margin-top:6px"><h2 style="font-size:15px">Comentarios</h2></div>
+      ${p.top ? `<div class="fd-topc"><b>${esc(p.top.by)}</b> ${esc(p.top.txt)}</div>` : `<p class="note" style="margin:0">Aún sin comentarios. Sé el primero.</p>`}
+    </div>`;
+}
 /* tiempo relativo en español a partir de un timestamp ISO (created_at) */
 function fmtWhen(iso) {
   if (!iso) return '';
@@ -926,26 +958,28 @@ function vSocialFeed() {
     const av = p.mine ? avatarImg(u, 'fd-av') : `<img class="fd-av golfer" src="${AVATARS[p.av] || AVATARS[0]}" alt="" loading="lazy">`;
     const headInner = `<span class="fd-avwrap">${av}</span>
         <div class="fd-who"><b>${esc(p.name)}${p.mine ? ' <span class="fd-you">tú</span>' : ''}</b><span>${p.mine ? 'Tú · ' + p.when : 'HCP ' + fmtHcp(p.hcp) + ' · ' + p.when}</span></div>`;
-    const head = p.mine
-      ? `<div class="fd-head">${headInner}</div>`
-      : `<button class="fd-head fd-link" data-act="friend" data-id="${esc(p.id)}">${headInner}<span class="fd-go">›</span></button>`;
-    return `<div class="fd-card">
-      ${head}
-      ${p.cap ? `<p class="fd-cap">${esc(p.cap)}</p>` : ''}
-      ${p.media ? `<div class="fd-media">${p.media.type === 'video' ? `<video src="${p.media.src}" controls playsinline preload="metadata"></video>` : `<img src="${p.media.src}" alt="" loading="lazy">`}</div>` : ''}
-      <div class="fd-round">
-        <div class="fd-course"><b>${esc(p.course)}</b><span>${p.holes} hoyos</span></div>
-        <div class="fd-score ${scoreCls}"><b>${p.score}</b><span>${fmtToPar(p.toPar)}</span></div>
+    const head = `<button class="fd-head fd-link" data-act="feed-card" data-id="${esc(p.id)}">${headInner}<span class="fd-go">›</span></button>`;
+    return `<div class="fd-post">
+      <div class="fd-card">
+        ${head}
+        ${p.cap ? `<p class="fd-cap">${esc(p.cap)}</p>` : ''}
+        ${p.media ? `<div class="fd-media">${p.media.type === 'video' ? `<video src="${p.media.src}" controls playsinline preload="metadata"></video>` : `<img src="${p.media.src}" alt="" loading="lazy">`}</div>` : ''}
+        <div class="fd-round fd-tap" data-act="feed-card" data-id="${esc(p.id)}">
+          <div class="fd-course"><b>${esc(p.course)}</b><span>${p.holes} hoyos</span></div>
+          <div class="fd-score ${scoreCls}"><b>${p.score}</b><span>${fmtToPar(p.toPar)}</span></div>
+        </div>
+        <div class="fd-stats">
+          <span><b>${p.fw}%</b> fairways</span><span><b>${p.gir}%</b> GIR</span><span><b>${p.putts}</b> putts</span>
+        </div>
+        <div class="fd-scard fd-tap" data-act="feed-card" data-id="${esc(p.id)}"><span class="fd-scard-lab">${golfIcon('card')} Tarjeta</span>${p.mine ? (p.card || '') : feedScorecard(p)}</div>
       </div>
-      <div class="fd-stats">
-        <span><b>${p.fw}%</b> fairways</span><span><b>${p.gir}%</b> GIR</span><span><b>${p.putts}</b> putts</span>
+      <div class="fd-social">
+        <div class="fd-actions">
+          <button class="fd-like ${liked ? 'on' : ''}" data-act="feed-like" data-id="${p.id}">${heartIcon()}<span>${ln}</span></button>
+          <span class="fd-cmt">${commentIcon()}<span>${p.cmt || 0}</span></span>
+        </div>
+        ${p.top ? `<div class="fd-topc"><b>${esc(p.top.by)}</b> ${esc(p.top.txt)}</div>` : ''}
       </div>
-      <div class="fd-scard"><span class="fd-scard-lab">${golfIcon('card')} Tarjeta</span>${p.mine ? (p.card || '') : feedScorecard(p)}</div>
-      <div class="fd-actions">
-        <button class="fd-like ${liked ? 'on' : ''}" data-act="feed-like" data-id="${p.id}">${heartIcon()}<span>${ln}</span></button>
-        <span class="fd-cmt">${commentIcon()}<span>${p.cmt || 0}</span></span>
-      </div>
-      ${p.top ? `<div class="fd-topc"><b>${esc(p.top.by)}</b> ${esc(p.top.txt)}</div>` : ''}
     </div>`;
   }).join('');
   return `<div class="sec-h" style="margin-top:6px"><h2>Feed de amigos</h2></div>

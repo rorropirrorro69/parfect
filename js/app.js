@@ -171,6 +171,7 @@ function App() {
     trofeos: vTrophies,
     clubs: vClubs,
     friend: vFriend,
+    feedcard: vFeedCard,
     trainer: vTrainer,
     perfil: vPerfil,
     social: vSocial,
@@ -1256,6 +1257,11 @@ const actions = {
     commit();
   },
   friend(d) { V.friendId = d.id; go('friend'); },
+  'feed-card'(d) {
+    const id = d.id || '';
+    if (id.indexOf('me-') === 0) { V.detail = id.slice(3); V.delArm = null; V.justFinished = null; V.roundAI = null; go('detalle'); return; }
+    V.feedCard = id; go('feedcard');
+  },
   'friend-soon'() { alert('Agregar amigos de otros dispositivos llegará con las cuentas en la nube (backend). Por ahora puedes invitarlos a una Party con el código.'); },
   'cal-train'(d) { const u = cur(); u.trainPerWeek = Stats.clamp((u.trainPerWeek != null ? u.trainPerWeek : 3) + Number(d.d), 0, 14); commit(); },
   'cal-rounds'(d) { const u = cur(); u.roundsPerWeek = Stats.clamp((u.roundsPerWeek != null ? u.roundsPerWeek : 1) + Number(d.d), 0, 7); commit(); },
