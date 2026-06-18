@@ -689,13 +689,21 @@ function vPlayerCard(u, agg) {
     const parPct = Math.round((sd.par || 0) / tot * 100);
     const birdiePct = Math.round(((sd.birdie || 0) + (sd.eagle || 0)) / tot * 100);
     const bogeyPct = Math.round(((sd.bogey || 0) + (sd.dbl || 0)) / tot * 100);
+    const statIcon = {
+      putt: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18 Q11 8.5 20 13" fill="none" stroke="#2f7d3a" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="1.5 3.5" opacity=".65"/><ellipse cx="19.5" cy="14.2" rx="3.6" ry="1.5" fill="#1f3a16"/><circle cx="6" cy="17.4" r="3.4" fill="#fff" stroke="#2f7d3a" stroke-width="1.5"/><g fill="#cfdacb"><circle cx="5" cy="16.6" r=".5"/><circle cx="6.9" cy="16.9" r=".5"/><circle cx="6" cy="18.4" r=".5"/></g></svg>`,
+      three: `<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="15.5" rx="9.5" ry="4.2" fill="#cfe6b8" stroke="#7cc24a" stroke-width="1.3"/><g fill="#fff" stroke="#2f7d3a" stroke-width="1"><circle cx="8" cy="15" r="1.7"/><circle cx="12.4" cy="16.6" r="1.7"/><circle cx="16" cy="14.6" r="1.7"/></g></svg>`,
+      birdie: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 14 Q7 7.5 12 12.6 Q17 7.5 22 14" fill="none" stroke="#7cc24a" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="14.6" r="2.4" fill="#7cc24a"/></svg>`,
+      bogey: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.5" fill="none" stroke="#e0873a" stroke-width="2.2"/><path d="M12 16 V9 M9 12 l3-3 3 3" fill="none" stroke="#e0873a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      par: `<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="19" rx="8" ry="2.2" fill="#cfe6b8"/><path d="M9 19 V5.5" stroke="#2f7d3a" stroke-width="2" stroke-linecap="round"/><path d="M9 5.5 L17.5 8.2 L9 10.9 Z" fill="#7cc24a"/></svg>`,
+      best: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 l2.6 5.3 5.9.9 -4.3 4.1 1 5.8 -5.2-2.7 -5.2 2.7 1-5.8 -4.3-4.1 5.9-.9z" fill="#f6c63c" stroke="#e0a92a" stroke-width="1" stroke-linejoin="round"/></svg>`,
+    };
     const tiles = [
-      ['Putts / ronda', agg.putts18.toFixed(0), `<span class="pst-ic">${golfIcon('putter')}</span>`],
-      ['3-putts / ronda', threeP, `<span class="pst-ic">${golfIcon('bucket')}</span>`],
-      ['Birdie o mejor', birdiePct + '%', `<img src="assets/eagle.png" class="pst-img" alt="">`],
-      ['Bogey o peor', bogeyPct + '%', `<span class="pst-ic pst-bogey"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="4.5" width="15" height="15" rx="3.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>`],
-      ['Pares', parPct + '%', `<span class="pst-ic">${golfIcon('flag')}</span>`],
-      ['Mejor vuelta', fmtToPar(agg.bestToPar), `<span class="pst-ic">${golfIcon('trophy')}</span>`],
+      ['Putts / ronda', agg.putts18.toFixed(0), `<span class="pst-ic">${statIcon.putt}</span>`],
+      ['3-putts / ronda', threeP, `<span class="pst-ic">${statIcon.three}</span>`],
+      ['Birdie o mejor', birdiePct + '%', `<span class="pst-ic">${statIcon.birdie}</span>`],
+      ['Bogey o peor', bogeyPct + '%', `<span class="pst-ic">${statIcon.bogey}</span>`],
+      ['Pares', parPct + '%', `<span class="pst-ic">${statIcon.par}</span>`],
+      ['Mejor vuelta', fmtToPar(agg.bestToPar), `<span class="pst-ic">${statIcon.best}</span>`],
     ].map((t, i) => `<div class="pst-tile" style="--i:${i}"><span class="pst-th">${t[2]}</span><b class="pst-val">${t[1]}</b><span class="pst-lab">${t[0]}</span></div>`).join('');
     statsHtml = `<div class="pst-rings">${rings}</div><div class="pst-grid">${tiles}</div>`;
   } else {
