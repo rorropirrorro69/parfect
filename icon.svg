@@ -1,15 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="40%" r="75%">
-      <stop offset="0%" stop-color="#173c21"/><stop offset="100%" stop-color="#070d09"/>
-    </radialGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4ea8e4"/><stop offset="100%" stop-color="#78c8ee"/>
+    </linearGradient>
+    <clipPath id="r"><rect width="64" height="64" rx="15"/></clipPath>
   </defs>
-  <rect width="64" height="64" rx="15" fill="url(#bg)"/>
-  <ellipse cx="32" cy="47" rx="21" ry="5.6" fill="#5a8f33"/>
-  <ellipse cx="32" cy="46" rx="20" ry="5" fill="#7cc24a"/>
-  <ellipse cx="38.5" cy="46" rx="3" ry="1.4" fill="#0c1a10"/>
-  <circle cx="21.5" cy="44" r="4.3" fill="#f4f7f9"/>
-  <rect x="37" y="15" width="2.4" height="31" rx="1.2" fill="#e8eef2"/>
-  <path d="M39.4 16 L55 21 L39.4 26 Z" fill="#c9f73e"/>
-  <path d="M39.4 21 L55 21 L39.4 26 Z" fill="#a8d63f"/>
+  <g clip-path="url(#r)">
+    <rect width="64" height="64" fill="url(#sky)"/>
+    <circle cx="50" cy="14" r="7" fill="#fbe89a"/>
+    <ellipse cx="30" cy="58" rx="42" ry="18" fill="#86ce63"/>
+    <ellipse cx="34" cy="66" rx="46" ry="20" fill="#5fb33f"/>
+    <ellipse cx="32" cy="50" rx="15" ry="4" fill="#7cc24a"/>
+    <ellipse cx="31" cy="50" rx="3" ry="1.3" fill="#1c461e"/>
+    <circle cx="38.5" cy="49" r="3.2" fill="#f6f9fa"/>
+    <rect x="31" y="24" width="1.9" height="26" rx="0.9" fill="#f4f7f9"/>
+    <path d="M32.9 25 L46 29 L32.9 34 Z" fill="#f0523f"/>
+    <path d="M32.9 29.5 L46 29 L32.9 34 Z" fill="#d6402f"/>
+  </g>
 </svg>
