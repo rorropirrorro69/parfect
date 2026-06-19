@@ -1230,6 +1230,7 @@ button.row { cursor: pointer; }
 .si-tb2 { animation-delay: .18s; } .si-tb3 { animation-delay: .36s; }
 @keyframes siBounce { 0%, 100% { transform: translateY(0); } 42% { transform: translateY(-2.6px); } }
 .si-emoji { display: inline-block; font-size: 34px; line-height: 1; }
+.si-img { width: 42px; height: 42px; object-fit: contain; display: block; }
 .si-soar { transform-origin: center; animation: siSoar 2.6s ease-in-out infinite; }
 @keyframes siSoar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.8px); } }
 .si-mwings { transform-origin: center 58%; animation: siWing 1.1s ease-in-out infinite; }
