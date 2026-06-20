@@ -2450,7 +2450,8 @@ body.is-scrolling .gi *, body.is-scrolling [class*="gi-"], body.is-scrolling .lp
 /* Birdie · chatbot flotante (app + landing) */
 .chat-fab { position: fixed; right: 16px; bottom: 20px; z-index: 80; width: 58px; height: 58px; border: 2px solid rgba(210,255,110,.4); border-radius: 50%; background: radial-gradient(circle at 38% 30%, #3aa346, #14622a); color: #d2ff6e; display: grid; place-items: center; box-shadow: 0 12px 28px rgba(20,60,20,.4); cursor: pointer; animation: chatFabIn .4s cubic-bezier(.2,.9,.3,1.3), chatBob 3.2s ease-in-out .6s infinite; }
 .chat-mount.in-app .chat-fab { bottom: 86px; }
-.chat-fab .chatico { width: 38px; height: 38px; }
+.chatico { object-fit: contain; }
+.chat-fab .chatico { width: 40px; height: 40px; }
 .chat-fab:active { transform: scale(.92); }
 @keyframes chatFabIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
 @keyframes chatBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
