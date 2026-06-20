@@ -538,9 +538,10 @@ function vPartyDone() {
     ${partyAnyBote(p) ? `<div class="card pay-card">
       <span class="label">${golfIcon('card')} Liquidar el bote</span>
       ${vPartySettle(p)}
-      ${V.paid ? `<div class="pay-done">Pago enviado ✓ <span>demo</span></div>`
+      ${V.paid ? `<div class="pay-done">Cuentas compartidas ✓</div>`
         : `<button class="applepay-btn" data-act="party-applepay"><span class="ap-logo">${appleMark()}</span> Pay · Pagar bote</button>`}
-      <p class="su-meta" style="text-align:center;margin-top:8px">Pago seguro entre amigos. Cada quien liquida su parte.</p>
+      <button class="btn wa-btn" data-act="party-share-tab" style="width:100%;margin-top:8px"><svg viewBox="0 0 32 32" style="width:17px;height:17px;vertical-align:-3px;margin-right:6px"><path fill="#25d366" d="M16 3a13 13 0 0 0-11 19.7L3 29l6.5-1.9A13 13 0 1 0 16 3z"/><path fill="#fff" d="M22.6 19.2c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.8.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1a8.6 8.6 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.9.9-1.2 2.1-.6 3.6a10.4 10.4 0 0 0 5.6 5.3c2.4 1 2.9.8 3.5.8.7-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4z"/></svg>Compartir cuentas por WhatsApp</button>
+      <p class="su-meta" style="text-align:center;margin-top:8px">El cobro con Apple Pay llega al conectar la pasarela de pago. Por ahora comparte las cuentas y cada quien transfiere su parte.</p>
     </div>` : ''}
     <button class="btn primary" data-act="party-close-done">Listo ✓</button>
   </div>`;
@@ -560,6 +561,17 @@ function vPartySettle(p) {
   const led = Party.ledger(p);                 // suma el bote de cada modalidad (separados)
   return p.players.slice().sort((a, b) => (led.net[b.pid] || 0) - (led.net[a.pid] || 0))
     .map(pl => settleRow(plName(p, pl.pid).split(' ')[0], Math.round(led.net[pl.pid] || 0))).join('');
+}
+/* comparte por WhatsApp quién le paga a quién (liquidación del bote) */
+function partyShareTab(p) {
+  if (typeof shareWA !== 'function') return;
+  const led = Party.ledger(p);
+  const pays = (Party.settle ? Party.settle(led.net) : [])
+    .map(t => `• ${plName(p, t.from).split(' ')[0]} le paga $${t.amount} a ${plName(p, t.to).split(' ')[0]}`);
+  const msg = pays.length
+    ? `Cuentas de la party ${p.code} en PARFECT ⛳️💵\n${pays.join('\n')}`
+    : `Party ${p.code} en PARFECT ⛳️ — sin deudas, todos a mano.`;
+  shareWA(msg);
 }
 
 /* ---------- Acciones ---------- */
@@ -596,7 +608,8 @@ const partyActions = {
   'pd-stake'(d) { V.partyDraft.stake = Number(d.v) || 0; render(); },
   'pd-bet'(d) { V.partyDraft.stake = d.v === '1' ? (V.partyDraft.stake > 0 ? V.partyDraft.stake : 20) : 0; render(); },
   'pd-stake-adj'(d) { const cur = V.partyDraft.stake > 0 ? V.partyDraft.stake : 20; V.partyDraft.stake = Math.max(5, Math.min(2000, cur + Number(d.d) * 5)); render(); },
-  'party-applepay'() { V.paid = true; render(); },
+  'party-applepay'() { const p = activeParty() || partyById(V.partyView); V.paid = true; render(); if (p) partyShareTab(p); },
+  'party-share-tab'() { const p = activeParty() || partyById(V.partyView); if (p) partyShareTab(p); },
   'party-create'() {
     const d = V.partyDraft;
     const u = cur();
@@ -653,9 +666,8 @@ const partyActions = {
   'party-share-wa'() {
     const p = activeParty(); if (!p) return;
     const link = 'https://parfectapp.github.io/parfect/';
-    const msg = `¡Te invito a mi party en PARFECT! 🏌️⛳️ Entra desde TU teléfono a ${link} → Social → "Unirse con código" y pon: ${p.code}. Cada quien anota su propia tarjeta.`;
-    const wa = 'https://wa.me/?text=' + encodeURIComponent(msg);
-    try { window.open(wa, '_blank'); } catch (e) { location.href = wa; }
+    const msg = `¡Te invito a mi party en PARFECT! 🏌️⛳️ Entra desde TU teléfono → Social → "Unirse con código" y pon: ${p.code}. Cada quien anota su propia tarjeta.`;
+    shareWA(msg, link);
   },
   'party-join'() {
     const code = val('join-code').toUpperCase().trim();

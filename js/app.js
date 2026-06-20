@@ -1,5 +1,20 @@
 /* ============ PARFECT app: estado, router, acciones ============ */
 
+/* Compartir confiable: hoja nativa (iOS/Android) y, si no, WhatsApp.
+   window.open('_blank') se bloquea como popup en PWA/iOS standalone, por eso
+   navegamos la pestaña actual como respaldo (abre la app de WhatsApp igual). */
+function shareWA(text, url) {
+  const full = url ? (text + ' ' + url) : text;
+  if (navigator.share) {
+    navigator.share(url ? { text, url } : { text }).catch(() => {});
+    return;
+  }
+  const wa = 'https://wa.me/?text=' + encodeURIComponent(full);
+  let w = null;
+  try { w = window.open(wa, '_blank'); } catch (e) {}
+  if (!w) location.href = wa;   // respaldo: navega (no se bloquea)
+}
+
 let S = Store.load();
 S.settings = S.settings || { lang: 'es', theme: 'light' };
 let V = {
@@ -1267,9 +1282,8 @@ const actions = {
   'invite-wa'() {
     const u = cur();
     const link = 'https://parfectapp.github.io/parfect/' + (u && u.id ? '?ref=' + encodeURIComponent(u.id) : '');
-    const msg = `¡Juega golf conmigo en PARFECT! 🏌️⛳️ Anota tus rondas, mídete con tus amigos y la IA te dice qué mejorar. Únete con mi link: ${link}`;
-    const wa = 'https://wa.me/?text=' + encodeURIComponent(msg);
-    try { window.open(wa, '_blank'); } catch (e) { location.href = wa; }
+    const msg = `¡Juega golf conmigo en PARFECT! 🏌️⛳️ Anota tus rondas, mídete con tus amigos y la IA te dice qué mejorar. Únete con mi link:`;
+    shareWA(msg, link);
   },
   'cal-train'(d) { const u = cur(); u.trainPerWeek = Stats.clamp((u.trainPerWeek != null ? u.trainPerWeek : 3) + Number(d.d), 0, 14); commit(); },
   'cal-rounds'(d) { const u = cur(); u.roundsPerWeek = Stats.clamp((u.roundsPerWeek != null ? u.roundsPerWeek : 1) + Number(d.d), 0, 7); commit(); },

@@ -4291,6 +4291,8 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .settle-amt.neg { color: var(--danger); }
 .applepay-btn { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; margin-top: 14px; background: #000; color: #fff; border: none; border-radius: 14px; padding: 15px; font-size: 16px; font-weight: 700; letter-spacing: .01em; cursor: pointer; }
 .applepay-btn:active { transform: scale(.99); }
+.wa-btn { display: flex; align-items: center; justify-content: center; background: #fff; color: #128c3e; border: 1.5px solid #25d366; border-radius: 14px; padding: 13px; font-size: 15px; font-weight: 800; cursor: pointer; }
+.wa-btn:active { transform: scale(.99); }
 .ap-logo { display: inline-grid; place-items: center; color: #fff; }
 .pay-done { margin-top: 14px; text-align: center; background: var(--lime-faint); color: var(--lime-ink); border-radius: 14px; padding: 14px; font-weight: 900; font-size: 15px; }
 .pay-done span { font-weight: 700; opacity: .6; font-size: 12px; }
