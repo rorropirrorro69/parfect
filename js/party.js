@@ -159,15 +159,12 @@ const Party = (() => {
       }
     });
 
-    // La corta se liquida por diferencia de puntos contra cada rival (suma cero)
+    // La corta se liquida con el total de unidades de cada quien (cada-vs-cada, suma cero).
+    // Misma cuenta que se muestra en el marcador y el panel: dinero = unidades × bote.
     if (party.games.corta) {
-      const active = pids.filter(p => party.holes.slice(0, limit).some(h => h.scores[p] != null));
-      const n = active.length;
-      if (n >= 2) {
-        const cstake = stakeOf('corta');
-        const sumP = active.reduce((a, p) => a + cortaPts[p], 0);
-        for (const p of active) net[p] += cstake * (n * cortaPts[p] - sumP);
-      }
+      const cstake = stakeOf('corta');
+      const u = unidades(party, limit);
+      for (const p of pids) net[p] += (u[p] || 0) * cstake;
     }
 
     // Medal / Nassau / Match: provisional en vivo (hoyos jugados), final al terminar
