@@ -409,7 +409,7 @@ function vPartyLive() {
     const yn = (scene, onYes, onNo, yesAttr, noAttr, q, extra) => `<h3 class="wz-q">${q}</h3><div class="wz-art">${chkScene(scene, onYes)}</div><div class="wz-yn"><button class="wz-opt yes ${onYes ? 'on' : ''}" data-act="pa-fast" ${yesAttr}>Sí</button><button class="wz-opt no ${onNo ? 'on' : ''}" data-act="pa-fast" ${noAttr}>No</button></div>${extra || ''}`;
     const penPill = `<div class="wz-extra"><button class="wz-pen ${c.tee === 'penal' ? 'on' : ''}" data-act="pa-pen" data-pid="${ap}">${c.tee === 'penal' ? '✓ ' : ''}Penalti / OB</button></div>`;
     let body;
-    if (curK === 'tee') body = yn('fw', c.tee === 'fw', !!c.tee && c.tee !== 'fw' && c.tee !== 'penal', `data-pid="${ap}" data-k="tee" data-v="fw"`, `data-pid="${ap}" data-k="tee" data-v="rough"`, `¿${nm} pegó a la calle?`, penPill);
+    if (curK === 'tee') body = yn('fw', c.tee === 'fw', !!c.tee && c.tee !== 'fw' && c.tee !== 'penal', `data-pid="${ap}" data-k="tee" data-v="fw"`, `data-pid="${ap}" data-k="tee" data-v="rough"`, `¿${nm} pegó al fairway?`, penPill);
     else if (curK === 'app') body = yn('gir', gir, !!c.app && !gir, `data-pid="${ap}" data-k="app" data-v="gir"`, `data-pid="${ap}" data-k="app" data-v="miss"`, '¿Green en regulación?', h.par === 3 ? penPill : '');
     else if (curK === 'ud') body = yn('ud', c.upDown === true, c.upDown === false, `data-pid="${ap}" data-k="ud" data-v="si"`, `data-pid="${ap}" data-k="ud" data-v="no"`, '¿Salvó el par? (up &amp; down)');
     else if (curK === 'putts') { const opts = c.upDown === true ? [[0, '0'], [1, '1']] : [[0, '0'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']]; body = `<h3 class="wz-q">¿Cuántos putts?</h3><div class="wz-putts ${opts.length === 2 ? 'wz-putts2' : ''}">${opts.map(([v, l]) => `<button class="wz-putt ${c.putts === v ? 'on' : ''}" data-act="pa-fast" data-pid="${ap}" data-k="putts" data-v="${v}">${l}</button>`).join('')}</div>`; }
@@ -907,9 +907,25 @@ function buildRoundFromParty(party, pid) {
   return { id: Store.uid(), userId: null, partyId: party.id, course: party.course, date: party.date, holes };
 }
 
-/* Guarda en el perfil la ronda de cada jugador con cuenta en este dispositivo (idempotente) */
+/* Guarda en el perfil la ronda de cada jugador con cuenta en este dispositivo (idempotente).
+   A cada ronda guardada se le adjuntan las TARJETAS de los demás jugadores + las CUENTAS del party,
+   para poder revisarlas luego en el detalle de ronda. */
 function savePartyRounds(party) {
   if (!party || party.status !== 'done') return;
+  const nameOf = pid => { const pl = party.players.find(x => x.pid === pid); return pl ? pl.name : '—'; };
+  const cardOf = pid => {
+    let score = 0, par = 0, any = false;
+    const holes = party.holes.slice(0, party.holesCount).map(h => {
+      const sc = (h.scores[pid] != null) ? h.scores[pid] : null;
+      if (sc != null) { score += sc; par += h.par; any = true; }
+      return { par: h.par, score: sc };
+    });
+    return { score, toPar: score - par, holes, has: any };
+  };
+  const ledger = (typeof Party !== 'undefined') ? Party.ledger(party) : null;
+  const money = (ledger && typeof Party.settle === 'function')
+    ? Party.settle(ledger.net).map(t => ({ from: nameOf(t.from), to: nameOf(t.to), amount: t.amount }))
+    : [];
   let added = false;
   for (const pl of party.players) {
     if (!pl.userId) continue;                                   // invitados sin cuenta no tienen perfil
@@ -918,6 +934,8 @@ function savePartyRounds(party) {
     const round = buildRoundFromParty(party, pl.pid);
     if (!round.holes.length) continue;
     round.userId = pl.userId;
+    round.partyMates = party.players.filter(x => x.pid !== pl.pid).map(x => { const c = cardOf(x.pid); return { name: x.name, score: c.score, toPar: c.toPar, holes: c.holes }; }).filter(m => m.holes.some(h => h.score != null));
+    if (money.length) round.partyMoney = money;
     S.rounds.push(round);
     added = true;
   }

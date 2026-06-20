@@ -508,7 +508,7 @@ function chkScene(kind, on) {
     <path d="M30 54 L70 54 L60 8 L40 8 Z" fill="${on ? 'url(#hsfw)' : 'var(--sc-dim)'}" stroke="var(--sc-line)" stroke-width="1.1"/>
     <line x1="50" y1="8" x2="50" y2="54" stroke="var(--sc-line)" stroke-width="1" stroke-dasharray="3 4" opacity=".45"/>
     <line x1="50" y1="8" x2="50" y2="2" stroke="var(--sc-cup)" stroke-width="1.3"/><path d="M50 2 L59 4.6 L50 7.2 Z" fill="var(--sc-flag)"/>
-    <circle cx="${on ? 50 : 80}" cy="${on ? 44 : 47}" r="3" fill="var(--sc-ball)" stroke="var(--sc-line)" stroke-width=".5"/>
+    <g class="hs-fly"><circle cx="${on ? 50 : 78}" cy="${on ? 44 : 47}" r="3" fill="var(--sc-ball)" stroke="var(--sc-line)" stroke-width=".5"/></g>
   </svg>`;
   if (kind === 'gir') return `<svg viewBox="0 0 100 56" class="hs-svg" aria-hidden="true">
     <defs><radialGradient id="hsgir" cx="50%" cy="36%" r="70%"><stop offset="0" stop-color="var(--sc-lit)"/><stop offset="1" stop-color="var(--sc-grass2)"/></radialGradient></defs>

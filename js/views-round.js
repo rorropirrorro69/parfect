@@ -869,7 +869,7 @@ function roundAnalysis(a, s) {
   const u = cur();
   const vibe = roundVibe(s, u.hcp);
   const areas = [
-    { k: 'la salida (calles)', v: s.fwTot ? s.fw / s.fwTot : 1 },
+    { k: 'la salida (fairways)', v: s.fwTot ? s.fw / s.fwTot : 1 },
     { k: 'los greens (GIR)', v: s.girTot ? s.gir / s.girTot : 1 },
     { k: 'el juego corto', v: s.scrTot ? s.scr / s.scrTot : 1 },
     { k: 'el putt', v: Math.max(0, Math.min(1, (36 - (s.putts * 18 / s.holes)) / 12)) },
@@ -1033,6 +1033,22 @@ function rdBirdie(r) {
   return `<button class="btn ghost sm rd-birdie-btn" data-act="round-ai" data-id="${esc(r.id)}">✨ Analizar esta ronda con IA</button>`;
 }
 
+/* Si la ronda vino de un party: tarjetas de los demás jugadores + las cuentas */
+function rdParty(r) {
+  if (!r || !r.partyMates || !r.partyMates.length) return '';
+  const mates = r.partyMates.map(m => {
+    const n = (m.holes || []).length;
+    const parOf = i => (m.holes[i] ? m.holes[i].par : 4);
+    const scoreOf = i => (m.holes[i] ? m.holes[i].score : null);
+    const card = (typeof scorecardTable === 'function') ? scorecardTable(n, parOf, [{ name: '', scoreOf }], -1, null) : '';
+    return `<div class="rd-mate"><div class="rd-mate-h"><b>${esc(m.name)}</b><span class="rd-mate-sc">${m.score} · ${fmtToPar(m.toPar)}</span></div>${card}</div>`;
+  }).join('');
+  const money = (r.partyMoney && r.partyMoney.length)
+    ? `<div class="card"><span class="label">${golfIcon('card')} Cuentas del party</span>${r.partyMoney.map(t => `<div class="rd-pay"><span><b>${esc(t.from)}</b> le paga a <b>${esc(t.to)}</b></span><span class="rd-pay-amt">${typeof fmtMoney === 'function' ? fmtMoney(t.amount) : '$' + t.amount}</span></div>`).join('')}</div>`
+    : '';
+  return `<div class="card"><span class="label">${golfIcon('card')} Tarjetas del party</span>${mates}</div>${money}`;
+}
+
 function vRoundDetail() {
   const r = S.rounds.find(x => x.id === V.detail);
   if (!r) return vRondaTab();
@@ -1068,6 +1084,7 @@ function vRoundDetail() {
     </div>
     ${roundAnalysis(r, s)}
     ${rdBirdie(r)}
+    ${rdParty(r)}
     <div class="card">
       <span class="label">${golfIcon('card')} Foto / video de la ronda</span>
       ${r.caption ? `<p class="note" style="margin:4px 0 0">${esc(r.caption)}</p>` : ''}
