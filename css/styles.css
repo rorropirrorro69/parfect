@@ -3302,8 +3302,6 @@ button.story.story-link:active { transform: scale(.96); }
 .cx-btn:active { transform: scale(.97); }
 .cx-btn.on { border-color: var(--lime); background: var(--lime-faint); }
 .cx-btn.neg.on { border-color: var(--danger); background: rgba(255,122,107,.1); }
-.cx-auto { cursor: default; opacity: .8; }
-.cx-auto:active { transform: none; }
 .cx-lab { font-size: 13.5px; font-weight: 800; color: var(--text); display: flex; flex-direction: column; }
 .cx-lab i { font-size: 10px; font-style: normal; font-weight: 600; color: var(--muted); }
 .cx-val { font-size: 13px; font-weight: 900; flex: none; }

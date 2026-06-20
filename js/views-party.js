@@ -185,7 +185,6 @@ function psync(h, pid) {
   setArr('fw', c.tee === 'fw');
   setArr('gir', c.app === 'gir');
   setArr('ud', c.upDown === true);
-  setArr('threeputt', c.putts != null && c.putts >= 3);   // 3-putt se deduce de la cantidad de putts (La corta)
 }
 
 /* marcador de La corta siempre visible en el room */
@@ -244,8 +243,7 @@ function pHoleReasons(p, idx, pid) {
     const regs = played.map(x => [x, h.reg[x] || 0]).filter(([, v]) => v > 0);
     if (regs.length) { const min = Math.min(...regs.map(([, v]) => v)); const who = regs.filter(([, v]) => v === min); if (who.length === 1 && who[0][0] === pid) r.push({ t: 'Más cerca', good: true }); }
   }
-  const np = (h.putts && h.putts[pid] != null) ? h.putts[pid] : null;
-  if (np != null ? np >= 3 : (h.threeputt || []).includes(pid)) r.push({ t: (np != null ? np + ' putts' : '3 putts'), good: false });
+  if ((h.threeputt || []).includes(pid)) r.push({ t: '3 putts', good: false });
   if ((h.espanol || []).includes(pid)) r.push({ t: 'Español', good: false });
   return r;
 }
@@ -423,16 +421,15 @@ function vPartyLive() {
       <div class="wz-body">${body}</div>
       ${ci > 0 ? `<button class="wz-back" data-act="pa-wiz-back">← Atrás</button>` : ''}
     </div>
-    ${(p.games.corta || (p.games.larga && h.par === 5)) ? `<div class="card cx">
-      <span class="label">Extras de ${nm}</span>
+    ${p.games.corta ? `<div class="card cx">
+      <span class="label">La corta · extras de ${nm}</span>
       <div class="cx-grid">
-        ${p.games.corta ? `<button class="cx-btn ${has('sandy') ? 'on' : ''}" data-act="pa-sandy" data-pid="${ap}"><span class="cx-lab">Sandy</span><span class="cx-val pos">+1</span></button>
+        <button class="cx-btn ${has('sandy') ? 'on' : ''}" data-act="pa-sandy" data-pid="${ap}"><span class="cx-lab">Sandy</span><span class="cx-val pos">+1</span></button>
         <button class="cx-btn ${has('holeout') ? 'on' : ''}" data-act="pa-holeout" data-pid="${ap}"><span class="cx-lab">Hole-out</span><span class="cx-val pos">+1</span></button>
         <div class="cx-step"><span class="cx-lab">Más cerca <i>reg</i></span><div class="cx-ctrl"><button class="ph-pbtn" data-act="pa-reg" data-pid="${ap}" data-d="-1">−</button><b>${reg || 0}</b><button class="ph-pbtn" data-act="pa-reg" data-pid="${ap}" data-d="1">+</button></div></div>
         <div class="cx-step"><span class="cx-lab">Banderas <i>putt largo</i></span><div class="cx-ctrl"><button class="ph-pbtn" data-act="pa-longputt" data-pid="${ap}" data-d="-1">−</button><b>${lpv}</b><button class="ph-pbtn" data-act="pa-longputt" data-pid="${ap}" data-d="1">+</button></div></div>
-        <div class="cx-btn neg cx-auto ${has('threeputt') ? 'on' : ''}"><span class="cx-lab">3-putt <i>auto · ${c.putts != null ? c.putts + ' putts' : 'sin putts'}</i></span><span class="cx-val neg">${has('threeputt') ? '−1' : '·'}</span></div>
-        <button class="cx-btn neg ${has('espanol') ? 'on' : ''}" data-act="pa-espanol" data-pid="${ap}"><span class="cx-lab">Español</span><span class="cx-val neg">−1</span></button>` : ''}
-        ${(p.games.larga && h.par === 5) ? `<button class="cx-btn ${h.larga === ap ? 'on' : ''}" data-act="pa-larga" data-pid="${ap}"><span class="cx-lab">La larga <i>drive +largo</i></span><span class="cx-val pos">+1</span></button>` : ''}
+        <button class="cx-btn neg ${has('threeputt') ? 'on' : ''}" data-act="pa-3putt" data-pid="${ap}"><span class="cx-lab">3-putt</span><span class="cx-val neg">−1</span></button>
+        <button class="cx-btn neg ${has('espanol') ? 'on' : ''}" data-act="pa-espanol" data-pid="${ap}"><span class="cx-lab">Español</span><span class="cx-val neg">−1</span></button>
       </div>
     </div>` : ''}`;
   }
@@ -802,7 +799,6 @@ const partyActions = {
   'pa-longputt'(d) { const p = activeParty(); const h = p.holes[p.idx]; if (!h.longputt || Array.isArray(h.longputt)) h.longputt = {}; const c = h.longputt[d.pid] || 0; h.longputt[d.pid] = Math.max(0, Math.min(9, c + Number(d.d))); pcommit(p); },
   'pa-3putt'(d) { const p = activeParty(); const h = p.holes[p.idx]; h.threeputt = h.threeputt || []; h.threeputt = h.threeputt.includes(d.pid) ? h.threeputt.filter(x => x !== d.pid) : [...h.threeputt, d.pid]; pcommit(p); },
   'pa-espanol'(d) { const p = activeParty(); const h = p.holes[p.idx]; h.espanol = h.espanol || []; h.espanol = h.espanol.includes(d.pid) ? h.espanol.filter(x => x !== d.pid) : [...h.espanol, d.pid]; pcommit(p); },
-  'pa-larga'(d) { const p = activeParty(); const h = p.holes[p.idx]; h.larga = (h.larga === d.pid) ? null : d.pid; pcommit(p); }, // drive más largo del par 5 (un solo ganador)
   'pa-ready'(d) {
     const p = activeParty(); const h = p.holes[pCurIdx(p)]; h.done = h.done || {};
     if (!pIsMine(p, d.pid)) return;

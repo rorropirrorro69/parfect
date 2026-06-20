@@ -21,8 +21,7 @@ const Party = (() => {
     if ((h.sandy || []).includes(pid)) bonus += 1;                   // sandy
     if ((h.holeout || []).includes(pid)) bonus += 1;                 // hole-out
     if (h.longputt && !Array.isArray(h.longputt) && h.longputt[pid]) bonus += h.longputt[pid]; // putt largo: +1 por bandera
-    const np = (h.putts && h.putts[pid] != null) ? h.putts[pid] : null;
-    if (np != null ? np >= 3 : (h.threeputt || []).includes(pid)) penalty += 1; // 3-putt: por cantidad de putts (1,2,3,4…)
+    if ((h.threeputt || []).includes(pid)) penalty += 1;            // 3-putt
     if ((h.espanol || []).includes(pid)) penalty += 1;             // español (doble del par)
     return { bonus, penalty };
   }
