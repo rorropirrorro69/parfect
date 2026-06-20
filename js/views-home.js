@@ -694,7 +694,7 @@ function vPlayerCard(u, agg) {
       three: `<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="16" rx="9.5" ry="4" fill="url(#g3dGrass)"/><circle class="si-tb1" cx="8" cy="15.2" r="1.8" fill="url(#g3dBall)"/><circle class="si-tb2" cx="12.4" cy="16.6" r="1.8" fill="url(#g3dBall)"/><circle class="si-tb3" cx="16" cy="14.8" r="1.8" fill="url(#g3dBall)"/></svg>`,
       birdie: `<img src="assets/eagle.png" class="si-img si-soar" alt="" aria-hidden="true">`,
       bogey: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.5" fill="none" stroke="#e0873a" stroke-width="2.2"/><path class="si-arrow" d="M12 16.5 V8.5 M9 11.5 l3-3 3 3" fill="none" stroke="#e0873a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      par: `<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="19" rx="8" ry="2.2" fill="url(#g3dGrass)"/><path d="M9 19 V5.5" stroke="#2f3a16" stroke-width="2" stroke-linecap="round"/><path class="si-flagw" d="M9 5.5 L17.5 8.2 L9 10.9 Z" fill="#ff5a4d"/></svg>`,
+      par: `<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="19" rx="8" ry="2.2" fill="url(#g3dGrass)"/><path d="M12 19 V5.5" stroke="#2f3a16" stroke-width="2" stroke-linecap="round"/><path class="si-flagw" d="M12 5.5 L20.5 8.2 L12 10.9 Z" fill="#ff5a4d"/></svg>`,
       best: `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="si-star" d="M12 3 l2.6 5.3 5.9.9 -4.3 4.1 1 5.8 -5.2-2.7 -5.2 2.7 1-5.8 -4.3-4.1 5.9-.9z" fill="#f8cf4a" stroke="#e0a92a" stroke-width="1" stroke-linejoin="round"/></svg>`,
     };
     const tiles = [

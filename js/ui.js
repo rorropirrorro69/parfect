@@ -514,9 +514,9 @@ function chkScene(kind, on) {
     <defs><radialGradient id="hsgir" cx="50%" cy="36%" r="70%"><stop offset="0" stop-color="var(--sc-lit)"/><stop offset="1" stop-color="var(--sc-grass2)"/></radialGradient></defs>
     <ellipse cx="50" cy="46" rx="40" ry="8" fill="var(--sc-dim)"/>
     <ellipse cx="50" cy="32" rx="30" ry="12" fill="${on ? 'url(#hsgir)' : 'var(--sc-dim)'}" stroke="var(--sc-grass2)" stroke-width="1"/>
-    <line x1="58" y1="24" x2="58" y2="6" stroke="var(--sc-cup)" stroke-width="1.3"/><path d="M58 6 L67 8.6 L58 11.2 Z" fill="var(--sc-flag)"/>
-    <ellipse cx="58" cy="24" rx="2" ry=".8" fill="var(--sc-cup)"/>
-    <circle cx="${on ? 48 : 50}" cy="${on ? 34 : 50}" r="3" fill="var(--sc-ball)" stroke="var(--sc-line)" stroke-width=".5"/>
+    <line x1="50" y1="24" x2="50" y2="6" stroke="var(--sc-cup)" stroke-width="1.3"/><path d="M50 6 L59 8.6 L50 11.2 Z" fill="var(--sc-flag)"/>
+    <ellipse cx="50" cy="24" rx="2" ry=".8" fill="var(--sc-cup)"/>
+    <circle cx="${on ? 44 : 50}" cy="${on ? 34 : 50}" r="3" fill="var(--sc-ball)" stroke="var(--sc-line)" stroke-width=".5"/>
   </svg>`;
   if (kind === 'ud') {
     const cx = on ? 44 : 72, cy = on ? 42 : 24, cr = on ? 4.6 : 3.4;
