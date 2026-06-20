@@ -472,10 +472,12 @@ function greenCloseup(h, G, pf, px) {
   const pin = { x: cx + px * rx * 0.42, y: cy + (0.5 - pf) * ry * 0.78 };
   const distFrac = { '0-3': 0.18, '3-8': 0.36, '8-20': 0.6, '20+': 0.86 };
   const fr = distFrac[h.dist] != null ? distFrac[h.dist] : 0.45;
-  const ball = { x: pin.x - fr * rx * 0.22, y: Math.min(cy + ry * 0.84, pin.y + fr * ry * 0.95) };
   const nPutts = h.putts != null ? Math.max(1, h.putts) : 1;
+  // empieza más lejos cuantos más putts (lag largo); cada putt cierra ~66% de lo que falta y el último entra
+  const startFrac = nPutts >= 3 ? 0.9 : nPutts === 2 ? 0.66 : Math.max(0.34, fr);
+  const ball = { x: pin.x - startFrac * rx * 0.34, y: Math.min(cy + ry * 0.86, pin.y + startFrac * ry * 1.04) };
   const stops = [];
-  for (let i = 1; i <= nPutts; i++) { const f = i === nPutts ? 1 : (i === 1 ? 0.8 : 0.8 + 0.16 * (i - 1)); stops.push({ x: ball.x + (pin.x - ball.x) * f, y: ball.y + (pin.y - ball.y) * f }); }
+  for (let i = 1; i <= nPutts; i++) { const f = i === nPutts ? 1 : (1 - Math.pow(0.34, i)); stops.push({ x: ball.x + (pin.x - ball.x) * f, y: ball.y + (pin.y - ball.y) * f }); }
   const pp = [ball, ...stops];
   const seg = []; let tot = 0;
   for (let i = 1; i < pp.length; i++) { const l = Math.hypot(pp[i].x - pp[i - 1].x, pp[i].y - pp[i - 1].y) || 1; seg.push(l); tot += l; }
