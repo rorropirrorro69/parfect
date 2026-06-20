@@ -168,7 +168,7 @@ function App() {
     if (V.view === 'login' || V.view === 'signup') return vAuth(V.view);
     return vLanding();
   }
-  if (u.onboarded === false) return vOnboard();
+  // Sin intro/presentación: los usuarios nuevos entran directo a la app.
   if (V.view === 'play') {
     if (!S.active || S.active.userId !== u.id) { V.view = 'ronda'; }
     else return vPlay();
@@ -547,7 +547,7 @@ const actions = {
     }
     // ---- modo local (sin nube configurada) ----
     if (S.users.some(x => x.email === email)) { V.err = 'Ya existe una cuenta con ese email en este dispositivo.'; render(); return; }
-    const u = { id: Store.uid(), name, email, pass: await hashPass(pass), hcp, goal, createdAt: Date.now(), onboarded: demo ? true : false };
+    const u = { id: Store.uid(), name, email, pass: await hashPass(pass), hcp, goal, createdAt: Date.now(), onboarded: true };
     S.users.push(u);
     S.session = u.id;
     if (demo) {
@@ -1295,7 +1295,7 @@ const actions = {
   'invite-wa'() {
     const u = cur();
     const link = 'https://parfectapp.github.io/parfect/' + (u && u.id ? '?ref=' + encodeURIComponent(u.id) : '');
-    const msg = `¡Juega golf conmigo en PARFECT! 🏌️⛳️ Anota tus rondas, mídete con tus amigos y la IA te dice qué mejorar. Únete con mi link:`;
+    const msg = `¡Juega golf conmigo en PARFECT! 🏌️⛳️ Anota tus rondas, mídete con tus amigos:`;
     shareWA(msg, link);
   },
   'cal-train'(d) { const u = cur(); u.trainPerWeek = Stats.clamp((u.trainPerWeek != null ? u.trainPerWeek : 3) + Number(d.d), 0, 14); commit(); },
