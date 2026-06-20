@@ -13,7 +13,7 @@ let V = {
   trackVals: null, trkTab: 'plan', drillLog: null, drillCat: 'fw',
   calY: null, calM: null, calSel: null, calAddType: 'entreno', friendId: null, holeIdx: 0,
   courseId: 'campestre', addFriend: false, teeClubId: null, attack2: false, sim: null, shadowHcp: null, camposHcp: null,
-  partyDraft: null, showMoney: false, partyView: null, capPid: null,
+  partyDraft: null, showMoney: false, partyView: null, capPid: null, onbStep: 0,
   stratCid: null, stratIdx: null, stratTeeId: null, stratLie: 'fw', stratMiss: null, histRound: null, histHole: null,
   homeCid: null, homeRid: null, bagEdit: false,
 };
@@ -711,12 +711,12 @@ const actions = {
     } catch (e) { alert('No se pudo exportar: ' + e.message); }
   },
   'import-data'() { const el = document.getElementById('import-file'); if (el) el.click(); },
+  'onb-next'() { onbSaveStep(); V.onbStep = (V.onbStep || 0) + 1; commit(); window.scrollTo(0, 0); },
+  'onb-back'() { V.onbStep = Math.max(0, (V.onbStep || 0) - 1); render(); window.scrollTo(0, 0); },
   'finish-onboard'() {
     const u = cur(); if (!u) return;
-    const n = val('p-name'); if (n) u.name = n;
-    const h = val('p-hcp'); if (h !== '') u.hcp = Math.round(Number(h)) || u.hcp;
-    const g = val('p-goal'); if (g !== '') u.goal = Math.round(Number(g));
-    u.onboarded = true;
+    onbSaveStep();
+    u.onboarded = true; V.onbStep = 0;
     V.view = 'inicio';
     commit(); window.scrollTo(0, 0);
   },
