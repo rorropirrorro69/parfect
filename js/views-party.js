@@ -293,13 +293,13 @@ function pReadOnlyCard(p, h, pid) {
   const score = pScoreOf(h, p.players.find(x => x.pid === pid));
   const done = h.done && h.done[pid];
   const pill = (lab, val) => `<div class="ro-pill"><span>${lab}</span><b>${val}</b></div>`;
-  const tee = c.tee === 'fw' ? 'Calle' : c.tee === 'penal' ? 'OB' : c.tee ? 'Falló' : '—';
+  const tee = c.tee === 'fw' ? 'Fairway' : c.tee === 'penal' ? 'OB' : c.tee ? 'Falló' : '—';
   const app = c.app === 'gir' ? 'GIR' : c.app ? 'Falló' : '—';
   const ud = c.upDown === true ? 'Sí' : c.upDown === false ? 'No' : '—';
   return `<div class="card ro-card">
     <div class="ro-head"><div class="ro-who">${avatarImg(p.players.find(x => x.pid === pid), 'mini')}<b>${esc(plName(p, pid).split(' ')[0])}</b></div>
       <span class="ro-state ${done ? 'done' : ''}">${done ? '✓ Terminó' : '⏺ Registrando…'}</span></div>
-    <div class="ro-grid">${h.par >= 4 ? pill('Calle', tee) : ''}${pill('Green', app)}${c.app && c.app !== 'gir' ? pill('Up&D', ud) : ''}${pill('Putts', c.putts != null ? c.putts : '—')}${pill('Score', score != null ? score : '—')}</div>
+    <div class="ro-grid">${h.par >= 4 ? pill('Fairway', tee) : ''}${pill('Green', app)}${c.app && c.app !== 'gir' ? pill('Up&D', ud) : ''}${pill('Putts', c.putts != null ? c.putts : '—')}${pill('Score', score != null ? score : '—')}</div>
     <p class="ro-note">Solo ${esc(plName(p, pid).split(' ')[0])} puede editar su hoyo desde su teléfono.</p>
   </div>`;
 }
@@ -399,7 +399,7 @@ function vPartyLive() {
     const nm = esc(apl.name.split(' ')[0]);
     const steps = partySteps(c, h.par);
     const curK = (V.pWizStep && steps.includes(V.pWizStep)) ? V.pWizStep : partyDerived(c, h.par);
-    const tabLab = { tee: 'Calle', app: 'Green', ud: 'Up&D', putts: 'Putts', score: 'Score' };
+    const tabLab = { tee: 'Fairway', app: 'Green', ud: 'Up&D', putts: 'Putts', score: 'Score' };
     const ansOf = k => k === 'tee' ? (c.tee === 'fw' ? 'Sí' : c.tee === 'penal' ? 'OB' : c.tee ? 'No' : null)
       : k === 'app' ? (c.app === 'gir' ? 'Sí' : c.app ? 'No' : null)
         : k === 'ud' ? (c.upDown === true ? 'Sí' : c.upDown === false ? 'No' : null)

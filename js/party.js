@@ -10,7 +10,7 @@ const Party = (() => {
     birdie: { name: 'Birdies',  desc: 'Cada birdie cobra 1 unidad de cada uno; el águila cobra 2.' },
     medal:  { name: 'Medal',    desc: 'Stroke play: gana quien termine con el score total más bajo.' },
     nassau: { name: 'Nassau',   desc: 'Ida, vuelta y total: cada tramo lo cobra el score más bajo (1 unidad de cada uno).' },
-    match:  { name: 'Match play', desc: 'Gana quien gane más hoyos (el score más bajo del hoyo). 2 o más jugadores.' },
+    match:  { name: 'Match play', desc: 'Hoyo a hoyo: el score más bajo del hoyo (sin empate) cobra 1 unidad de cada rival. 2 o más jugadores.' },
   };
 
   /** Bonos (+) y castigos (−) de un jugador en un hoyo, para La corta */
@@ -152,6 +152,11 @@ const Party = (() => {
           else if (d <= -2) pay(p, 2, 'Águila', i + 1, played, 'birdie');
         }
       }
+      if (party.games.match) {                                   // Match play POR HOYO: el más bajo (sin empate) cobra 1 de cada quien
+        const min = Math.min(...played.map(p => sc(h, i, p)));
+        const winners = played.filter(p => sc(h, i, p) === min);
+        if (winners.length === 1) pay(winners[0], 1, 'Match · hoyo ' + (i + 1), i + 1, played, 'match');
+      }
     });
 
     // La corta se liquida por diferencia de puntos contra cada rival (suma cero)
@@ -168,11 +173,12 @@ const Party = (() => {
     // Medal / Nassau / Match: provisional en vivo (hoyos jugados), final al terminar
     {
       const netSum = (pid, from, to) => {
-        let s = 0, n = 0;
+        let s = 0, n = 0, expected = 0;
         party.holes.slice(from, Math.min(to, limit)).forEach((h, k) => {
+          expected++;
           if (h.scores[pid] != null) { s += sc(h, from + k, pid); n++; }
         });
-        return n ? s : null;
+        return (n > 0 && n === expected) ? s : null;   // medal/nassau: SOLO tarjeta completa del tramo (comparación justa)
       };
       const segWinner = (from, to) => {
         const sums = pids.map(p => [p, netSum(p, from, to)]).filter(([, s]) => s != null);
@@ -197,19 +203,6 @@ const Party = (() => {
         }
       }
 
-      if (party.games.match && pids.length === 2) {
-        const [a, b] = pids;
-        let wa = 0, wb = 0;
-        party.holes.slice(0, limit).forEach((h, i) => {
-          if (h.scores[a] == null || h.scores[b] == null) return;
-          const da = sc(h, i, a), db = sc(h, i, b);
-          if (da < db) wa++; else if (db < da) wb++;
-        });
-        if (wa !== wb) {
-          const winner = wa > wb ? a : b;
-          pay(winner, Math.abs(wa - wb), `Match play (${Math.max(wa, wb)}–${Math.min(wa, wb)})`, null, pids, 'match');
-        }
-      }
     }
 
     return { net, events, carry, cortaPts };
