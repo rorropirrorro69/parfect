@@ -523,7 +523,7 @@ function vLanding() {
         <p class="lp-sub">Anota tu ronda en segundos y descubre <b>qué falló y qué practicar</b>. Mejoras tu juego sin adivinar.</p>
         <div class="lp-cta-row">
           <button class="lp-order" data-act="go" data-view="signup">Empezar gratis →</button>
-          <button class="lp-ghostbtn" data-act="demo-account">Ver demo</button>
+          <button class="lp-ghostbtn" data-act="demo-account">Probar beta</button>
         </div>
         <p class="lp-trust">Gratis para empezar · Tus datos viven en tu dispositivo</p>
       </div>
@@ -660,7 +660,7 @@ function vLanding() {
         <div class="lp-alt">
           <button data-act="go" data-view="login">Ya tengo cuenta</button>
           <span>·</span>
-          <button data-act="demo-account">Ver demo (HCP 7)</button>
+          <button data-act="demo-account">Probar beta</button>
         </div>
       </div>
     </section>
