@@ -246,7 +246,18 @@ function vCourse(u) {
       <div class="trk-pbar"><i style="width:${pct}%"></i></div>
     </div>`;
   };
-  const blocks = groups.map(([title, arr]) => {
+  const all = groups.flatMap(([t, arr]) => arr);
+  const total = all.length;
+  const doneTotal = all.filter(d => trkHits(log[d.key], d.reps) >= d.reps).length;
+  const pct = total ? Math.round(doneTotal / total * 100) : 0;
+  const progress = `<div class="card trk-prog">
+      <div class="trk-prog-top"><span class="label" style="margin:0">${golfIcon('bucket')} Tu progreso · Tracker</span><b class="trk-prog-pct">${pct}%</b></div>
+      <div class="trk-pbar big"><i style="width:${pct}%"></i></div>
+      <span class="small muted">${doneTotal}/${total} ejercicios completos</span>
+    </div>`;
+  const open = !!V.trkOpen;
+  const toggle = `<button class="btn ${open ? '' : 'primary'} trk-open" data-act="trk-open">${golfIcon('flag')} ${open ? 'Ocultar ejercicios' : 'Abrir tracker · ejercicios'}</button>`;
+  const blocks = !open ? '' : groups.map(([title, arr]) => {
     const on = V.trkCat === title;
     const doneN = arr.filter(d => trkHits(log[d.key], d.reps) >= d.reps).length;
     return `<button class="trk-cat ${on ? 'on' : ''}" data-act="trk-cat" data-c="${esc(title)}">
@@ -255,7 +266,7 @@ function vCourse(u) {
         <span class="trk-cat-go">${on ? '▾' : '▸'}</span>
       </button>${on ? `<div class="trk-drills">${arr.map(drillCard).join('')}</div>` : ''}`;
   }).join('');
-  return `<p class="note" style="margin:2px 2px 10px">Elige <b>qué quieres entrenar</b> y registra tus reps (ej. 7/7).</p>${blocks}`;
+  return progress + toggle + (open ? `<p class="note" style="margin:2px 2px 10px">Elige <b>qué quieres entrenar</b> y registra tus reps (ej. 7/7).</p>${blocks}` : '');
 }
 
 /* ============ Camino: progreso gamificado (Romper 100 / 90 / 80…) ============ */
@@ -299,7 +310,7 @@ function vTrainer() {
   if (tab === 'tracker' || tab === 'camino' || tab === 'objetivos') tab = 'logros';
   tab = ['diag', 'entreno', 'logros'].includes(tab) ? tab : 'diag';
   const showHist = (!V.planStep || V.planStep === 'time') && !V.sessionRun && !V.sessionSummary;
-  const body = tab === 'entreno' ? (vSessionPlanner() + (showHist ? (`<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">${golfIcon('bucket')} Tracker · drills</h2></div>` + vCourse(u) + vTrainHistory()) : ''))
+  const body = tab === 'entreno' ? (vSessionPlanner() + (showHist ? (`<div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">${golfIcon('bucket')} Tracker</h2></div>` + vCourse(u) + vTrainHistory()) : ''))
     : tab === 'logros' ? vLogros()
       : vDiag();
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;

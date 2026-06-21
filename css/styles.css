@@ -4715,3 +4715,10 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .trk-tm { white-space: nowrap; }
 .trk-pbar { height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 10px; }
 .trk-pbar i { display: block; height: 100%; background: var(--lime); border-radius: 99px; }
+
+/* Tracker: progreso global + botón general */
+.trk-prog { padding: 14px; margin-bottom: 10px; }
+.trk-prog-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.trk-prog-pct { font-size: 22px; font-weight: 900; color: var(--lime-ink, var(--text)); letter-spacing: -.02em; }
+.trk-pbar.big { height: 10px; margin: 10px 0 6px; }
+.trk-open { width: 100%; margin-bottom: 10px; }
