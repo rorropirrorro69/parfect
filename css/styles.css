@@ -3939,17 +3939,6 @@ body.is-scrolling .ht-trace, body.is-scrolling .ht-ball { animation-play-state: 
 .lp-realwrap .pl-hero { margin: 0 0 12px; padding: 16px 18px; }
 .lp-realwrap .pst-rings { margin: 0; }
 .lp-realwrap .pst-grid { margin-top: 10px; }
-/* ciclo de tarjetas de perfil completas en el primer iPhone */
-.lp-profcyc { position: absolute; inset: 0; }
-.lp-prof { position: absolute; inset: 0; opacity: 0; animation-name: lpProfCyc; animation-iteration-count: infinite; animation-timing-function: ease; will-change: opacity, transform; }
-@keyframes lpProfCyc {
-  0% { opacity: 0; transform: translateY(10px) scale(.985); }
-  3% { opacity: 1; transform: translateY(0) scale(1); }
-  24% { opacity: 1; transform: translateY(0) scale(1); }
-  27% { opacity: 0; transform: translateY(-8px) scale(.99); }
-  100% { opacity: 0; transform: translateY(-8px) scale(.99); }
-}
-@media (prefers-reduced-motion: reduce) { .lp-prof { animation: none; } .lp-prof:first-child { opacity: 1; } }
 /* home en vivo del hero: carrusel infinito de perfiles */
 .lph-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 48px 0 14px; }
 .lph-greet b { font-size: 19px; font-weight: 900; color: var(--text); display: block; letter-spacing: -.01em; line-height: 1.1; }
