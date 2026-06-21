@@ -201,6 +201,23 @@ function trackerDrills(u) {
   ];
   return [['Long game', long], ['Fierros', irons], ['Wedges', wedges], ['Approach', approach], ['Putt', putt]];
 }
+/* Avatar Stats: resumen de números (de tus rondas) arriba del Tracker */
+function avatarStatsBlock(u) {
+  const rounds = (typeof myRounds === 'function') ? myRounds() : [];
+  const agg = (rounds.length && typeof Stats !== 'undefined' && Stats.aggregate) ? Stats.aggregate(rounds) : null;
+  const head = `<div class="sec-h"><h2 style="font-size:15px">${golfIcon('trophy')} Tus números</h2><span class="small muted">${rounds.length} ronda${rounds.length === 1 ? '' : 's'}</span></div>`;
+  if (!agg) return head + `<div class="card"><p class="note" style="margin:6px 2px">Registra una ronda para ver tu score, fairways, GIR, putts y reparto de score.</p></div>`;
+  const tile = (big, lab) => `<div style="text-align:center;padding:11px 6px;background:var(--card2);border-radius:14px"><b style="font-size:22px;font-weight:900;display:block;letter-spacing:-.02em">${big}</b><span style="font-size:11px;color:var(--muted);font-weight:700">${lab}</span></div>`;
+  const grid = `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+    ${tile(fmtHcp(u.hcp), 'Hándicap')}${tile(Math.round(agg.fwPct) + '%', 'Fairways')}${tile(Math.round(agg.girPct) + '%', 'GIR')}
+    ${tile(Math.round(agg.scrPct) + '%', 'Up & down')}${tile(agg.putts18.toFixed(1), 'Putts/ronda')}${tile(Math.round(agg.threePct) + '%', '3 putts')}
+  </div>`;
+  const sd = agg.scoreDist, t = sd.total || 1, p = n => Math.round(n / t * 100);
+  const segs = [['Águila+', sd.eagle, '#2f8f4f'], ['Birdie', sd.birdie, '#54b85a'], ['Par', sd.par, '#7cc24a'], ['Bogey', sd.bogey, '#e0a23a'], ['Doble+', sd.dbl, '#e0653a']];
+  const bar = `<div style="display:flex;height:16px;border-radius:8px;overflow:hidden;margin-top:4px;background:var(--line)">${segs.map(s => s[1] ? `<div style="width:${p(s[1])}%;background:${s[2]}"></div>` : '').join('')}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:7px">${segs.map(s => `<span style="font-size:11px;color:var(--muted)"><b style="color:var(--text)">${p(s[1])}%</b> ${s[0]}</span>`).join('')}</div>`;
+  return head + `<div class="card">${grid}<span class="label" style="margin-top:12px;display:block">Reparto de score</span>${bar}</div>`;
+}
 function vCourse(u) {
   const log = (u && u.tracker) || {};
   const anyBag = Object.keys((u && u.clubs) || {}).length;
@@ -223,7 +240,9 @@ function vCourse(u) {
     </div>`;
   };
   const sec = ([title, arr]) => arr.length ? `<div class="sec-h" style="margin-top:16px"><h2 style="font-size:15px">${esc(title)}</h2></div>${arr.map(drillCard).join('')}` : '';
-  return `<p class="note" style="margin:2px 2px 10px">Elige un carry, pega tus reps y registra cuántas caíste en el gap. Tu <b>% por palo</b> alimenta tu plan.</p>
+  return `${avatarStatsBlock(u)}
+    <div class="sec-h" style="margin-top:18px"><h2 style="font-size:15px">${golfIcon('bucket')} Tracker · drills</h2></div>
+    <p class="note" style="margin:2px 2px 10px">Elige un carry, pega tus reps y registra cuántas caíste en el gap. Tu <b>% por palo</b> alimenta tu plan.</p>
     ${!anyBag ? `<div class="card"><p class="note" style="margin:6px 2px">Primero llena tu <b>bolsa</b> (carrys) en tu perfil — con eso genero tus drills.</p></div>` : groups.map(sec).join('')}`;
 }
 
