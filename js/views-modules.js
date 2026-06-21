@@ -256,7 +256,11 @@ function vCourse(u) {
       <span class="small muted">${doneTotal}/${total} ejercicios completos</span>
     </div>`;
   const open = !!V.trkOpen;
-  const toggle = `<button class="btn ${open ? '' : 'primary'} trk-open" data-act="trk-open">${golfIcon('flag')} ${open ? 'Ocultar ejercicios' : 'Abrir tracker · ejercicios'}</button>`;
+  const toggle = `<button class="trk-open ${open ? 'on' : ''}" data-act="trk-open">
+      <span class="trk-open-ic">${golfIcon('bucket')}</span>
+      <span class="trk-open-tx"><b>${open ? 'Ocultar ejercicios' : 'Abrir tracker'}</b><span>${total} ejercicios · ${doneTotal} completos</span></span>
+      <span class="trk-open-go">${open ? '▾' : '▸'}</span>
+    </button>`;
   const blocks = !open ? '' : groups.map(([title, arr]) => {
     const on = V.trkCat === title;
     const doneN = arr.filter(d => trkHits(log[d.key], d.reps) >= d.reps).length;

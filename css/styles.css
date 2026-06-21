@@ -4721,4 +4721,12 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .trk-prog-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .trk-prog-pct { font-size: 22px; font-weight: 900; color: var(--lime-ink, var(--text)); letter-spacing: -.02em; }
 .trk-pbar.big { height: 10px; margin: 10px 0 6px; }
-.trk-open { width: 100%; margin-bottom: 10px; }
+.trk-open { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 13px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); color: var(--text); cursor: pointer; margin-bottom: 10px; }
+.trk-open.on { border-color: var(--lime); }
+.trk-open-ic { width: 38px; height: 38px; border-radius: 11px; background: var(--lime-faint, rgba(124,194,74,.12)); display: grid; place-items: center; flex: none; }
+.trk-open-ic .gi { width: 20px; height: 20px; }
+.trk-open-tx { flex: 1; min-width: 0; }
+.trk-open-tx b { display: block; font-size: 14.5px; font-weight: 800; }
+.trk-open-tx span { display: block; font-size: 11.5px; color: var(--muted); margin-top: 1px; }
+.trk-open-go { font-size: 14px; color: var(--muted); flex: none; }
+.trk-open:active { transform: scale(.99); }
