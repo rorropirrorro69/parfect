@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PARFECT · Preview mapas reales (Campestre)</title>
+<style>
+  body { margin:0; background:#0e1a10; color:#eaf3e3; font-family:Inter,system-ui,sans-serif; padding:18px; }
+  h1 { font-size:18px; margin:0 0 4px; }
+  p.sub { color:#9bbf90; font-size:13px; margin:0 0 18px; }
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; max-width:760px; }
+  .card { background:#16271a; border:1px solid #244a2a; border-radius:18px; overflow:hidden; }
+  .card svg { display:block; width:100%; height:auto; background:#3c7a39; }
+  .cap { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; }
+  .cap b { font-size:14px; }
+  .cap span { font-size:12px; color:#9bbf90; }
+  .big { max-width:340px; margin:0 auto 22px; }
+</style>
+</head>
+<body>
+  <h1>Mapas reales de Campestre — preview</h1>
+  <p class="sub">Dibujados desde la geometría trazada de satélite (CAMP_GEO). Aún NO está en la app: es para que apruebes el look.</p>
+  <div id="big" class="big"></div>
+  <div id="grid" class="grid"></div>
+
+  <script src="js/campestre_geo.js"></script>
+  <script>
+    const PARS = {1:5,2:5,3:3,4:4,5:3,6:4,7:5,8:3,9:4};
+    function holeSVG(n, opts){
+      const g = CAMP_GEO[n]; if(!g) return '';
+      opts = opts||{};
+      const [bx,by,bw,bh] = g.bbox;
+      const pad = Math.max(bw,bh)*0.08;
+      const vb = `${(bx-pad).toFixed(1)} ${(by-pad).toFixed(1)} ${(bw+pad*2).toFixed(1)} ${(bh+pad*2).toFixed(1)}`;
+      const col = { turf:'#74c35a', arena:'#ecdcab', agua:'#5cb4e6' };
+      // dibujar agua y arena al final para que queden encima del turf
+      const order = { turf:0, arena:2, agua:1 };
+      const polys = g.polys.slice().sort((a,b)=>(order[a.k]||0)-(order[b.k]||0)).map(p=>{
+        const f = col[p.k]||'#74c35a';
+        const st = p.k==='turf' ? 'stroke="#3f8f44" stroke-width="0.5"' : p.k==='agua' ? 'stroke="#3f97cf" stroke-width="0.4"' : 'stroke="#d8c489" stroke-width="0.4"';
+        return `<path d="${p.d}" fill="${f}" ${st}/>`;
+      }).join('');
+      const tee = g.tee, pin = g.pin;
+      const r = Math.max(bw,bh);
+      const teeR = r*0.012, flagH = r*0.07;
+      const teeM = tee ? `<circle cx="${tee[0]}" cy="${tee[1]}" r="${(teeR*1.4).toFixed(1)}" fill="#fff" opacity=".25"/><rect x="${(tee[0]-teeR).toFixed(1)}" y="${(tee[1]-teeR*0.7).toFixed(1)}" width="${(teeR*2).toFixed(1)}" height="${(teeR*1.4).toFixed(1)}" rx="${(teeR*0.4).toFixed(1)}" fill="#caa15e"/>` : '';
+      const flag = pin ? `<line x1="${pin[0]}" y1="${pin[1]}" x2="${pin[0]}" y2="${(pin[1]-flagH).toFixed(1)}" stroke="#fff" stroke-width="${(r*0.006).toFixed(2)}"/><path d="M${pin[0]},${(pin[1]-flagH).toFixed(1)} l${(r*0.035).toFixed(1)},${(flagH*0.18).toFixed(1)} l${(-r*0.035).toFixed(1)},${(flagH*0.18).toFixed(1)} z" fill="#ff5a4d"/><circle cx="${pin[0]}" cy="${pin[1]}" r="${(r*0.008).toFixed(2)}" fill="#0a2e16"/>` : '';
+      return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet" style="aspect-ratio:${(bw/bh).toFixed(2)}">
+        <rect x="${bx-pad}" y="${by-pad}" width="${bw+pad*2}" height="${bh+pad*2}" fill="#3c7a39"/>
+        ${polys}${teeM}${flag}
+      </svg>`;
+    }
+    // hoyo grande (1) + grilla de los 9
+    document.getElementById('big').innerHTML = `<div class="card">${holeSVG(1)}<div class="cap"><b>Hoyo 1</b><span>Par ${PARS[1]} · forma real</span></div></div>`;
+    document.getElementById('grid').innerHTML = Object.keys(CAMP_GEO).map(n=>`<div class="card">${holeSVG(n)}<div class="cap"><b>Hoyo ${n}</b><span>Par ${PARS[n]||''}</span></div></div>`).join('');
+  </script>
+</body>
+</html>
