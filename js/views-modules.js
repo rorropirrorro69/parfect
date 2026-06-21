@@ -261,6 +261,48 @@ function vTrainer() {
     ${body}`;
 }
 
+/* Parfect Trainer · data-driven (sin IA): insights, trainings, estrategia y metas
+   derivados de tu % por palo (Tracker) + tus rondas. Instantáneo, siempre disponible. */
+function vDataDriven(u, agg) {
+  const tr = (u && u.tracker) || {};
+  const bag = (u && u.clubs) || {};
+  const carry = id => (typeof clubC === 'function') ? clubC(bag, id) : (bag[id] && bag[id].c);
+  const ins = [];
+  CLUBS.forEach(c => { const e = tr['c_' + c.id]; if (e && e.reps && carry(c.id) != null) { const pct = Math.round(e.hits / e.reps * 100); if (pct < 70) ins.push({ sev: 100 - pct, txt: `Baja precisión en ${c.name} (${pct}%)`, drill: { name: c.name, goal: `${carry(c.id)} yds · 7/7 en su gap` } }); } });
+  if (agg) {
+    if (agg.fwPct < 50) ins.push({ sev: 62 - agg.fwPct, txt: `Pocos fairways (${Math.round(agg.fwPct)}%)`, drill: { name: 'Driver', goal: '7/7 en un gap de 40 yds' } });
+    if (agg.girPct < 40) ins.push({ sev: 52 - agg.girPct, txt: `Pocos greens en regulación (${Math.round(agg.girPct)}%)`, drill: { name: 'Fierros', goal: '7/7 a tu carry, gap 40' } });
+    if (agg.putts18 > 32) ins.push({ sev: (agg.putts18 - 30) * 9, txt: `Muchos putts (${agg.putts18.toFixed(1)}/ronda)`, drill: { name: 'Putt corto', goal: '10/10 desde 3 y 5 pies' } });
+    if (agg.threePct > 10) ins.push({ sev: agg.threePct + 6, txt: `3-putts altos (${Math.round(agg.threePct)}%)`, drill: { name: 'Putt largo', goal: 'dadas desde 20 y 30 pies' } });
+    if (agg.scrPct < 45) ins.push({ sev: 52 - agg.scrPct, txt: `Up & down bajo (${Math.round(agg.scrPct)}%)`, drill: { name: 'Approach', goal: 'up & down 10 y 30 yds' } });
+  }
+  ins.sort((a, b) => b.sev - a.sev);
+  const top = ins.slice(0, 3);
+  const accs = CLUBS.map(c => { const e = tr['c_' + c.id]; return (e && e.reps) ? { name: c.name, pct: Math.round(e.hits / e.reps * 100), group: c.group } : null; }).filter(Boolean);
+  const strat = [];
+  if (accs.length) {
+    const best = accs.slice().sort((a, b) => b.pct - a.pct)[0];
+    strat.push(`Confía en tu ${best.name} (${best.pct}%) para colocar la bola.`);
+    const worst = accs.filter(a => a.group === 'largo').sort((a, b) => a.pct - b.pct)[0];
+    if (worst && worst.pct < 65) strat.push(`En hoyos angostos evita ${worst.name} (${worst.pct}%); usa un palo más certero.`);
+  }
+  if (agg && agg.girPct < 42) strat.push('Apunta al centro del green, no a la bandera: sube tu GIR.');
+  if (agg && agg.scrPct < 45) strat.push('Cuando falles green, deja el chip cuesta arriba para salvar el par.');
+  const goals = [];
+  if (agg) {
+    goals.push(['Fairways', Math.round(agg.fwPct) + '%', Math.min(78, Math.round(agg.fwPct) + 8) + '%']);
+    goals.push(['GIR', Math.round(agg.girPct) + '%', Math.min(68, Math.round(agg.girPct) + 8) + '%']);
+    goals.push(['Putts / ronda', agg.putts18.toFixed(1), Math.max(28, agg.putts18 - 1.5).toFixed(1)]);
+  }
+  const row = t => `<div style="font-size:13.5px;padding:5px 0;border-top:1px solid var(--line-soft,var(--line))">${t}</div>`;
+  const cardInsights = top.length
+    ? `<div class="card"><span class="label">⚠️ Dónde pierdes golpes</span>${top.map(i => row('• ' + esc(i.txt))).join('')}</div>
+       <div class="card"><span class="label">${golfIcon('bucket')} Qué entrenar</span>${top.map(i => row(`${golfIcon('flag')} <b>${esc(i.drill.name)}</b> — ${esc(i.drill.goal)}`)).join('')}</div>`
+    : `<div class="card"><p class="note" style="margin:6px 2px">Registra tus drills (Tracker) y unas rondas para que detecte tus fugas de golpes.</p></div>`;
+  const cardStrat = strat.length ? `<div class="card"><span class="label">${golfIcon('peak')} Estrategia en el campo</span>${strat.map(s => row('• ' + esc(s))).join('')}</div>` : '';
+  const cardGoals = goals.length ? `<div class="card"><span class="label">${golfIcon('trophy')} Tus metas</span>${goals.map(g => `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid var(--line-soft,var(--line))"><b style="font-size:13.5px">${g[0]}</b><span style="font-size:13.5px;color:var(--muted)">${g[1]} → <b class="lime" style="color:var(--lime-ink)">${g[2]}</b></span></div>`).join('')}</div>` : '';
+  return `<div class="sec-h" style="margin-top:6px"><h2 style="font-size:16px">${golfIcon('green')} Tu plan según tus datos</h2></div>${cardInsights}${cardStrat}${cardGoals}`;
+}
 function vDiag() {
   const agg = Stats.aggregate(myRounds());
   if (!agg) {
@@ -268,16 +310,16 @@ function vDiag() {
       <p>Registra al menos una ronda y Parfect Trainer encontrará dónde se van tus golpes.</p>
       <button class="btn primary" data-act="quick-round">Registrar ronda</button></div>`;
   }
+  const dd = vDataDriven(cur(), agg);
   if (V.diagBusy) {
     return `<div class="card empty"><div class="e-ico">${golfIcon('green')}</div><h3>Analizando tus patrones…</h3>
       <p>Correlacionando ${agg.holesPlayed} hoyos, ${agg.rounds} rondas y 12+ métricas.</p></div>`;
   }
   if (!V.diag) {
-    return `<div class="sec-h" style="margin-top:6px"><h2 style="font-size:18px">Análisis IA</h2><span class="small muted">${agg.rounds} rondas</span></div>
-      <div class="diag-cta">
+    return dd + `<div class="diag-cta" style="margin-top:18px">
         <span class="diag-cta-ic">${golfIcon('green')}</span>
-        <h2 class="diag-cta-h">Tu coach IA está listo</h2>
-        <p class="diag-cta-p">La IA cruza tus ${agg.holesPlayed} hoyos y ${agg.rounds} ronda${agg.rounds === 1 ? '' : 's'} para encontrar exactamente dónde se te van los golpes y qué entrenar.</p>
+        <h2 class="diag-cta-h">¿Quieres el análisis profundo?</h2>
+        <p class="diag-cta-p">La IA cruza tus ${agg.holesPlayed} hoyos y ${agg.rounds} ronda${agg.rounds === 1 ? '' : 's'} para un diagnóstico aún más fino.</p>
         <button class="btn primary big" data-act="diagnose">${golfIcon('flag')} Generar análisis IA</button>
       </div>`;
   }
@@ -323,7 +365,7 @@ function vDiag() {
             : `<p>${esc(ai.text).replace(/\n/g, '<br>')}</p>`}
        </div>
      </div>` : '';
-  return warn +
+  return dd + warn +
     `<div class="aiq-hero">
        <span class="aiq-hero-ava">${golfIcon('flag')}</span>
        <div class="aiq-hero-tx"><span class="aiq-hero-lab">Análisis IA · ${agg.rounds} ronda${agg.rounds === 1 ? '' : 's'}</span><b class="aiq-hero-h">Tu enfoque ahora: ${esc((top.titulo || 'tu juego').split('·')[0].trim())}</b><p class="aiq-hero-p">${d.focus.length} prioridades para bajar golpes, ordenadas por impacto.</p></div>
