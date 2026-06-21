@@ -355,15 +355,12 @@ function vSetup() {
         <div class="obj-grid">${items.map(([ic, v, k]) => `<div class="obj-it"><span class="obj-ic">${ic}</span><b class="obj-v">${v}</b><span class="obj-k">${k}</span></div>`).join('')}</div>
       </div></div>`;
   })();
-  return `<div class="su-hero2 su-hero-course">
-      <div class="su-hero2-txt">
-        <span class="su-hero-tag">${golfIcon('flag')} Nueva ronda</span>
-        <h1 class="su-hero-h">${esc(sname(cid))}</h1>
-        <p class="su-hero-sub">${COURSES[cid].holes.length} hoyos · Par ${curPar} · ${COURSES[cid].approx ? 'aprox' : 'real'}</p>
-      </div>
-      <div class="su-hero2-art">${courseCrest(cid)}</div>
-    </div>
+  const planBtn = `<button class="btn ghost su-planbtn" data-act="setup-plan">${golfIcon('green')} ${V.setupPlan ? 'Ocultar plan' : 'Ver mi plan con IA'}</button>`;
+  const planBody = V.setupPlan ? `<div class="su-block">${vDataDriven(u, Stats.aggregate(myRounds()))}</div>` : '';
+  return `<div class="sec-h" style="margin-bottom:8px"><h2>${golfIcon('flag')} Nueva ronda</h2></div>
     ${objCard}
+    ${planBtn}
+    ${planBody}
     ${body}
     ${lobbyCard}
     <button class="btn su-cancel" data-act="nav" data-view="ronda">Cancelar</button>
