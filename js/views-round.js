@@ -458,7 +458,6 @@ function approachView(h, chole, G, pf, px) {
   const shadow = `<ellipse rx="5" ry="1.8" fill="#000" opacity="0.2"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${shadowPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></ellipse>`;
   return `<div class="cap"><svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Tu tiro al green">
     <g clip-path="url(#capClip)">${field}
-    <path d="${shadowPath}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="3 5" stroke-linecap="round" opacity="0.85"/>
     ${landDot}${shadow}${ball}</g>
     <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="16" fill="none" stroke="rgba(20,50,15,0.18)"/>
   </svg></div>`;
@@ -497,8 +496,7 @@ function greenCloseup(h, G, pf, px) {
     ${rings}
     <circle cx="${pin.x.toFixed(0)}" cy="${pin.y.toFixed(0)}" r="5.5" fill="#08260f"/>
     <line x1="${pin.x.toFixed(0)}" y1="${pin.y.toFixed(0)}" x2="${pin.x.toFixed(0)}" y2="${(pin.y - 42).toFixed(0)}" stroke="#ffffff" stroke-width="2.5"/><path d="M${pin.x.toFixed(0)},${(pin.y - 42).toFixed(0)} l16,5 -16,5z" fill="#7cc24a"/>`;
-  const ballEl = `<path d="${puttPath}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="3 5" stroke-linecap="round" opacity="0.9"/>
-    <ellipse rx="5" ry="2" fill="#000" opacity="0.2"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${puttPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></ellipse>
+  const ballEl = `<ellipse rx="5" ry="2" fill="#000" opacity="0.2"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${puttPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></ellipse>
     <circle r="6" fill="url(#g3dBall)" stroke="#16301a" stroke-width="0.8" style="filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))"><animateMotion dur="${dur}s" repeatCount="indefinite" path="${puttPath}" keyPoints="${kp.join(';')}" keyTimes="${kt.join(';')}" calcMode="linear"/></circle>`;
   return `<div class="cap"><svg width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Green y putt">
     <g clip-path="url(#capClip)">${field}${ballEl}</g>
@@ -646,7 +644,6 @@ function captureSchematic(h, chole, noZoom, clean, full) {
   return `<div class="cap"><svg width="100%" viewBox="${vb}" role="img" aria-label="${aria}">
     <g clip-path="url(#capClip)">
     ${field}
-    ${nodes.length > 1 ? `<path d="${shadowPath}" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="3 5" stroke-linecap="round" opacity="0.85"/>` : ''}
     ${dots}${shadow}${ball}
     </g>
     <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="16" fill="none" stroke="rgba(20,50,15,0.18)"/>

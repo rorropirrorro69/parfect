@@ -511,7 +511,7 @@ function vLanding() {
         <span class="lp-intro-logo">${pLogo()}</span>
         <span class="lp-intro-tag">Golf Analytics</span>
         <div class="lp-press2">
-          <span class="lp-beta">● Beta abierta · lanzamiento próximamente</span>
+          <span class="lp-beta">Beta</span>
         </div>
       </div>
     </section>
