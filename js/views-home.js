@@ -3,7 +3,7 @@
 function navKeyOf(view) {
   if (['ronda', 'nueva', 'detalle'].includes(view)) return 'ronda';
   if (['trainer', 'clubs'].includes(view)) return 'trainer';
-  if (['perfil', 'clubs', 'friend', 'feedcard', 'social', 'club', 'club-tourn', 'club-academy'].includes(view)) return 'perfil';
+  if (['perfil', 'clubs', 'friend', 'feedcard', 'social', 'club', 'club-tourn', 'club-academy', 'metrics'].includes(view)) return 'perfil';
   return 'inicio';
 }
 
@@ -1277,6 +1277,40 @@ function vPerfil() {
     ${vSocialFeed()}`;
 }
 
+/* ============ Dashboard de métricas (solo el dueño) ============ */
+const OWNER_EMAIL = 'andremacouzetruiz@gmail.com';
+function isOwner(u) { return !!(u && (u.email || '').toLowerCase() === OWNER_EMAIL); }
+function vMetrics() {
+  const u = cur();
+  if (!isOwner(u)) { V.view = 'inicio'; return vDashboard(); }
+  const m = V.metrics;
+  const head = `<div class="sec-h"><button class="sec-link" data-act="nav" data-view="perfil">← Perfil</button></div>
+    <div class="sec-h" style="margin-top:2px"><h2>${golfIcon('trophy')} Métricas</h2><button class="sec-link" data-act="go-metrics">↻ Actualizar</button></div>`;
+  if (!m || m.loading) return head + `<div class="card"><p class="note" style="margin:8px 2px">Cargando métricas…</p></div>`;
+  if (m.error) return head + `<div class="card"><p class="note err" style="margin:6px 2px">No pude leer las métricas: ${esc(m.error)}</p><p class="note">Corre la migración <b>06_analytics.sql</b> en Supabase (SQL Editor) e inicia sesión con tu correo de dueño. Mientras, los eventos ya se están registrando.</p></div>`;
+  const ev = m.events || [];
+  const now = Date.now();
+  const since = d => now - d * 86400000;
+  const inWin = (e, d) => new Date(e.created_at).getTime() >= since(d);
+  const cnt = (name, d) => ev.filter(e => e.name === name && (d == null || inWin(e, d))).length;
+  const roundsCnt = d => ev.filter(e => (e.name === 'round_saved' || e.name === 'party_round') && (d == null || inWin(e, d))).length;
+  const actives = d => new Set(ev.filter(e => e.user_id && inWin(e, d)).map(e => e.user_id)).size;
+  const tile = (big, lab, sub) => `<div class="card" style="text-align:center;padding:16px 8px"><b style="font-size:30px;font-weight:900;display:block;letter-spacing:-.02em">${big}</b><span style="font-size:12.5px;font-weight:800;color:var(--text)">${lab}</span>${sub ? `<span style="display:block;font-size:11px;color:var(--muted);margin-top:2px">${sub}</span>` : ''}</div>`;
+  // barra de rondas por día (últimos 7)
+  const days = []; for (let i = 6; i >= 0; i--) { const d = new Date(now - i * 86400000); const key = d.toISOString().slice(0, 10); const n = ev.filter(e => (e.name === 'round_saved' || e.name === 'party_round') && e.created_at.slice(0, 10) === key).length; days.push({ lab: ['D', 'L', 'M', 'M', 'J', 'V', 'S'][d.getDay()], n }); }
+  const maxN = Math.max(1, ...days.map(d => d.n));
+  const bars = `<div class="card"><span class="label">Rondas por día (7 días)</span><div style="display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:10px">${days.map(d => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:flex-end"><b style="font-size:11px;font-weight:800;color:var(--text)">${d.n || ''}</b><div style="width:100%;border-radius:6px 6px 0 0;background:var(--lime);height:${Math.max(4, d.n / maxN * 64)}px"></div><span style="font-size:10px;color:var(--muted)">${d.lab}</span></div>`).join('')}</div></div>`;
+  return head +
+    `<div class="grid2">
+      ${tile(m.users, 'Usuarios', 'registrados en la nube')}
+      ${tile(cnt('signup', null), 'Altas (30d)', `hoy ${cnt('signup', 1)} · 7d ${cnt('signup', 7)}`)}
+      ${tile(roundsCnt(null), 'Rondas (30d)', `hoy ${roundsCnt(1)} · 7d ${roundsCnt(7)}`)}
+      ${tile(actives(7), 'Activos 7d', `hoy ${actives(1)}`)}
+    </div>
+    ${bars}
+    <p class="note" style="text-align:center;margin-top:10px">Eventos en ventana de 30 días · solo tú ves esto.</p>`;
+}
+
 /* ============ Club (B2B): multi-tenant local-first, listo para Supabase ============ */
 const CLUB_ROLE_LABEL = { admin: 'Administrador', coach: 'Coach', member: 'Miembro', junior: 'Juvenil', parent: 'Padre/Madre' };
 function myClub() { const u = cur(); if (!u) return null; return (S.clubs || []).find(c => (c.members || []).some(m => m.userId === u.id)) || null; }
@@ -1736,6 +1770,7 @@ function vProfile() {
         <button class="panel-x" data-act="profile-close" aria-label="Cerrar">✕</button>
       </div>
       <div class="panel-body">
+        ${isOwner(u) ? `<button class="btn ghost" data-act="go-metrics" style="width:100%;margin-bottom:10px">${golfIcon('trophy')} Métricas (dueño)</button>` : ''}
         ${vAvatarCreator(u)}
         <div class="sec-h" style="margin-top:18px"><h2 style="font-size:16px">Tus datos</h2></div>
         <div class="card">

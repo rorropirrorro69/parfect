@@ -957,6 +957,7 @@ function savePartyRounds(party) {
     round.partyMates = party.players.filter(x => x.pid !== pl.pid).map(x => { const c = cardOf(x.pid); return { name: x.name, score: c.score, toPar: c.toPar, holes: c.holes }; }).filter(m => m.holes.some(h => h.score != null));
     if (money.length) round.partyMoney = money;
     S.rounds.push(round);
+    if (typeof Analytics !== 'undefined') Analytics.track('party_round', { holes: round.holes.length });
     added = true;
   }
   // agrega a los compañeros de party a tu historial de amigos (desde tu perspectiva)

@@ -190,6 +190,7 @@ function App() {
     feedcard: vFeedCard,
     trainer: vTrainer,
     perfil: vPerfil,
+    metrics: vMetrics,
     social: vSocial,
     club: vClub,
     'club-tourn': vClubTourn,
@@ -543,6 +544,7 @@ const actions = {
       if (!res.ok) { V.err = res.msg; render(); return; }
       if (res.needsConfirm) { V.authVals = null; V.err = 'Te enviamos un correo para confirmar tu cuenta. Confírmalo y luego inicia sesión.'; V.view = 'login'; render(); window.scrollTo(0, 0); return; }
       V.authVals = null; V.err = null; V.view = 'inicio'; V.diag = null;
+      if (typeof Analytics !== 'undefined') Analytics.track('signup', { demo: !!demo });
       commit(); window.scrollTo(0, 0); return;
     }
     // ---- modo local (sin nube configurada) ----
@@ -555,6 +557,7 @@ const actions = {
       S.practices.push(...Demo.practices(u.id));
     }
     V.authVals = null; V.err = null; V.view = 'inicio'; V.diag = null;
+    if (typeof Analytics !== 'undefined') Analytics.track('signup', { demo: !!demo, local: true });
     commit(); window.scrollTo(0, 0);
   },
 
@@ -567,6 +570,10 @@ const actions = {
 
   /* ---- perfil ---- */
   'profile-open'() { V.wipeArm = false; go('perfil'); },
+  'go-metrics'() {
+    V.profileOpen = false; V.view = 'metrics'; V.metrics = { loading: true }; render(); window.scrollTo(0, 0);
+    if (typeof Analytics !== 'undefined') Analytics.summary(30).then(s => { V.metrics = s; if (V.view === 'metrics') render(); });
+  },
   'profile-edit'() { V.profileOpen = true; render(); },
   'feed-like'(d) {
     if (typeof Feed !== 'undefined' && Feed.on()) { Feed.toggleLike(d.id); return; }
@@ -948,6 +955,7 @@ const actions = {
     const a = S.active;
     const round = { id: Store.uid(), userId: a.userId, course: a.course, courseId: a.courseId, holeOffset: a.holeOffset || 0, date: today(), time: new Date().toTimeString().slice(0, 5), holes: a.holes.slice(0, a.holesCount) };
     S.rounds.push(round);
+    if (typeof Analytics !== 'undefined') Analytics.track('round_saved', { holes: round.holes.length });
     S.active = null;
     V.diag = null; V.detail = round.id; V.view = 'detalle'; V.justFinished = round.id;
     V.roundAI = null;
@@ -1399,6 +1407,7 @@ render();
 /* ---- arranque: sync de party activa + service worker (solo producción) ---- */
 (() => {
   if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.restore();
+  if (typeof Analytics !== 'undefined') Analytics.track('app_open');
   const p = S.parties.find(x => x.id === S.activeParty);
   if (p && p.status !== 'done' && p.status !== 'cancelled') Sync.watch(p.code);
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
