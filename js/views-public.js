@@ -162,22 +162,27 @@ function lpScrLoading() {
     <div class="lp-load-foot">Cargando tu juego…</div>
   </div>`;
 }
-/* primer iPhone: pantalla de inicio (screenshot estático, ya sin el saludo) */
+/* perfiles que rotan en el primer iPhone: tarjeta completa (avatar+color, hcp, stats) */
+const LP_PROFILES = [
+  { rank: 'Élite', hcp: '7.2', av: 12, grad: 'linear-gradient(135deg,#2f6d34,#1c4a23)', fw: 61, gir: 53, ud: 51, putts: '30', bird: '8%', bog: '31%', par: '60%' },
+  { rank: 'Avanzada', hcp: '12', av: 7, grad: 'linear-gradient(135deg,#1f6f8b,#0f3b52)', fw: 54, gir: 44, ud: 47, putts: '32', bird: '5%', bog: '38%', par: '52%' },
+  { rank: 'Intermedio', hcp: '18', av: 14, grad: 'linear-gradient(135deg,#7a4ea0,#3a2660)', fw: 47, gir: 34, ud: 39, putts: '34', bird: '3%', bog: '46%', par: '44%' },
+  { rank: 'Juvenil', hcp: '24', av: 9, grad: 'linear-gradient(135deg,#c2722e,#7a3f18)', fw: 40, gir: 26, ud: 32, putts: '36', bird: '2%', bog: '55%', par: '36%' },
+];
+/* primer iPhone: rota tarjetas de perfil completas (distinto color, hándicap y stats) */
 function lpIntroPhone() {
-  // monitos que aparecen y desaparecen SOLO sobre el avatar del hero (tapa al ninja del screenshot)
-  const monos = ['🏌️‍♂️', '🏌️‍♀️', '👦', '👧', '👴', '👵'];
-  const cyc = monos.map((e, i) => `<span class="lp-em" style="animation-delay:${(i * 1.5).toFixed(1)}s">${e}</span>`).join('');
-  const scr = `<img class="lp-shotimg" src="assets/shot-inicio.png?v=388" alt="" onload="if(this.naturalWidth){var c=this.parentElement.querySelector('.lp-shotcomp');if(c)c.style.display='none'}else{this.remove()}" onerror="this.remove()">
-    <div class="lp-shotcomp">${lpScrStats()}</div>
-    <div class="lp-ninja" aria-hidden="true">${cyc}</div>`;
-  return lpPhone(scr);
+  const T = (LP_PROFILES.length * 2.6).toFixed(1);
+  const cards = LP_PROFILES.map((p, i) => `<div class="lp-prof" style="animation-delay:-${(i * 2.6).toFixed(1)}s;animation-duration:${T}s">${lpScrStats(p)}</div>`).join('');
+  return lpPhone(`<div class="lp-profcyc">${cards}</div>`);
 }
-function lpScrStats() {
-  const rings = [['fw', 61, 'Fairways'], ['gir', 53, 'GIR'], ['ud', 51, 'Up & down']]
-    .map(([k, p, l]) => (typeof pstSceneStatic === 'function') ? pstSceneStatic(k, p, l) : '').join('');
-  const tiles = [['Putts / ronda', '30', 'putter'], ['Birdie o mejor', '8%', 'flag'], ['Bogey o peor', '31%', 'green'], ['Pares', '60%', 'flag']]
+function lpScrStats(p) {
+  p = p || LP_PROFILES[0];
+  const rings = [['fw', p.fw, 'Fairways'], ['gir', p.gir, 'GIR'], ['ud', p.ud, 'Up & down']]
+    .map(([k, pc, l]) => (typeof pstSceneStatic === 'function') ? pstSceneStatic(k, pc, l) : '').join('');
+  const tiles = [['Putts / ronda', p.putts, 'putter'], ['Birdie o mejor', p.bird, 'flag'], ['Bogey o peor', p.bog, 'green'], ['Pares', p.par, 'flag']]
     .map((t, i) => `<div class="pst-tile" style="--i:${i}"><span class="pst-th"><span class="pst-ic">${golfIcon(t[2])}</span></span><b class="pst-val">${t[1]}</b><span class="pst-lab">${t[0]}</span></div>`).join('');
-  return lpReal(`<div class="pl-hero" style="background:linear-gradient(135deg,#2f6d34,#1c4a23)"><div class="pl-hero-txt"><span class="pl-hero-lab">Demo PARFECT · Élite</span><div class="pl-hero-num">7.2</div><span class="pl-hero-sub">Hándicap · Campestre</span></div></div><div class="pst-rings">${rings}</div><div class="pst-grid">${tiles}</div>`);
+  const av = (typeof AVATARS !== 'undefined') ? `<img class="pl-hero-av" src="${AVATARS[p.av] || AVATARS[12]}" alt="" loading="lazy">` : '';
+  return lpReal(`<div class="pl-hero" style="background:${p.grad}"><div class="pl-hero-txt"><span class="pl-hero-lab">Demo PARFECT · ${p.rank}</span><div class="pl-hero-num">${p.hcp}</div><span class="pl-hero-sub">Hándicap · Campestre</span></div>${av}</div><div class="pst-rings">${rings}</div><div class="pst-grid">${tiles}</div>`);
 }
 function lpScrPlay() {
   const tiles = [['fw', true, 'Calle'], ['gir', true, 'Green'], ['ud', false, 'Up & down']]
