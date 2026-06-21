@@ -202,9 +202,21 @@ function App() {
 
 function render() {
   if (typeof applyTheme === 'function') applyTheme();
-  document.getElementById('root').innerHTML = App();
-  if (typeof positionOrb === 'function') positionOrb();
-  if (typeof afterRender === 'function') afterRender();
+  let html;
+  try {
+    html = App();
+  } catch (e) {
+    console.error('render error', e);
+    html = `<div style="max-width:420px;margin:70px auto;padding:26px;text-align:center;font-family:Inter,system-ui,sans-serif;color:#14301c;background:rgba(255,255,255,.92);border-radius:22px">
+      <h2 style="font-weight:900;font-size:22px;margin:0">Ups, algo se atoró</h2>
+      <p style="color:#5c7a63;margin:10px 0 18px;font-size:14px">Recarga para continuar. <b>Tus datos están a salvo.</b></p>
+      <button onclick="location.reload()" style="background:#7cc24a;color:#0c2913;border:none;border-radius:14px;padding:14px 24px;font-weight:800;font-size:16px;cursor:pointer">Recargar</button>
+    </div>`;
+  }
+  const root = document.getElementById('root');
+  if (root) root.innerHTML = html;
+  try { if (typeof positionOrb === 'function') positionOrb(); } catch (e) {}
+  try { if (typeof afterRender === 'function') afterRender(); } catch (e) {}
 }
 
 /* ============ Acciones ============ */
