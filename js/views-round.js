@@ -307,9 +307,7 @@ function vSetup() {
   const teeSheet = V.teeSheet ? `<div class="overlay" data-act="tee-cancel"><div class="sheet" data-act="noop">
       <div class="grab"></div>
       <h2>Ajusta tu ronda</h2>
-      <p class="auth-sub">Campo, hoyos, desde dónde y tu salida.</p>
-      <span class="su-lab" style="display:block;margin-bottom:6px">Campo</span>
-      <div class="su-courses" style="margin-bottom:14px">${courseCards}</div>
+      <p class="auth-sub">Cuántos hoyos, desde dónde y tu salida en ${esc(sname(cid))}.</p>
       ${holesNineBlock}
       <span class="su-lab" style="display:block;margin-top:4px">Salida</span>
       <div class="tee-opts" style="margin-top:6px">${TEES.map(t => `<button class="tee-opt ${tid === t.id ? 'on' : ''}" data-act="confirm-tee" data-t="${t.id}">
@@ -318,7 +316,8 @@ function vSetup() {
         <span class="tee-opt-go">→</span>
       </button>`).join('')}</div>
     </div></div>` : '';
-  const body = `<button class="btn primary big su-go" data-act="start-round">${pMark(19)} Comenzar ronda</button>`;
+  const body = `<div class="su-block"><span class="su-lab">Campo</span><div class="su-courses">${courseCards}</div></div>
+      <button class="btn primary big su-go" data-act="start-round">${pMark(19)} Comenzar ronda</button>`;
   const u = cur();
   const act = (typeof activeParty === 'function') ? activeParty() : null;
   const myActive = act && (act.hostUserId === u.id || act.players.some(x => x.userId === u.id));
@@ -336,31 +335,14 @@ function vSetup() {
         ${V.err ? `<p class="form-err">${esc(V.err)}</p>` : ''}
       </div>
     </div>`;
-  const objCard = (() => {
-    const goal = u.goal != null ? u.goal : Math.max(0, (u.hcp != null ? u.hcp : 12) - 5);
-    const b = (typeof Stats !== 'undefined' && Stats.benchFor) ? Stats.benchFor(goal) : null;
-    if (!b) return '';
-    const items = [
-      [golfIcon('flag'), Math.round(b.fwPct) + '%', 'Fairways'],
-      [golfIcon('green'), Math.round(b.girPct) + '%', 'Greens (GIR)'],
-      [golfIcon('bucket'), Math.round(b.scrPct) + '%', 'Up & down'],
-      [golfIcon('putter'), Math.round(b.putts18), 'Putts'],
-    ];
-    return `<div class="su-block"><span class="su-lab">Tus objetivos de hoy</span>
-      <div class="card obj-card">
-        <div class="obj-head">
-          <span class="obj-av">${avatarImg(u, 'obj-monito', true)}</span>
-          <div class="obj-who"><b>${esc(u.name || 'Tú')}</b><span class="small muted">HCP ${fmtHcp(u.hcp != null ? u.hcp : 12)} · meta ${fmtHcp(goal)}</span></div>
-        </div>
-        <div class="obj-grid">${items.map(([ic, v, k]) => `<div class="obj-it"><span class="obj-ic">${ic}</span><b class="obj-v">${v}</b><span class="obj-k">${k}</span></div>`).join('')}</div>
-      </div></div>`;
-  })();
-  const planBtn = `<button class="btn ghost su-planbtn" data-act="setup-plan">${golfIcon('green')} ${V.setupPlan ? 'Ocultar plan' : 'Ver mi plan con IA'}</button>`;
-  const planBody = V.setupPlan ? `<div class="su-block">${vDataDriven(u, Stats.aggregate(myRounds()))}</div>` : '';
-  return `<div class="sec-h" style="margin-bottom:8px"><h2>${golfIcon('flag')} Nueva ronda</h2></div>
-    ${objCard}
-    ${planBtn}
-    ${planBody}
+  return `<div class="su-hero2 su-hero-course">
+      <div class="su-hero2-txt">
+        <span class="su-hero-tag">${golfIcon('flag')} Nueva ronda</span>
+        <h1 class="su-hero-h">${esc(sname(cid))}</h1>
+        <p class="su-hero-sub">${COURSES[cid].holes.length} hoyos · Par ${curPar} · ${COURSES[cid].approx ? 'aprox' : 'real'}</p>
+      </div>
+      <div class="su-hero2-art">${courseCrest(cid)}</div>
+    </div>
     ${body}
     ${lobbyCard}
     <button class="btn su-cancel" data-act="nav" data-view="ronda">Cancelar</button>

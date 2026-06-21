@@ -806,7 +806,6 @@ const actions = {
   },
   'setup-when'(d) { V.setupWhen = d.w === 'prog' ? 'prog' : 'ahora'; render(); window.scrollTo(0, 0); },
   'setup-holes'(d) { V.setupHoles = Number(d.h) === 9 ? 9 : 18; render(); },
-  'setup-plan'() { V.setupPlan = !V.setupPlan; render(); },
   'setup-nine'(d) { V.setupStart = Number(d.s) || 0; render(); },
   'setup-start-adj'(d) {
     const cid = (V.setupCourseId && COURSES[V.setupCourseId]) ? V.setupCourseId : 'campestre';
