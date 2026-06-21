@@ -4649,3 +4649,14 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .lp-allies-row .lp-ally .lp-org-fb { display: none; font-size: 13px; font-weight: 800; color: var(--text); opacity: .82; align-items: center; padding: 7px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); }
 
 .trk-done { border-color: var(--lime) !important; }
+
+/* Camino: metas gamificadas (Romper 100/90/80...) */
+.ms-ladder { display: flex; flex-direction: column; gap: 8px; }
+.ms-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; border-radius: 14px; border: 1px solid var(--line); background: var(--card); }
+.ms-row.now { border-color: var(--lime); background: var(--lime-faint); }
+.ms-row.lock { opacity: .5; }
+.ms-dot { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 14px; background: var(--card2); color: var(--muted); }
+.ms-dot.done, .ms-dot.now { background: var(--lime); color: #0c2913; }
+.ms-tx { flex: 1; min-width: 0; }
+.ms-tx b { display: block; font-size: 14.5px; }
+.ms-tx span { font-size: 12px; color: var(--muted); }

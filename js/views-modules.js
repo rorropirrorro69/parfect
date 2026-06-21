@@ -247,18 +247,55 @@ function vCourse(u) {
     ${!anyBag ? `<div class="card"><p class="note" style="margin:6px 2px">Primero llena tu <b>bolsa</b> (carrys) en tu perfil — con eso genero tus drills.</p></div>` : groups.map(sec).join('')}`;
 }
 
+/* ============ Camino: progreso gamificado (Romper 100 / 90 / 80…) ============ */
+const MILESTONES = [120, 110, 100, 95, 90, 85, 80, 75, 72];
+function bestScore18(rounds) {
+  let best = null;
+  (rounds || []).forEach(r => { const s = Stats.roundStats(r); if (s && s.holes >= 9) { const eq = Math.round(s.score / s.holes * 18); if (best == null || eq < best) best = eq; } });
+  return best;
+}
+function vCamino(u) {
+  const rounds = (typeof myRounds === 'function') ? myRounds() : [];
+  const best = bestScore18(rounds);
+  const items = MILESTONES.map(m => ({ m, label: m <= 72 ? 'Par o mejor (72)' : 'Romper ' + m, broken: best != null && best < m }));
+  const nextIdx = items.findIndex(x => !x.broken);
+  const next = nextIdx >= 0 ? items[nextIdx] : null;
+  const doneN = items.filter(x => x.broken).length;
+  const need = m => Math.max(1, best - (m - 1));
+  const hero = `<div class="card" style="text-align:center">
+    <span class="label" style="justify-content:center">${golfIcon('peak')} Tu camino</span>
+    ${best != null ? `<div style="font-size:13px;color:var(--muted);margin-top:8px">Tu mejor ronda (18 hoyos)</div><div style="font-size:40px;font-weight:900;letter-spacing:-.03em;line-height:1">${best}</div>` : `<p class="note" style="margin:8px 2px">Registra una ronda para arrancar tu camino y desbloquear metas.</p>`}
+    ${next ? `<div style="margin-top:10px;font-size:15px;font-weight:800">Próxima meta: <span style="color:var(--lime-ink)">${next.label}</span></div>${best != null ? `<div style="font-size:12.5px;color:var(--muted);margin-top:2px">Te faltan <b>${need(next.m)}</b> golpe${need(next.m) === 1 ? '' : 's'}</div>` : ''}` : `<div style="margin-top:10px;font-weight:800">¡Rompiste todas las metas! 🏆</div>`}
+    <div style="margin-top:8px;font-size:12px;color:var(--muted)">${doneN}/${items.length} metas logradas</div>
+  </div>`;
+  const ladder = items.map((x, i) => {
+    const isNext = i === nextIdx; const st = x.broken ? 'done' : isNext ? 'now' : 'lock';
+    const ic = x.broken ? '✓' : isNext ? '★' : '🔒';
+    const sub = x.broken ? 'Logrado' : isNext ? (best != null ? `Te faltan ${need(x.m)} golpes` : 'Tu primera meta') : 'Bloqueado';
+    return `<div class="ms-row ${st}">
+      <span class="ms-dot ${st}">${ic}</span>
+      <div class="ms-tx"><b>${x.label}</b><span>${sub}</span></div>
+      ${isNext ? `<button class="chip sm" data-act="trainer-tab" data-t="plan">Mi plan →</button>` : ''}
+    </div>`;
+  }).join('');
+  return hero + `<div class="ms-ladder" style="margin-top:12px">${ladder}</div>`;
+}
+
 function vTrainer() {
   const u = cur();
-  const tab = ['entreno', 'tracker', 'logros', 'coach'].includes(V.trainerTab) ? V.trainerTab : 'diag';
+  let tab = V.trainerTab;
+  if (tab === 'diag') tab = 'plan';                              // alias heredados
+  if (tab === 'logros' || tab === 'objetivos') tab = 'camino';
+  tab = ['tracker', 'plan', 'entreno', 'coach'].includes(tab) ? tab : 'camino';
   const showHist = (!V.planStep || V.planStep === 'time') && !V.sessionRun && !V.sessionSummary;
-  const body = tab === 'entreno' ? (vSessionPlanner() + (showHist ? vTrainHistory() : ''))
-    : tab === 'tracker' ? vCourse(u)
-      : tab === 'logros' ? (vKeyTargets(u) + `<div style="margin-top:22px"></div>` + vLogros())
+  const body = tab === 'tracker' ? vCourse(u)
+    : tab === 'plan' ? vDiag()
+      : tab === 'entreno' ? (vSessionPlanner() + (showHist ? vTrainHistory() : ''))
         : tab === 'coach' ? vCoach()
-          : vDiag();
+          : (vCamino(u) + `<div class="sec-h" style="margin-top:22px"><h2 style="font-size:15px">${golfIcon('trophy')} Logros</h2></div>` + vKeyTargets(u) + `<div style="margin-top:12px"></div>` + vLogros());
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
-    <div class="tabs scroll">${T('diag', 'Análisis IA')}${T('tracker', 'Tracker')}${T('entreno', 'Entrenamiento')}${T('logros', 'Logros')}${T('coach', 'Coach')}</div>
+    <div class="tabs scroll">${T('camino', 'Camino')}${T('tracker', 'Tracker')}${T('plan', 'Plan')}${T('entreno', 'Entreno')}${T('coach', 'Coach')}</div>
     ${body}`;
 }
 
