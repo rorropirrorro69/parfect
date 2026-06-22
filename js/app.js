@@ -1026,6 +1026,8 @@ const actions = {
     u.tracker[d.k] = { hits, reps, date: today() };
     commit();
   },
+  'avi-pick'(d) { V.aviPick = Number(d.i); render(); },
+  'avi-close'() { V.aviPick = null; render(); },
   'trk-cat'(d) { V.trkCat = (V.trkCat === d.c) ? null : d.c; render(); },
   'trk-finish'() {
     const u = cur(); if (!u) return;

@@ -4668,7 +4668,18 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 
 /* Aviario: colección de pájaros (logros) */
 .avi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.avi { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 6px 8px; text-align: center; }
+.avi { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 6px 8px; text-align: center; width: 100%; cursor: pointer; font: inherit; color: inherit; display: block; }
+.avi:active { transform: scale(.96); }
+.avi-sheet { text-align: center; }
+.avi-sheet-ic { width: 96px; height: 96px; margin: 6px auto 4px; }
+.avi-sheet-ic.off { filter: grayscale(1) opacity(.55); }
+.avi-sheet-h { margin: 6px 0 2px; font-size: 22px; }
+.avi-sheet-st { font-weight: 800; font-size: 13px; margin: 2px 0 0; }
+.avi-sheet-st.on { color: #3aa055; }
+.avi-sheet-st.off { color: var(--muted); }
+.avi-sheet-desc { text-align: center; margin: 10px 14px 0; font-size: 14px; }
+.avi-sheet-how { text-align: center; margin: 10px 14px 0; }
+.avi-sheet .btn { margin-top: 18px; }
 .avi.on { border-color: var(--lime); box-shadow: 0 4px 12px rgba(124,194,74,.14); }
 .avi:not(.on) { opacity: .72; }
 .avi-ic { width: 100%; max-width: 56px; aspect-ratio: 50/44; margin: 0 auto; }

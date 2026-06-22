@@ -64,6 +64,7 @@ function aviBird(i, locked) {
     <circle cx="37" cy="14.5" r="1.8" fill="${eye}"/>${locked ? '' : `<circle cx="37.5" cy="14" r=".66" fill="#fff"/>`}
   </svg>`;
 }
+const AVIARY_DESC = ['Registraste tu primera ronda en PARFECT.', 'Anotaste tu primer hoyo.', 'Hiciste tu primer par.', 'Tu primer birdie. ¡El pájaro de la casa!', 'Bajaste de 120 golpes en 18 hoyos.', 'Bajaste de 115.', 'Bajaste de 110.', 'Bajaste de 105.', 'Rompiste la barrera de los 100. Gran paso.', 'Bajaste de 95.', 'Rompiste 90: ya juegas bogey golf.', 'Bajaste de 85.', 'Rompiste 80: nivel de un dígito a la vista.', 'Bajaste de 75. Élite amateur.', 'Una vuelta completa en par.', 'Terminaste una ronda bajo par.', 'Pegaste muchas calles en una ronda.', 'Nueve fairways en una vuelta.', 'Llegaste a green en regulación.', 'Nueve greens en regulación en una ronda.', 'Salvaste el par desde fuera del green.', 'Una ronda sin tres putts.', '30 putts o menos en 18 hoyos.', 'Ni un doble bogey en toda la vuelta.', 'Tres birdies en una sola ronda.', 'Cinco pares en una ronda.', 'Pares seguidos sin soltar.', 'Acumulaste birdies de sobra.', 'Tu tarjeta está llena de pares.', 'Dominas el tee: calles y más calles.', 'Llegas a green con constancia.', 'Salvas el par una y otra vez.', 'El putter es tu varita.', 'Arrancas fuerte los primeros 9.', 'Cierras fuerte los últimos 9.', 'Le diste la vuelta a una mala salida.', 'Jugaste 5 rondas con PARFECT.', '10 rondas registradas.', '25 rondas. Constancia real.', '50 rondas. Eres de casa.', 'Entrenas y juegas sin parar.', 'Tu hándicap va para abajo.', 'Hándicap de un solo dígito.', 'A un paso del scratch.', 'Hándicap 0. Juegas a la par.', 'Tu mejor ronda hasta hoy.', 'Muchas rondas en las piernas.', 'Domas tu campo de casa.', 'Tu nombre suena en el club.', 'Coleccionaste todo el aviario. Leyenda.'];
 function vLogros() {
   const rounds = (typeof myRounds === 'function') ? myRounds() : [];
   const agg = rounds.length ? Stats.aggregate(rounds) : null;
@@ -71,15 +72,28 @@ function vLogros() {
   const unlocked = Math.min(AVIARY.length, (rounds.length ? 1 : 0) + rounds.length + birdies);
   const cards = AVIARY.map((nm, i) => {
     const on = i < unlocked;
-    return `<div class="avi ${on ? 'on' : ''}">
+    return `<button class="avi ${on ? 'on' : ''}" data-act="avi-pick" data-i="${i}">
       <div class="avi-ic">${aviBird(i, !on)}</div>
       <span class="avi-nm">${esc(nm)}</span>
       ${on ? '' : '<span class="avi-lock">🔒</span>'}
-    </div>`;
+    </button>`;
   }).join('');
+  const pick = V.aviPick;
+  const sheet = (pick != null && AVIARY[pick] != null) ? (() => {
+    const on = pick < unlocked;
+    return `<div class="overlay" data-act="avi-close"><div class="sheet avi-sheet" data-act="noop">
+      <div class="grab"></div>
+      <div class="avi-sheet-ic ${on ? 'on' : 'off'}">${aviBird(pick, !on)}</div>
+      <h2 class="avi-sheet-h">${esc(AVIARY[pick])}</h2>
+      <p class="avi-sheet-st ${on ? 'on' : 'off'}">${on ? '✓ Desbloqueado' : '🔒 Bloqueado'}</p>
+      <p class="note avi-sheet-desc">${esc(AVIARY_DESC[pick] || '')}</p>
+      <p class="small muted avi-sheet-how">${on ? 'Lo conseguiste jugando rondas y haciendo birdies.' : 'Sigue jugando rondas y haciendo birdies para desbloquearlo.'}</p>
+      <button class="btn primary" data-act="avi-close">Cerrar</button>
+    </div></div>`;
+  })() : '';
   return `<div class="sec-h"><h2>Aviario</h2><span class="small muted">${unlocked}/${AVIARY.length} pájaros</span></div>
-    <p class="note" style="margin:0 2px 10px">Colecciona pájaros: cada ronda y cada <b>birdie</b> desbloquea uno nuevo.</p>
-    <div class="avi-grid">${cards}</div>`;
+    <p class="note" style="margin:0 2px 10px">Colecciona pájaros: cada ronda y cada <b>birdie</b> desbloquea uno nuevo. <b>Toca un pájaro</b> para ver qué logro es.</p>
+    <div class="avi-grid">${cards}</div>${sheet}`;
 }
 
 /* Números clave para llegar a tu meta (según tu HCP objetivo) */
