@@ -1701,7 +1701,6 @@ function vOnboard() {
         <span class="onb-kicker">Bienvenido a PARFECT</span>
         <h1 class="onb-h1">Hola,<br><span class="lime">${first}</span></h1>
         <p class="onb-sub">Soy <b>Birdie</b>, tu coach con IA. En menos de un minuto armamos tu perfil. Empiezas <b>de cero</b>: tú decides qué registrar y la IA hace el resto.</p>
-        <button class="btn ghost onb-tour" data-act="onboard-academy">${golfIcon('flag')} ¿Nuevo en el golf? Tour rápido</button>
       </div>`;
   } else if (step === 1) {
     const m = ONB_META[1];
