@@ -511,13 +511,7 @@ function vLanding() {
           <span class="lp-beta">Beta</span>
         </div>
         <div class="lp-intro-cta">
-          <div class="lp-cta-stack">
-            <button class="lp-order lp-cta-main" data-act="go" data-view="signup">${golfIcon('flag')} Crear cuenta gratis</button>
-            <button class="lp-cta-login" data-act="go" data-view="login">Ya tengo cuenta · Iniciar sesión</button>
-          </div>
           <div class="lp-stores">${lpStoreBadge()}${lpGooglePlay()}</div>
-          <div class="lp-stars" aria-label="4.9 de 5">★★★★★ <b>4.9</b> · golfistas la usan</div>
-          <button class="lp-ghostbtn lp-intro-beta" data-act="demo-account">Probar beta sin cuenta</button>
         </div>
       </div>
     </section>
@@ -527,8 +521,9 @@ function vLanding() {
       <div class="lp-hero-copy reveal">
         <h1 class="lp-title lp-title-stage">Baja tu hándicap<br/><span class="lp-title-grad">con datos.</span></h1>
         <p class="lp-sub">Anota tu ronda en segundos y descubre <b>qué falló y qué practicar</b>. Mejoras tu juego sin adivinar.</p>
-        <div class="lp-cta-row">
-          <button class="lp-order" data-act="go" data-view="signup">Crear cuenta gratis →</button>
+        <div class="lp-cta-stack">
+          <button class="lp-order lp-cta-main" data-act="go" data-view="signup">${golfIcon('flag')} Crear cuenta gratis</button>
+          <button class="lp-cta-login" data-act="go" data-view="login">Ya tengo cuenta · Iniciar sesión</button>
         </div>
         <p class="lp-trust">Gratis para empezar · Tus datos viven en tu dispositivo</p>
       </div>
