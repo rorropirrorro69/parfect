@@ -216,32 +216,32 @@ function trkHits(e, reps) { return e ? (e.hits != null ? Math.max(0, Math.min(re
 /* Diagrama visual del ejercicio (para que se entienda de un vistazo) */
 function drillVisual(d) {
   if (d.kind === 'putt') {
-    return `<svg class="trk-viz" viewBox="0 0 280 56" aria-hidden="true">
-      <rect width="280" height="56" rx="10" fill="#cdeccb"/>
-      <line x1="34" y1="38" x2="242" y2="38" stroke="#8aa07f" stroke-width="2" stroke-dasharray="3 5"/>
-      <circle cx="34" cy="38" r="6" fill="#fff" stroke="#b9c4b4"/>
-      <circle cx="244" cy="38" r="6" fill="#243018"/>
-      <rect x="244" y="14" width="2.5" height="24" fill="#c23a2a"/><path d="M246.5 15 l12 4 -12 4 z" fill="#e0653a"/>
-      <text x="138" y="22" text-anchor="middle" font-size="12" font-weight="800" fill="#3a5230">${d.feet} pies · en línea</text>
+    return `<svg class="trk-viz" viewBox="0 0 320 96" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <rect width="320" height="96" rx="12" fill="#cdeccb"/>
+      <text x="160" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#3a5230">${d.feet} pies · en línea</text>
+      <line x1="46" y1="66" x2="272" y2="66" stroke="#8aa07f" stroke-width="2.5" stroke-dasharray="4 6"/>
+      <circle cx="46" cy="66" r="7" fill="#fff" stroke="#b9c4b4"/>
+      <circle cx="278" cy="66" r="7" fill="#243018"/>
+      <rect x="278" y="38" width="3" height="28" fill="#c23a2a"/><path d="M281 40 l13 5 -13 5 z" fill="#e0653a"/>
     </svg>`;
   }
   if (d.kind === 'updown') {
-    return `<svg class="trk-viz" viewBox="0 0 280 56" aria-hidden="true">
-      <rect width="280" height="56" rx="10" fill="#dff0d8"/>
-      <ellipse cx="214" cy="44" rx="56" ry="11" fill="#7cc24a"/>
-      <path d="M30 47 Q120 -4 206 40" fill="none" stroke="#e0a23a" stroke-width="2.5" stroke-dasharray="4 4"/>
-      <circle cx="30" cy="47" r="5" fill="#fff" stroke="#b9c4b4"/>
-      <circle cx="214" cy="42" r="4" fill="#243018"/>
-      <rect x="214" y="18" width="2.5" height="24" fill="#c23a2a"/><path d="M216.5 19 l11 4 -11 4 z" fill="#e0653a"/>
-      <text x="100" y="18" text-anchor="middle" font-size="12" font-weight="800" fill="#7a5a1f">chip & putt · ${d.dist} yds</text>
+    return `<svg class="trk-viz" viewBox="0 0 320 96" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <rect width="320" height="96" rx="12" fill="#dff0d8"/>
+      <text x="160" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#7a5a1f">chip &amp; putt · ${d.dist} yds</text>
+      <ellipse cx="244" cy="76" rx="66" ry="14" fill="#7cc24a"/>
+      <path d="M36 80 Q150 22 236 68" fill="none" stroke="#e0a23a" stroke-width="3" stroke-dasharray="5 5"/>
+      <circle cx="36" cy="80" r="6" fill="#fff" stroke="#b9c4b4"/>
+      <circle cx="244" cy="72" r="5" fill="#243018"/>
+      <rect x="244" y="44" width="3" height="28" fill="#c23a2a"/><path d="M247 46 l13 5 -13 5 z" fill="#e0653a"/>
     </svg>`;
   }
-  return `<svg class="trk-viz" viewBox="0 0 280 56" aria-hidden="true">
-    <rect width="280" height="56" rx="10" fill="#dff0d8"/>
-    <path d="M22 47 Q150 -8 250 47" fill="none" stroke="#54b85a" stroke-width="2.5" stroke-dasharray="4 4"/>
-    <ellipse cx="250" cy="48" rx="22" ry="5" fill="#3f9f4a" opacity=".5"/>
-    <circle cx="22" cy="47" r="5" fill="#fff" stroke="#b9c4b4"/>
-    <text x="150" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="#2f6b32">carry ${d.carry} y · gap ±${d.gap}</text>
+  return `<svg class="trk-viz" viewBox="0 0 320 96" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <rect width="320" height="96" rx="12" fill="#dff0d8"/>
+    <text x="160" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#2f6b32">carry ${d.carry} y · gap ±${d.gap}</text>
+    <path d="M28 80 Q160 14 296 80" fill="none" stroke="#54b85a" stroke-width="3" stroke-dasharray="5 5"/>
+    <ellipse cx="296" cy="81" rx="24" ry="6" fill="#3f9f4a" opacity=".5"/>
+    <circle cx="28" cy="80" r="6" fill="#fff" stroke="#b9c4b4"/>
   </svg>`;
 }
 function vCourse(u) {
