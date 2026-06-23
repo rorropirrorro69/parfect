@@ -4785,3 +4785,7 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .qlog-score.par .qlog-score-val b { color: #3b7d2a; }
 .qlog-score.over .qlog-score-val b { color: #c98a1e; }
 .qlog-score.bad .qlog-score-val b { color: #c2502f; }
+
+/* Análisis IA / diagnóstico: marca de área ya en meta */
+.aiq-rank.met { background: #3aa055 !important; color: #fff !important; }
+.aisum-row.met .aisum-n { background: #3aa055; color: #fff; }

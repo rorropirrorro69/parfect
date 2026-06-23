@@ -433,8 +433,8 @@ function vDiag() {
     }).join('');
     return `<div class="aiq-card" style="--pc:${pc}">
       <div class="aiq-head">
-        <span class="aiq-rank">${i + 1}</span>
-        <div class="aiq-htx"><span class="aiq-plab">${i === 0 ? 'Tu enfoque #1' : 'Prioridad ' + (i + 1)}</span><b>${esc(f.titulo)}</b></div>
+        <span class="aiq-rank ${f.met ? 'met' : ''}">${f.met ? '✓' : (i + 1)}</span>
+        <div class="aiq-htx"><span class="aiq-plab">${f.met ? 'Ya en meta' : (i === 0 ? 'Tu enfoque #1' : 'Prioridad ' + (i + 1))}</span><b>${esc(f.titulo)}</b></div>
         <span class="aiq-ic">${golfIcon(ic)}</span>
       </div>
       <p class="aiq-diag">${esc(lead)}</p>
@@ -460,6 +460,7 @@ function vDiag() {
      <div class="aiq-list">${cards}</div>
      <button class="btn primary big" data-act="diag-aicoach" style="margin-top:14px">${golfIcon('flag')} Entrenar este plan con AI Coach →</button>
      <p class="note" style="text-align:center;margin-top:8px">El AI Coach arma tu sesión según tu tiempo y estas prioridades.</p>
+     <div style="margin-top:14px">${vHcpReference(cur())}</div>
      <button class="btn ghost" data-act="diagnose" style="margin-top:6px">↺ Recalcular diagnóstico</button>`;
 }
 

@@ -124,7 +124,7 @@ const Stats = (() => {
 
   /* Benchmarks por hándicap (aprox. tour de datos amateur) */
   function benchFor(hcp) {
-    const h = clamp(Number(hcp) || 0, -3, 28);
+    const h = clamp(Number(hcp) || 0, -3, 36);
     return {
       hcp: h,
       fwPct: clamp(60 - 0.65 * h, 35, 65),

@@ -167,9 +167,10 @@ function vKeyTargets(u) {
 
 /* Tabla de referencia: qué stats tiene cada nivel de hándicap */
 function vHcpReference(u) {
-  const levels = [0, 5, 10, 15, 20, 25];
-  const near = levels.reduce((a, b) => (Math.abs(b - u.hcp) < Math.abs(a - u.hcp) ? b : a), levels[0]);
-  const nearGoal = levels.reduce((a, b) => (Math.abs(b - u.goal) < Math.abs(a - u.goal) ? b : a), levels[0]);
+  const levels = [36, 30, 25, 20, 15, 10, 5, 0];
+  const hcp = u && u.hcp != null ? u.hcp : 18, goal = u && u.goal != null ? u.goal : Math.max(0, hcp - 5);
+  const near = levels.reduce((a, b) => (Math.abs(b - hcp) < Math.abs(a - hcp) ? b : a), levels[0]);
+  const nearGoal = levels.reduce((a, b) => (Math.abs(b - goal) < Math.abs(a - goal) ? b : a), levels[0]);
   const rows = levels.map(h => {
     const b = Stats.benchFor(h);
     const tags = [];
@@ -185,8 +186,8 @@ function vHcpReference(u) {
     </tr>`;
   }).join('');
   return `<div class="card">
-    <span class="label">Referencia por hándicap</span>
-    <p class="note" style="margin-top:0;margin-bottom:8px">Cómo juega cada nivel. Úsalo de mapa para saber qué buscar.</p>
+    <span class="label">Estadísticas por hándicap (36 → 0)</span>
+    <p class="note" style="margin-top:0;margin-bottom:8px">Calles, greens, up&down y putts que tira cada nivel. Tu fila y tu meta van marcadas.</p>
     <div class="sc-scroll"><table class="sc-table ref-table">
       <thead><tr><th class="sc-name">HCP</th><th>Calles</th><th>GIR</th><th>U/D</th><th>Putts</th></tr></thead>
       <tbody>${rows}</tbody>
