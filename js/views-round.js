@@ -839,11 +839,30 @@ function vPlay() {
             <div class="stepper"><button data-act="h-score" data-d="-1">−</button><button data-act="h-score" data-d="1">+</button></div>
           </div>`;
       }
-      return `<div class="card wz">
-        <div class="wz-map">${capArt}</div>
-        <div class="wz-tabs">${tabs}</div>
-        <div class="wz-body">${body}</div>
-        ${ci > 0 ? `<button class="wz-back" data-act="fast-back">← Atrás</button>` : ''}
+      return `<div class="card qlog">
+        ${h.par > 3
+          ? `<span class="qlog-lab">Salida</span><div class="qlog-chips">
+              <button class="qlog-chip ${h.teeLie === 'calle' ? 'on' : ''}" data-act="fast" data-k="tee" data-lie="calle" data-dir="c">Fairway</button>
+              <button class="qlog-chip neg ${h.teeLie === 'rough' && h.tee === 'l' ? 'on' : ''}" data-act="fast" data-k="tee" data-lie="rough" data-dir="l">Izq</button>
+              <button class="qlog-chip neg ${h.teeLie === 'rough' && h.tee === 'r' ? 'on' : ''}" data-act="fast" data-k="tee" data-lie="rough" data-dir="r">Der</button>
+              <button class="qlog-chip neg ${h.teeLie === 'ob' ? 'on' : ''}" data-act="fast" data-k="tee" data-lie="ob" data-dir="c">OB</button>
+            </div>`
+          : `<div class="qlog-par3">Par 3 · directo al green</div>`}
+        <span class="qlog-lab">Green</span><div class="qlog-chips">
+          <button class="qlog-chip ${h.app === 'gir' ? 'on' : ''}" data-act="fast" data-k="app" data-v="gir">En regulación</button>
+          <button class="qlog-chip neg ${h.app != null && h.app !== 'gir' ? 'on' : ''}" data-act="fast" data-k="app" data-v="miss">Falló</button>
+        </div>
+        ${(h.app != null && h.app !== 'gir') ? `<span class="qlog-lab">Up &amp; down</span><div class="qlog-chips">
+          <button class="qlog-chip ${h.upDown === true ? 'on' : ''}" data-act="fast" data-k="ud" data-v="si">Salvé el par</button>
+          <button class="qlog-chip neg ${h.upDown === false ? 'on' : ''}" data-act="fast" data-k="ud" data-v="no">No</button>
+        </div>` : ''}
+        <span class="qlog-lab">Putts</span><div class="qlog-chips">
+          ${[[0, '0'], [1, '1'], [2, '2'], [3, '3'], [4, '4+']].map(([v, l]) => `<button class="qlog-chip ${h.putts === v ? 'on' : ''}" data-act="fast" data-k="putts" data-v="${v}">${l}</button>`).join('')}
+        </div>
+        <div class="qlog-score ${scoreCls}">
+          <div><span class="qlog-score-lab">SCORE</span><div class="qlog-score-val"><b>${score != null ? score : '–'}</b><i>${score != null ? relScore(score - h.par) : ''}</i></div></div>
+          <div class="stepper"><button data-act="h-score" data-d="-1">−</button><button data-act="h-score" data-d="1">+</button></div>
+        </div>
       </div>`;
     })()}
 
@@ -852,10 +871,10 @@ function vPlay() {
       <button class="btn primary big" data-act="h-next" ${ready ? '' : 'disabled'}>${a.idx + 1 === a.holesCount ? 'Finalizar ronda ✓' : 'Siguiente hoyo →'}</button>
     </div>
 
-    ${ready ? `<div class="card sc-clean" style="margin-top:18px">
+    <div class="card sc-clean sc-dock" style="margin-top:16px">
       <span class="label">Tarjeta</span>
-      ${scorecardTable(a.holesCount, i => (i === a.idx ? h.par : (a.holes[i] ? a.holes[i].par : parForActive(a, i))), [{ name: cur().name.split(' ')[0], scoreOf: i => (a.holes[i] ? a.holes[i].score : null) }], a.idx)}
-    </div>` : ''}
+      ${scorecardTable(a.holesCount, i => (i === a.idx ? h.par : (a.holes[i] ? a.holes[i].par : parForActive(a, i))), [{ name: cur().name.split(' ')[0], scoreOf: i => (i === a.idx ? ((V.scoreTouched && h.score != null) ? h.score : suggestScore(h)) : (a.holes[i] ? a.holes[i].score : null)) }], a.idx)}
+    </div>
     ${V.confirmExit ? vExitSheet() : ''}
   </div>`;
 }

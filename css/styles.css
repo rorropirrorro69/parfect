@@ -4765,3 +4765,23 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 .lp-rating { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; }
 .lp-rating-stars { color: #f5b301; font-size: 17px; letter-spacing: 2px; }
 .lp-rating-num { color: var(--text); font-size: 16px; font-weight: 900; }
+
+/* Registro de tiros rápido (una pantalla, chips) */
+.qlog { padding: 12px 12px 14px; }
+.qlog-lab { display: block; font-size: 11px; color: var(--muted); font-weight: 800; letter-spacing: .04em; margin: 12px 2px 6px; }
+.qlog-lab:first-child { margin-top: 2px; }
+.qlog-chips { display: flex; gap: 7px; }
+.qlog-chip { flex: 1; min-width: 0; min-height: 46px; padding: 10px 6px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--card); color: var(--text); font-size: 13.5px; font-weight: 800; cursor: pointer; transition: transform .12s; }
+.qlog-chip:active { transform: scale(.95); }
+.qlog-chip.on { background: var(--lime); border-color: var(--lime-ink, #5da524); color: #16320f; }
+.qlog-chip.neg.on { background: #ef9a6a; border-color: #d8763e; color: #4a1b0c; }
+.qlog-par3 { font-size: 12.5px; color: var(--muted); background: var(--card2, #f4f8ef); border-radius: 10px; padding: 9px 11px; margin-top: 2px; }
+.qlog-score { display: flex; align-items: center; justify-content: space-between; margin-top: 13px; background: var(--card2, #f4f8ef); border-radius: 13px; padding: 10px 12px; }
+.qlog-score-lab { font-size: 11px; color: var(--muted); font-weight: 800; }
+.qlog-score-val { display: flex; align-items: baseline; gap: 7px; margin-top: 2px; }
+.qlog-score-val b { font-size: 28px; font-weight: 900; line-height: 1; }
+.qlog-score-val i { font-style: normal; font-size: 14px; font-weight: 800; color: var(--muted); }
+.qlog-score.good .qlog-score-val b { color: #2f8f4f; }
+.qlog-score.par .qlog-score-val b { color: #3b7d2a; }
+.qlog-score.over .qlog-score-val b { color: #c98a1e; }
+.qlog-score.bad .qlog-score-val b { color: #c2502f; }
