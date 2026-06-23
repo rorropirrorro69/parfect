@@ -927,6 +927,13 @@ function socialReady(u) {
   return !!((u && u.friends && u.friends.length) || (u && u.shared && u.shared.length));
 }
 
+function postCardBtn() {
+  return `<button class="card invite-card post-card-btn" data-act="share-open">
+    <span class="invite-ic" aria-hidden="true" style="background:var(--lime-faint,rgba(124,194,74,.14))">${golfIcon('card')}</span>
+    <div class="invite-tx"><b>Postear tarjeta</b><span>Comparte tu ronda con tus amigos</span></div>
+    <span class="invite-go">Postear ›</span>
+  </button>`;
+}
 function vSocialFeed() {
   const u = cur();
   // ---- modo nube: feed real desde Supabase (solo si ya participas) ----
@@ -936,6 +943,7 @@ function vSocialFeed() {
     if (st.posts.length) {
       const body = st.posts.map(p => feedCardReal(p, u)).join('');
       return `<div class="sec-h" style="margin-top:6px"><h2>Feed de amigos</h2></div>
+        ${postCardBtn()}
         ${friendsBlock(u)}
         <div class="fd-list">${body}</div>
         ${V.shareDraft ? vShareComposer(u) : ''}
@@ -987,6 +995,7 @@ function vSocialFeed() {
     </div>`;
   }).join('');
   return `<div class="sec-h" style="margin-top:6px"><h2>Feed de amigos</h2></div>
+    ${postCardBtn()}
     ${friendsBlock(u)}
     ${cards ? `<div class="fd-list">${cards}</div>` : `<div class="card empty"><div class="e-ico">${golfIcon('flag')}</div><h3>Tu feed está listo</h3><p>Comparte una ronda e invita a tus cuates por WhatsApp para verlos aquí.</p></div>`}
     ${V.shareDraft ? vShareComposer(u) : ''}
@@ -1013,32 +1022,23 @@ function friendsBlock(u) {
   return `<div class="sec-h" style="margin-top:8px"><h2>Tus amigos${fr.length ? ` · ${fr.length}` : ''}</h2></div>
     <button class="card invite-card add-friend-card" data-act="add-friend">
       <span class="invite-ic addf-ic" aria-hidden="true">+</span>
-      <div class="invite-tx"><b>Agregar amigo</b><span>Invítalo por WhatsApp o agrégalo a tu liga</span></div>
+      <div class="invite-tx"><b>Agregar amigo</b><span>Invítalo por WhatsApp y se agregan al aceptar</span></div>
       <span class="invite-go">Agregar ›</span>
     </button>
     ${list}`;
 }
 
-/* hoja para agregar un amigo: invitar por WhatsApp o agregar a mano */
+/* hoja para invitar a un amigo por WhatsApp (se agrega solo al aceptar el link) */
 function vAddFriend(u) {
-  const d = V.friendDraft || (V.friendDraft = { name: '', hcp: '', av: 0 });
-  const avs = AVATARS.map((src, i) => `<button class="afa ${d.av === i ? 'on' : ''}" data-act="afriend-av" data-i="${i}" aria-label="Monito ${i + 1}"><img class="golfer" src="${src}" alt="" loading="lazy"></button>`).join('');
   return `<div class="overlay" data-act="add-friend-close"><div class="sheet" data-act="noop">
     <div class="grab"></div>
     <h2>Agregar amigo</h2>
-    <button class="card invite-card" data-act="invite-wa" style="margin:6px 0 0">
-      <span class="invite-ic" aria-hidden="true"><svg viewBox="0 0 32 32"><path fill="#25D366" d="M16 3a13 13 0 0 0-11 19.7L3 29l6.5-1.9A13 13 0 1 0 16 3z"/><path fill="#fff" d="M22.6 19.2c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.8.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1a8.6 8.6 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.9.9-1.2 2.1-.6 3.6a10.4 10.4 0 0 0 5.6 5.3c2.4 1 2.9.8 3.5.8.7-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4z"/></svg></span>
-      <div class="invite-tx"><b>Invitar por WhatsApp</b><span>Le llega tu link y se une a la app</span></div>
-      <span class="invite-go">Invitar ›</span>
+    <p class="auth-sub">Mándale tu link por WhatsApp. Cuando lo abra y entre a PARFECT, <b>se agregan como amigos automáticamente</b>.</p>
+    <button class="btn primary big" data-act="invite-wa" style="width:100%;background:#25D366;color:#073b1e">
+      <svg viewBox="0 0 32 32" style="width:20px;height:20px;vertical-align:-4px;margin-right:6px"><path fill="#fff" d="M16 3a13 13 0 0 0-11 19.7L3 29l6.5-1.9A13 13 0 1 0 16 3z"/><path fill="#25D366" d="M22.6 19.2c-.3-.2-1.9-1-2.2-1.1-.3-.1-.5-.2-.8.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1a8.6 8.6 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.7-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.9.9-1.2 2.1-.6 3.6a10.4 10.4 0 0 0 5.6 5.3c2.4 1 2.9.8 3.5.8.7-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4z"/></svg>
+      Invitar por WhatsApp
     </button>
-    <div class="auth-or"><span>o agrégalo tú</span></div>
-    ${d.err ? `<p class="auth-err" style="margin:0 2px 8px">${esc(d.err)}</p>` : ''}
-    <div class="field-row">
-      <div class="field" style="flex:2"><label>Nombre</label><input id="af-name" value="${esc(d.name)}" placeholder="Nombre de tu amigo" autocomplete="off"></div>
-      <div class="field" style="flex:1"><label>Hándicap</label><input id="af-hcp" type="number" inputmode="numeric" value="${esc(d.hcp)}" placeholder="15"></div>
-    </div>
-    <div class="field"><label>Monito</label><div class="afa-grid">${avs}</div></div>
-    <button class="btn primary big" data-act="afriend-save" style="width:100%">${golfIcon('flag')} Agregar a mi liga</button>
+    <button class="btn" data-act="add-friend-close" style="width:100%;margin-top:8px">Cerrar</button>
   </div></div>`;
 }
 

@@ -52,7 +52,7 @@ const myPractices = () => S.practices.filter(p => p.userId === S.session).sort((
 const today = () => new Date().toISOString().slice(0, 10);
 const val = id => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
 
-function commit() { Store.save(S); render(); if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.pushSoon(); if (typeof Clubs !== 'undefined' && Clubs.on() && typeof myClub === 'function') { const _c = myClub(); if (_c) Clubs.pushSoon(_c); } }
+function commit() { Store.save(S); render(); if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.pushSoon(); if (typeof Clubs !== 'undefined' && Clubs.on() && typeof myClub === 'function') { const _c = myClub(); if (_c) Clubs.pushSoon(_c); } if (S.pendingRef && typeof claimRef === 'function') claimRef(); }
 function go(view) { V.view = view; V.err = null; render(); window.scrollTo(0, 0); }
 
 async function hashPass(pass) {
@@ -1473,12 +1473,42 @@ document.addEventListener('keydown', e => {
   else if (V.view === 'signup' && e.target.tagName === 'INPUT' && e.target.type !== 'checkbox') { e.preventDefault(); actions.signup(); }
 });
 
+/* ---- invitación por link: ?ref=<uid> del que invita ---- */
+async function claimRef() {
+  if (window.__claiming || !S.pendingRef) return;
+  const u = cur(); if (!u) return;
+  const ref = S.pendingRef;
+  if (ref === u.id) { S.pendingRef = null; Store.save(S); return; }
+  u.friends = u.friends || [];
+  if (u.friends.some(f => f.refId === ref)) { S.pendingRef = null; Store.save(S); return; }
+  window.__claiming = true;
+  let prof = null;
+  try {
+    if (typeof Cloud !== 'undefined' && Cloud.enabled() && Cloud.client()) {
+      const { data } = await Cloud.client().from('public_profiles').select('*').eq('id', ref).maybeSingle();
+      prof = data;
+    }
+  } catch (e) {}
+  window.__claiming = false;
+  if (prof && prof.name && S.pendingRef === ref) {
+    u.friends.push({ id: 'fr_' + Store.uid(), refId: ref, name: prof.name, hcp: prof.hcp != null ? prof.hcp : null, av: prof.avatar || 0 });
+    S.pendingRef = null;
+    if (typeof celebrate === 'function') celebrate(false, `¡${prof.name} es tu amigo!`);
+    commit();
+  }
+}
+
 render();
 
 /* ---- arranque: sync de party activa + service worker (solo producción) ---- */
 (() => {
+  try {
+    const ref = new URLSearchParams(location.search).get('ref');
+    if (ref) { S.pendingRef = ref; Store.save(S); history.replaceState(null, '', location.pathname); }
+  } catch (e) {}
   if (typeof Cloud !== 'undefined' && Cloud.enabled()) Cloud.restore();
   if (typeof Analytics !== 'undefined') Analytics.track('app_open');
+  setTimeout(() => { try { claimRef(); } catch (e) {} }, 1800);
   const p = S.parties.find(x => x.id === S.activeParty);
   if (p && p.status !== 'done' && p.status !== 'cancelled') Sync.watch(p.code);
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
