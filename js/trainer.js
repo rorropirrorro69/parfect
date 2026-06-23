@@ -42,7 +42,7 @@ const Trainer = (() => {
       const lost = Math.max(0, deficit * 0.05) + agg.penals18 * 0.9;
       const m = agg.missTee;
       const pIzq = pctOf(m.izq, { a: m.izq, b: m.der });
-      let diag = `Aciertas el ${agg.fwPct.toFixed(0)}% de fairways (referencia para meta ${fmtHcp(goal)}: ${bench.fwPct.toFixed(0)}%).`;
+      let diag = `Aciertas el ${agg.fwPct.toFixed(0)}% de fairways (objetivo: ${bench.fwPct.toFixed(0)}%).`;
       const tips = [];
       if (m.izq + m.der >= 4 && pIzq >= 0.62) {
         diag += ` Patrón claro: el ${Math.round(pIzq * 100)}% de tus fallos de salida van a la IZQUIERDA — típico de cara cerrada al impacto o path muy in-to-out.`;
@@ -67,7 +67,7 @@ const Trainer = (() => {
       const m = agg.missApp;
       const tot = m.corto + m.largo + m.izq + m.der;
       const pCorto = tot ? m.corto / tot : 0;
-      let diag = `Tu GIR es ${agg.girPct.toFixed(0)}% (referencia: ${bench.girPct.toFixed(0)}%). Cada green que no tomas en regulación te obliga a salvar el par con el juego corto.`;
+      let diag = `Tu GIR es ${agg.girPct.toFixed(0)}% (objetivo: ${bench.girPct.toFixed(0)}%). Cada green que no tomas en regulación te obliga a salvar el par con el juego corto.`;
       const tips = [];
       if (tot >= 5 && pCorto >= 0.45) {
         diag += ` Causa raíz detectada: el ${Math.round(pCorto * 100)}% de tus greens fallados son CORTOS. No es swing — es selección de palo: calculas con tu mejor golpe, no con tu golpe promedio.`;
@@ -85,7 +85,7 @@ const Trainer = (() => {
     {
       const deficit = bench.scrPct - agg.scrPct;
       const lost = Math.max(0, deficit * 0.05);
-      let diag = `Salvas el par el ${agg.scrPct.toFixed(0)}% de las veces que fallas green (referencia: ${bench.scrPct.toFixed(0)}%).`;
+      let diag = `Salvas el par el ${agg.scrPct.toFixed(0)}% de las veces que fallas green (objetivo: ${bench.scrPct.toFixed(0)}%).`;
       const tips = [];
       if (deficit > 8) {
         diag += ` Aquí hay golpes fáciles: con tu GIR actual juegas ~${Math.round((100 - agg.girPct) / 100 * 18)} hoyos por ronda dependiendo del up/down.`;
@@ -101,7 +101,7 @@ const Trainer = (() => {
     {
       const excess = agg.putts18 - bench.putts18;
       const lost = Math.max(0, excess);
-      let diag = `Promedias ${agg.putts18.toFixed(1)} putts por ronda (referencia: ${bench.putts18.toFixed(1)}).`;
+      let diag = `Promedias ${agg.putts18.toFixed(1)} putts por ronda (objetivo: ${bench.putts18.toFixed(1)}).`;
       const tips = [];
       const corta = agg.puttsByDist['0-2'];
       const cortaPct = corta && corta.n >= 5 ? (corta.one / corta.n) * 100 : null;
