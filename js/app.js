@@ -912,7 +912,7 @@ const actions = {
     const k = d.k;
     if (k === 'tee') { h.teeLie = d.lie; h.tee = d.dir || 'c'; if (d.lie !== 'ob') h.pen = false; if (d.lie === 'ob') h.pen = true; }
     else if (k === 'app') { h.app = d.v; if (d.v === 'gir') h.upDown = null; }
-    else if (k === 'ud') { h.upDown = (d.v === 'si'); }   // luego pregunta 1 o 0 putts
+    else if (k === 'ud') { h.upDown = (d.v === 'si'); if (d.v === 'si') h.putts = 1; }   // salvar el par = 1 putt automático
     else if (k === 'putts') { h.putts = Number(d.v); }
     V.fastStep = null; // re-deriva el paso → auto-avanza al siguiente
     render();

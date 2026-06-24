@@ -335,14 +335,15 @@ function vTrainer() {
   let tab = V.trainerTab;
   if (tab === 'plan' || tab === 'coach') tab = 'diag';            // alias heredados
   if (tab === 'tracker' || tab === 'camino' || tab === 'objetivos') tab = 'logros';
-  tab = ['diag', 'entreno', 'logros'].includes(tab) ? tab : 'diag';
+  tab = ['diag', 'entreno', 'logros', 'niveles'].includes(tab) ? tab : 'diag';
   const showHist = (!V.planStep || V.planStep === 'time') && !V.sessionRun && !V.sessionSummary;
   const body = tab === 'entreno' ? (vSessionPlanner() + (showHist ? (`<div style="margin-top:18px"></div>` + vCourse(u) + vTrainHistory()) : ''))
     : tab === 'logros' ? vLogros()
-      : vDiag();
+      : tab === 'niveles' ? vNiveles(u)
+        : vDiag();
   const T = (id, label) => `<button class="tab ${tab === id ? 'on' : ''}" data-act="trainer-tab" data-t="${id}">${label}</button>`;
   return `<div class="sec-h"><h2>Parfect Trainer</h2></div>
-    <div class="tabs scroll">${T('diag', 'Análisis IA')}${T('entreno', 'Entreno')}${T('logros', 'Logros')}</div>
+    <div class="tabs scroll">${T('diag', 'Análisis IA')}${T('entreno', 'Entreno')}${T('logros', 'Logros')}${T('niveles', 'Niveles')}</div>
     ${body}`;
 }
 

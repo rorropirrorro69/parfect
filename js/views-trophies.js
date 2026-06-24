@@ -194,3 +194,38 @@ function vHcpReference(u) {
     </table></div>
   </div>`;
 }
+
+/* ============ Niveles: escalera gamificada de hándicaps (36 → 0) ============ */
+const NIV_LEVELS = [0, 3, 6, 9, 12, 15, 18, 21, 24, 28, 32, 36];
+const NIV_TITLES = { 0: 'Scratch', 3: 'Crack', 6: 'Élite amateur', 9: 'Un dígito', 12: 'Avanzado', 15: 'Intermedio', 18: 'Bogey golfer', 21: 'Aprendiz', 24: 'En forma', 28: 'Novato', 32: 'Principiante', 36: 'Arrancando' };
+function vNiveles(u) {
+  const hcp = u && u.hcp != null ? u.hcp : 18;
+  const goal = u && u.goal != null ? u.goal : Math.max(0, hcp - 5);
+  const pct = Math.round(Math.max(0, Math.min(100, (36 - hcp) / 36 * 100)));
+  const reached = NIV_LEVELS.filter(h => h >= hcp);
+  const curLvl = reached.length ? Math.min(...reached) : 0;          // mejor nivel alcanzado
+  const goalLvl = NIV_LEVELS.reduce((a, b) => (Math.abs(b - goal) < Math.abs(a - goal) ? b : a), NIV_LEVELS[0]);
+  const emoji = (u && u.avatarEmoji) ? u.avatarEmoji : '🏌️';
+  const rows = NIV_LEVELS.map(h => {
+    const b = Stats.benchFor(h);
+    const isCur = h === curLvl, done = h >= hcp && !isCur, lock = h < hcp;
+    const st = isCur ? 'cur' : done ? 'done' : 'lock';
+    const ic = isCur ? '★' : done ? '✓' : '🔒';
+    const tags = `${h === goalLvl ? '<span class="niv-tag meta">meta</span>' : ''}${isCur ? '<span class="niv-tag you">tú</span>' : ''}`;
+    return `<div class="niv-row ${st}">
+      <span class="niv-hcp">${h}</span>
+      <div class="niv-tx"><b>${esc(NIV_TITLES[h] || ('HCP ' + h))} ${tags}</b><span>Calles ${Math.round(b.fwPct)}% · GIR ${Math.round(b.girPct)}% · ${Math.round(b.putts18)} putts</span></div>
+      <span class="niv-ic">${ic}</span>
+    </div>`;
+  }).join('');
+  return `<div class="card niv-hero">
+      <span class="label">${golfIcon('peak')} Vas escalando</span>
+      <div class="niv-hero-row"><span>HCP <b>${fmtHcp(hcp)}</b></span><span class="niv-arrow">→</span><span>meta <b style="color:var(--lime-ink)">${fmtHcp(goal)}</b></span><span class="niv-pct">${pct}%</span></div>
+      <div class="niv-prog"><i style="width:${pct}%"></i></div>
+      <span class="small muted">${pct}% del camino de 36 a 0 (scratch)</span>
+    </div>
+    <div class="niv-wrap">
+      <div class="niv-ladder">${rows}</div>
+      <div class="niv-track"><div class="niv-fill" style="height:${pct}%"></div><span class="niv-emoji" style="bottom:${pct}%">${emoji}</span></div>
+    </div>`;
+}

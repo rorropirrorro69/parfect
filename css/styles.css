@@ -4789,3 +4789,31 @@ body.is-scrolling .lp-flyb, body.is-scrolling .lp-bug, body.is-scrolling .lp-bee
 /* Análisis IA / diagnóstico: marca de área ya en meta */
 .aiq-rank.met { background: #3aa055 !important; color: #fff !important; }
 .aisum-row.met .aisum-n { background: #3aa055; color: #fff; }
+
+/* Niveles: escalera gamificada de hándicaps + barra con emoji */
+.niv-hero { padding: 14px; }
+.niv-hero-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 15px; }
+.niv-hero-row b { font-weight: 900; }
+.niv-arrow { color: var(--muted); }
+.niv-pct { margin-left: auto; font-weight: 900; font-size: 18px; color: var(--lime-ink); }
+.niv-prog { height: 9px; border-radius: 99px; background: var(--line); overflow: hidden; margin: 9px 0 6px; }
+.niv-prog i { display: block; height: 100%; background: var(--lime); border-radius: 99px; }
+.niv-wrap { display: flex; gap: 10px; align-items: stretch; margin-top: 12px; }
+.niv-ladder { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+.niv-row { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 13px; padding: 9px 11px; }
+.niv-row.cur { border-color: var(--lime); background: var(--lime-faint, rgba(124,194,74,.12)); }
+.niv-row.lock { opacity: .55; }
+.niv-hcp { flex: none; width: 30px; height: 30px; border-radius: 9px; background: var(--card2, #eef3ea); display: grid; place-items: center; font-weight: 900; font-size: 14px; color: var(--text); }
+.niv-row.cur .niv-hcp { background: var(--lime); color: #16320f; }
+.niv-row.lock .niv-hcp { background: var(--line); }
+.niv-tx { flex: 1; min-width: 0; }
+.niv-tx b { display: block; font-size: 13.5px; font-weight: 800; }
+.niv-tx span { display: block; font-size: 11px; color: var(--muted); margin-top: 1px; }
+.niv-tag { display: inline-block; font-size: 9px; font-weight: 900; padding: 1px 6px; border-radius: 6px; margin-left: 4px; vertical-align: middle; }
+.niv-tag.you { background: var(--lime); color: #16320f; }
+.niv-tag.meta { background: #dfe7fb; color: #2f49a8; }
+.niv-ic { flex: none; font-size: 15px; }
+.niv-row.done .niv-ic { color: #3aa055; }
+.niv-track { flex: none; width: 40px; position: relative; background: var(--card2, #eef3ea); border: 1px solid var(--line); border-radius: 99px; overflow: hidden; }
+.niv-fill { position: absolute; left: 0; right: 0; bottom: 0; background: linear-gradient(#7cc24a, #3a9e46); border-radius: 99px; }
+.niv-emoji { position: absolute; left: 50%; transform: translate(-50%, 50%); font-size: 22px; line-height: 1; filter: drop-shadow(0 2px 3px rgba(20,40,15,.3)); }
